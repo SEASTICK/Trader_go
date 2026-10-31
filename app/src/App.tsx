@@ -48,7 +48,7 @@ export default function App() {
   return (
     <div className="shell">
       <aside className="sidebar">
-        <div className="brand"><span className="logo">T</span><b>Trader_go</b></div>
+        <div className="brand"><img src="/logo.svg" className="logo" alt="" /><b>Trader_go</b></div>
         <nav>
           {NAV.map((n) => (
             <button key={n.id} className={page === n.id ? "nav on" : "nav"} onClick={() => setPage(n.id)}>
