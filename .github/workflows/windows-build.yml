@@ -1,0 +1,36 @@
+name: Windows check
+
+# Ren kontroll vid pull request: testar och bygger installationsfilen utan att publicera något.
+# Releaser görs bara via desktop-release.yml (Run workflow). Se docs/release.md.
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: app/src-tauri
+      - run: npm ci
+      - run: npm test
+      # Utan signeringsnyckel: uppdateringsfilerna stängs av här. Riktiga släpp signeras i desktop-release.yml.
+      - run: npm run tauri build -- --bundles nsis --config '{"bundle":{"createUpdaterArtifacts":false}}'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Trader_go-windows-installer
+          path: app/src-tauri/target/release/bundle/nsis/*.exe

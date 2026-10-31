@@ -78,7 +78,7 @@ pub fn migrate(path: &Path, migrations: &[&str]) -> Result<Connection, DbError> 
         return Ok(conn);
     }
     if current > 0 {
-        backup(&conn, path, current)?;
+        backup(&conn, path, &format!("schema{current}"))?;
     }
 
     let tx = conn.transaction()?;
@@ -95,14 +95,19 @@ pub fn schema_version(conn: &Connection) -> Result<usize, DbError> {
     Ok(v as usize)
 }
 
-fn backup(conn: &Connection, path: &Path, version: usize) -> Result<PathBuf, DbError> {
+/// Copy taken right before the app installs an update, in case the new version misbehaves.
+pub fn backup_before_update(conn: &Connection, path: &Path) -> Result<PathBuf, DbError> {
+    backup(conn, path, "pre-update")
+}
+
+fn backup(conn: &Connection, path: &Path, label: &str) -> Result<PathBuf, DbError> {
     let dir = path.with_file_name("backups");
     std::fs::create_dir_all(&dir)?;
     let stamp = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .map(|d| d.as_secs())
         .unwrap_or(0);
-    let file = dir.join(format!("tradergo-schema{version}-{stamp}.db"));
+    let file = dir.join(format!("tradergo-{label}-{stamp}.db"));
     conn.execute("VACUUM INTO ?1", params![file.to_string_lossy()])?;
     prune_backups(&dir)?;
     Ok(file)
@@ -162,6 +167,8 @@ pub fn list_paper_trades(conn: &Connection, limit: u32) -> Result<Vec<PaperTrade
     Ok(rows.collect::<Result<_, _>>()?)
 }
 
+// Only tests read settings back right now; the app writes them.
+#[cfg(test)]
 pub fn get_setting(conn: &Connection, key: &str) -> Result<Option<String>, DbError> {
     let mut stmt = conn.prepare("SELECT value FROM settings WHERE key = ?1")?;
     let mut rows = stmt.query(params![key])?;

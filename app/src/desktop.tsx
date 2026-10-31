@@ -1,86 +1,11 @@
-// Flikar som bara finns i datorprogrammet. På webben (Cloudflare Pages) finns ingen Tauri-brygga.
+// Sidor som bara finns i datorprogrammet. På webben (Cloudflare Pages) finns ingen Tauri-brygga.
 import { FormEvent, useEffect, useState } from "react";
+import { invoke, isTauri } from "@tauri-apps/api/core";
 
-type Tauri = {
-  core: { invoke<T>(cmd: string, args?: Record<string, unknown>): Promise<T> };
-  event: { listen<T>(name: string, cb: (e: { payload: T }) => void): Promise<() => void> };
-};
-const tauri = (window as unknown as { __TAURI__?: Tauri }).__TAURI__;
-export const isDesktop = tauri !== undefined;
-const invoke = <T,>(cmd: string, args?: Record<string, unknown>) => tauri!.core.invoke<T>(cmd, args);
+export const isDesktop = isTauri();
 
-type AppInfo = { version: string; mode: string; data_dir: string; schema: number; auto_download: boolean };
-type Status = {
-  state: "checking" | "none" | "available" | "downloading" | "ready" | "error";
-  current: string;
-  version?: string;
-  notes?: string;
-  downloaded: number;
-  total?: number;
-  message?: string;
-};
 type Counts = { paper: number; backtest: number };
 type Trade = { id: number; opened_at: string; symbol: string; side: string; quantity: number; entry_price: number };
-
-const mb = (n: number) => (n / 1048576).toFixed(1) + " MB";
-
-function statusText(s: Status): string {
-  switch (s.state) {
-    case "checking": return "Letar efter uppdateringar…";
-    case "none": return `Du har senaste versionen (${s.current}).`;
-    case "available": return `Version ${s.version} finns.`;
-    case "downloading": return `Laddar ner ${s.version}…`;
-    case "ready": return `Version ${s.version} är nedladdad och kontrollerad.${s.message ? " " + s.message : ""}`;
-    case "error": return s.message ?? "Något gick fel.";
-  }
-}
-
-export function Updates() {
-  const [info, setInfo] = useState<AppInfo>();
-  const [s, setS] = useState<Status>();
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    invoke<AppInfo>("app_info").then(setInfo, (e) => setError(String(e)));
-    invoke<Status>("update_status").then(setS);
-    const off = tauri!.event.listen<Status>("update-status", (e) => setS(e.payload));
-    return () => { off.then((f) => f()); };
-  }, []);
-
-  const run = (cmd: string, args?: Record<string, unknown>) =>
-    invoke(cmd, args).then(() => setError(""), (e) => setError(String(e)));
-
-  return (
-    <section>
-      <dl>
-        <dt>Installerad version</dt><dd><code>{info?.version ?? "…"}</code></dd>
-        <dt>Läge</dt><dd><span className="badge">{info?.mode ?? "paper"}</span></dd>
-        <dt>Data</dt><dd className="muted">{info?.data_dir} · schema {info?.schema}</dd>
-      </dl>
-      {s && <p className={s.state === "error" ? "error" : "muted"}>{statusText(s)}</p>}
-      {s?.state === "downloading" && (
-        <progress max={s.total} value={s.total ? s.downloaded : undefined}
-          title={s.total ? `${mb(s.downloaded)} / ${mb(s.total)}` : undefined} />
-      )}
-      {s?.notes && <details><summary>Versionsnyheter</summary><pre>{s.notes}</pre></details>}
-      <div className="actions">
-        <button disabled={s?.state === "checking" || s?.state === "downloading"} onClick={() => run("check_for_update")}>
-          Leta efter uppdateringar
-        </button>
-        {s?.state === "available" && <button onClick={() => run("download_update")}>Ladda ner</button>}
-        {s?.state === "ready" && <button onClick={() => run("install_update")}>Starta om och uppdatera</button>}
-        {info && (
-          <label>
-            <input type="checkbox" defaultChecked={info.auto_download}
-              onChange={(e) => run("set_setting", { key: "auto_download", value: String(e.target.checked) })} />
-            {" "}Ladda ner uppdateringar automatiskt
-          </label>
-        )}
-      </div>
-      {error && <p className="error">{error}</p>}
-    </section>
-  );
-}
 
 export function Paper() {
   const [counts, setCounts] = useState<Counts>({ paper: 0, backtest: 0 });

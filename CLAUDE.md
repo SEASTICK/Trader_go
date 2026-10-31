@@ -32,7 +32,7 @@ vidare till papper.
 
 ## Skrivbordsappen
 
-`app/` är en Tauri-app för macOS och Windows. Den uppdateras via GitHub Releases när något
-pushas till `main` (se [app/README.md](app/README.md)). Appen är bara för papperstrading: lägg
+`app/` är en Tauri-app. Släpp görs för hand enligt [docs/release.md](docs/release.md), se
+också [app/README.md](app/README.md). Appen är bara för papperstrading: lägg
 aldrig till mäklarkoppling, orderkod eller nyckellagring. Ändra aldrig `identifier` eller en
 utgiven migration i `db.rs`.

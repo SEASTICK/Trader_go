@@ -4,16 +4,17 @@
 mod activity;
 mod db;
 mod safety;
-mod updater;
 
 use activity::{Activity, Counts};
 use rusqlite::Connection;
 use serde::Serialize;
+use std::path::PathBuf;
 use std::sync::Mutex;
 use tauri::{Manager, State};
 
 pub struct AppState {
     pub db: Mutex<Connection>,
+    pub db_path: PathBuf,
     pub activity: Activity,
 }
 
@@ -23,7 +24,6 @@ struct AppInfo {
     mode: &'static str,
     data_dir: String,
     schema: usize,
-    auto_download: bool,
 }
 
 #[tauri::command]
@@ -39,11 +39,18 @@ fn app_info(app: tauri::AppHandle, state: State<'_, AppState>) -> Result<AppInfo
             .display()
             .to_string(),
         schema: db::schema_version(&conn).map_err(|e| e.to_string())?,
-        auto_download: db::get_setting(&conn, "auto_download")
-            .map_err(|e| e.to_string())?
-            .as_deref()
-            != Some("false"),
     })
+}
+
+/// Called by the frontend updater right before it downloads and installs. Refuses while a
+/// paper session or backtest runs, then backs up the database so an update can be undone.
+#[tauri::command]
+fn prepare_update_install(state: State<'_, AppState>) -> Result<String, String> {
+    state.activity.ensure_idle()?;
+    let conn = state.db.lock().unwrap();
+    db::backup_before_update(&conn, &state.db_path)
+        .map(|p| p.display().to_string())
+        .map_err(|e| format!("Kunde inte säkerhetskopiera databasen före uppdateringen: {e}"))
 }
 
 #[tauri::command]
@@ -84,6 +91,7 @@ fn stop_activity(kind: String, state: State<'_, AppState>) -> Result<Counts, Str
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_process::init())
         .setup(|app| {
             let path = app.path().app_data_dir()?.join("tradergo.db");
             let conn = db::open(&path).map_err(|e| {
@@ -97,10 +105,9 @@ fn main() {
             })?;
             app.manage(AppState {
                 db: Mutex::new(conn),
+                db_path: path,
                 activity: Activity::default(),
             });
-            app.manage(updater::UpdateState::default());
-            tauri::async_runtime::spawn(updater::startup(app.handle().clone()));
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -110,10 +117,7 @@ fn main() {
             list_paper_trades,
             start_activity,
             stop_activity,
-            updater::update_status,
-            updater::check_for_update,
-            updater::download_update,
-            updater::install_update,
+            prepare_update_install,
         ])
         .run(tauri::generate_context!())
         .expect("fel när Trader_go startades");

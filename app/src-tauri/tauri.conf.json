@@ -10,24 +10,39 @@
     "frontendDist": "../dist"
   },
   "app": {
-    "withGlobalTauri": true,
     "windows": [
-      { "label": "main", "title": "Trader_go", "width": 1200, "height": 800, "minWidth": 700, "minHeight": 500 }
+      {
+        "label": "main",
+        "title": "Trader_go",
+        "width": 1200,
+        "height": 800,
+        "minWidth": 700,
+        "minHeight": 500
+      }
     ],
     "security": {
-      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost"
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
     }
   },
   "bundle": {
     "active": true,
-    "createUpdaterArtifacts": true,
-    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"]
+    "targets": [
+      "nsis"
+    ],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "createUpdaterArtifacts": true
   },
   "plugins": {
     "updater": {
-      "pubkey": "REPLACE_WITH_TAURI_UPDATER_PUBLIC_KEY",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEVDMThFQjZDQ0I5MDg4MkYKUldRdmlKRExiT3NZN0o3aWxjUURjUmFQN3Y5RDRVc2xjMVBKdWpxWTJzdHlKdFZjUjlvRzBuNHQK",
       "endpoints": [
-        "https://github.com/SEASTICK/TraderGO-releases/releases/latest/download/latest.json"
+        "https://seastick.github.io/trader-go-releases/latest.json"
       ],
       "windows": {
         "installMode": "passive"
