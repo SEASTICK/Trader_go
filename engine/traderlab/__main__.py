@@ -34,12 +34,26 @@ def main(argv: list[str] | None = None) -> int:
     b = sub.add_parser("batch", help="Kör alla registrerade rutor i research/experiments.json och exportera till appen")
     b.add_argument("--only", nargs="*", help="Bara dessa rutor, till exempel E-01")
     sub.add_parser("export", help="Exportera senaste resultat per ruta till app/data/results.json")
+    pp = sub.add_parser("paper", help="Pappershandel framåt: step eller status för en fryst strategi")
+    pp.add_argument("action", choices=["step", "status"])
+    pp.add_argument("paper_id")
+    pp.add_argument("--data-dir", type=Path, default=REPO / "data")
     k = sub.add_parser("krav", help="Krav på t-värde efter N försök")
     k.add_argument("n", type=int)
 
     a = p.parse_args(argv)
     if a.cmd == "krav":
         print(f"{stats.t_krav(a.n):.2f}")
+        return 0
+    if a.cmd == "paper":
+        import json as _json
+        from .paper import engine as paper
+        if a.action == "step":
+            spec = paper._load(REPO, a.paper_id)["spec"]
+            bars = binance.load(spec.get("market", "spot"), spec["symbol"], spec["interval"], a.data_dir)
+            n = paper.step(REPO, a.paper_id, paper.closed_only(bars, spec["interval"]))
+            print(f"{n} nya staplar loggade.")
+        print(_json.dumps(paper.status(REPO, a.paper_id), ensure_ascii=False, indent=2))
         return 0
     if a.cmd in ("batch", "export"):
         from . import batch

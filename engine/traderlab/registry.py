@@ -62,3 +62,35 @@ def require_registered(hypothesis_id: str, repo: Path) -> Registration:
         raise NotRegisteredError(f"{REGISTRY} har ocommittade ändringar. Committa dem innan testet körs.")
     commit = _git(repo, "log", "-1", "--format=%H", "--", REGISTRY.as_posix()).strip()
     return Registration(hypothesis_id, commit, count_attempts(committed))
+
+
+DECISIONS = ("REJECT", "MORE_RESEARCH", "READY_FOR_PAPER")
+
+
+def latest_decisions(text: str) -> dict[str, str]:
+    """Senaste beslut per id, från kolumnen 'beslut' (sista raden för ett id vinner)."""
+    header: list[str] | None = None
+    out: dict[str, str] = {}
+    for line in text.splitlines():
+        if not line.strip().startswith("|"):
+            continue
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if header is None and any(c.lower() == "beslut" for c in cells):
+            header = [c.lower() for c in cells]
+            continue
+        if header is None or not ID_RE.match(line):
+            continue
+        col = header.index("beslut")
+        if col < len(cells) and cells[col] in DECISIONS:
+            out[cells[0]] = cells[col]
+    return out
+
+
+def require_decision(hypothesis_id: str, repo: Path, decision: str = "READY_FOR_PAPER") -> str:
+    """Kräver att det senaste committade beslutet för hypotesen är `decision`. Returnerar registrets commit."""
+    reg = require_registered(hypothesis_id, repo)
+    committed = _git(repo, "show", f"HEAD:{REGISTRY.as_posix()}")
+    got = latest_decisions(committed).get(hypothesis_id)
+    if got != decision:
+        raise NotRegisteredError(f"{hypothesis_id} har beslutet {got or 'inget'} i registret, inte {decision}.")
+    return reg.registry_commit
