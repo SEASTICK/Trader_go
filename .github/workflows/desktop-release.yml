@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Optional release version override; leave blank to auto-increment (for example 0.1.2)"
+        description: "Optional. Leave blank to get the previous version +1 (patch), counting both stable and test releases. Or write one yourself, for example 0.2.0."
         required: false
         type: string
       channel:
@@ -52,16 +52,16 @@ jobs:
           } elseif ($env:MANUAL_VERSION) {
             $version = $env:MANUAL_VERSION.TrimStart('v')
           } else {
-            # Höj nästa patch efter senaste vX.Y.Z-taggen. Respektera en version som höjts manuellt i källan.
-            # Bara taggar på formen vX.Y.Z räknas, så test-v-taggarna förvirrar inte beräkningen.
+            # Tomt fält: föregående version + 1 (patch). Räknar både stable (vX.Y.Z) och test (test-vX.Y.Z), så
+            # numren bara går uppåt oavsett kanal. Respektera en version som höjts manuellt i källan.
             git fetch --tags --quiet
             if ($LASTEXITCODE -ne 0) { throw "Could not fetch release tags." }
             $pkg = (Get-Content ./app/package.json -Raw | ConvertFrom-Json).version
             if ($pkg -notmatch '^\d+\.\d+\.\d+$') { throw "Invalid package.json version: $pkg" }
             $sourceVersion = [version]$pkg
-            $latestTag = git tag --list "v*" |
+            $latestTag = git tag --list |
               ForEach-Object {
-                if ($_ -match '^v(\d+\.\d+\.\d+)$') { [version]$Matches[1] }
+                if ($_ -match '^(?:test-)?v(\d+\.\d+\.\d+)$') { [version]$Matches[1] }
               } |
               Sort-Object -Descending |
               Select-Object -First 1
@@ -81,6 +81,7 @@ jobs:
         shell: pwsh
         env:
           RELEASE_TAG: ${{ steps.release.outputs.tag }}
+          CHANNEL: ${{ steps.release.outputs.channel }}
         run: |
           $pkg = (Get-Content ./app/package.json -Raw | ConvertFrom-Json).version
           $conf = (Get-Content ./app/src-tauri/tauri.conf.json -Raw | ConvertFrom-Json).version
@@ -92,8 +93,9 @@ jobs:
           if ($env:GITHUB_REF -like "refs/tags/v*") {
             Write-Host "Taggbygge: hoppar over kontrollen av om taggen redan finns."
           } else {
-            $existing = git tag --list $env:RELEASE_TAG
-            if ($existing) { throw "$env:RELEASE_TAG ar redan slappt. Kontrollera versionsvalet." }
+            $tagToCheck = if ($env:CHANNEL -eq "test") { "test-$($env:RELEASE_TAG)" } else { $env:RELEASE_TAG }
+            $existing = git tag --list $tagToCheck
+            if ($existing) { throw "$tagToCheck ar redan slappt. Kontrollera versionsvalet." }
           }
 
   build-windows:
