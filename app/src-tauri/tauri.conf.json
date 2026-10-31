@@ -11,7 +11,14 @@
   },
   "app": {
     "windows": [
-      { "label": "main", "title": "Trader_go", "width": 1200, "height": 800, "minWidth": 700, "minHeight": 500 }
+      {
+        "label": "main",
+        "title": "Trader_go",
+        "width": 1200,
+        "height": 800,
+        "minWidth": 700,
+        "minHeight": 500
+      }
     ],
     "security": {
       "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
@@ -19,7 +26,27 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["nsis"],
-    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"]
+    "targets": [
+      "nsis"
+    ],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "BYTS_UT_MOT_PUBLIK_NYCKEL_FRAN_tauri_signer_generate",
+      "endpoints": [
+        "https://seastick.github.io/trader-go-releases/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      }
+    }
   }
 }

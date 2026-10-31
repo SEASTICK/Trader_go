@@ -5,6 +5,8 @@ import Overview from "./pages/Overview";
 import Research from "./pages/Research";
 import Hypotheses from "./pages/Hypotheses";
 import Status from "./pages/Status";
+import { UpdateDialog } from "./features/updates/UpdateDialog";
+import { useUpdater } from "./features/updates/useUpdater";
 
 const NAV = [
   { id: "Översikt", icon: "home" },
@@ -26,6 +28,7 @@ export default function App() {
   const [menu, setMenu] = useState(false);
   const [settings, setSettings] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const updater = useUpdater(__APP_VERSION__);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -61,7 +64,14 @@ export default function App() {
               <button className="item" onClick={() => setTheme(theme === "Mörkt" ? "Ljust" : "Mörkt")}>
                 <Icon name={theme === "Mörkt" ? "sun" : "moon"} /> Utseende <span className="muted right">{theme}</span>
               </button>
-              <div className="item static"><Icon name="info" /> Om Trader_go <span className="muted right">{__COMMIT__}</span></div>
+              {updater.enabled && (
+                <button className="item" disabled={updater.notice.status === "checking" || updater.notice.status === "installing"}
+                  onClick={() => { void updater.checkNow(false); }}>
+                  <Icon name="info" /> Sök efter uppdateringar
+                  <span className="muted right">{updater.notice.status === "available" ? `v${updater.notice.version}` : updater.notice.status === "checking" ? "Söker…" : updater.notice.status === "current" ? "Aktuell" : updater.notice.status === "error" ? "Fel" : ""}</span>
+                </button>
+              )}
+              <div className="item static"><Icon name="info" /> Om Trader_go <span className="muted right">v{__APP_VERSION__}</span></div>
             </div>
           )}
           <button className="user" onClick={() => setMenu(!menu)}>
@@ -79,6 +89,8 @@ export default function App() {
         {page === "Hypoteser" && <Hypotheses />}
         {page === "Status" && <Status />}
       </main>
+
+      <UpdateDialog notice={updater.notice} currentVersion={__APP_VERSION__} onInstall={() => { void updater.install(); }} onLater={updater.later} onDismissError={updater.dismissError} />
 
       {settings && (
         <div className="overlay" onMouseDown={() => setSettings(false)}>
