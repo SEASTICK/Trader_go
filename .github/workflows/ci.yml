@@ -44,6 +44,7 @@ jobs:
         working-directory: app
         run: |
           npm ci
+          npm test
           npm run build
       - run: cargo fmt --check
       - run: cargo clippy --all-targets -- -D warnings
