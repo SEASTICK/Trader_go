@@ -106,7 +106,7 @@ def step(repo: Path, paper_id: str, bars: pd.DataFrame) -> int:
     if spec.get("leverage", 1.0) != 1.0:
         raise NotImplementedError("Hävstång i papper är inte stödd än. Kräver riskgranser-genomgång.")
     rate = CostModel(**spec.get("costs", {})).per_side
-    strategy = build(spec["strategy"]["name"], spec["strategy"].get("params"))
+    strategy = build(spec["strategy"]["name"], spec["strategy"].get("params"), spec.get("risk"))
     s = _replay(_events(repo, paper_id))
     times = [t.isoformat() for t in bars.index]
     start = times.index(s.last_bar) + 1 if s.last_bar in times else 0
