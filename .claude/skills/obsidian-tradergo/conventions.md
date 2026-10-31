@@ -7,7 +7,7 @@ Load this only when creating or restructuring notes.
 | Folder | Holds | Template |
 |---|---|---|
 | `00 Dashboard/` | Index notes and Bases views. One canonical index per area. | none |
-| `01 Research/` | Loose ideas, reading notes, market observations | none |
+| `01 Research/` | Hypothesis notes, loose ideas, reading notes, market observations | `forskningslogg` (hypotheses) |
 | `02 Strategies/` | One note per strategy | `strategy-research.md` |
 | `03 Backtests/` | One note per backtest run that matters | `backtest-summary.md` |
 | `04 Architecture/` | One note per decision (ADR) | `architecture-decision.md` |

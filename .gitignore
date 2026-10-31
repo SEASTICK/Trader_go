@@ -5,3 +5,5 @@ __pycache__/
 *.pyc
 data/raw/
 data/clean/
+.DS_Store
+research/.obsidian/workspace*.json
