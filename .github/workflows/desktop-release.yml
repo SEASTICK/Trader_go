@@ -1,0 +1,404 @@
+name: Publish Trader_go release
+
+# Modell: Vinstlys desktop-release.yml. Bara Windows för närvarande. Mac kan läggas till senare
+# med en matris som i Vinstly (kräver Apple Developer-konto för att signera på riktigt).
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Optional release version override; leave blank to auto-increment (for example 0.1.2)"
+        required: false
+        type: string
+      channel:
+        description: "stable publishes the update everyone receives. test publishes under /test only and creates no v-tag."
+        required: false
+        default: stable
+        type: choice
+        options: [stable, test]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: trader-go-release
+  cancel-in-progress: false
+
+env:
+  RELEASES_REPO: SEASTICK/trader-go-releases
+  RELEASES_PAGES_URL: https://seastick.github.io/trader-go-releases
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.release.outputs.version }}
+      tag: ${{ steps.release.outputs.tag }}
+      channel: ${{ steps.release.outputs.channel }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Choose release version
+        id: release
+        shell: pwsh
+        env:
+          MANUAL_VERSION: ${{ inputs.version }}
+          REQUESTED_CHANNEL: ${{ inputs.channel }}
+        run: |
+          if ($env:GITHUB_REF -like "refs/tags/v*") {
+            $version = $env:GITHUB_REF_NAME.Substring(1)
+          } elseif ($env:MANUAL_VERSION) {
+            $version = $env:MANUAL_VERSION.TrimStart('v')
+          } else {
+            # Höj nästa patch efter senaste vX.Y.Z-taggen. Respektera en version som höjts manuellt i källan.
+            # Bara taggar på formen vX.Y.Z räknas, så test-v-taggarna förvirrar inte beräkningen.
+            git fetch --tags --quiet
+            if ($LASTEXITCODE -ne 0) { throw "Could not fetch release tags." }
+            $pkg = (Get-Content ./app/package.json -Raw | ConvertFrom-Json).version
+            if ($pkg -notmatch '^\d+\.\d+\.\d+$') { throw "Invalid package.json version: $pkg" }
+            $sourceVersion = [version]$pkg
+            $latestTag = git tag --list "v*" |
+              ForEach-Object {
+                if ($_ -match '^v(\d+\.\d+\.\d+)$') { [version]$Matches[1] }
+              } |
+              Sort-Object -Descending |
+              Select-Object -First 1
+            if ($latestTag -and $sourceVersion -le $latestTag) {
+              $version = "$($latestTag.Major).$($latestTag.Minor).$($latestTag.Build + 1)"
+            } else {
+              $version = $sourceVersion.ToString(3)
+            }
+          }
+          if ($version -notmatch '^\d+\.\d+\.\d+$') { throw "Invalid release version: $version" }
+          $channel = if ($env:REQUESTED_CHANNEL -eq "test") { "test" } else { "stable" }
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "tag=v$version" >> $env:GITHUB_OUTPUT
+          "channel=$channel" >> $env:GITHUB_OUTPUT
+          Write-Host "Publishing Trader_go $version on the $channel channel"
+      - name: Check version consistency and that it is not already released
+        shell: pwsh
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          $pkg = (Get-Content ./app/package.json -Raw | ConvertFrom-Json).version
+          $conf = (Get-Content ./app/src-tauri/tauri.conf.json -Raw | ConvertFrom-Json).version
+          $cargoLine = Select-String -Path ./app/src-tauri/Cargo.toml -Pattern '^version' | Select-Object -First 1
+          $cargo = $cargoLine.Line.Split('"')[1]
+          if ($pkg -ne $conf -or $pkg -ne $cargo) {
+            throw "Versionerna skiljer sig. package.json=$pkg, tauri.conf.json=$conf, Cargo.toml=$cargo. Satt alla tre till samma varde."
+          }
+          if ($env:GITHUB_REF -like "refs/tags/v*") {
+            Write-Host "Taggbygge: hoppar over kontrollen av om taggen redan finns."
+          } else {
+            $existing = git tag --list $env:RELEASE_TAG
+            if ($existing) { throw "$env:RELEASE_TAG ar redan slappt. Kontrollera versionsvalet." }
+          }
+
+  build-windows:
+    needs: version
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - uses: dtolnay/rust-toolchain@stable
+      # Sparar de färdigkompilerade Rust-biblioteken mellan körningarna. Första körningen fyller cachen, de följande går snabbare.
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: app/src-tauri
+      - name: Install frontend dependencies
+        working-directory: app
+        run: npm ci
+      - name: Run frontend tests
+        working-directory: app
+        run: npm test
+      - name: Set release version and channel identity
+        shell: pwsh
+        env:
+          RELEASE_VERSION: ${{ needs.version.outputs.version }}
+          CHANNEL: ${{ needs.version.outputs.channel }}
+        run: |
+          npm --prefix .\app version $env:RELEASE_VERSION --no-git-tag-version --allow-same-version
+          $configPath = Resolve-Path ".\app\src-tauri\tauri.conf.json"
+          $config = Get-Content $configPath -Raw | ConvertFrom-Json
+          $config.version = $env:RELEASE_VERSION
+          if ($env:CHANNEL -eq "test") {
+            $config.identifier = "com.seastick.tradergo.updatertest"
+            $config.productName = "Trader_go Updater Test"
+            $config.plugins.updater.endpoints = @("$env:RELEASES_PAGES_URL/test/latest.json")
+          }
+          [IO.File]::WriteAllText($configPath, ((ConvertTo-Json -InputObject $config -Depth 100) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+          $cargoPath = Resolve-Path ".\app\src-tauri\Cargo.toml"
+          $cargo = Get-Content $cargoPath -Raw
+          $cargo = [regex]::Replace($cargo, '(?ms)(\[package\].*?^version\s*=\s*")[^"]+(".*?$)', "`${1}$env:RELEASE_VERSION`${2}", 1)
+          [IO.File]::WriteAllText($cargoPath, $cargo, [Text.UTF8Encoding]::new($false))
+          $pkg = (Get-Content .\app\package.json -Raw | ConvertFrom-Json).version
+          $conf = (Get-Content $configPath -Raw | ConvertFrom-Json).version
+          $cargoVersion = (Select-String -Path $cargoPath -Pattern '^version' | Select-Object -First 1).Line.Split('"')[1]
+          if ($pkg -ne $env:RELEASE_VERSION -or $conf -ne $env:RELEASE_VERSION -or $cargoVersion -ne $env:RELEASE_VERSION) { throw "Could not set the release version consistently." }
+      - name: Prepare updater signing key
+        shell: pwsh
+        env:
+          TAURI_SIGNING_PRIVATE_KEY_B64: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        run: |
+          if (-not $env:TAURI_SIGNING_PRIVATE_KEY_B64) { throw "Repository secret TAURI_SIGNING_PRIVATE_KEY is missing." }
+          $keyInput = $env:TAURI_SIGNING_PRIVATE_KEY_B64.Trim()
+          $privateKeyPath = Join-Path $env:RUNNER_TEMP "trader-go-updater.key"
+          if ($keyInput.StartsWith("untrusted comment:")) {
+            $value = [Convert]::ToBase64String([Text.UTF8Encoding]::new($false).GetBytes($keyInput))
+          } else {
+            $keyBytes = [Convert]::FromBase64String($keyInput)
+            $decodedText = [Text.Encoding]::UTF8.GetString($keyBytes).Trim()
+            if ($decodedText.StartsWith("untrusted comment:")) {
+              $value = [Convert]::ToBase64String([Text.UTF8Encoding]::new($false).GetBytes($decodedText))
+            } else {
+              [IO.File]::WriteAllBytes($privateKeyPath, $keyBytes)
+              $value = $privateKeyPath
+            }
+          }
+          "TAURI_SIGNING_PRIVATE_KEY=$value" >> $env:GITHUB_ENV
+      - name: Build signed Windows installer and updater
+        working-directory: app
+        shell: pwsh
+        env:
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: |
+          npm run tauri build -- --target x86_64-pc-windows-msvc --bundles nsis --config '{"bundle":{"createUpdaterArtifacts":true}}'
+      - name: Stage Windows release files
+        shell: pwsh
+        env:
+          RELEASE_VERSION: ${{ needs.version.outputs.version }}
+        run: |
+          $bundle = Get-ChildItem .\app\src-tauri\target\x86_64-pc-windows-msvc\release\bundle\nsis\*.exe | Select-Object -First 1
+          if (-not $bundle) { throw "Tauri did not produce a Windows NSIS installer." }
+          $signature = "$($bundle.FullName).sig"
+          if (-not (Test-Path $signature)) { throw "Updater signature not found: $signature" }
+          New-Item -ItemType Directory -Force .\release-files | Out-Null
+          $name = "Trader_go_$($env:RELEASE_VERSION)_x64-setup.exe"
+          Copy-Item $bundle.FullName (Join-Path .\release-files $name)
+          Copy-Item $signature (Join-Path .\release-files "$name.sig")
+      - name: Upload Windows release files
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-windows-x64
+          if-no-files-found: error
+          path: release-files/*
+
+  approve:
+    # Stable-uppdateringen når alla som har appen, så den pausar här tills en godkännare svarar.
+    # Test-körningar hoppar över steget. GitHub tillåter inte "required reviewers" i privata repon
+    # på gratisplanen, därför sker godkännandet i ett ärende (issue) som endast de listade kan svara i.
+    needs: [version, build-windows]
+    if: ${{ needs.version.outputs.channel == 'stable' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    permissions:
+      contents: read
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      APPROVERS: SEASTICK edwinfighter42-star
+      TRIGGERED_BY: ${{ github.actor }}
+      RELEASE_VERSION: ${{ needs.version.outputs.version }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Wait for approval
+        run: bash .github/scripts/wait_for_approval.sh
+
+  publish:
+    needs: [version, build-windows, approve]
+    if: ${{ always() && needs.version.result == 'success' && needs.build-windows.result == 'success' && (needs.approve.result == 'success' || needs.approve.result == 'skipped') }}
+    runs-on: ubuntu-latest
+    env:
+      RELEASES_DEPLOY_KEY: ${{ secrets.RELEASES_DEPLOY_KEY }}
+      RELEASE_VERSION: ${{ needs.version.outputs.version }}
+      RELEASE_TAG: ${{ needs.version.outputs.tag }}
+      CHANNEL: ${{ needs.version.outputs.channel }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: desktop-*
+          path: release-files
+          merge-multiple: true
+      - name: Verify the complete release file set
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected=(
+            "Trader_go_${RELEASE_VERSION}_x64-setup.exe"
+            "Trader_go_${RELEASE_VERSION}_x64-setup.exe.sig"
+          )
+          for file in "${expected[@]}"; do
+            test -s "release-files/$file" || { echo "Missing release file: $file" >&2; exit 1; }
+          done
+      - name: Compose release notes
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os
+          import subprocess
+          from pathlib import Path
+
+          curated = Path("app/RELEASE_NOTES.md")
+          if curated.exists():
+              text = curated.read_text(encoding="utf-8").strip()
+          else:
+              tag = os.environ["RELEASE_TAG"]
+              versions = []
+              for item in subprocess.check_output(["git", "tag", "--list", "v*"], text=True).splitlines():
+                  if item == tag:
+                      continue
+                  parts = item.removeprefix("v").split(".")
+                  if len(parts) == 3 and all(part.isdigit() for part in parts):
+                      versions.append((tuple(map(int, parts)), item))
+              previous = max(versions)[1] if versions else None
+              revision = f"{previous}..HEAD" if previous else "HEAD"
+              text = subprocess.run(["git", "log", revision, "--no-merges", "--pretty=format:- %s", "-n", "10"], check=True, text=True, capture_output=True).stdout.strip()
+          if not text:
+              text = "Förbättringar och rättelser."
+          if len(text) > 1800:
+              text = text[:1800].rstrip() + "…"
+          Path("release-notes.txt").write_text(text, encoding="utf-8")
+          PY
+      - name: Create and validate shared updater manifest
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from urllib.parse import quote
+
+          version = os.environ["RELEASE_VERSION"]
+          base = os.environ["RELEASES_PAGES_URL"] + ("/test" if os.environ["CHANNEL"] == "test" else "")
+          files = Path("release-files")
+          windows = f"Trader_go_{version}_x64-setup.exe"
+
+          def signature(name):
+              value = (files / f"{name}.sig").read_text(encoding="utf-8").strip()
+              if not value:
+                  raise SystemExit(f"Empty updater signature for {name}")
+              return value
+
+          def public_url(name):
+              return f"{base}/{quote(name)}"
+
+          manifest = {
+              "version": version,
+              "notes": Path("release-notes.txt").read_text(encoding="utf-8").strip(),
+              "pub_date": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+              "platforms": {
+                  "windows-x86_64": {"signature": signature(windows), "url": public_url(windows)},
+                  "windows-x86_64-nsis": {"signature": signature(windows), "url": public_url(windows)},
+              },
+          }
+          required = {"windows-x86_64", "windows-x86_64-nsis"}
+          if manifest["version"] != version or set(manifest["platforms"]) != required:
+              raise SystemExit("The updater manifest is incomplete")
+          Path("latest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          PY
+      - name: Create first-time download page
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import html
+          import os
+          from pathlib import Path
+          from urllib.parse import quote
+
+          version = os.environ["RELEASE_VERSION"]
+          channel = os.environ["CHANNEL"]
+          assets = [("Windows (64-bit)", f"Trader_go_{version}_x64-setup.exe")]
+          links = "\n".join(f'<li><a href="{quote(filename)}">{html.escape(label)}</a></li>' for label, filename in assets)
+          page = f'''<!doctype html><html lang="sv"><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+          <meta name="robots" content="noindex">
+          <title>Hämta Trader_go</title><style>body{{font:18px system-ui;max-width:720px;margin:64px auto;padding:0 24px;background:#101211;color:#ecefed}}a{{color:#5aa56f}}li{{margin:18px 0}}</style>
+          <h1>Hämta Trader_go {html.escape(version)}</h1><p>Kanal: {html.escape(channel)}</p><ul>{links}</ul>
+          <p>Forskningsverktyg. Inga riktiga pengar.</p></html>'''
+          Path("downloads.html").write_text(page, encoding="utf-8")
+          PY
+      - name: Require public updates site credentials
+        shell: bash
+        run: |
+          test -n "$RELEASES_DEPLOY_KEY" || { echo "Repository secret RELEASES_DEPLOY_KEY is missing; refusing a partial release." >&2; exit 1; }
+      - name: Publish the complete update set atomically to GitHub Pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          key_path="$RUNNER_TEMP/releases_deploy_key"
+          printf '%s\n' "$RELEASES_DEPLOY_KEY" > "$key_path"
+          chmod 600 "$key_path"
+          export GIT_SSH_COMMAND="ssh -i $key_path -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
+          site="$RUNNER_TEMP/updates-site"
+          git clone --quiet --depth 1 --branch gh-pages "git@github.com:${RELEASES_REPO}.git" "$site"
+          destination="$site"
+          if [ "$CHANNEL" = "test" ]; then destination="$site/test"; fi
+          mkdir -p "$destination"
+          find "$destination" -maxdepth 1 -type f \( -name '*.exe' -o -name '*.sig' -o -name 'latest.json' -o -name 'downloads.html' \) -delete
+          cp release-files/* "$destination/"
+          cp latest.json downloads.html "$destination/"
+          git -C "$site" checkout --quiet --orphan publish
+          git -C "$site" add -A
+          git -C "$site" -c user.name="trader-go-ci" -c user.email="ci@trader-go.invalid" commit --quiet -m "Trader_go $RELEASE_VERSION ($CHANNEL)"
+          git -C "$site" push --quiet --force origin publish:gh-pages
+          rm -f "$key_path"
+      - name: Verify every public updater URL
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' > "$RUNNER_TEMP/updater-urls.txt"
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path("latest.json").read_text(encoding="utf-8"))
+          print(*[item["url"] for item in manifest["platforms"].values()], sep="\n")
+          PY
+          while IFS= read -r url; do
+            ok=false
+            for attempt in $(seq 1 24); do
+              status="$(curl --silent --show-error --head --output /dev/null --write-out '%{http_code}' "$url" || true)"
+              if [ "$status" = "200" ]; then ok=true; break; fi
+              sleep 10
+            done
+            $ok || { echo "Public updater URL did not return HTTP 200: $url" >&2; exit 1; }
+          done < "$RUNNER_TEMP/updater-urls.txt"
+      - name: Publish stable GitHub release
+        if: ${{ needs.version.outputs.channel == 'stable' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.version.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          generate_release_notes: true
+          files: |
+            release-files/*
+            latest.json
+            downloads.html
+
+      - name: Publish test pre-release
+        # Test-bygget läggs som en förhandsversion under Releases så att det går att ladda ner direkt i repot.
+        # Den är inte "Latest" och rör inte uppdateringssidans rot, så den stabila appen märker ingenting.
+        if: ${{ needs.version.outputs.channel == 'test' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: test-v${{ needs.version.outputs.version }}
+          target_commitish: ${{ github.sha }}
+          name: Testbygge ${{ needs.version.outputs.version }} (inte släppt)
+          prerelease: true
+          make_latest: "false"
+          body: |
+            Testbygge av Trader_go ${{ needs.version.outputs.version }} från commit ${{ github.sha }}. Inte släppt.
+
+            Testbygget heter "Trader_go Updater Test" och har eget program-id, så det kan installeras vid sidan av den vanliga appen utan att ersätta den. Det söker uppdateringar bara mot testkanalen.
+            Släpp på riktigt genom att köra arbetsflödet med channel = stable.
+          files: |
+            release-files/*.exe

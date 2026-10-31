@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Minimala rättigheter: uppdatering och omstart. Appen visar bara och ansluter inte till något annat.",
+  "windows": ["main"],
+  "permissions": ["core:default", "updater:default", "process:allow-restart"]
+}
