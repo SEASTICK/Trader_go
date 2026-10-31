@@ -14,7 +14,7 @@ Arbetsflödet måste ligga på `main` för att kunna startas.
 
 ## Så släpper du
 
-1. **Förbered versionen.** Låt `app/package.json`, `app/src-tauri/tauri.conf.json` och `app/src-tauri/Cargo.toml` ha samma version. Lämna fältet *version* tomt i Run workflow så höjs patchnumret automatiskt efter senaste `vX.Y.Z`-taggen. Skriv `app/RELEASE_NOTES.md` om du vill ha egna anteckningar, annars används de senaste commit-meddelandena.
+1. **Förbered versionen.** Låt `app/package.json`, `app/src-tauri/tauri.conf.json` och `app/src-tauri/Cargo.toml` ha samma version. Lämna fältet *version* tomt i Run workflow så blir det föregående version +1 (patch). Både stable- och test-releaser räknas, så numren går bara uppåt. Skriv ett eget nummer bara när du vill ändra mellan- eller huvudversion (till exempel `0.2.0`). Skriv `app/RELEASE_NOTES.md` om du vill ha egna anteckningar, annars används de senaste commit-meddelandena.
 2. **Kör `test` först.** Run workflow med `channel = test`. Vänta tills `version`, `build-windows` och `publish` är gröna, och `approve` är **hoppad över** (grå).
 3. **Kontrollera testet.**
    - `https://seastick.github.io/trader-go-releases/test/latest.json` finns och innehåller `windows-x86_64` och `windows-x86_64-nsis`.
