@@ -1,0 +1,39 @@
+# Run the desktop app's checks on every pull request. Builds nothing and publishes nothing;
+# releases are handled by release.yml on pushes to main.
+name: CI
+
+on:
+  pull_request:
+    paths:
+      - "app/**"
+      - ".github/workflows/**"
+
+# A newer push to the same PR replaces the older run.
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.platform }}
+    defaults:
+      run:
+        working-directory: app/src-tauri
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: app/src-tauri
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets -- -D warnings
+      - run: cargo test

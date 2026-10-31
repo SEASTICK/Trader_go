@@ -14,7 +14,8 @@ used only to check for updates.
 | `src-tauri/src/updater.rs` | Update check, download, install |
 | `src-tauri/src/activity.rs` | Running paper sessions and backtests (install waits for them) |
 | `src-tauri/src/safety.rs` | Paper-only guard |
-| `../.github/workflows/release.yml` | Test, build, sign, publish |
+| `../.github/workflows/release.yml` | Test, build, sign, publish (push to `main`) |
+| `../.github/workflows/ci.yml` | fmt, clippy and tests on macOS and Windows (every PR) |
 
 ## Develop
 
