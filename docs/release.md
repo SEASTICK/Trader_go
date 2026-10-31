@@ -46,3 +46,10 @@ Taggar som startar arbetsflödet ska bara vara `v*`. Versionsberäkningen läser
 - Uppdateringssidan är publik, så installationsfilerna kan hämtas av vem som helst. Lägg inte känsliga strategier eller data i appen.
 - Mac är inte med. Att lägga till det kräver en matris som i Vinstlys `desktop-release.yml` och, för signering på riktigt, ett Apple Developer-konto.
 - Testa godkännandeskriptet lokalt: `bash .github/scripts/test_wait_for_approval.sh`.
+
+## Tid och Actions-minuter
+
+- Windows-körningar räknas dubbelt mot Linux i privata repon på gratisplanen, så de görs bara när det behövs.
+- `app-check.yml` (Linux, cirka 1 minut) körs vid ändringar i `app/`. `windows-build.yml` körs bara vid ändringar i `app/src-tauri/`, i paketfilerna eller i release-flödena.
+- Rust-biblioteken cachas (`rust-cache`). Första bygget efter ändrade beroenden eller ny Rust-version tar cirka 14 minuter, vanliga bygge cirka 5 minuter.
+- Appens uppdatering laddar ner hela installationsfilen. Tauris uppdaterare har ingen delta-uppdatering.

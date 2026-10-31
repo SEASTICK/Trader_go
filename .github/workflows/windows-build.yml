@@ -1,13 +1,25 @@
 name: Windows check
 
-# Ren kontroll vid pull request: testar och bygger installationsfilen utan att publicera något.
-# Releaser görs bara via desktop-release.yml (Run workflow). Se docs/release.md.
+# Ren kontroll vid pull request: bygger Windows-programmet utan att publicera något.
+# Körs bara när något som påverkar Windows-bygget ändras. Vanliga ändringar i gränssnittet
+# kontrolleras av app-check.yml på Linux (billigare). Releaser görs via desktop-release.yml.
 on:
   pull_request:
+    paths:
+      - "app/src-tauri/**"
+      - "app/package.json"
+      - "app/package-lock.json"
+      - ".github/workflows/windows-build.yml"
+      - ".github/workflows/desktop-release.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
+
+# Ny push till samma PR avbryter den gamla körningen, så ingen betalar för ett föråldrat bygge.
+concurrency:
+  group: windows-check-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -23,14 +35,19 @@ jobs:
           cache: npm
           cache-dependency-path: app/package-lock.json
       - uses: dtolnay/rust-toolchain@stable
+      # Samma nyckel och samma --target som release-bygget (jobbet heter build-windows där), så att
+      # kontrollen återanvänder de färdigkompilerade biblioteken som release-körningarna sparat på main.
+      # Kontrollen sparar ingen egen cache (save-if), för PR-cacher kan ändå inte delas vidare.
       - uses: swatinem/rust-cache@v2
         with:
           workspaces: app/src-tauri
+          shared-key: build-windows
+          save-if: ${{ github.ref == 'refs/heads/main' }}
       - run: npm ci
-      - run: npm test
       # Utan signeringsnyckel: uppdateringsfilerna stängs av här. Riktiga släpp signeras i desktop-release.yml.
-      - run: npm run tauri build -- --bundles nsis --config '{"bundle":{"createUpdaterArtifacts":false}}'
+      - run: npm run tauri build -- --target x86_64-pc-windows-msvc --bundles nsis --config '{"bundle":{"createUpdaterArtifacts":false}}'
       - uses: actions/upload-artifact@v4
         with:
           name: Trader_go-windows-installer
-          path: app/src-tauri/target/release/bundle/nsis/*.exe
+          path: app/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
+          retention-days: 7
