@@ -12,6 +12,8 @@ permissions:
 jobs:
   build:
     runs-on: windows-latest
+    permissions:
+      contents: write # behövs bara för att publicera releasen
     defaults:
       run:
         working-directory: app
@@ -32,3 +34,16 @@ jobs:
         with:
           name: Trader_go-windows-installer
           path: app/src-tauri/target/release/bundle/nsis/*.exe
+      - name: Publicera release "latest" (bara vid push till main)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        working-directory: ${{ github.workspace }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release delete latest --cleanup-tag --yes || true
+          gh release create latest app/src-tauri/target/release/bundle/nsis/*.exe \
+            --prerelease \
+            --target "$GITHUB_SHA" \
+            --title "Trader_go (senaste main)" \
+            --notes "Automatiskt bygge av commit ${GITHUB_SHA::7}. Inte kodsignerad. Inga riktiga pengar."

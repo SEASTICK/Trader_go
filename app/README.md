@@ -31,7 +31,9 @@ npm run tauri build   # bygger installationsfilen
 ```
 
 GitHub Actions (`.github/workflows/windows-build.yml`) bygger en installationsfil (`.exe`) vid
-varje pull request och push till `main`. Ladda ner den under körningens **Artifacts**.
+varje pull request (ladda ner under körningens **Artifacts**) och vid varje push till `main`.
+Vid push till `main` publiceras den också under **Releases** som `latest` (senaste bygget
+ersätter det förra).
 
 Installationsfilen är **inte kodsignerad**, så Windows kan visa "okänd utgivare" första
 gången. Välj "Mer info" och "Kör ändå".
