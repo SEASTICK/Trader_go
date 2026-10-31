@@ -14,6 +14,9 @@ göra så används rätt skill.
 | `hamta-data` | Historik ska hämtas från öppna källor eller kontrolleras. |
 | `papper-framat` | En strategi med `READY_FOR_PAPER` ska köras framåt på papper. |
 | `riskgranser` | Position, hävstång, short eller nödstopp ska dimensioneras. |
+| `release` | En ny version av appen ska släppas, eller en release-körning har misslyckats. |
+| `app-design` | Något i appen ska byggas eller ändras visuellt. |
+| `ny-ruta` | En ruta ska läggas till i Research, få riktiga siffror eller sållas. |
 
 ## Från andra, kopierade och fastlåsta
 
@@ -24,17 +27,15 @@ genomgång. Alla är MIT-licensierade, och licensen ligger i varje mapp som `LIC
 |---|---|---|
 | `backtest-expert` | [tradermonty/claude-trading-skills](https://github.com/tradermonty/claude-trading-skills) | `94c5835` |
 | `obsidian-markdown`, `obsidian-bases`, `obsidian-cli`, `json-canvas` | [kepano/obsidian-skills](https://github.com/kepano/obsidian-skills) | `3ccff53` |
-| `omni-auth`, `cli-serve`, `omni-combos-routing` | [diegosouzapw/OmniRoute](https://github.com/diegosouzapw/OmniRoute) | `b2a6410` |
 
 Enda ändringar: sökvägen i `backtest-expert` pekar på `.claude/skills/`, och dess tester är
 borttagna.
 
 ## Att veta
 
-- **OmniRoute** är en AI-gateway för att välja och byta AI-modell. Den gör inte strategin
-  bättre, och skillsen gör inget förrän ni själva installerat och startat den. Ruttar ni till
-  externa eller gratis leverantörer kan era prompter och strategiidéer skickas dit. Kontrollera
-  också att användningen följer varje leverantörs villkor.
+- **OmniRoute-skillsen** (`omni-auth`, `cli-serve`, `omni-combos-routing`) är borttagna eftersom de inte
+  användes och tog plats i varje session. Vill ni ha dem igen: kopiera dem från
+  [diegosouzapw/OmniRoute](https://github.com/diegosouzapw/OmniRoute) (commit `b2a6410`) efter en ny genomgång.
 - **`obsidian-cli`** kräver att Obsidian är öppet och att dess kommandorad är påslagen.
 - **`backtest-expert`** är skriven med aktier som exempel, så anpassa den till krypto. Den
   täcker inte finansieringsränta eller likvidation. Det gör `granska-backtest`.
