@@ -54,7 +54,7 @@ export default function App() {
   return (
     <div className="shell">
       <aside className="sidebar">
-        <div className="brand"><span className="logo">T</span><b>Trader_go</b></div>
+        <div className="brand"><img src="/logo.svg" className="logo" alt="" /><b>Trader_go</b></div>
         <nav>
           {ALL_NAV.map((n) => (
             <button key={n.id} className={page === n.id ? "nav on" : "nav"} onClick={() => setPage(n.id)}>
@@ -89,11 +89,19 @@ export default function App() {
       </aside>
 
       <main>
-        <div className="topbar"><span className="saved"><i />Papper · inga riktiga pengar · {__COMMIT__}</span></div>
+        {updater.enabled && updater.notice.version && (updater.notice.status === "available" || updater.notice.status === "installing") && (
+          <div className="update-banner" role="status">
+            <span>Ny version <b>v{updater.notice.version}</b> finns. Du kör v{__APP_VERSION__}.</span>
+            <button type="button" className="btn accent" disabled={updater.notice.status === "installing"} onClick={() => { void updater.install(); }}>
+              {updater.notice.status === "installing" ? "Uppdaterar…" : "Uppdatera nu"}
+            </button>
+          </div>
+        )}
+        <div className="topbar"><span className="saved"><i />Papper · inga riktiga pengar · v{__APP_VERSION__}</span></div>
         {page === "Översikt" && <Overview go={(p) => setPage(p)} />}
         {page === "Research" && <Research />}
         {page === "Hypoteser" && <Hypotheses />}
-        {page === "Status" && <Status />}
+        {page === "Status" && <Status updater={updater} />}
         {page === "Papper" && <Page title="Papper" sub="Bara papper. Ingen riktig order läggs."><div className="card pad desk"><Paper /></div></Page>}
       </main>
 
