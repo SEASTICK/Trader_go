@@ -30,8 +30,13 @@ class Summary:
     passes: bool
 
     def to_dict(self) -> dict:
-        d = asdict(self)
-        d["sharpe_ci"] = list(self.sharpe_ci)
+        """Som ordlista för JSON. NaN (för lite data) blir None, eftersom NaN inte är giltig JSON."""
+        def clean(v):
+            if isinstance(v, float) and not np.isfinite(v):
+                return None
+            return v
+        d = {k: clean(v) for k, v in asdict(self).items()}
+        d["sharpe_ci"] = [clean(x) for x in self.sharpe_ci]
         return d
 
 

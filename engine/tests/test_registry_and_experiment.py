@@ -82,3 +82,13 @@ def test_run_experiment_writes_result_with_stress_and_control(repo):
     assert out["summary_stressed_costs"]["costs"] > out["summary"]["costs"]
     assert out["summary"]["t_required"] == 2.0  # 2 försök: max(2,0; 1,96)
     assert "random_label_t" in out and out["simulated"] is False
+
+
+def test_short_history_gives_valid_json_without_nan(repo):
+    (repo / "research/registry.md").write_text(TABLE)
+    git(repo, "add", "-A"); git(repo, "commit", "-qm", "reg")
+    bars = make_bars(120, seed=3)  # cirka 20 dagar: för lite för bootstrap
+    path = run_experiment("H-0002", repo, bars, examples.ma_cross, CostModel(), market="syn", interval="4h")
+    text = path.read_text()
+    assert "NaN" not in text
+    assert json.loads(text)["summary"]["sharpe_ci"] == [None, None]
