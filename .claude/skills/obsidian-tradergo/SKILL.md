@@ -14,7 +14,7 @@ No plugin, CLI or MCP server is needed, and none is used just to read a local fi
 |---|---|
 | Vault root | `research/` in this repo |
 | Approved folder | `research/TraderGO/` (the only place this skill reads or writes) |
-| Excluded | `research/.obsidian/`, and everything outside `research/TraderGO/` |
+| Excluded | `research/.obsidian/`, everything outside `research/TraderGO/`, and the generated `00 Dashboard/Project Map/` (written by `tools/project-map`; never edit it by hand) |
 | Access | Read/write for new notes and requested edits |
 | Attachments | May be read (images, PDFs) inside the approved folder |
 | Backlinks | Do not add links to existing notes without asking. New notes may contain links. |

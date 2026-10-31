@@ -1,0 +1,62 @@
+{
+	"root": "../..",
+	"vault": "research",
+	"output_dir": "research/TraderGO/00 Dashboard/Project Map",
+	"state_dir": "tools/project-map/.state",
+	"overview_name": "Project Map",
+
+	"respect_gitignore": true,
+	"include": ["**"],
+	"exclude": [
+		".git/", ".obsidian/", ".trash/", "node_modules/", "target/", "dist/", "gen/", "build/", "out/",
+		".env", ".env.*", "*.pem", "*.key", "*.p12", "*.pfx", "*.keystore", "*.jks",
+		"id_rsa*", "id_ed25519*", "id_ecdsa*", "credentials*.json", "secrets.*", "*.secret",
+		".cache/", ".vite/", ".next/", ".turbo/", ".parcel-cache/", "coverage/",
+		"__pycache__/", "*.pyc", ".venv/", "venv/", ".pytest_cache/", ".ruff_cache/", ".mypy_cache/", ".ipynb_checkpoints/",
+		"data/raw/", "data/clean/",
+		".DS_Store", "Thumbs.db", "*.log", "*.tmp", "*.swp", "*.swo", "*~", ".#*", "*.crdownload", ".~lock.*"
+	],
+	"no_parse": ["*.lock", "package-lock.json", "tools/project-map/config*.json"],
+
+	"debounce_ms": 1500,
+	"settle_ms": 400,
+	"reconcile_minutes": 10,
+	"max_parse_bytes": 1000000,
+	"max_hash_bytes": 20000000,
+
+	"overview_max_per_group": 18,
+	"layout": {
+		"node_width": 300,
+		"node_height": 110,
+		"gap_x": 40,
+		"gap_y": 30,
+		"group_padding": 40,
+		"group_gap": 120,
+		"group_columns": 3,
+		"canvas_columns": 3
+	},
+
+	"groups": [
+		{ "label": "Project rules and docs", "match": ["/*.md", "/.gitignore", "/.gitattributes"], "color": "6" },
+		{ "label": "Skills: ours", "color": "4", "match": [
+			".claude/skills/README.md",
+			".claude/skills/ny-hypotes/", ".claude/skills/granska-backtest/", ".claude/skills/pengar-grind/",
+			".claude/skills/forskningslogg/", ".claude/skills/hamta-data/", ".claude/skills/papper-framat/",
+			".claude/skills/riskgranser/", ".claude/skills/obsidian-tradergo/"
+		] },
+		{ "label": "Skills: third-party (pinned copies)", "match": [".claude/"], "color": "2" },
+		{ "label": "Research registry", "match": ["/research/*"], "color": "5" },
+		{ "label": "Vault: {dir}", "match": ["research/TraderGO/"], "split": "research/TraderGO", "color": "5" },
+		{ "label": "Vault: other", "match": ["research/"], "color": "5" },
+		{ "label": "App: icons", "match": ["app/src-tauri/icons/"], "color": "3" },
+		{ "label": "App: backend (Tauri, Rust)", "match": ["app/src-tauri/"], "color": "1" },
+		{ "label": "App: frontend", "match": ["app/"], "color": "2" },
+		{ "label": "CI and releases", "match": [".github/"], "color": "3" },
+		{ "label": "Tools", "match": ["tools/"] },
+		{ "label": "Data and reports", "match": ["data/", "reports/"] }
+	],
+
+	"aliases": [
+		{ "files": ".claude/skills/*/SKILL.md", "name": "{1}" }
+	]
+}

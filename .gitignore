@@ -7,3 +7,8 @@ data/raw/
 data/clean/
 .DS_Store
 research/.obsidian/workspace*.json
+
+# Project map (tools/project-map): generated per machine, never committed
+tools/project-map/.state/
+tools/project-map/config.local.json
+research/TraderGO/00 Dashboard/Project Map/
