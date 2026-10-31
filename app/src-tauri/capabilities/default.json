@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Minimala rättigheter. Appen visar bara och ansluter inte till något.",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}
