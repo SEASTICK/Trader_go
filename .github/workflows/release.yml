@@ -1,0 +1,169 @@
+# Test, build, sign and publish the TraderGO desktop app on every push to main.
+#
+# Order of safety: tests must pass -> both platforms build into a DRAFT release -> only then is
+# the release published. Installed apps read latest.json from the latest *published* release,
+# so a failed or cancelled run can never be offered as an update.
+#
+# Setup (secrets, variables, releases repo): see app/README.md.
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# One release at a time, in push order. Never cancel a run mid-upload.
+concurrency:
+  group: desktop-release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  # Public repo that only holds release files (the source repo is private).
+  RELEASES_REPO_NAME: ${{ vars.RELEASES_REPO_NAME || 'TraderGO-releases' }}
+
+jobs:
+  test:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: app/src-tauri
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: app/src-tauri
+      - name: Updater public key is configured
+        run: |
+          if grep -q REPLACE_WITH_TAURI_UPDATER_PUBLIC_KEY tauri.conf.json; then
+            echo "::error::Set plugins.updater.pubkey in app/src-tauri/tauri.conf.json (see app/README.md)."
+            exit 1
+          fi
+      - run: cargo fmt --check
+      - run: cargo clippy --all-targets -- -D warnings
+      - run: cargo test
+
+  version:
+    needs: test
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.v.outputs.version }}
+    steps:
+      # run_number only grows, so every release gets a unique, higher version.
+      - id: v
+        run: echo "version=0.1.${{ github.run_number }}" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: version
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - platform: macos-latest
+            args: --target universal-apple-darwin
+          - platform: windows-latest
+            args: ""
+    runs-on: ${{ matrix.platform }}
+    env:
+      VERSION: ${{ needs.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: app/src-tauri
+
+      - name: Require updater signing key
+        shell: bash
+        env:
+          KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        run: |
+          if [ -z "$KEY" ]; then
+            echo "::error::Secret TAURI_SIGNING_PRIVATE_KEY is missing; unsigned updates are never published."
+            exit 1
+          fi
+
+      - name: Set app version
+        shell: bash
+        working-directory: app/src-tauri
+        run: |
+          node -e '
+            const fs = require("fs");
+            const c = JSON.parse(fs.readFileSync("tauri.conf.json", "utf8"));
+            c.version = process.env.VERSION;
+            fs.writeFileSync("tauri.conf.json", JSON.stringify(c, null, 2));
+          '
+
+      # Apple signing and notarization run only when the secrets exist. Without them the build
+      # still works, but macOS will warn on first launch.
+      - name: Apple signing environment
+        if: runner.os == 'macOS'
+        shell: bash
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          if [ -n "$APPLE_CERTIFICATE" ]; then
+            for v in APPLE_CERTIFICATE APPLE_CERTIFICATE_PASSWORD APPLE_SIGNING_IDENTITY APPLE_ID APPLE_PASSWORD APPLE_TEAM_ID; do
+              echo "::add-mask::${!v}"
+              echo "$v=${!v}" >> "$GITHUB_ENV"
+            done
+          else
+            echo "::warning::Apple signing secrets not set; the macOS build is not signed or notarized."
+          fi
+
+      - run: npm ci
+        working-directory: app
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          projectPath: app
+          owner: ${{ github.repository_owner }}
+          repo: ${{ env.RELEASES_REPO_NAME }}
+          releaseCommitish: main
+          tagName: v${{ env.VERSION }}
+          releaseName: TraderGO v${{ env.VERSION }}
+          releaseBody: ${{ github.event.head_commit.message || 'Manual release.' }}
+          releaseDraft: true
+          prerelease: false
+          includeUpdaterJson: true
+          updaterJsonPreferNsis: true
+          args: ${{ matrix.args }}
+
+  publish:
+    needs: [version, build]
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.RELEASES_TOKEN }}
+      TAG: v${{ needs.version.outputs.version }}
+      RELEASES_REPO: ${{ github.repository_owner }}/${{ vars.RELEASES_REPO_NAME || 'TraderGO-releases' }}
+    steps:
+      - name: Check the draft is complete
+        run: |
+          gh release download "$TAG" --repo "$RELEASES_REPO" --pattern latest.json --dir .
+          for p in darwin-aarch64 darwin-x86_64 windows-x86_64; do
+            jq -e --arg p "$p" '.platforms[$p].signature | length > 0' latest.json > /dev/null \
+              || { echo "::error::latest.json has no signed entry for $p"; exit 1; }
+          done
+      - name: Publish
+        run: gh release edit "$TAG" --repo "$RELEASES_REPO" --draft=false --latest

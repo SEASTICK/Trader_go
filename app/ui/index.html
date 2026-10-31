@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TraderGO</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="main.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>TraderGO</h1>
+    <span class="badge">PAPER ONLY</span>
+    <span id="version" class="muted"></span>
+  </header>
+
+  <section id="update" class="card">
+    <div class="row">
+      <h2>Updates</h2>
+      <button id="check">Check for updates</button>
+    </div>
+    <p id="update-text" class="muted">Not checked yet.</p>
+    <progress id="progress" hidden></progress>
+    <details id="notes-box" hidden><summary>Release notes</summary><pre id="notes"></pre></details>
+    <div class="row">
+      <button id="download" hidden>Download</button>
+      <button id="install" hidden>Restart to update</button>
+      <label><input type="checkbox" id="auto"> Download updates automatically</label>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="row">
+      <h2>Activity</h2>
+      <span id="activity" class="muted"></span>
+    </div>
+    <p class="muted">Updates install only when nothing below is running.</p>
+    <div class="row">
+      <button data-toggle="paper">Start paper session</button>
+      <button data-toggle="backtest">Start backtest</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Paper trades</h2>
+    <form id="trade" class="row">
+      <input name="symbol" placeholder="BTCUSDT" required maxlength="32">
+      <select name="side"><option>long</option><option>short</option></select>
+      <input name="quantity" type="number" step="any" min="0" placeholder="Qty" required>
+      <input name="price" type="number" step="any" min="0" placeholder="Entry price" required>
+      <button>Log paper trade</button>
+    </form>
+    <table><thead><tr><th>#</th><th>Opened (UTC)</th><th>Symbol</th><th>Side</th><th>Qty</th><th>Entry</th></tr></thead>
+      <tbody id="trades"></tbody></table>
+  </section>
+
+  <footer id="error" class="error" hidden></footer>
+  <footer id="data" class="muted"></footer>
+</body>
+</html>

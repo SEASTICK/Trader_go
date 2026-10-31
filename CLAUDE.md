@@ -29,3 +29,10 @@ och kombinera små kanter utan att lura oss själva.
 Se [.claude/skills/README.md](.claude/skills/README.md). Våra egna regler går före
 tredjepartsskills. Säger `backtest-expert` "Deploy" betyder det ändå bara att idén får gå
 vidare till papper.
+
+## Skrivbordsappen
+
+`app/` är en Tauri-app för macOS och Windows. Den uppdateras via GitHub Releases när något
+pushas till `main` (se [app/README.md](app/README.md)). Appen är bara för papperstrading: lägg
+aldrig till mäklarkoppling, orderkod eller nyckellagring. Ändra aldrig `identifier` eller en
+utgiven migration i `db.rs`.
