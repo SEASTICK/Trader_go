@@ -54,6 +54,30 @@ run_experiment("H-0001", repo, bars, strategi, CostModel(fee_bps=10, spread_bps=
 eller om registret har ocommittade ändringar (regel 2 i `CLAUDE.md`). Den vägrar också om strategin tittar
 framåt. Resultatet sparas i `research/results/H-0001-<tid>.json` och skrivs aldrig över.
 
+## Maskininlärning (`traderlab/ml/`)
+
+- `features.build_features`: avkastning över flera horisonter, volatilitet, trend, RSI, ATR, läge i
+  intervallet, volym och kalender. Alla bara från historik (testas kolumn för kolumn mot look-ahead).
+- `labels`: etiketten är exakt en affär. Beslut vid stängning av t, in vid öppning t+1, ut vid öppning t+1+h.
+- `cv.PurgedKFold`: korsvalidering som gallrar överlappande etiketter och lägger till embargo.
+- `walkforward.walk_forward_proba` / `ml_strategy`: tränas om med jämna mellanrum, bara på exempel vars utfall
+  var kända vid tidpunkten. Modeller: `logistic` och `gbm`, med fast frö.
+- Bevisat i testerna: hittar en signal som finns (påhittad AR-data, över 55 % rätt) och hittar **ingen** i ren
+  slump (50 % ± 2). Klarar `check_no_lookahead`.
+
+## Från motor till app
+
+1. Registrera hypotesen i `research/registry.md` och committa.
+2. Koppla rutan till hypotes, data och strategi i `research/experiments.json`:
+   ```json
+   {"E-01": {"hypothesis": "H-0001", "market": "spot", "symbol": "BTCUSDT", "interval": "4h",
+             "strategy": {"name": "ml", "params": {"horizon": 1}},
+             "costs": {"fee_bps": 10, "spread_bps": 2, "slippage_bps": 5}}}
+   ```
+   Strategier: `buy_and_hold`, `ma_cross`, `zscore_reversion`, `ml`.
+3. `python -m traderlab batch` kör alla rutor med registrerad hypotes och ren data, och skriver
+   `app/data/results.json`. Rutor utan resultat förblir `SIM` i appen. Rutor med resultat märks `HISTORIK`.
+
 ## Vad motorn garanterar (och testar)
 
 | Regel | Var | Test |
@@ -67,6 +91,9 @@ framåt. Resultatet sparas i `research/results/H-0001-<tid>.json` och skrivs ald
 | Slumpade positioner ger inget t-värde före kostnader | `experiment.random_label_control` | `test_random_labels_have_no_edge_before_costs` |
 | Hypotes registrerad och committad före körning | `registry.require_registered` | `test_registry_and_experiment.py` |
 | t-krav: Bonferroni, ensidigt, minst 2,0 | `stats.t_krav` | `test_t_krav_matches_skill_and_app` |
+| Deflated Sharpe: sannolikhet att slå bästa tur efter N försök | `stats.deflated_sharpe` | `test_deflated_sharpe_falls_with_more_trials` |
+| ML tränas bara på kända utfall, gallrad CV med embargo | `ml/` | `test_ml.py` |
+| Batch kör bara registrerade rutor med ren data | `batch.run_all` | `test_batch.py` |
 | Newey-West-t på dagsavkastning, Sharpe med block-bootstrap | `stats`, `report.summarize` | `test_stats.py` |
 | Datakontroller: luckor, dubbletter, OHLC, noll/negativa priser, utstickare, stillastående pris, UTC, tidsjustering | `quality.check` | `test_quality.py` |
 | Kontrollsumma, aldrig överskriven rådata, ms och µs-tidsstämplar | `data.binance` | `test_binance.py` |

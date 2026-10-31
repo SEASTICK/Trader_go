@@ -28,6 +28,7 @@ class Summary:
     attempts: int
     t_required: float
     passes: bool
+    deflated_sharpe: float   # sannolikhet att resultatet slår bästa tur efter alla försök (0..1)
 
     def to_dict(self) -> dict:
         """Som ordlista för JSON. NaN (för lite data) blir None, eftersom NaN inte är giltig JSON."""
@@ -69,4 +70,5 @@ def summarize(res: BacktestResult, attempts: int, seed: int = 0) -> Summary:
         attempts=attempts,
         t_required=t_req,
         passes=t_nw >= t_req,
+        deflated_sharpe=stats.deflated_sharpe(daily.to_numpy(), max(attempts, 1)),
     )
