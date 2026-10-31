@@ -11,6 +11,7 @@ göra så används rätt skill.
 | `granska-backtest` | Ett resultat ska granskas innan beslut. |
 | `pengar-grind` | Riktiga pengar, nycklar eller hävstång kommer på tal. |
 | `forskningslogg` | Något ska in i Obsidian-anteckningarna. |
+| `obsidian-tradergo` | Läsa, söka, skapa eller länka anteckningar i `research/TraderGO/`. |
 
 ## Från andra, kopierade och fastlåsta
 
