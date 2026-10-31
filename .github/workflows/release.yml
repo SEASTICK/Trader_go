@@ -1,4 +1,6 @@
-# Test, build, sign and publish the Trader_go desktop app on every push to main.
+# Test, build, sign and publish the Trader_go desktop app. Manual only (Run workflow): the push
+# trigger is off because desktop-release.yml now publishes updates to the Pages site that installed
+# apps read (see docs/release.md). Running this would publish to a different releases repo.
 #
 # Order of safety: tests must pass -> both platforms build into a DRAFT release -> only then is
 # the release published. Installed apps read latest.json from the latest *published* release,
@@ -8,8 +10,6 @@
 name: Release
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 # One release at a time, in push order. Never cancel a run mid-upload.
