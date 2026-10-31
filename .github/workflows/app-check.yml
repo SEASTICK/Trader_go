@@ -1,0 +1,33 @@
+name: App check
+
+# Snabb och billig kontroll av gränssnittet på Linux: tester, typkontroll och bygge. Ingen Windows.
+on:
+  pull_request:
+    paths:
+      - "app/**"
+      - ".github/workflows/app-check.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: app-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
