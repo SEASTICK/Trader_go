@@ -4,6 +4,8 @@ import { LineChart } from "../components/Charts";
 import { Page, Segmented, SimChip } from "../components/ui";
 import { walk } from "../lib/sim";
 import { tKrav } from "../lib/stats";
+import registryMd from "../../../research/registry.md?raw";
+import { parseRegistry } from "../lib/registry";
 
 const PERIODS = { "1M": 30, "3M": 90, "6M": 180, "1 år": 365, "Max": 730 } as const;
 type Period = keyof typeof PERIODS;
@@ -24,7 +26,7 @@ export default function Overview({ go }: { go: (p: "Research") => void }) {
   const n = PERIODS[period];
   const rebase = (a: number[]) => { const s = a.slice(-n); return s.map((v) => (v / s[0]) * 100); };
   const labels = useMemo(() => labelsFor(n), [n]);
-  const attempts = 0;
+  const attempts = parseRegistry(registryMd).attempts;
   const idle = tracks.filter((t) => t.status === "Idé").length;
 
   return (
