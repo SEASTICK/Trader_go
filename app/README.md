@@ -18,6 +18,7 @@ cd src-tauri && cargo test
 |---|---|
 | `src/`, `data/` | Gränssnittet och datan det visar |
 | `src/desktop.tsx` | Flikarna *Uppdateringar* och *Papper*, syns bara i datorprogrammet |
+| `src/projectmap.tsx`, `src-tauri/src/project_map/` | Projektkartan, se [PROJEKTKARTA.md](PROJEKTKARTA.md) |
 | `src-tauri/src/main.rs` | Start och kommandon |
 | `src-tauri/src/db.rs` | SQLite, migreringar, säkerhetskopior |
 | `src-tauri/src/updater.rs` | Leta, ladda ner, installera uppdateringar |

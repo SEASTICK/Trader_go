@@ -4,13 +4,16 @@
 pub const TRADING_MODE: &str = "paper";
 
 /// Settings the UI may change. Anything else (e.g. a trading mode or API key) is refused.
-pub const ALLOWED_SETTINGS: &[&str] = &["auto_download"];
+pub const ALLOWED_SETTINGS: &[&str] = &["auto_download", "project_root"];
 
 pub fn check_setting(key: &str, value: &str) -> Result<(), String> {
     if !ALLOWED_SETTINGS.contains(&key) {
         return Err(format!(
             "inställningen '{key}' är inte tillåten i en app som bara kör papper"
         ));
+    }
+    if key == "project_root" && !std::path::Path::new(value).is_absolute() {
+        return Err("projektmappen måste vara en absolut sökväg".into());
     }
     if key == "auto_download" && value != "true" && value != "false" {
         return Err("auto_download måste vara true eller false".into());

@@ -7,7 +7,8 @@ type Tauri = {
 };
 const tauri = (window as unknown as { __TAURI__?: Tauri }).__TAURI__;
 export const isDesktop = tauri !== undefined;
-const invoke = <T,>(cmd: string, args?: Record<string, unknown>) => tauri!.core.invoke<T>(cmd, args);
+export const invoke = <T,>(cmd: string, args?: Record<string, unknown>) => tauri!.core.invoke<T>(cmd, args);
+export const listen = <T,>(name: string, cb: (e: { payload: T }) => void) => tauri!.event.listen<T>(name, cb);
 
 type AppInfo = { version: string; mode: string; data_dir: string; schema: number; auto_download: boolean };
 type Status = {

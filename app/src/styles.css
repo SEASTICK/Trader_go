@@ -22,3 +22,31 @@ input, select { font:inherit; padding:5px 8px; border:1px solid var(--line); bor
 progress { width:100%; }
 pre { white-space:pre-wrap; font-size:13px; }
 .error { color:#d93025; }
+
+/* Projektkarta */
+main:has(.pm) { max-width:none; padding:8px 12px; }
+.pm-bar { margin:6px 0; }
+.pm-bar > .muted:first-child { max-width:320px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.pm-kind { display:inline-flex; align-items:center; gap:4px; font-size:13px; }
+.pm-kind i { display:inline-block; width:18px; }
+.pm-body { display:flex; gap:10px; height:calc(100vh - 190px); min-height:360px; }
+.pm-canvas { flex:1; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+.pm-side { width:340px; overflow:auto; border:1px solid var(--line); border-radius:8px; padding:10px 12px; }
+.pm-side h3 { margin:0 0 4px; font-size:15px; word-break:break-all; }
+.pm-card { height:100%; box-sizing:border-box; border:1px solid var(--line); border-radius:6px; background:var(--bg); padding:6px 10px; display:flex; flex-direction:column; justify-content:center; overflow:hidden; font-size:12px; }
+.pm-card strong { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pm-card span { color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:11px; }
+.pm-card.sel { border-color:var(--accent); box-shadow:0 0 0 2px var(--accent); }
+.pm-card.dim { opacity:.25; }
+.pm-text { white-space:pre-wrap; justify-content:flex-start; }
+.pm-group { width:100%; height:100%; border:1.5px dashed var(--line); border-radius:10px; background:color-mix(in srgb, var(--accent) 4%, transparent); }
+.pm-group.collapsed { background:color-mix(in srgb, var(--accent) 10%, transparent); }
+.pm-group-head { background:none !important; color:var(--fg) !important; font-weight:600; padding:8px 12px !important; }
+.pm-group-head span { color:var(--muted); font-weight:400; }
+.pm-conflict { background:#fff4e5; color:#7a4100; border:1px solid #f0b46a; border-radius:6px; padding:8px 12px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.pm-preview { max-height:50vh; overflow:auto; background:color-mix(in srgb, var(--fg) 5%, transparent); padding:8px; border-radius:6px; }
+.pm-links { list-style:none; padding:0; margin:8px 0; font-size:13px; }
+.pm-links .link { background:none !important; color:var(--accent) !important; padding:0 !important; text-align:left; }
+.pm-card .react-flow__handle { width:7px; height:7px; background:var(--muted); opacity:0; }
+.pm-card:hover .react-flow__handle, .pm-card.sel .react-flow__handle { opacity:1; }
+.pm-group-head { display:block; text-align:left; }

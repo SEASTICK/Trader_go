@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import tracks from "../data/tracks.json";
 import { isDesktop, Paper, Updates } from "./desktop";
+// React Flow loads only when the map is opened, so the web build stays small.
+const ProjectMap = lazy(() => import("./projectmap").then((m) => ({ default: m.ProjectMap })));
 
 type Track = (typeof tracks)[number];
-type Tab = "Översikt" | "Research" | "Hypoteser" | "Status" | "Papper" | "Uppdateringar";
-const TABS: Tab[] = ["Översikt", "Research", "Hypoteser", "Status", ...(isDesktop ? (["Papper", "Uppdateringar"] as Tab[]) : [])];
+type Tab = "Översikt" | "Research" | "Hypoteser" | "Status" | "Projektkarta" | "Papper" | "Uppdateringar";
+const TABS: Tab[] = ["Översikt", "Research", "Hypoteser", "Status", ...(isDesktop ? (["Projektkarta", "Papper", "Uppdateringar"] as Tab[]) : [])];
 
 function Overview() {
   return (
@@ -104,6 +106,7 @@ export default function App() {
         {tab === "Research" && <Research />}
         {tab === "Hypoteser" && <Hypotheses />}
         {tab === "Status" && <Status />}
+        {tab === "Projektkarta" && <Suspense fallback={<p className="muted">Laddar…</p>}><ProjectMap /></Suspense>}
         {tab === "Papper" && <Paper />}
         {tab === "Uppdateringar" && <Updates />}
       </main>

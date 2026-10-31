@@ -3,6 +3,7 @@
 
 mod activity;
 mod db;
+mod project_map;
 mod safety;
 mod updater;
 
@@ -84,8 +85,11 @@ fn stop_activity(kind: String, state: State<'_, AppState>) -> Result<Counts, Str
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_opener::init())
         .setup(|app| {
-            let path = app.path().app_data_dir()?.join("tradergo.db");
+            let data_dir = app.path().app_data_dir()?;
+            let path = data_dir.join("tradergo.db");
             let conn = db::open(&path).map_err(|e| {
                 // Surface the reason instead of starting with an empty or half-migrated store.
                 let msg = format!(
@@ -95,6 +99,15 @@ fn main() {
                 eprintln!("{msg}");
                 msg
             })?;
+            let map_root = db::get_setting(&conn, "project_root")
+                .ok()
+                .flatten()
+                .map(std::path::PathBuf::from);
+            app.manage(project_map::MapService::start(
+                app.handle().clone(),
+                data_dir,
+                map_root,
+            ));
             app.manage(AppState {
                 db: Mutex::new(conn),
                 activity: Activity::default(),
@@ -114,6 +127,16 @@ fn main() {
             updater::check_for_update,
             updater::download_update,
             updater::install_update,
+            project_map::map_info,
+            project_map::map_choose_root,
+            project_map::map_refresh,
+            project_map::map_load,
+            project_map::map_save,
+            project_map::map_save_copy,
+            project_map::map_export,
+            project_map::map_preview,
+            project_map::map_reveal,
+            project_map::map_open_obsidian,
         ])
         .run(tauri::generate_context!())
         .expect("fel när Trader_go startades");
