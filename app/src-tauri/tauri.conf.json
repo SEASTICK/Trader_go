@@ -40,7 +40,7 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDNEODFFRTlFNTMyMEVBQjEKUldTeDZpQlRudTZCUFlXQWtFc3NZN0pTS2hOeVloRDQ2UmpXOU1mMVR2WXJtMDNRb3dDMmNqZFIK",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEVDMThFQjZDQ0I5MDg4MkYKUldRdmlKRExiT3NZN0o3aWxjUURjUmFQN3Y5RDRVc2xjMVBKdWpxWTJzdHlKdFZjUjlvRzBuNHQK",
       "endpoints": [
         "https://seastick.github.io/trader-go-releases/latest.json"
       ],
