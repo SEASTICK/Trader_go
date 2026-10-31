@@ -55,11 +55,11 @@ describe("checkForUpdate", () => {
   });
   it("nätverksfel blir ett begripligt felmeddelande", async () => {
     const r = await checkForUpdate(deps(async () => { throw new Error("request failed: timeout"); }), "0.1.0");
-    expect(r).toEqual({ kind: "error", message: text.error.networkCheck });
+    expect(r).toMatchObject({ kind: "error", message: text.error.networkCheck, detail: "request failed: timeout" });
   });
   it("signaturfel blir ett eget meddelande", async () => {
     const r = await checkForUpdate(deps(async () => { throw "signature verification failed"; }), "0.1.0");
-    expect(r).toEqual({ kind: "error", message: text.error.signature });
+    expect(r).toMatchObject({ kind: "error", message: text.error.signature, detail: "signature verification failed" });
   });
   it("Senare undertrycker frågan men inte uppdateringen", async () => {
     const storage = memory();

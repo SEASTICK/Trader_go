@@ -91,11 +91,19 @@ export default function App() {
       </aside>
 
       <main>
-        <div className="topbar"><span className="saved"><i />Papper · inga riktiga pengar · {__COMMIT__}</span></div>
+        {updater.enabled && updater.notice.version && (updater.notice.status === "available" || updater.notice.status === "installing") && (
+          <div className="update-banner" role="status">
+            <span>Ny version <b>v{updater.notice.version}</b> finns. Du kör v{__APP_VERSION__}.</span>
+            <button type="button" className="btn accent" disabled={updater.notice.status === "installing"} onClick={() => { void updater.install(); }}>
+              {updater.notice.status === "installing" ? "Uppdaterar…" : "Uppdatera nu"}
+            </button>
+          </div>
+        )}
+        <div className="topbar"><span className="saved"><i />Papper · inga riktiga pengar · v{__APP_VERSION__}</span></div>
         {page === "Översikt" && <Overview go={(p) => setPage(p)} />}
         {page === "Research" && <Research />}
         {page === "Hypoteser" && <Hypotheses />}
-        {page === "Status" && <Status />}
+        {page === "Status" && <Status updater={updater} />}
         {page === "Projektkarta" && <div className="desk"><Suspense fallback={<p className="muted">Laddar…</p>}><ProjectMap /></Suspense></div>}
         {page === "Papper" && <div className="desk"><Paper /></div>}
         {page === "Uppdateringar" && <div className="desk"><Updates /></div>}
