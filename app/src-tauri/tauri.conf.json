@@ -40,7 +40,7 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "BYTS_UT_MOT_PUBLIK_NYCKEL_FRAN_tauri_signer_generate",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDNEODFFRTlFNTMyMEVBQjEKUldTeDZpQlRudTZCUFlXQWtFc3NZN0pTS2hOeVloRDQ2UmpXOU1mMVR2WXJtMDNRb3dDMmNqZFIK",
       "endpoints": [
         "https://seastick.github.io/trader-go-releases/latest.json"
       ],
