@@ -130,6 +130,41 @@ h2 { font-size:17px; font-weight:650; letter-spacing:-.01em; }
 .update-banner { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:10px 40px; background:color-mix(in srgb,var(--accent) 12%,var(--card)); border-bottom:1px solid var(--line); flex-wrap:wrap; }
 .update-banner .btn { padding:8px 16px; }
 
+/* Research-rutor */
+.toolbar { display:flex; align-items:center; gap:12px; margin:0 0 16px; flex-wrap:wrap; }
+.rgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px; }
+.rtile { --tile:#5d6763; position:relative; display:flex; flex-direction:column; text-align:left; min-height:196px; padding:14px 14px 12px; border:0; border-radius:6px; background:var(--tile); color:#fff; cursor:pointer; transition:transform .15s,box-shadow .15s,filter .15s; }
+.rtile:hover { transform:translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,.25); filter:brightness(1.06); }
+.rtile:focus-visible { outline:3px solid var(--ink); outline-offset:2px; }
+[data-group="krypto"] { --tile:#9a6412; } [data-group="terminer"] { --tile:#7a4aa8; } [data-group="aktier"] { --tile:#2b67ad; } [data-group="makro"] { --tile:#237f7a; } [data-group="baslinje"] { --tile:#566160; }
+.rtile-top { display:flex; justify-content:space-between; align-items:center; font-size:12px; opacity:.9; }
+.sim-tag { font-size:9px; font-weight:700; letter-spacing:.1em; padding:2px 6px; border-radius:999px; background:rgba(255,255,255,.2); }
+.rtile-name { font-size:22px; font-weight:700; letter-spacing:-.02em; line-height:1.15; margin-top:8px; text-transform:uppercase; }
+.rtile-sub { font-size:12px; opacity:.85; margin-top:3px; }
+.rtile-mid { display:flex; align-items:flex-end; justify-content:space-between; gap:8px; margin-top:auto; padding-top:10px; }
+.rtile-ret { font-size:20px; font-weight:700; letter-spacing:-.02em; white-space:nowrap; padding:3px 9px; border-radius:8px; background:rgba(255,255,255,.95); }
+.rtile-ret.up { color:#1b7a3a; } .rtile-ret.down { color:#b3261e; }
+.rtile-mid .spark { flex-shrink:1; min-width:0; }
+.rtile .spark { color:#fff; opacity:.9; }
+.rtile-foot { display:flex; justify-content:space-between; gap:8px; font-size:11px; margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,.28); }
+.rtile-foot i { font-style:normal; opacity:.8; }
+.rtile .pass,.rtile .fail { font-weight:600; }
+.legend-groups { display:flex; gap:18px; flex-wrap:wrap; margin:16px 2px 0; color:var(--muted); font-size:12px; }
+.legend-groups span { display:inline-flex; align-items:center; gap:7px; }
+.gdot { width:10px; height:10px; border-radius:2px; background:var(--tile,#5d6763); display:inline-block; }
+.callout { margin:16px 0 0; padding:12px 16px; border-radius:12px; border:1px solid color-mix(in srgb,var(--warn) 50%,transparent); background:color-mix(in srgb,var(--warn) 9%,transparent); font-size:13px; line-height:1.55; }
+.banner-sim { display:flex; align-items:center; gap:12px; padding:10px 14px; margin:0 0 18px; border-radius:12px; background:color-mix(in srgb,var(--warn) 9%,transparent); border:1px solid color-mix(in srgb,var(--warn) 40%,transparent); font-size:13px; }
+.up { color:var(--good); } .down { color:var(--bad); } .pass { color:var(--good); } .fail { color:var(--bad); }
+.kpi b small { font-size:14px; font-weight:500; color:var(--muted); }
+.ttable { font-size:13px; } .ttr { display:grid; grid-template-columns:44px 1.1fr .8fr 1fr 1fr 1fr 1fr 1fr; gap:8px; padding:10px 24px; border-top:1px solid var(--line); align-items:center; }
+.ttr.head { color:var(--muted); font-size:12px; font-weight:600; border-top:0; }
+.checklist { margin:12px 0 0; padding-left:20px; line-height:1.8; color:var(--ink); }
+.rtile-foot .pass { color:#d6f5dd; } .rtile-foot .fail { color:#ffd6cf; }
+@media (max-width:760px) { .ttr { grid-template-columns:32px 1fr 1fr 1fr; } .ttr span:nth-child(n+5):not(:last-child) { display:none; } }
+.rsection { margin-top:28px; } .rsection:first-of-type { margin-top:4px; }
+.rsection-head { display:flex; align-items:baseline; gap:10px; margin:0 0 12px; flex-wrap:wrap; }
+.rsection-head h2 { font-size:18px; } .rsection-head .muted { font-size:13px; }
+.rsection-head .gdot { width:12px; height:12px; border-radius:3px; align-self:center; }
 /* Datorprogrammets sidor (Papper) */
 .desk .actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:14px 0; }
 .desk button { background:var(--accent); color:var(--on-accent); border:0; border-radius:10px; padding:8px 14px; font-weight:600; }

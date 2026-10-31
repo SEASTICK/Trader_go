@@ -24,8 +24,9 @@ cd src-tauri && cargo test
 | `src-tauri/src/activity.rs` | Pågående papperssessioner och backtester (installation väntar på dem) |
 | `src-tauri/src/safety.rs` | Spärr som håller appen på papper |
 | `../.github/workflows/desktop-release.yml` | Släpp (startas för hand), se [docs/release.md](../docs/release.md) |
-| `../.github/workflows/windows-build.yml` | Windows-installationsfil att ladda ner (varje PR) |
-| `../.github/workflows/ci.yml` | Rust- och frontendtester på macOS och Windows (varje PR) |
+| `../.github/workflows/windows-build.yml` | Windows-bygge och installationsfil (PR som rör Windows-bygget) |
+| `../.github/workflows/app-check.yml` | Frontendtester och bygge på Linux (PR som rör `app/`) |
+| `../.github/workflows/rust-check.yml` | fmt, clippy och Rust-tester på Linux (PR som rör `src-tauri/`) |
 
 ## Cloudflare Pages (görs av människa, inget hemligt i Git)
 

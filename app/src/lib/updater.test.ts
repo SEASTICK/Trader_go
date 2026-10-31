@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { checkForUpdate, installUpdate, snoozeUpdate, text, type UpdateHandle, type UpdaterDeps } from "./updater";
+import { checkForUpdate, installUpdate, shouldCheckOnFocus, snoozeUpdate, text, type UpdateHandle, type UpdaterDeps } from "./updater";
 import { compareVersions, isNewerVersion, readSnooze, shouldPromptForUpdate, UPDATE_SNOOZE_MS } from "./version";
 
 function memory(): UpdaterDeps["storage"] {
@@ -116,5 +116,13 @@ describe("installUpdate", () => {
   it("fel vid omstart är inte ett installationsfel", async () => {
     const d = deps(async () => handle("0.2.0"), { relaunch: async () => { throw new Error("redan omstartad"); } });
     expect(await installUpdate(d, "0.1.0", () => {})).toEqual({ ok: true });
+  });
+});
+
+describe("shouldCheckOnFocus", () => {
+  it("kontrollerar första gången och efter tio minuter, inte däremellan", () => {
+    expect(shouldCheckOnFocus(null, 1_000)).toBe(true);
+    expect(shouldCheckOnFocus(1_000, 1_000 + 9 * 60_000)).toBe(false);
+    expect(shouldCheckOnFocus(1_000, 1_000 + 10 * 60_000)).toBe(true);
   });
 });
