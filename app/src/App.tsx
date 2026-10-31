@@ -1,112 +1,109 @@
-import { useState } from "react";
-import tracks from "../data/tracks.json";
+import { useEffect, useRef, useState } from "react";
+import { Icon } from "./components/icons";
+import { Page, Segmented } from "./components/ui";
 import { isDesktop, Paper, Updates } from "./desktop";
+import Overview from "./pages/Overview";
+import Research from "./pages/Research";
+import Hypotheses from "./pages/Hypotheses";
+import Status from "./pages/Status";
 
-type Track = (typeof tracks)[number];
-type Tab = "Översikt" | "Research" | "Hypoteser" | "Status" | "Papper" | "Uppdateringar";
-const TABS: Tab[] = ["Översikt", "Research", "Hypoteser", "Status", ...(isDesktop ? (["Papper", "Uppdateringar"] as Tab[]) : [])];
+const NAV = [
+  { id: "Översikt", icon: "home" },
+  { id: "Research", icon: "flask" },
+  { id: "Hypoteser", icon: "list" },
+  { id: "Status", icon: "info" },
+] as const;
+// Bara i datorprogrammet; webbversionen har ingen Tauri-brygga.
+const DESKTOP_NAV = [
+  { id: "Papper", icon: "shield" },
+  { id: "Uppdateringar", icon: "down" },
+] as const;
+const ALL_NAV = isDesktop ? [...NAV, ...DESKTOP_NAV] : NAV;
+type PageId = (typeof NAV)[number]["id"] | (typeof DESKTOP_NAV)[number]["id"];
+type Theme = "Ljust" | "Mörkt" | "System";
 
-function Overview() {
-  return (
-    <section>
-      <h2>Översikt</h2>
-      <p>
-        Trader_go är en tradingbot som byggs för eget bruk. Vi forskar brett på flera spår
-        och går vidare med det som håller efter kostnader och efter att alla försök räknats.
-      </p>
-      <p>
-        Livscykel: <strong>Idé → Research</strong> → Fryst → Papper → Liten live → Live → Pensionerad.
-        Just nu är allt på <strong>Idé/Research</strong>. Inget är fryst, inget är på papper.
-      </p>
-      <p>Det är normalt att de flesta spår blir <code>REJECT</code>.</p>
-    </section>
-  );
-}
-
-function Research() {
-  return (
-    <section>
-      <h2>Research</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Spår</th>
-            <th>Marknad</th>
-            <th>Tidsram</th>
-            <th>Status</th>
-            <th>Utfall</th>
-            <th>Nästa steg</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tracks.map((t: Track) => (
-            <tr key={t.id}>
-              <td>
-                <strong>{t.id} {t.namn}</strong>
-                <div className="muted">{t.idé}</div>
-              </td>
-              <td>{t.marknad}</td>
-              <td>{t.tidsram}</td>
-              <td><span className="badge">{t.status}</span></td>
-              <td className="muted">Inga resultat än</td>
-              <td>{t.nästaSteg}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </section>
-  );
-}
-
-function Hypotheses() {
-  return (
-    <section>
-      <h2>Hypoteser</h2>
-      <p className="muted">
-        Kommer att läsa <code>research/registry.md</code> och visa antal försök och aktuellt
-        krav på t-värde. Registret finns inte än, eftersom ingen hypotes är registrerad.
-      </p>
-    </section>
-  );
-}
-
-function Status() {
-  return (
-    <section>
-      <h2>Status</h2>
-      <dl>
-        <dt>Version (commit)</dt><dd><code>{__COMMIT__}</code></dd>
-        <dt>Senaste ändring</dt><dd>{__COMMIT_MSG__ || "okänd"}</dd>
-        <dt>Byggd</dt><dd>{new Date(__BUILT_AT__).toLocaleString("sv-SE")}</dd>
-      </dl>
-      <p className="muted">Är commit-koden densamma hos dig och Edwin ser ni samma version.</p>
-    </section>
-  );
+function loadTheme(): Theme {
+  try { const t = localStorage.getItem("theme"); if (t === "Ljust" || t === "Mörkt" || t === "System") return t; } catch { /* ignoreras */ }
+  return "System";
 }
 
 export default function App() {
-  const [tab, setTab] = useState<Tab>("Översikt");
+  const [page, setPage] = useState<PageId>("Översikt");
+  const [theme, setTheme] = useState<Theme>(loadTheme);
+  const [menu, setMenu] = useState(false);
+  const [settings, setSettings] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === "System") root.removeAttribute("data-theme");
+    else root.setAttribute("data-theme", theme === "Mörkt" ? "dark" : "light");
+    try { localStorage.setItem("theme", theme); } catch { /* ignoreras */ }
+  }, [theme]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") { setSettings(false); setMenu(false); } };
+    const onClick = (e: MouseEvent) => { if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenu(false); };
+    window.addEventListener("keydown", onKey);
+    window.addEventListener("mousedown", onClick);
+    return () => { window.removeEventListener("keydown", onKey); window.removeEventListener("mousedown", onClick); };
+  }, []);
+
   return (
-    <>
-      <div className="banner">Inga riktiga pengar. Inga prognoser. Allt här är forskning.</div>
-      <header>
-        <h1>Trader_go</h1>
+    <div className="shell">
+      <aside className="sidebar">
+        <div className="brand"><span className="logo">T</span><b>Trader_go</b></div>
         <nav>
-          {TABS.map((t) => (
-            <button key={t} className={t === tab ? "active" : ""} onClick={() => setTab(t)}>
-              {t}
+          {ALL_NAV.map((n) => (
+            <button key={n.id} className={page === n.id ? "nav on" : "nav"} onClick={() => setPage(n.id)}>
+              <Icon name={n.icon} /> {n.id}
             </button>
           ))}
         </nav>
-      </header>
+        <div className="side-foot" ref={menuRef}>
+          {menu && (
+            <div className="popup" role="menu">
+              <div className="popup-head"><b>Trader_go</b><span className="muted">Privat forskning</span></div>
+              <button className="item" onClick={() => { setSettings(true); setMenu(false); }}><Icon name="settings" /> Inställningar</button>
+              <button className="item" onClick={() => setTheme(theme === "Mörkt" ? "Ljust" : "Mörkt")}>
+                <Icon name={theme === "Mörkt" ? "sun" : "moon"} /> Utseende <span className="muted right">{theme}</span>
+              </button>
+              <div className="item static"><Icon name="info" /> Om Trader_go <span className="muted right">{__COMMIT__}</span></div>
+            </div>
+          )}
+          <button className="user" onClick={() => setMenu(!menu)}>
+            <span className="avatar">TG</span>
+            <span className="who"><b>Trader_go</b><span className="muted">Privat forskning</span></span>
+            <span className="dots">···</span>
+          </button>
+        </div>
+      </aside>
+
       <main>
-        {tab === "Översikt" && <Overview />}
-        {tab === "Research" && <Research />}
-        {tab === "Hypoteser" && <Hypotheses />}
-        {tab === "Status" && <Status />}
-        {tab === "Papper" && <Paper />}
-        {tab === "Uppdateringar" && <Updates />}
+        <div className="topbar"><span className="saved"><i />Papper · inga riktiga pengar · {__COMMIT__}</span></div>
+        {page === "Översikt" && <Overview go={(p) => setPage(p)} />}
+        {page === "Research" && <Research />}
+        {page === "Hypoteser" && <Hypotheses />}
+        {page === "Status" && <Status />}
+        {page === "Papper" && <Page title="Papper" sub="Bara papper. Ingen riktig order läggs."><div className="card pad desk"><Paper /></div></Page>}
+        {page === "Uppdateringar" && <Page title="Uppdateringar" sub="Installerad version och nya versioner från GitHub."><div className="card pad desk"><Updates /></div></Page>}
       </main>
-    </>
+
+      {settings && (
+        <div className="overlay" onMouseDown={() => setSettings(false)}>
+          <div className="modal" role="dialog" aria-label="Inställningar" onMouseDown={(e) => e.stopPropagation()}>
+            <div className="modal-side"><h3>Inställningar</h3><button className="nav on">Allmänt</button></div>
+            <div className="modal-body">
+              <div className="modal-head"><h2>Allmänt</h2><button className="icon-btn" onClick={() => setSettings(false)} aria-label="Stäng"><Icon name="x" /></button></div>
+              <h4>Utseende</h4>
+              <div className="setting"><div><b>Färgtema</b><p className="muted">Sparas på den här datorn.</p></div>
+                <Segmented value={theme} options={["Ljust", "Mörkt", "System"]} onChange={setTheme} /></div>
+              <h4>Säkerhet</h4>
+              <div className="setting"><div><b>Inga riktiga pengar</b><p className="muted">Appen visar bara. Den handlar inte, ansluter inte till någon börs och hanterar inga nycklar.</p></div></div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

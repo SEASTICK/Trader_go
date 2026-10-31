@@ -52,7 +52,6 @@ export function Updates() {
 
   return (
     <section>
-      <h2>Uppdateringar</h2>
       <dl>
         <dt>Installerad version</dt><dd><code>{info?.version ?? "…"}</code></dd>
         <dt>Läge</dt><dd><span className="badge">{info?.mode ?? "paper"}</span></dd>
@@ -111,8 +110,7 @@ export function Paper() {
 
   return (
     <section>
-      <h2>Papper</h2>
-      <p className="muted">Bara papper. Ingen riktig order läggs. Uppdateringar installeras först när inget nedan pågår.</p>
+      <p className="muted">Uppdateringar installeras först när inget nedan pågår.</p>
       <div className="actions">
         <button onClick={() => toggle("paper")}>{counts.paper > 0 ? "Stoppa" : "Starta"} papperssession</button>
         <button onClick={() => toggle("backtest")}>{counts.backtest > 0 ? "Stoppa" : "Starta"} backtest</button>
