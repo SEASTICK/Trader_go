@@ -24,7 +24,7 @@ export function Sparkline({ data, w = 84, h = 26 }: { data: number[]; w?: number
 
 type Series = { name: string; data: number[]; cls: string };
 
-export function LineChart({ series, labels, height = 280 }: { series: Series[]; labels: string[]; height?: number }) {
+export function LineChart({ series, labels, height = 280, watermark = "SIMULERAD DATA" }: { series: Series[]; labels: string[]; height?: number; watermark?: string | null }) {
   const [ref, width] = useWidth<HTMLDivElement>();
   const [hover, setHover] = useState<number | null>(null);
   const padL = 8, padR = 52, padT = 12, padB = 26;
@@ -69,7 +69,7 @@ export function LineChart({ series, labels, height = 280 }: { series: Series[]; 
           </g>
         )}
       </svg>
-      <div className="watermark">SIMULERAD DATA</div>
+      {watermark && <div className="watermark">{watermark}</div>}
       {hover !== null && (
         <div className="tip" style={{ left: Math.min(width - 170, Math.max(0, x(hover) + 12)) }}>
           <div className="tip-date">{labels[hover]}</div>

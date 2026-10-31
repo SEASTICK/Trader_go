@@ -31,12 +31,25 @@ def main(argv: list[str] | None = None) -> int:
     f.add_argument("--start", required=True, help="ÅÅÅÅ-MM")
     f.add_argument("--end", required=True, help="ÅÅÅÅ-MM")
     f.add_argument("--funding", action="store_true", help="Hämta finansieringsränta i stället (bara um)")
+    b = sub.add_parser("batch", help="Kör alla registrerade rutor i research/experiments.json och exportera till appen")
+    b.add_argument("--only", nargs="*", help="Bara dessa rutor, till exempel E-01")
+    sub.add_parser("export", help="Exportera senaste resultat per ruta till app/data/results.json")
     k = sub.add_parser("krav", help="Krav på t-värde efter N försök")
     k.add_argument("n", type=int)
 
     a = p.parse_args(argv)
     if a.cmd == "krav":
         print(f"{stats.t_krav(a.n):.2f}")
+        return 0
+    if a.cmd in ("batch", "export"):
+        from . import batch
+        if a.cmd == "batch":
+            r = batch.run_all(REPO, only=a.only)
+            print(f"Körda: {', '.join(r.ran) or 'inga'}")
+            for tile, why in r.skipped.items():
+                print(f"Hoppade över {tile}: {why}")
+        out = batch.export_to_app(REPO)
+        print(f"Exporterade {len(out)} rutor till app/data/results.json")
         return 0
     if a.cmd == "fetch":
         kind = "funding" if a.funding else "klines"

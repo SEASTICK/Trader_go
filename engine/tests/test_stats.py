@@ -54,3 +54,25 @@ def test_bootstrap_ci_is_deterministic_and_contains_estimate():
 
 def test_max_drawdown():
     assert stats.max_drawdown([1.0, 1.2, 0.9, 1.3, 1.0]) == pytest.approx(0.9 / 1.2 - 1)
+
+
+def test_probabilistic_sharpe_basics():
+    rng = np.random.default_rng(3)
+    x = rng.normal(0, 0.01, 5000)
+    assert 0.0 <= stats.probabilistic_sharpe(x) <= 1.0
+    good = rng.normal(0.002, 0.01, 2000)
+    assert stats.probabilistic_sharpe(good) > 0.99
+
+
+def test_deflated_sharpe_falls_with_more_trials():
+    rng = np.random.default_rng(4)
+    x = rng.normal(0.0008, 0.01, 1500)
+    d1, d10, d1000 = (stats.deflated_sharpe(x, n) for n in (1, 10, 1000))
+    assert d1 > d10 > d1000
+    assert d1 == pytest.approx(stats.probabilistic_sharpe(x))
+
+
+def test_expected_max_sharpe_grows_with_trials():
+    v = 1 / 1000
+    assert stats.expected_max_sharpe(1, v) == 0.0
+    assert stats.expected_max_sharpe(10, v) < stats.expected_max_sharpe(100, v)

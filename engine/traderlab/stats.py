@@ -95,3 +95,54 @@ def max_drawdown(equity: pd.Series | np.ndarray) -> float:
         return 0.0
     peak = np.maximum.accumulate(e)
     return float(np.min(e / peak - 1))
+
+
+EULER_GAMMA = 0.5772156649015329
+
+
+def _moments(x: np.ndarray) -> tuple[float, float, float, int]:
+    a = np.asarray(x, dtype=float)
+    a = a[np.isfinite(a)]
+    n = a.size
+    sd = a.std(ddof=1) if n > 1 else 0.0
+    if n < 3 or sd == 0:
+        return 0.0, 0.0, 3.0, n
+    z = (a - a.mean()) / a.std(ddof=0)
+    return float(a.mean() / sd), float(np.mean(z**3)), float(np.mean(z**4)), n
+
+
+def probabilistic_sharpe(returns: np.ndarray | pd.Series, sr_benchmark: float = 0.0) -> float:
+    """Sannolikheten att den sanna Sharpe (per period) är större än sr_benchmark.
+
+    Bailey och López de Prado (2012). Tar hänsyn till snedhet och tjocka svansar.
+    """
+    sr, skew, kurt, n = _moments(np.asarray(returns))
+    if n < 3:
+        return float("nan")
+    denom = 1 - skew * sr + (kurt - 1) / 4 * sr**2
+    if denom <= 0:
+        return float("nan")
+    return _N.cdf((sr - sr_benchmark) * math.sqrt(n - 1) / math.sqrt(denom))
+
+
+def expected_max_sharpe(n_trials: int, var_trials: float) -> float:
+    """Förväntad bästa Sharpe (per period) bland n_trials försök utan någon riktig fördel."""
+    if n_trials < 2:
+        return 0.0
+    return math.sqrt(var_trials) * ((1 - EULER_GAMMA) * _N.inv_cdf(1 - 1 / n_trials)
+                                    + EULER_GAMMA * _N.inv_cdf(1 - 1 / (n_trials * math.e)))
+
+
+def deflated_sharpe(returns: np.ndarray | pd.Series, n_trials: int, var_trials: float | None = None) -> float:
+    """Deflated Sharpe Ratio (Bailey och López de Prado, 2014): sannolikheten att resultatet slår det
+    bästa man kan vänta sig av ren tur efter n_trials försök.
+
+    var_trials: variansen i Sharpe mellan försöken. Okänd: uppskattas med variansen för en Sharpe-skattning
+    utan fördel, (1 + (kurt-1)/4*0) / (n-1) ≈ 1/(n-1).
+    """
+    sr, skew, kurt, n = _moments(np.asarray(returns))
+    if n < 3:
+        return float("nan")
+    if var_trials is None:
+        var_trials = 1.0 / (n - 1)
+    return probabilistic_sharpe(returns, expected_max_sharpe(n_trials, var_trials))
