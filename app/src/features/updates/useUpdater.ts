@@ -16,6 +16,8 @@ export type UpdateNotice = {
   promptOpen?: boolean;
 };
 
+export type UpdateDiagnostics = { checkedAt: number; result: "current" | "available" | "error"; version?: string; detail?: string };
+
 const defaultDeps = (): UpdaterDeps => ({
   check: () => check({ timeout: 15_000 }),
   relaunch,
@@ -28,11 +30,18 @@ export function useUpdater(currentVersion: string, deps?: UpdaterDeps, enabled =
   const depsRef = useRef<UpdaterDeps | null>(null);
   const getDeps = () => (depsRef.current ??= deps ?? defaultDeps());
   const [notice, setNotice] = useState<UpdateNotice>({ status: "idle" });
+  const [diagnostics, setDiagnostics] = useState<UpdateDiagnostics | null>(null);
 
   const checkNow = useCallback(async (silent: boolean) => {
     if (!enabled) return;
     if (!silent) setNotice(current => ({ ...current, status: "checking", message: text.checking }));
     const outcome = await checkForUpdate(getDeps(), currentVersion);
+    setDiagnostics({
+      checkedAt: getDeps().now(),
+      result: outcome.kind,
+      version: outcome.kind === "available" ? outcome.version : undefined,
+      detail: outcome.kind === "error" ? outcome.detail : undefined,
+    });
     if (outcome.kind === "available") setNotice({ status: "available", version: outcome.version, notes: outcome.notes, date: outcome.date, promptOpen: outcome.prompt });
     else if (outcome.kind === "current") setNotice(current => (silent && current.status === "available" ? current : { status: silent ? "idle" : "current", message: silent ? undefined : text.upToDate }));
     else if (!silent) setNotice({ status: "error", message: outcome.message });
@@ -60,5 +69,7 @@ export function useUpdater(currentVersion: string, deps?: UpdaterDeps, enabled =
 
   const dismissError = useCallback(() => setNotice(current => ({ ...current, status: current.version ? "available" : "idle", promptOpen: false, message: undefined })), []);
 
-  return { enabled, notice, checkNow, install, later, dismissError };
+  const openPrompt = useCallback(() => setNotice(current => (current.status === "available" ? { ...current, promptOpen: true } : current)), []);
+
+  return { enabled, notice, diagnostics, checkNow, install, later, dismissError, openPrompt };
 }

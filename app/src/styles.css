@@ -127,3 +127,5 @@ h2 { font-size:17px; font-weight:650; letter-spacing:-.01em; }
 .update-actions { display:flex; gap:10px; align-items:center; margin-top:8px; flex-wrap:wrap; }
 .btn.accent { background:var(--accent); color:var(--on-accent); border-color:var(--accent); } .btn.accent:hover { background:var(--accent-h); }
 .btn:disabled,.item:disabled { opacity:.55; cursor:default; }
+.update-banner { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:10px 40px; background:color-mix(in srgb,var(--accent) 12%,var(--card)); border-bottom:1px solid var(--line); flex-wrap:wrap; }
+.update-banner .btn { padding:8px 16px; }
