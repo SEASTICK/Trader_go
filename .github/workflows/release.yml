@@ -1,4 +1,4 @@
-# Test, build, sign and publish the TraderGO desktop app on every push to main.
+# Test, build, sign and publish the Trader_go desktop app on every push to main.
 #
 # Order of safety: tests must pass -> both platforms build into a DRAFT release -> only then is
 # the release published. Installed apps read latest.json from the latest *published* release,
@@ -44,6 +44,17 @@ jobs:
             echo "::error::Set plugins.updater.pubkey in app/src-tauri/tauri.conf.json (see app/README.md)."
             exit 1
           fi
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      # Tauri embeds app/dist at compile time, so build the front end (also type-checks it).
+      - name: Build front end
+        working-directory: app
+        run: |
+          npm ci
+          npm run build
       - run: cargo fmt --check
       - run: cargo clippy --all-targets -- -D warnings
       - run: cargo test
@@ -142,7 +153,7 @@ jobs:
           repo: ${{ env.RELEASES_REPO_NAME }}
           releaseCommitish: main
           tagName: v${{ env.VERSION }}
-          releaseName: TraderGO v${{ env.VERSION }}
+          releaseName: Trader_go v${{ env.VERSION }}
           releaseBody: ${{ github.event.head_commit.message || 'Manual release.' }}
           releaseDraft: true
           prerelease: false

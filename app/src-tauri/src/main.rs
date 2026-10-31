@@ -89,7 +89,7 @@ fn main() {
             let conn = db::open(&path).map_err(|e| {
                 // Surface the reason instead of starting with an empty or half-migrated store.
                 let msg = format!(
-                    "TraderGO could not open its database at {}:\n\n{e}",
+                    "Trader_go kunde inte öppna sin databas på {}:\n\n{e}",
                     path.display()
                 );
                 eprintln!("{msg}");
@@ -116,5 +116,5 @@ fn main() {
             updater::install_update,
         ])
         .run(tauri::generate_context!())
-        .expect("error while running TraderGO");
+        .expect("fel när Trader_go startades");
 }

@@ -1,8 +1,8 @@
 [package]
-name = "tradergo"
+name = "trader-go"
 # The app version shown to users comes from tauri.conf.json, which CI sets per release.
 version = "0.1.0"
-description = "TraderGO desktop app (paper trading only)"
+description = "Trader_go research app (paper trading only)"
 edition = "2021"
 publish = false
 

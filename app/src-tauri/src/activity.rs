@@ -20,7 +20,7 @@ impl Activity {
         match kind {
             "paper" => Ok(&self.paper),
             "backtest" => Ok(&self.backtest),
-            _ => Err(format!("unknown activity '{kind}'")),
+            _ => Err(format!("okänd aktivitet '{kind}'")),
         }
     }
 
@@ -31,7 +31,13 @@ impl Activity {
 
     pub fn stop(&self, kind: &str) -> Result<Counts, String> {
         let c = self.counter(kind)?;
-        let _ = c.fetch_update(Ordering::SeqCst, Ordering::SeqCst, |n| n.checked_sub(1));
+        let mut n = c.load(Ordering::SeqCst);
+        while n > 0 {
+            match c.compare_exchange(n, n - 1, Ordering::SeqCst, Ordering::SeqCst) {
+                Ok(_) => break,
+                Err(current) => n = current,
+            }
+        }
         Ok(self.counts())
     }
 
@@ -49,7 +55,7 @@ impl Activity {
             return Ok(());
         }
         Err(format!(
-            "Update is ready but waits until {paper} paper session(s) and {backtest} backtest(s) have finished."
+            "Uppdateringen installeras när {paper} papperssession(er) och {backtest} backtest har avslutats."
         ))
     }
 }

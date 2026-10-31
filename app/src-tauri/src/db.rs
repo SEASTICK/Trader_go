@@ -43,13 +43,13 @@ const BACKUPS_KEPT: usize = 5;
 
 #[derive(Debug, thiserror::Error)]
 pub enum DbError {
-    #[error("database error: {0}")]
+    #[error("databasfel: {0}")]
     Sql(#[from] rusqlite::Error),
-    #[error("file error: {0}")]
+    #[error("filfel: {0}")]
     Io(#[from] std::io::Error),
     #[error(
-        "this database was created by a newer TraderGO (schema {found}, this version supports {supported}). \
-         Install the latest version; your data has not been changed"
+        "databasen skapades av en nyare Trader_go (schema {found}, den här versionen klarar {supported}). \
+         Installera senaste versionen; din data har inte ändrats"
     )]
     NewerSchema { found: usize, supported: usize },
 }

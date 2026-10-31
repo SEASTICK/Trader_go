@@ -57,19 +57,19 @@ fn with_update(mut s: Status, u: &Update) -> Status {
 pub fn friendly(err: &str) -> String {
     let e = err.to_lowercase();
     if e.contains("signature") || e.contains("minisign") || e.contains("pubkey") {
-        "The downloaded update failed signature verification and was discarded. Nothing was installed."
+        "Uppdateringen klarade inte signaturkontrollen och kastades. Ingenting installerades."
             .into()
     } else if e.contains("dns")
         || e.contains("connect")
         || e.contains("network")
         || e.contains("timed out")
     {
-        "Could not reach the update server. You may be offline; TraderGO keeps working with local data."
+        "Når inte uppdateringsservern. Du kan vara offline; Trader_go fungerar ändå med lokal data."
             .into()
     } else if e.contains("404") || e.contains("not found") {
-        "No published release was found on the update server yet.".into()
+        "Ingen publicerad version finns på uppdateringsservern än.".into()
     } else {
-        format!("Update failed: {err}")
+        format!("Uppdateringen misslyckades: {err}")
     }
 }
 
@@ -107,7 +107,7 @@ pub async fn check(app: &AppHandle) -> Status {
 pub async fn download(app: &AppHandle) -> Result<(), String> {
     let us = app.state::<UpdateState>();
     let Some(update) = us.available.lock().unwrap().clone() else {
-        return Err("No update to download. Check for updates first.".into());
+        return Err("Ingen uppdatering att ladda ner. Leta efter uppdateringar först.".into());
     };
     if us.downloading.swap(true, Ordering::SeqCst) {
         return Ok(());
@@ -191,7 +191,7 @@ pub fn install_update(
 ) -> Result<(), String> {
     state.activity.ensure_idle()?;
     let Some((update, bytes)) = us.ready.lock().unwrap().take() else {
-        return Err("No downloaded update is ready to install.".into());
+        return Err("Ingen nedladdad uppdatering är redo att installeras.".into());
     };
     if let Err(e) = update.install(&bytes) {
         // Keep the bytes so the user can retry; the installed app is untouched.
@@ -209,7 +209,7 @@ mod tests {
     #[test]
     fn errors_are_explained() {
         assert!(friendly("error sending request: dns error").contains("offline"));
-        assert!(friendly("minisign error: signature mismatch").contains("signature verification"));
-        assert!(friendly("status 404 Not Found").contains("No published release"));
+        assert!(friendly("minisign error: signature mismatch").contains("signaturkontrollen"));
+        assert!(friendly("status 404 Not Found").contains("Ingen publicerad version"));
     }
 }

@@ -1,125 +1,124 @@
-# TraderGO desktop app
+# Trader_go-appen
 
-A Tauri v2 desktop app for macOS and Windows. Paper trading only: the app has no broker
-connection, no order API and nowhere to store exchange keys. It works offline. The internet is
-used only to check for updates.
-
-## Layout
-
-| Path | What |
-|---|---|
-| `ui/` | Plain HTML/CSS/JS front end, with no build step |
-| `src-tauri/src/main.rs` | App setup and commands |
-| `src-tauri/src/db.rs` | SQLite store, migrations, backups |
-| `src-tauri/src/updater.rs` | Update check, download, install |
-| `src-tauri/src/activity.rs` | Running paper sessions and backtests (install waits for them) |
-| `src-tauri/src/safety.rs` | Paper-only guard |
-| `../.github/workflows/release.yml` | Test, build, sign, publish (push to `main`) |
-| `../.github/workflows/ci.yml` | fmt, clippy and tests on macOS and Windows (every PR) |
-
-## Develop
-
-Requires Rust (stable), Node 20+ and, on macOS, Xcode command-line tools.
+Vite + React + TypeScript. Samma gränssnitt körs som webbsida (Cloudflare Pages) och som
+datorprogram för macOS och Windows (Tauri v2). Appen handlar inte och ansluter inte till någon
+börs. Datorprogrammet fungerar offline; nätet används bara för att leta efter uppdateringar.
 
 ```bash
-cd app && npm ci
-npm run dev                       # run the app
-cd src-tauri && cargo test        # unit + signature tests
+cd app
+npm ci
+npm run dev           # webbsidan lokalt
+npm run tauri dev     # datorprogrammet lokalt (kräver Rust)
+cd src-tauri && cargo test
 ```
 
-## How updates work
+## Struktur
 
-1. A push to `main` runs `release.yml`. The app's tests must pass first.
-2. The version is `0.1.<run number>`, so every release is unique and higher than the last.
-   Runs are queued, never run in parallel.
-3. macOS (universal) and Windows builds are uploaded to a **draft** release. Each update package
-   is signed with the updater key.
-4. Only when both builds succeed and `latest.json` has a signed entry for every platform is the
-   draft published. Failed or cancelled runs stay as drafts, and installed apps never see them.
-5. The app checks `latest.json` at startup and when you click **Check for updates**. It
-   downloads in the background (you can turn this off), verifies the signature against the
-   public key built into the app, and shows **Restart to update**. If a paper session or
-   backtest is running, installation waits.
+| Sökväg | Vad |
+|---|---|
+| `src/`, `data/` | Gränssnittet och datan det visar |
+| `src/desktop.tsx` | Flikarna *Uppdateringar* och *Papper*, syns bara i datorprogrammet |
+| `src-tauri/src/main.rs` | Start och kommandon |
+| `src-tauri/src/db.rs` | SQLite, migreringar, säkerhetskopior |
+| `src-tauri/src/updater.rs` | Leta, ladda ner, installera uppdateringar |
+| `src-tauri/src/activity.rs` | Pågående papperssessioner och backtester (installation väntar på dem) |
+| `src-tauri/src/safety.rs` | Spärr som håller appen på papper |
+| `../.github/workflows/release.yml` | Testa, bygga, signera, publicera (push till `main`) |
+| `../.github/workflows/ci.yml` | Tester på macOS och Windows, plus en Windows-installationsfil att ladda ner (varje PR) |
 
-Updates are never installed by running `git pull` or code from the repository.
+## Cloudflare Pages (görs av människa, inget hemligt i Git)
 
-### Why a separate releases repo
+- Root directory: `app`
+- Build command: `npm run build`
+- Build output directory: `dist`
+- Skydda sidan med Cloudflare Access (e-post) så bara ni två kommer in.
 
-`SEASTICK/Trader_go` is private. An installed app cannot download from a private repo without a
-token, and a token built into the app could be extracted. Release files are therefore published
-to a small **public** repo, `SEASTICK/TraderGO-releases`, which holds only installers, update
-packages and `latest.json`. The source stays private. The installers are public, but they
-contain nothing secret.
+På webben syns inte flikarna Uppdateringar och Papper.
 
-If public installers are not acceptable, put the files behind your own update server or a
-signed-URL bucket, and change `plugins.updater.endpoints` in `tauri.conf.json`.
+## Så fungerar uppdateringar
 
-## Your data across updates
+1. En push till `main` kör `release.yml`. Testerna måste gå igenom först.
+2. Versionen blir `0.1.<körningsnummer>`, alltså unik och alltid högre. Körningarna köas.
+3. macOS (universal) och Windows byggs till en **utkast**-release. Varje uppdateringspaket
+   signeras med uppdateringsnyckeln.
+4. Först när båda byggena lyckats och `latest.json` har en signerad post per plattform
+   publiceras utkastet. Misslyckade körningar förblir utkast och syns aldrig för installerade appar.
+5. Appen letar vid start och via **Leta efter uppdateringar**, laddar ner i bakgrunden (kan
+   stängas av), kontrollerar signaturen mot den publika nyckeln i appen och visar **Starta om
+   och uppdatera**. Pågår en papperssession eller ett backtest väntar installationen.
 
-- Data lives in the OS app-data folder: `~/Library/Application Support/com.seastick.tradergo/`
-  on macOS, `%APPDATA%\com.seastick.tradergo\` on Windows. Installers replace the app, not this
-  folder.
-- **Never change `identifier` in `tauri.conf.json`.** The data folder is named after it.
-- Schema changes are new entries appended to `MIGRATIONS` in `db.rs`. Never edit a released entry.
-- Each migration runs in one transaction. If it fails, nothing changes and the app shows the
-  error.
-- Before migrating, a copy goes to `backups/` next to the database. The last 5 are kept.
-- If an older app opens a database from a newer version, it refuses and changes nothing.
-- A failed update download or signature check leaves the installed app as it was.
+Appen uppdateras aldrig med `git pull` eller genom att köra kod från repot.
 
-## One-time setup (for the repo owners)
+### Varför ett separat release-repo
 
-Nothing below has been done yet.
+`SEASTICK/Trader_go` är privat. En installerad app kan inte ladda ner från ett privat repo utan
+en token, och en token i appen går att plocka ut. Releasefilerna läggs därför i ett litet
+**publikt** repo, `SEASTICK/TraderGO-releases`, som bara innehåller installationsfiler,
+uppdateringspaket och `latest.json`. Källkoden förblir privat.
 
-### 1. Updater signing key (required)
+## Data mellan uppdateringar
 
-On your own machine, outside the repo:
+- Datan ligger i appens datamapp: `~/Library/Application Support/com.seastick.tradergo/` på
+  macOS, `%APPDATA%\com.seastick.tradergo\` på Windows. Installationen byter appen, inte mappen.
+- **Ändra aldrig `identifier` i `tauri.conf.json`.** Datamappen heter som den.
+- Schemaändringar läggs sist i `MIGRATIONS` i `db.rs`. Ändra aldrig en utgiven post.
+- Varje migrering körs i en transaktion. Misslyckas den ändras ingenting.
+- Före migrering sparas en kopia i `backups/` bredvid databasen. De 5 senaste behålls.
+- En äldre app vägrar öppna en databas från en nyare version och ändrar ingenting.
+- En misslyckad nedladdning eller signaturkontroll lämnar den installerade appen orörd.
+
+## Engångsinställning (för repoägarna)
+
+Inget av detta är gjort än. Tills steg 1 är klart stoppar `release.yml` vid nyckelkontrollen och
+publicerar ingenting.
+
+### 1. Uppdateringsnyckel (krävs)
+
+På egen dator, utanför repot:
 
 ```bash
 cd app && npx tauri signer generate -w ~/.tauri/tradergo-updater.key
 ```
 
-- Put the **public** key (contents of `~/.tauri/tradergo-updater.key.pub`) in
-  `src-tauri/tauri.conf.json` → `plugins.updater.pubkey`, and commit it. It is public by design.
-- Add the private key and its password as repository secrets (next step). Keep a backup of the
-  key in a password manager. **If it is lost, installed apps can never update again** and must
-  be reinstalled by hand.
+- Lägg den **publika** nyckeln (innehållet i `~/.tauri/tradergo-updater.key.pub`) i
+  `src-tauri/tauri.conf.json` → `plugins.updater.pubkey` och committa. Den är publik med flit.
+- Lägg den privata nyckeln och lösenordet som secrets (nästa steg). Spara en kopia i en
+  lösenordshanterare. **Försvinner nyckeln kan installerade appar aldrig uppdateras igen.**
 
-### 2. Repository secrets (Settings → Secrets and variables → Actions)
+### 2. Secrets (Settings → Secrets and variables → Actions)
 
-| Secret | Required | Value |
+| Secret | Krävs | Värde |
 |---|---|---|
-| `TAURI_SIGNING_PRIVATE_KEY` | yes | Contents of `~/.tauri/tradergo-updater.key` |
-| `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` | yes | Its password |
-| `RELEASES_TOKEN` | yes | Fine-grained token: **only** `TraderGO-releases`, permission *Contents: read and write*. Nothing else. |
-| `APPLE_CERTIFICATE` | macOS signing | Base64 of the *Developer ID Application* `.p12` |
-| `APPLE_CERTIFICATE_PASSWORD` | macOS signing | The `.p12` password |
-| `APPLE_SIGNING_IDENTITY` | macOS signing | e.g. `Developer ID Application: Name (TEAMID)` |
-| `APPLE_ID` | notarization | Apple ID email |
-| `APPLE_PASSWORD` | notarization | App-specific password for that Apple ID |
-| `APPLE_TEAM_ID` | notarization | 10-character team ID |
+| `TAURI_SIGNING_PRIVATE_KEY` | ja | Innehållet i `~/.tauri/tradergo-updater.key` |
+| `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` | ja | Lösenordet |
+| `RELEASES_TOKEN` | ja | Fine-grained token: **bara** `TraderGO-releases`, *Contents: read and write* |
+| `APPLE_CERTIFICATE` | macOS-signering | Base64 av *Developer ID Application*-`.p12` |
+| `APPLE_CERTIFICATE_PASSWORD` | macOS-signering | Lösenordet till `.p12` |
+| `APPLE_SIGNING_IDENTITY` | macOS-signering | t.ex. `Developer ID Application: Namn (TEAMID)` |
+| `APPLE_ID` | notarisering | Apple-ID |
+| `APPLE_PASSWORD` | notarisering | App-specifikt lösenord |
+| `APPLE_TEAM_ID` | notarisering | Team-ID (10 tecken) |
 
-Optional variable `RELEASES_REPO_NAME` if the releases repo has another name.
+Valfri variabel `RELEASES_REPO_NAME` om release-repot heter något annat.
 
-### 3. Releases repo
+### 3. Release-repo
 
-Create a public `SEASTICK/TraderGO-releases` with a README on `main` (releases need a commit to
-tag). If the name differs, update `endpoints` in `tauri.conf.json`.
+Skapa ett publikt `SEASTICK/TraderGO-releases` med en README på `main`. Heter det något annat,
+ändra `endpoints` i `tauri.conf.json`.
 
-### 4. Platform signing
+### 4. Plattformssignering
 
-- **macOS:** requires an Apple Developer Program membership (paid). Without it, builds still
-  work, but macOS blocks the first launch until you allow it in System Settings → Privacy &
-  Security. Updates are signature-checked either way.
-- **Windows:** unsigned installers trigger a SmartScreen warning. To sign them, add a
-  code-signing certificate or Azure Trusted Signing via `bundle.windows.signCommand`
-  ([Tauri docs](https://v2.tauri.app/distribute/sign/windows/)). Not set up yet.
+- **macOS:** kräver Apple Developer Program (betalt). Utan det fungerar bygget, men macOS
+  stoppar första starten tills man tillåter den under Systeminställningar → Integritet och
+  säkerhet. Uppdateringar kontrolleras med signatur ändå.
+- **Windows:** installationsfilen är inte kodsignerad, så Windows kan visa "okänd utgivare".
+  Välj "Mer info" och "Kör ändå". Signering kan läggas till via `bundle.windows.signCommand`.
 
-## Rules that stay
+## Regler som gäller
 
-- No live trading, no order execution, no broker or exchange credentials in this app. Moving
-  from paper to real money goes through the `pengar-grind` skill and an explicit decision.
-- `safety.rs` tests fail the build if a network, shell or HTTP plugin or a trading library is
-  added, or if a trade could be stored with a mode other than `paper`.
-- If a future feature needs a secret (e.g. a market-data API key), store it in the OS keychain
-  (`keyring` crate), never in SQLite, settings or the repo.
+- Ingen livehandel, ingen orderkod, inga mäklar- eller börsnycklar i appen. Från papper till
+  riktiga pengar går via skillen `pengar-grind` och ett uttryckligt beslut.
+- Testerna i `safety.rs` fäller bygget om ett nätverks-, shell- eller HTTP-tillägg eller ett
+  tradingbibliotek läggs till, eller om en affär kan sparas med annat läge än `paper`.
+- Behöver en framtida funktion en hemlighet (t.ex. en API-nyckel för marknadsdata), lägg den i
+  operativsystemets nyckelring (`keyring`), aldrig i SQLite, inställningar eller repot.

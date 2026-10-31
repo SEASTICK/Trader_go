@@ -9,11 +9,11 @@ pub const ALLOWED_SETTINGS: &[&str] = &["auto_download"];
 pub fn check_setting(key: &str, value: &str) -> Result<(), String> {
     if !ALLOWED_SETTINGS.contains(&key) {
         return Err(format!(
-            "setting '{key}' is not allowed in this paper-only app"
+            "inställningen '{key}' är inte tillåten i en app som bara kör papper"
         ));
     }
     if key == "auto_download" && value != "true" && value != "false" {
-        return Err("auto_download must be true or false".into());
+        return Err("auto_download måste vara true eller false".into());
     }
     Ok(())
 }
@@ -25,13 +25,13 @@ pub fn check_paper_trade(
     price: f64,
 ) -> Result<(), String> {
     if symbol.trim().is_empty() || symbol.len() > 32 {
-        return Err("symbol must be 1–32 characters".into());
+        return Err("symbolen måste vara 1–32 tecken".into());
     }
     if side != "long" && side != "short" {
-        return Err("side must be long or short".into());
+        return Err("riktningen måste vara long eller short".into());
     }
     if !(quantity.is_finite() && quantity > 0.0 && price.is_finite() && price > 0.0) {
-        return Err("quantity and price must be positive numbers".into());
+        return Err("antal och pris måste vara positiva tal".into());
     }
     Ok(())
 }
