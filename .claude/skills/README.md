@@ -11,6 +11,9 @@ göra så används rätt skill.
 | `granska-backtest` | Ett resultat ska granskas innan beslut. |
 | `pengar-grind` | Riktiga pengar, nycklar eller hävstång kommer på tal. |
 | `forskningslogg` | Något ska in i Obsidian-anteckningarna. |
+| `hamta-data` | Historik ska hämtas från öppna källor eller kontrolleras. |
+| `papper-framat` | En strategi med `READY_FOR_PAPER` ska köras framåt på papper. |
+| `riskgranser` | Position, hävstång, short eller nödstopp ska dimensioneras. |
 
 ## Från andra, kopierade och fastlåsta
 
