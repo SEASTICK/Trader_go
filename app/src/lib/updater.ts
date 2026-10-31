@@ -50,11 +50,18 @@ export type UpdaterDeps = {
 export type CheckOutcome =
   | { kind: "available"; version: string; notes: string; date: string | null; prompt: boolean }
   | { kind: "current" }
-  | { kind: "error"; message: string };
+  | { kind: "error"; message: string; detail: string };
 
 /** "Senare": fråga inte om samma version igen på ett dygn. */
 export function snoozeUpdate(storage: Pick<Storage, "setItem">, version: string, now: number) {
   try { storage.setItem(SNOOZE_KEY, JSON.stringify({ version, untilUnixMs: now + UPDATE_SNOOZE_MS })); } catch { /* ignoreras */ }
+}
+
+/** Pluginens egen feltext, för felsökning. Visas under Status. */
+export function rawReason(reason: unknown): string {
+  if (typeof reason === "string") return reason;
+  if (reason instanceof Error) return reason.message;
+  try { return JSON.stringify(reason) ?? String(reason); } catch { return String(reason); }
 }
 
 /** Översätter pluginens felmeddelanden till något användaren kan agera på. */
@@ -71,7 +78,7 @@ export function describeUpdateError(reason: unknown, phase: "check" | "install")
 export async function checkForUpdate(deps: UpdaterDeps, currentVersion: string): Promise<CheckOutcome> {
   let handle: UpdateHandle | null;
   try { handle = await deps.check(); }
-  catch (reason) { return { kind: "error", message: describeUpdateError(reason, "check") }; }
+  catch (reason) { return { kind: "error", message: describeUpdateError(reason, "check"), detail: rawReason(reason) }; }
   if (!handle) return { kind: "current" };
   // Pluginen kan i sällsynta fall peka på samma eller en äldre version. Det ska aldrig erbjudas.
   if (!isNewerVersion(handle.version, currentVersion)) {
