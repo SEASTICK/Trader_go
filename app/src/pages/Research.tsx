@@ -10,7 +10,13 @@ const VIEWS = ["Rutor", "Spår"] as const;
 type View = (typeof VIEWS)[number];
 const SORTS = ["Standard", "Namn", "Avkastning", "t-värde"] as const;
 type Sort = (typeof SORTS)[number];
-const GROUP_LABEL: Record<string, string> = { krypto: "Krypto", terminer: "Terminer", aktier: "Aktier", makro: "Makro / nyheter", baslinje: "Baslinje" };
+const GROUPS = [
+  { key: "krypto", label: "Krypto", desc: "Bitcoin och Ethereum, köpta och sålda direkt." },
+  { key: "terminer", label: "Krypto-terminer", desc: "Short och finansieringsränta. Kräver koll på likvidation." },
+  { key: "aktier", label: "Aktier", desc: "Aktier och index." },
+  { key: "makro", label: "Makro och volatilitet", desc: "Regimer, räntor och volatilitet över flera marknader." },
+  { key: "baslinje", label: "Baslinje", desc: "Köp-och-behåll. Det alla andra rutor måste slå efter kostnader." },
+];
 
 function Tile({ c, krav, onOpen }: { c: Computed; krav: number; onOpen: () => void }) {
   const up = c.avkastning >= 0;
@@ -21,7 +27,7 @@ function Tile({ c, krav, onOpen }: { c: Computed; krav: number; onOpen: () => vo
       <span className="rtile-name">{c.exp.namn}</span>
       <span className="rtile-sub">{c.exp.strategi}</span>
       <span className="rtile-mid">
-        <span className="rtile-ret">{up ? "▲" : "▼"} {pct(c.avkastning)}</span>
+        <span className={`rtile-ret ${up ? "up" : "down"}`}>{up ? "▲" : "▼"} {pct(c.avkastning)}</span>
         <Sparkline data={c.equity} w={92} h={34} />
       </span>
       <span className="rtile-foot">
@@ -62,12 +68,22 @@ export default function Research() {
             <Segmented value={sort} options={[...SORTS]} onChange={setSort} />
             <SimChip />
           </div>
-          <div className="rgrid">
-            {sorted.map((c) => <Tile key={c.exp.id} c={c} krav={krav} onOpen={() => setOpen(c.exp.id)} />)}
-          </div>
-          <div className="legend-groups">
-            {Object.entries(GROUP_LABEL).map(([k, v]) => <span key={k}><i className="gdot" data-group={k} />{v}</span>)}
-          </div>
+          {GROUPS.map((g) => {
+            const items = sorted.filter((c) => c.exp.grupp === g.key);
+            if (!items.length) return null;
+            return (
+              <section key={g.key} className="rsection">
+                <div className="rsection-head">
+                  <i className="gdot" data-group={g.key} />
+                  <h2>{g.label}</h2>
+                  <span className="muted">{items.length} {items.length === 1 ? "ruta" : "rutor"} · {g.desc}</span>
+                </div>
+                <div className="rgrid">
+                  {items.map((c) => <Tile key={c.exp.id} c={c} krav={krav} onOpen={() => setOpen(c.exp.id)} />)}
+                </div>
+              </section>
+            );
+          })}
           {(sort === "Avkastning" || sort === "t-värde") && (
             <p className="callout">
               <b>Se upp:</b> att sortera många rutor efter resultat ger alltid några "vinnare" av ren slump. Med {all.length} rutor är kravet på t-värde {num(krav, 1)}, inte 2. Av slump brukar flera rutor se bra ut, så titta på <i>över kravet</i>, antal affärer och om resultatet håller på ny data, inte bara på procenten.
