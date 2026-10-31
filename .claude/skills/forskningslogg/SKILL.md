@@ -23,8 +23,8 @@ Filnamn: `H-0001 kort namn.md`
 id: H-0001
 status: REJECT
 datum: 2026-11-01
-t: -0.14
-t_krav: 3.30
+t:
+t_krav:
 ren_data: false
 tags: [hypotes]
 ---
