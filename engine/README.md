@@ -75,6 +75,8 @@ framåt. Resultatet sparas i `research/results/H-0001-<tid>.json` och skrivs ald
              "costs": {"fee_bps": 10, "spread_bps": 2, "slippage_bps": 5}}}
    ```
    Strategier: `buy_and_hold`, `ma_cross`, `zscore_reversion`, `ml`.
+   Riskskydd (valfritt, rekommenderas): `"risk": {"target_vol": 0.02, "max_drawdown": 0.25, "max_daily_loss": 0.05}`
+   ger volatilitetsstyrd storlek, nödstopp och daglig förlustgräns utanför strategin (`traderlab/risk.py`).
 3. `python -m traderlab batch` kör alla rutor med registrerad hypotes och ren data, och skriver
    `app/data/results.json`. Rutor utan resultat förblir `SIM` i appen. Rutor med resultat märks `HISTORIK`.
 
@@ -110,6 +112,7 @@ paper.freeze(repo, "P-0001", "H-0001", spec, planned_trades=60, stop_rule="förl
 | Deflated Sharpe: sannolikhet att slå bästa tur efter N försök | `stats.deflated_sharpe` | `test_deflated_sharpe_falls_with_more_trials` |
 | ML tränas bara på kända utfall, gallrad CV med embargo | `ml/` | `test_ml.py` |
 | Batch kör bara registrerade rutor med ren data | `batch.run_all` | `test_batch.py` |
+| Riskskydd: volatilitetsstyrd storlek, nödstopp, daglig förlustgräns, utan look-ahead | `risk.py` | `test_risk.py` |
 | Papper: bara READY_FOR_PAPER, fryst, append-only, identiskt med backtest | `paper/engine.py` | `test_paper.py` |
 | Newey-West-t på dagsavkastning, Sharpe med block-bootstrap | `stats`, `report.summarize` | `test_stats.py` |
 | Datakontroller: luckor, dubbletter, OHLC, noll/negativa priser, utstickare, stillastående pris, UTC, tidsjustering | `quality.check` | `test_quality.py` |

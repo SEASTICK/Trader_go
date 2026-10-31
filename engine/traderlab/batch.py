@@ -56,7 +56,7 @@ def run_all(repo: Path, data_dir: Path | None = None, loader=binance.load, only:
             rep.skipped[tile] = "datakvalitet: " + "; ".join(q.problems)
             continue
         try:
-            run_experiment(spec["hypothesis"], repo, bars, build(spec["strategy"]["name"], spec["strategy"].get("params")),
+            run_experiment(spec["hypothesis"], repo, bars, build(spec["strategy"]["name"], spec["strategy"].get("params"), spec.get("risk")),
                            CostModel(**spec.get("costs", {})), market=f'{spec.get("market", "spot")} {spec["symbol"]}',
                            interval=spec["interval"], leverage=spec.get("leverage", 1.0), note=f"ruta {tile}")
             rep.ran.append(tile)

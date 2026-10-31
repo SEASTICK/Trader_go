@@ -21,7 +21,12 @@ FACTORIES: dict[str, Callable[..., Callable[[pd.DataFrame], pd.Series]]] = {
 }
 
 
-def build(name: str, params: dict | None = None) -> Callable[[pd.DataFrame], pd.Series]:
+def build(name: str, params: dict | None = None, risk: dict | None = None) -> Callable[[pd.DataFrame], pd.Series]:
+    """risk: valfria parametrar till traderlab.risk.risk_overlay (target_vol, max_drawdown, max_daily_loss ...)."""
     if name not in FACTORIES:
         raise ValueError(f"Okänd strategi: {name}. Tillåtna: {', '.join(FACTORIES)}")
-    return FACTORIES[name](**(params or {}))
+    strat = FACTORIES[name](**(params or {}))
+    if risk is not None:
+        from ..risk import risk_overlay
+        strat = risk_overlay(strat, **risk)
+    return strat
