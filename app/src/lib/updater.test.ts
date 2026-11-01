@@ -70,6 +70,20 @@ describe("checkForUpdate", () => {
 });
 
 describe("installUpdate", () => {
+  it("installerar inte när beforeInstall stoppar (pågående session)", async () => {
+    const install = vi.fn(async () => {});
+    const h = handle("0.2.0", install);
+    const d = deps(async () => h, { beforeInstall: async () => "Uppdateringen installeras när 1 papperssession(er) har avslutats." });
+    const r = await installUpdate(d, "0.1.0", () => {});
+    expect(r).toEqual({ ok: false, message: "Uppdateringen installeras när 1 papperssession(er) har avslutats." });
+    expect(install).not.toHaveBeenCalled();
+    expect(h.close).toHaveBeenCalled();
+  });
+  it("installerar när beforeInstall godkänner", async () => {
+    const d = deps(async () => handle("0.2.0"), { beforeInstall: async () => null });
+    expect(await installUpdate(d, "0.1.0", () => {})).toEqual({ ok: true });
+  });
+
   it("hämtar, rapporterar framsteg och startar om", async () => {
     const phases: string[] = [];
     const d = deps(async () => handle("0.2.0", async onEvent => {

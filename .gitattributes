@@ -1,2 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+# Signed test fixtures must stay byte-identical on every OS.
+app/src-tauri/tests/fixtures/** binary

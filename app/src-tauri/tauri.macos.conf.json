@@ -12,5 +12,11 @@
         "minHeight": 500
       }
     ]
+  },
+  "bundle": {
+    "targets": ["app", "dmg"],
+    "macOS": {
+      "minimumSystemVersion": "11.0"
+    }
   }
 }

@@ -51,3 +51,10 @@ pappersjournal i Obsidian. Använd den bara när någon uttryckligen ber om en O
   ändrad frontmatter kräver en fråga först.
 - Inga lösenord, nycklar eller kontouppgifter i anteckningar.
 - Stora dataset och resultattabeller ligger i repot, inte i Obsidian. Anteckningen länkar dit.
+
+## Skrivbordsappen
+
+`app/` är en Tauri-app. Släpp görs för hand enligt [docs/release.md](docs/release.md), se
+också [app/README.md](app/README.md). Appen är bara för papperstrading: lägg
+aldrig till mäklarkoppling, orderkod eller nyckellagring. Ändra aldrig `identifier` eller en
+utgiven migration i `db.rs`.

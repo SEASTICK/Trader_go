@@ -8,8 +8,8 @@
  *   3. downloadAndInstall hämtar och installerar. Signaturen kontrolleras igen av pluginen.
  *   4. Omstart            Windows-installationen startar om appen själv (passiv installation).
  *
- * Trader_go har ingen lokal användardata, så ingen säkerhetskopia tas före installation.
- * Om appen får lokal data ska en säkerhetskopia läggas till före steg 3, som i Vinstly.
+ * Före steg 3 anropas beforeInstall: datorprogrammet vägrar medan en papperssession eller ett
+ * backtest pågår och säkerhetskopierar sin lokala databas (pappersaffärer, backtester).
  */
 import { isNewerVersion, readSnooze, shouldPromptForUpdate, SNOOZE_KEY, UPDATE_SNOOZE_MS } from "./version";
 
@@ -45,6 +45,8 @@ export type UpdaterDeps = {
   relaunch: () => Promise<void>;
   storage: Pick<Storage, "getItem" | "setItem" | "removeItem">;
   now: () => number;
+  /** Null om installationen får fortsätta, annars ett meddelande till användaren. */
+  beforeInstall?: () => Promise<string | null>;
 };
 
 export type CheckOutcome =
@@ -101,6 +103,11 @@ export async function installUpdate(deps: UpdaterDeps, currentVersion: string, o
   try { handle = await deps.check(); }
   catch (reason) { return { ok: false, message: describeUpdateError(reason, "check") }; }
   if (!handle || !isNewerVersion(handle.version, currentVersion)) return { ok: false, message: text.error.gone };
+  const blocked = await deps.beforeInstall?.();
+  if (blocked) {
+    try { await handle.close?.(); } catch { /* ignoreras */ }
+    return { ok: false, message: blocked };
+  }
 
   try {
     let total = 0; let received = 0;
