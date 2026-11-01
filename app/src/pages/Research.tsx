@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
 import experiments from "../../data/experiments.json";
+import results from "../../data/results.json";
 import { Sparkline } from "../components/Charts";
 import { Page, Segmented, SimChip } from "../components/ui";
-import { compute, kravFör, num, pct, type Computed, type Experiment } from "../lib/experiments";
+import { compute, fromResult, kravFör, num, pct, type Computed, type Experiment, type RealResult } from "../lib/experiments";
 import ExperimentDetail from "./ExperimentDetail";
 import { TrackList } from "./TrackList";
 
@@ -18,12 +19,13 @@ const GROUPS = [
   { key: "baslinje", label: "Baslinje", desc: "Köp-och-behåll. Det alla andra rutor måste slå efter kostnader." },
 ];
 
-function Tile({ c, krav, onOpen }: { c: Computed; krav: number; onOpen: () => void }) {
+function Tile({ c, krav: kravAlla, onOpen }: { c: Computed; krav: number; onOpen: () => void }) {
   const up = c.avkastning >= 0;
-  const passes = c.t >= krav;
+  const krav = c.krav ?? kravAlla;
+  const passes = c.passes ?? c.t >= krav;
   return (
     <button type="button" className="rtile" data-group={c.exp.grupp} onClick={onOpen} aria-label={`${c.exp.namn}, öppna detaljer`}>
-      <span className="rtile-top"><b>{c.exp.id}</b><span className="sim-tag">SIM</span></span>
+      <span className="rtile-top"><b>{c.exp.id}</b><span className={c.källa === "HISTORIK" ? "sim-tag real" : "sim-tag"}>{c.källa === "HISTORIK" ? "HISTORIK" : "SIM"}</span></span>
       <span className="rtile-name">{c.exp.namn}</span>
       <span className="rtile-sub">{c.exp.strategi}</span>
       <span className="rtile-mid">
@@ -42,7 +44,12 @@ export default function Research() {
   const [view, setView] = useState<View>("Rutor");
   const [sort, setSort] = useState<Sort>("Standard");
   const [open, setOpen] = useState<string | null>(null);
-  const all = useMemo(() => (experiments as Experiment[]).map(compute), []);
+  // JSON-filen skrivs av motorn. Bara poster som är märkta HISTORIK används, allt annat förblir SIM.
+  const real = useMemo(() => Object.fromEntries(
+    Object.entries(results as unknown as Record<string, RealResult>).filter(([, r]) => r && r.source === "HISTORIK"),
+  ), []);
+  const all = useMemo(() => (experiments as Experiment[]).map((e) => (real[e.id] ? fromResult(e, real[e.id]) : compute(e))), [real]);
+  const antalRiktiga = all.filter((c) => c.källa === "HISTORIK").length;
   const krav = kravFör(all.length);
   const sorted = useMemo(() => {
     const a = [...all];
@@ -89,7 +96,11 @@ export default function Research() {
               <b>Se upp:</b> att sortera många rutor efter resultat ger alltid några "vinnare" av ren slump. Med {all.length} rutor är kravet på t-värde {num(krav, 1)}, inte 2. Av slump brukar flera rutor se bra ut, så titta på <i>över kravet</i>, antal affärer och om resultatet håller på ny data, inte bara på procenten.
             </p>
           )}
-          <p className="footnote">Alla siffror är påhittade exempel, märkta SIM. Ingen ruta har ett riktigt resultat, och inget är registrerat som hypotes än.</p>
+          <p className="footnote">
+            {antalRiktiga === 0
+              ? "Alla siffror är påhittade exempel, märkta SIM. Ingen ruta har ett riktigt resultat, och inget är registrerat som hypotes än."
+              : `${antalRiktiga} av ${all.length} rutor har ett riktigt backtest på historik (HISTORIK). Övriga är påhittade exempel (SIM). Ett backtest är inte en prognos.`}
+          </p>
         </>
       )}
     </Page>

@@ -14,6 +14,9 @@ göra så används rätt skill.
 | `hamta-data` | Historik ska hämtas från öppna källor eller kontrolleras. |
 | `papper-framat` | En strategi med `READY_FOR_PAPER` ska köras framåt på papper. |
 | `riskgranser` | Position, hävstång, short eller nödstopp ska dimensioneras. |
+| `release` | En ny version av appen ska släppas, eller en release-körning har misslyckats. |
+| `app-design` | Något i appen ska byggas eller ändras visuellt. |
+| `ny-ruta` | En ruta ska läggas till i Research, få riktiga siffror eller sållas. |
 
 ## Från andra, kopierade och fastlåsta
 
@@ -34,7 +37,8 @@ borttagna.
 - **OmniRoute** är en AI-gateway för att välja och byta AI-modell. Den gör inte strategin
   bättre, och skillsen gör inget förrän ni själva installerat och startat den. Ruttar ni till
   externa eller gratis leverantörer kan era prompter och strategiidéer skickas dit. Kontrollera
-  också att användningen följer varje leverantörs villkor.
+  också att användningen följer varje leverantörs villkor. Den påverkar inte Claude-sessioner som
+  körs i molnet på claude.ai, bara verktyg som ni själva pekar mot gatewayen.
 - **`obsidian-cli`** kräver att Obsidian är öppet och att dess kommandorad är påslagen.
 - **`backtest-expert`** är skriven med aktier som exempel, så anpassa den till krypto. Den
   täcker inte finansieringsränta eller likvidation. Det gör `granska-backtest`.

@@ -1,0 +1,32 @@
+name: Engine check
+
+# Tester för forskningsmotorn på Linux (billigt). Körs bara när engine/ ändras.
+on:
+  pull_request:
+    paths:
+      - "engine/**"
+      - ".github/workflows/engine-check.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: engine-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: engine
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: engine/requirements.txt
+      - run: pip install -r requirements.txt
+      - run: python -m pytest

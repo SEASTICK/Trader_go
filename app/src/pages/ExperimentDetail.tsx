@@ -3,9 +3,12 @@ import { Icon } from "../components/icons";
 import { Page, SimChip, StatusDot } from "../components/ui";
 import { num, pct, type Computed } from "../lib/experiments";
 
-export default function ExperimentDetail({ c, krav, total, onBack }: { c: Computed; krav: number; total: number; onBack: () => void }) {
+export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: { c: Computed; krav: number; total: number; onBack: () => void }) {
   const { exp } = c;
-  const passes = c.t >= krav;
+  let krav = kravAlla;
+  const real = c.källa === "HISTORIK";
+  if (real && c.krav !== undefined) krav = c.krav;
+  const passes = c.passes ?? c.t >= krav;
   const pos = c.position;
   const recent = [...c.trades].reverse().slice(0, 20);
   return (
@@ -14,10 +17,18 @@ export default function ExperimentDetail({ c, krav, total, onBack }: { c: Comput
       sub={`${exp.strategi} · ${exp.marknad} · ${exp.tidsram} · ${exp.riktning}`}
       actions={<button className="btn" onClick={onBack}>← Tillbaka till rutorna</button>}
     >
-      <div className="banner-sim" role="note"><SimChip /> Allt på den här sidan är påhittat. Det visar hur ett resultat kommer att se ut, inte ett verkligt resultat.</div>
+      {real ? (
+        <div className="banner-real" role="note">
+          <span className="chip-real">HISTORIK</span> Backtest på riktig historik för <b>{c.hypotes}</b>
+          {c.period && <> ({c.period[0].slice(0, 10)} till {c.period[1].slice(0, 10)})</>}, registrerad i commit <code>{c.registerCommit?.slice(0, 7)}</code>.
+          Det är inte en prognos.
+        </div>
+      ) : (
+        <div className="banner-sim" role="note"><SimChip /> Allt på den här sidan är påhittat. Det visar hur ett resultat kommer att se ut, inte ett verkligt resultat.</div>
+      )}
 
       <div className="kpis">
-        <div className="card kpi"><span className="k">Avkastning efter kostnader</span><b className={c.avkastning >= 0 ? "up" : "down"}>{pct(c.avkastning)}</b><span className="muted">Simulerat</span></div>
+        <div className="card kpi"><span className="k">Avkastning efter kostnader</span><b className={c.avkastning >= 0 ? "up" : "down"}>{pct(c.avkastning)}</b><span className="muted">{real && c.stressad !== undefined ? `Med 2,5× kostnader: ${pct(c.stressad)}` : "Simulerat"}</span></div>
         <div className="card kpi"><span className="k">Största nedgång</span><b>{pct(c.maxDrawdown)}</b><span className="muted">Från topp till botten</span></div>
         <div className="card kpi"><span className="k">Affärer</span><b>{c.antal}</b><span className="muted">{num(c.vinstandel, 0)} % vinnande</span></div>
         <div className="card kpi"><span className="k">t-värde mot krav</span><b>{num(c.t, 1)} <small>/ {num(krav, 1)}</small></b><span className={passes ? "pass" : "fail"}>{passes ? "över kravet" : "under kravet"}</span></div>
@@ -25,19 +36,19 @@ export default function ExperimentDetail({ c, krav, total, onBack }: { c: Comput
 
       <section className="card chart-card">
         <div className="card-head"><div><h2>Utveckling</h2><p className="muted">Strategin efter kostnader mot baslinjen köp-och-behåll. Start = 100.</p></div></div>
-        <LineChart labels={c.labels} series={[{ name: exp.namn, data: c.equity, cls: "s1" }, { name: "Baslinje", data: c.baseline, cls: "s2" }]} />
+        <LineChart watermark={real ? null : "SIMULERAD DATA"} labels={c.labels} series={[{ name: exp.namn, data: c.equity, cls: "s1" }, { name: "Baslinje", data: c.baseline, cls: "s2" }]} />
         <div className="legend"><span><i className="swatch s1" />{exp.namn}</span><span><i className="swatch s2" />Baslinje (köp-och-behåll)</span></div>
       </section>
 
       <div className="split">
         <section className="card pad">
           <h2>Innehav nu</h2>
-          {pos.läge === "Ingen" ? <p className="muted" style={{ marginTop: 10 }}>Ingen öppen position (simulerat).</p> : (
+          {pos.läge === "Ingen" ? <p className="muted" style={{ marginTop: 10 }}>Ingen öppen position{real ? " i slutet av testet" : " (simulerat)"}.</p> : (
             <dl className="dl" style={{ marginTop: 14 }}>
               <dt>Läge</dt><dd><b>{pos.läge}</b></dd>
-              <dt>Sedan</dt><dd>{pos.sedan}</dd>
+              {pos.sedan && <><dt>Sedan</dt><dd>{pos.sedan}</dd></>}
               <dt>Storlek</dt><dd>{pos.storlek} % av kapitalet</dd>
-              <dt>Orealiserat</dt><dd className={(pos.orealiserat ?? 0) >= 0 ? "up" : "down"}>{pct(pos.orealiserat ?? 0)}</dd>
+              {pos.orealiserat !== undefined && <><dt>Orealiserat</dt><dd className={pos.orealiserat >= 0 ? "up" : "down"}>{pct(pos.orealiserat)}</dd></>}
             </dl>
           )}
           <p className="footnote" style={{ padding: "14px 0 0" }}>Papper. Aldrig riktiga order.</p>
@@ -45,11 +56,13 @@ export default function ExperimentDetail({ c, krav, total, onBack }: { c: Comput
         <section className="card pad">
           <h2>Om testet</h2>
           <dl className="dl" style={{ marginTop: 14 }}>
-            <dt>Status</dt><dd><StatusDot status="Idé" /></dd>
-            <dt>Hypotes</dt><dd className="muted">Inte registrerad än (<code>research/registry.md</code>)</dd>
+            <dt>Status</dt><dd><StatusDot status={real ? "Pågår" : "Idé"} /></dd>
+            <dt>Hypotes</dt><dd>{real ? <b>{c.hypotes}</b> : <span className="muted">Inte registrerad än (<code>research/registry.md</code>)</span>}</dd>
+            {real && c.deflated != null && <><dt>Deflated Sharpe</dt><dd>{num(c.deflated * 100, 0)} % sannolikhet att slå bästa tur efter alla försök</dd></>}
+            {real && c.resultatfil && <><dt>Resultatfil</dt><dd><code>{c.resultatfil}</code></dd></>}
             <dt>Beslut</dt><dd>På stängd stapel, fyllning vid nästa öppning</dd>
             <dt>Kostnad per affär</dt><dd>{num(c.kostnadPerAffär, 2)} % (avgift, spread, slippage{exp.grupp === "terminer" ? ", finansiering" : ""})</dd>
-            <dt>Räknas som försök</dt><dd>{total} rutor, därför är kravet t ≥ {num(krav, 1)}</dd>
+            <dt>Krav</dt><dd>{real ? `t ≥ ${num(krav, 1)} enligt antalet försök i registret` : `${total} rutor räknas som försök, därför t ≥ ${num(krav, 1)}`}</dd>
           </dl>
         </section>
       </div>
