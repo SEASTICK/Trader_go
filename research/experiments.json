@@ -1,1 +1,50 @@
-{}
+{
+  "E-01": {
+    "hypothesis": "H-0001",
+    "market": "spot",
+    "symbol": "BTCUSDT",
+    "interval": "4h",
+    "period": {
+      "start": "2020-01-01",
+      "end": "2025-01-01"
+    },
+    "strategy": {
+      "name": "ma_cross",
+      "params": {
+        "fast": 20,
+        "slow": 50,
+        "allow_short": false
+      }
+    },
+    "costs": {
+      "fee_bps": 10,
+      "spread_bps": 2,
+      "slippage_bps": 5
+    }
+  },
+  "E-17": {
+    "hypothesis": "H-0002",
+    "market": "spot",
+    "symbol": "BTCUSDT",
+    "interval": "4h",
+    "period": {
+      "start": "2020-01-01",
+      "end": "2025-01-01"
+    },
+    "strategy": {
+      "name": "ml",
+      "params": {
+        "horizon": 6,
+        "band": 0.05,
+        "allow_short": false,
+        "min_train": 2000,
+        "step": 180
+      }
+    },
+    "costs": {
+      "fee_bps": 10,
+      "spread_bps": 2,
+      "slippage_bps": 5
+    }
+  }
+}

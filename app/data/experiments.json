@@ -1,5 +1,5 @@
 [
-  {"id": "E-01", "spår": "S-01", "namn": "BTC 4h", "strategi": "Krypto trend/momentum", "grupp": "krypto", "marknad": "Bitcoin", "tidsram": "4h", "riktning": "Long/short"},
+  {"id": "E-01", "spår": "S-01", "namn": "BTC 4h", "strategi": "Krypto trend/momentum", "grupp": "krypto", "marknad": "Bitcoin", "tidsram": "4h", "riktning": "Long eller platt"},
   {"id": "E-02", "spår": "S-01", "namn": "BTC 1d", "strategi": "Krypto trend/momentum", "grupp": "krypto", "marknad": "Bitcoin", "tidsram": "1d", "riktning": "Long/short"},
   {"id": "E-03", "spår": "S-01", "namn": "ETH 4h", "strategi": "Krypto trend/momentum", "grupp": "krypto", "marknad": "Ethereum", "tidsram": "4h", "riktning": "Long/short"},
   {"id": "E-04", "spår": "S-01", "namn": "ETH 1d", "strategi": "Krypto trend/momentum", "grupp": "krypto", "marknad": "Ethereum", "tidsram": "1d", "riktning": "Long/short"},
@@ -7,6 +7,7 @@
   {"id": "E-06", "spår": "S-02", "namn": "ETH 1h", "strategi": "Krypto mean-reversion", "grupp": "krypto", "marknad": "Ethereum", "tidsram": "1h", "riktning": "Long/short"},
   {"id": "E-07", "spår": "S-03", "namn": "BTC terminer 1d", "strategi": "Krypto short / finansieringsränta", "grupp": "terminer", "marknad": "Bitcoin-terminer", "tidsram": "1d", "riktning": "Short"},
   {"id": "E-08", "spår": "S-03", "namn": "ETH terminer 1d", "strategi": "Krypto short / finansieringsränta", "grupp": "terminer", "marknad": "Ethereum-terminer", "tidsram": "1d", "riktning": "Short"},
+  {"id": "E-17", "spår": "S-01", "namn": "BTC 4h ML", "strategi": "Maskininlärning (logistisk)", "grupp": "krypto", "marknad": "Bitcoin", "tidsram": "4h", "riktning": "Long eller platt"},
   {"id": "E-09", "spår": "S-04", "namn": "USA-aktier 1 mån", "strategi": "Aktier momentum", "grupp": "aktier", "marknad": "USA-aktier", "tidsram": "1 mån", "riktning": "Long"},
   {"id": "E-10", "spår": "S-05", "namn": "USA värde 1 mån", "strategi": "Aktier värde/kvalitet", "grupp": "aktier", "marknad": "USA-aktier", "tidsram": "1 mån", "riktning": "Long"},
   {"id": "E-11", "spår": "S-06", "namn": "Indexbyten", "strategi": "Indexrebalansering", "grupp": "aktier", "marknad": "USA-aktier", "tidsram": "1d", "riktning": "Long/short"},

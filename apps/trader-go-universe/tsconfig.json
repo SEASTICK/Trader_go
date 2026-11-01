@@ -1,0 +1,45 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": [
+      "node",
+      "vite/client"
+    ],
+    "paths": {
+      "@trader-go/updates/*": [
+        "../../app/src/features/updates/*"
+      ],
+      "react": [
+        "./node_modules/@types/react"
+      ],
+      "react/*": [
+        "./node_modules/@types/react/*"
+      ],
+      "@tauri-apps/api/*": [
+        "./node_modules/@tauri-apps/api/*"
+      ],
+      "@tauri-apps/plugin-updater": [
+        "./node_modules/@tauri-apps/plugin-updater"
+      ],
+      "@tauri-apps/plugin-process": [
+        "./node_modules/@tauri-apps/plugin-process"
+      ]
+    }
+  },
+  "include": [
+    "src",
+    "vite.config.ts"
+  ]
+}

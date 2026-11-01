@@ -1,0 +1,85 @@
+name: Research data
+
+# Hämtar öppen historik från Binance och kör kvalitetskontrollen (skillen hamta-data) på GitHub,
+# eftersom Claudes molnmiljö inte når data.binance.vision. Bara Linux. Inga nycklar, inga order.
+# Rådatan sparas i Actions-cachen (inte i Git). Rapporten hamnar i körningens sammanfattning.
+on:
+  workflow_dispatch:
+    inputs:
+      market:
+        description: "spot eller um (terminer)"
+        default: spot
+        type: choice
+        options: [spot, um]
+      symbol:
+        description: "Till exempel BTCUSDT"
+        default: BTCUSDT
+        type: string
+      interval:
+        description: "1h, 4h eller 1d"
+        default: 4h
+        type: string
+      start:
+        description: "Första månad, ÅÅÅÅ-MM"
+        default: "2020-01"
+        type: string
+      end:
+        description: "Sista månad, ÅÅÅÅ-MM"
+        default: "2026-09"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  fetch-and-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: engine
+    env:
+      MARKET: ${{ inputs.market }}
+      SYMBOL: ${{ inputs.symbol }}
+      INTERVAL: ${{ inputs.interval }}
+      START: ${{ inputs.start }}
+      END: ${{ inputs.end }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: engine/requirements.txt
+      - run: pip install -r requirements.txt
+      - name: Restore raw data cache
+        uses: actions/cache@v4
+        with:
+          path: data/raw
+          key: binance-${{ inputs.market }}-${{ inputs.symbol }}-${{ inputs.interval }}-${{ inputs.end }}
+          restore-keys: binance-${{ inputs.market }}-${{ inputs.symbol }}-${{ inputs.interval }}-
+      - name: Fetch
+        run: python -m traderlab fetch --market "$MARKET" --symbol "$SYMBOL" --interval "$INTERVAL" --start "$START" --end "$END" | tee fetch.txt
+      - name: Quality check
+        run: |
+          set +e
+          python -m traderlab check --market "$MARKET" --symbol "$SYMBOL" --interval "$INTERVAL" > report.md
+          code=$?
+          set -e
+          {
+            echo "## Data: $MARKET $SYMBOL $INTERVAL ($START till $END)"
+            echo
+            echo '```'; cat fetch.txt; echo '```'
+            echo
+            cat report.md
+          } >> "$GITHUB_STEP_SUMMARY"
+          cat report.md
+          echo "Kvalitetskontrollens exitkod: $code (1 = något behöver tittas på, inte ett fel i körningen)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: data-report-${{ inputs.market }}-${{ inputs.symbol }}-${{ inputs.interval }}
+          path: |
+            engine/report.md
+            engine/fetch.txt
+            data/MANIFEST.md
+          retention-days: 30
