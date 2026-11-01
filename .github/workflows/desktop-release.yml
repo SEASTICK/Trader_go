@@ -1,7 +1,8 @@
 name: Publish Trader_go release
 
-# Modell: Vinstlys desktop-release.yml. Bara Windows för närvarande. Mac kan läggas till senare
-# med en matris som i Vinstly (kräver Apple Developer-konto för att signera på riktigt).
+# Modell: Vinstlys desktop-release.yml. Trader_go byggs för Windows (x64) och macOS (universal: Apple
+# Silicon och Intel) och båda hamnar i samma latest.json. Mac-appen är ad hoc-signerad tills ett Apple
+# Developer-konto finns; uppdateringarna verifieras ändå med Tauris signatur.
 on:
   push:
     tags: ["v*"]
@@ -196,6 +197,101 @@ jobs:
           if-no-files-found: error
           path: release-files/*
 
+  build-macos:
+    needs: version
+    runs-on: macos-latest
+    env:
+      RELEASE_VERSION: ${{ needs.version.outputs.version }}
+      CHANNEL: ${{ needs.version.outputs.channel }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: app/src-tauri
+          key: macos
+      - name: Install frontend dependencies
+        working-directory: app
+        run: npm ci
+      - name: Run frontend tests
+        working-directory: app
+        run: npm test
+      - name: Set release version and channel identity
+        run: node .github/scripts/prepare-trader-go-macos.mjs "$CHANNEL" "$RELEASE_VERSION"
+      - name: Prepare updater signing key
+        shell: pwsh
+        env:
+          TAURI_SIGNING_PRIVATE_KEY_B64: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        run: |
+          if (-not $env:TAURI_SIGNING_PRIVATE_KEY_B64) { throw "Repository secret TAURI_SIGNING_PRIVATE_KEY is missing." }
+          $keyInput = $env:TAURI_SIGNING_PRIVATE_KEY_B64.Trim()
+          $privateKeyPath = Join-Path $env:RUNNER_TEMP "trader-go-updater.key"
+          if ($keyInput.StartsWith("untrusted comment:")) {
+            $value = [Convert]::ToBase64String([Text.UTF8Encoding]::new($false).GetBytes($keyInput))
+          } else {
+            $keyBytes = [Convert]::FromBase64String($keyInput)
+            $decodedText = [Text.Encoding]::UTF8.GetString($keyBytes).Trim()
+            if ($decodedText.StartsWith("untrusted comment:")) {
+              $value = [Convert]::ToBase64String([Text.UTF8Encoding]::new($false).GetBytes($decodedText))
+            } else {
+              [IO.File]::WriteAllBytes($privateKeyPath, $keyBytes)
+              $value = $privateKeyPath
+            }
+          }
+          "TAURI_SIGNING_PRIVATE_KEY=$value" >> $env:GITHUB_ENV
+      - name: Use Apple signing and notarization when configured
+        # Valfritt. Utan dessa hemligheter blir appen ad hoc-signerad och Gatekeeper frågar vid första
+        # installationen från en nedladdad dmg. Uppdateringar via appen påverkas inte.
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          if [ -n "$APPLE_CERTIFICATE" ] && [ -n "$APPLE_SIGNING_IDENTITY" ]; then
+            for name in APPLE_CERTIFICATE APPLE_CERTIFICATE_PASSWORD APPLE_SIGNING_IDENTITY APPLE_ID APPLE_PASSWORD APPLE_TEAM_ID; do
+              value="${!name}"
+              if [ -n "$value" ]; then
+                { echo "$name<<APPLE_EOF"; echo "$value"; echo "APPLE_EOF"; } >> "$GITHUB_ENV"
+              fi
+            done
+            echo "Apple signing enabled."
+          else
+            echo "Apple signing secrets not set; building an ad-hoc signed app."
+          fi
+      - name: Build signed macOS app and updater
+        working-directory: app
+        env:
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: npm run tauri build -- --target universal-apple-darwin --bundles app,dmg --config '{"bundle":{"createUpdaterArtifacts":true}}'
+      - name: Stage macOS release files
+        run: |
+          set -euo pipefail
+          dir=app/src-tauri/target/universal-apple-darwin/release/bundle
+          archive=$(ls "$dir"/macos/*.app.tar.gz | head -n1)
+          dmg=$(ls "$dir"/dmg/*.dmg | head -n1)
+          test -f "$archive.sig" || { echo "Updater signature not found: $archive.sig" >&2; exit 1; }
+          mkdir -p release-files
+          cp "$archive" "release-files/Trader_go_${RELEASE_VERSION}_universal.app.tar.gz"
+          cp "$archive.sig" "release-files/Trader_go_${RELEASE_VERSION}_universal.app.tar.gz.sig"
+          cp "$dmg" "release-files/Trader_go_${RELEASE_VERSION}_universal.dmg"
+          ls -la release-files
+      - name: Upload macOS release files
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-macos-universal
+          if-no-files-found: error
+          path: release-files/*
+
   # TraderGO Universe, den läsande projektkartan. Egen app med eget program-id och egen
   # uppdateringsadress (universe/latest.json). Byggs med samma version och kanal som Trader_go och går
   # genom samma godkännande. Hoppas över om "universe" är avbockat i Run workflow.
@@ -297,8 +393,8 @@ jobs:
     # Stable-uppdateringen når alla som har appen, så den pausar här tills en godkännare svarar.
     # Test-körningar hoppar över steget. GitHub tillåter inte "required reviewers" i privata repon
     # på gratisplanen, därför sker godkännandet i ett ärende (issue) som endast de listade kan svara i.
-    needs: [version, build-windows, build-universe]
-    if: ${{ always() && needs.version.outputs.channel == 'stable' && needs.build-windows.result == 'success' && (needs.build-universe.result == 'success' || needs.build-universe.result == 'skipped') }}
+    needs: [version, build-windows, build-macos, build-universe]
+    if: ${{ always() && needs.version.outputs.channel == 'stable' && needs.build-windows.result == 'success' && needs.build-macos.result == 'success' && (needs.build-universe.result == 'success' || needs.build-universe.result == 'skipped') }}
     runs-on: ubuntu-latest
     timeout-minutes: 300
     permissions:
@@ -317,8 +413,8 @@ jobs:
         run: bash .github/scripts/wait_for_approval.sh
 
   publish:
-    needs: [version, build-windows, build-universe, approve]
-    if: ${{ always() && needs.version.result == 'success' && needs.build-windows.result == 'success' && (needs.build-universe.result == 'success' || needs.build-universe.result == 'skipped') && (needs.approve.result == 'success' || needs.approve.result == 'skipped') }}
+    needs: [version, build-windows, build-macos, build-universe, approve]
+    if: ${{ always() && needs.version.result == 'success' && needs.build-windows.result == 'success' && needs.build-macos.result == 'success' && (needs.build-universe.result == 'success' || needs.build-universe.result == 'skipped') && (needs.approve.result == 'success' || needs.approve.result == 'skipped') }}
     runs-on: ubuntu-latest
     env:
       RELEASES_DEPLOY_KEY: ${{ secrets.RELEASES_DEPLOY_KEY }}
@@ -349,6 +445,9 @@ jobs:
           expected=(
             "Trader_go_${RELEASE_VERSION}_x64-setup.exe"
             "Trader_go_${RELEASE_VERSION}_x64-setup.exe.sig"
+            "Trader_go_${RELEASE_VERSION}_universal.app.tar.gz"
+            "Trader_go_${RELEASE_VERSION}_universal.app.tar.gz.sig"
+            "Trader_go_${RELEASE_VERSION}_universal.dmg"
           )
           for file in "${expected[@]}"; do
             test -s "release-files/$file" || { echo "Missing release file: $file" >&2; exit 1; }
@@ -396,6 +495,7 @@ jobs:
           base = os.environ["RELEASES_PAGES_URL"] + ("/test" if os.environ["CHANNEL"] == "test" else "")
           files = Path("release-files")
           windows = f"Trader_go_{version}_x64-setup.exe"
+          mac = f"Trader_go_{version}_universal.app.tar.gz"
 
           def signature(name):
               value = (files / f"{name}.sig").read_text(encoding="utf-8").strip()
@@ -413,9 +513,14 @@ jobs:
               "platforms": {
                   "windows-x86_64": {"signature": signature(windows), "url": public_url(windows)},
                   "windows-x86_64-nsis": {"signature": signature(windows), "url": public_url(windows)},
+                  # En universal-app för både Apple Silicon och Intel.
+                  "darwin-aarch64": {"signature": signature(mac), "url": public_url(mac)},
+                  "darwin-aarch64-app": {"signature": signature(mac), "url": public_url(mac)},
+                  "darwin-x86_64": {"signature": signature(mac), "url": public_url(mac)},
+                  "darwin-x86_64-app": {"signature": signature(mac), "url": public_url(mac)},
               },
           }
-          required = {"windows-x86_64", "windows-x86_64-nsis"}
+          required = {"windows-x86_64", "windows-x86_64-nsis", "darwin-aarch64", "darwin-aarch64-app", "darwin-x86_64", "darwin-x86_64-app"}
           if manifest["version"] != version or set(manifest["platforms"]) != required:
               raise SystemExit("The updater manifest is incomplete")
           Path("latest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -471,7 +576,7 @@ jobs:
 
           version = os.environ["RELEASE_VERSION"]
           channel = os.environ["CHANNEL"]
-          assets = [("Windows (64-bit)", f"Trader_go_{version}_x64-setup.exe")]
+          assets = [("Windows (64-bit)", f"Trader_go_{version}_x64-setup.exe"), ("macOS (Apple Silicon och Intel)", f"Trader_go_{version}_universal.dmg")]
           if Path("universe-files").is_dir():
               assets += [
                   ("TraderGO Universe, Windows (64-bit)", f"universe/TraderGO-Universe_{version}_x64-setup.exe"),
@@ -502,7 +607,7 @@ jobs:
           destination="$site"
           if [ "$CHANNEL" = "test" ]; then destination="$site/test"; fi
           mkdir -p "$destination"
-          find "$destination" -maxdepth 1 -type f \( -name '*.exe' -o -name '*.sig' -o -name 'latest.json' -o -name 'downloads.html' \) -delete
+          find "$destination" -maxdepth 1 -type f \( -name '*.exe' -o -name '*.sig' -o -name '*.tar.gz' -o -name '*.dmg' -o -name 'latest.json' -o -name 'downloads.html' \) -delete
           cp release-files/* "$destination/"
           cp latest.json downloads.html "$destination/"
           # Universe: ersätt bara Universes egna filer i universe/. Körs Universe inte, lämnas mappen orörd.
@@ -571,5 +676,6 @@ jobs:
             Släpp på riktigt genom att köra arbetsflödet med channel = stable.
           files: |
             release-files/*.exe
+            release-files/*.dmg
             universe-files/*.exe
             universe-files/*.dmg

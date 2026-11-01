@@ -5,10 +5,12 @@
  *   1. check()            pluginen läser latest.json från den publika uppdateringssidan och verifierar
  *                         signaturen mot pubkey i tauri.conf.json.
  *   2. isNewerVersion     appen erbjuder bara en strikt nyare version.
- *   3. downloadAndInstall hämtar och installerar. Signaturen kontrolleras igen av pluginen.
- *   4. Omstart            Windows-installationen startar om appen själv (passiv installation).
+ *   3. download           hämtas i bakgrunden direkt när en nyare version finns. Pluginen verifierar
+ *                         signaturen här, så en ogiltig uppdatering stoppas innan någon frågas.
+ *   4. install + omstart  först när användaren väljer "Starta om nu". Windows-installationen startar
+ *                         om appen själv (passiv installation), på macOS byts appen ut och startas om.
  *
- * Före steg 3 anropas beforeInstall: datorprogrammet vägrar medan en papperssession eller ett
+ * Före steg 4 anropas beforeInstall: datorprogrammet vägrar medan en papperssession eller ett
  * backtest pågår och säkerhetskopierar sin lokala databas (pappersaffärer, backtester).
  */
 import { isNewerVersion, readSnooze, shouldPromptForUpdate, SNOOZE_KEY, UPDATE_SNOOZE_MS } from "./version";
@@ -17,6 +19,7 @@ export const text = {
   checking: "Söker efter uppdateringar…",
   upToDate: "Du har den senaste versionen.",
   phase: { download: "Hämtar uppdateringen…", install: "Installerar…", restart: "Startar om…" },
+  ready: "Uppdateringen är hämtad och verifierad. Programmet startar om när du installerar.",
   error: {
     signature: "Uppdateringen kunde inte verifieras och installerades inte.",
     networkCheck: "Kunde inte söka efter uppdateringar. Kontrollera internetanslutningen.",
@@ -24,6 +27,7 @@ export const text = {
     check: "Uppdateringskontrollen misslyckades.",
     install: "Uppdateringen kunde inte installeras.",
     gone: "Uppdateringen finns inte längre. Sök igen om en stund.",
+    platform: "Den senaste versionen finns inte för den här datorn ännu (ingen fil för den här plattformen i latest.json).",
   },
 };
 
@@ -32,6 +36,8 @@ export type UpdateHandle = {
   body?: string | null;
   date?: string | null;
   downloadAndInstall: (onEvent?: (event: DownloadEvent) => void) => Promise<void>;
+  download?: (onEvent?: (event: DownloadEvent) => void) => Promise<void>;
+  install?: () => Promise<void>;
   close?: () => Promise<void>;
 };
 
@@ -71,6 +77,7 @@ export function describeUpdateError(reason: unknown, phase: "check" | "install")
   const raw = typeof reason === "string" ? reason : reason instanceof Error ? reason.message : "";
   const lower = raw.toLowerCase();
   if (/signature|signatur|verif/.test(lower)) return text.error.signature;
+  if (/platform/.test(lower)) return text.error.platform;
   if (/network|timeout|timed out|dns|connect|offline|request|http|resolve/.test(lower) || lower === "") {
     return phase === "check" ? text.error.networkCheck : text.error.networkInstall;
   }
@@ -97,27 +104,42 @@ export async function checkForUpdate(deps: UpdaterDeps, currentVersion: string):
 export type InstallProgress = { phase: "download"; fraction: number | null } | { phase: "install" } | { phase: "restart" };
 export type InstallOutcome = { ok: true } | { ok: false; message: string };
 
-/** Hämtar uppdateringen på nytt (en ny kontroll kan ha kommit) och kontrollerar att den fortfarande är nyare. */
-export async function installUpdate(deps: UpdaterDeps, currentVersion: string, onProgress: (progress: InstallProgress) => void): Promise<InstallOutcome> {
+export type ReadyUpdate = { version: string; handle: UpdateHandle };
+export type DownloadOutcome = { ok: true; ready: ReadyUpdate } | { ok: false; message: string; detail: string };
+
+/**
+ * Hämtar en nyare version i bakgrunden utan att installera den. Signaturen verifieras av pluginen under
+ * hämtningen, så en uppdatering som inte går att verifiera blir ett fel här och erbjuds aldrig.
+ */
+export async function downloadUpdate(deps: UpdaterDeps, currentVersion: string, onProgress: (fraction: number | null) => void): Promise<DownloadOutcome> {
   let handle: UpdateHandle | null;
   try { handle = await deps.check(); }
-  catch (reason) { return { ok: false, message: describeUpdateError(reason, "check") }; }
-  if (!handle || !isNewerVersion(handle.version, currentVersion)) return { ok: false, message: text.error.gone };
-  const blocked = await deps.beforeInstall?.();
-  if (blocked) {
-    try { await handle.close?.(); } catch { /* ignoreras */ }
-    return { ok: false, message: blocked };
-  }
-
+  catch (reason) { return { ok: false, message: describeUpdateError(reason, "check"), detail: rawReason(reason) }; }
+  if (!handle || !isNewerVersion(handle.version, currentVersion)) return { ok: false, message: text.error.gone, detail: "no newer version in latest.json" };
+  if (!handle.download || !handle.install) return { ok: false, message: text.error.install, detail: "updater plugin has no separate download/install" };
   try {
     let total = 0; let received = 0;
-    await handle.downloadAndInstall(event => {
-      if (event.event === "Started") { total = event.data.contentLength ?? 0; onProgress({ phase: "download", fraction: total ? 0 : null }); }
-      else if (event.event === "Progress") { received += event.data.chunkLength; onProgress({ phase: "download", fraction: total ? Math.min(1, received / total) : null }); }
-      else onProgress({ phase: "install" });
+    await handle.download(event => {
+      if (event.event === "Started") { total = event.data.contentLength ?? 0; onProgress(total ? 0 : null); }
+      else if (event.event === "Progress") { received += event.data.chunkLength; onProgress(total ? Math.min(1, received / total) : null); }
+      else onProgress(1);
     });
-  } catch (reason) { return { ok: false, message: describeUpdateError(reason, "install") }; }
+  } catch (reason) {
+    try { await handle.close?.(); } catch { /* ignoreras */ }
+    return { ok: false, message: describeUpdateError(reason, "install"), detail: rawReason(reason) };
+  }
+  return { ok: true, ready: { version: handle.version, handle } };
+}
 
+/** Installerar en hämtad och verifierad version och startar om. Anropas bara när användaren valt det. */
+export async function installReady(ready: ReadyUpdate, deps: UpdaterDeps, onProgress: (progress: InstallProgress) => void): Promise<InstallOutcome> {
+  // Spärr och säkerhetskopia (#6) körs precis före installationen, inte vid bakgrundshämtningen:
+  // backupen ska vara färsk, och en pågående papperssession eller ett backtest stoppar bara installationen.
+  const blocked = await deps.beforeInstall?.();
+  if (blocked) return { ok: false, message: blocked };
+  onProgress({ phase: "install" });
+  try { await ready.handle.install!(); }
+  catch (reason) { return { ok: false, message: describeUpdateError(reason, "install") }; }
   onProgress({ phase: "restart" });
   try { await deps.relaunch(); } catch { /* På Windows har installationen redan startat om appen. */ }
   return { ok: true };

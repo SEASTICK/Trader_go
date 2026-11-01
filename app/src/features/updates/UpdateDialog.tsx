@@ -6,12 +6,15 @@ type Props = { notice: UpdateNotice; currentVersion: string; onInstall: () => vo
 /** "Ny version av Trader_go finns". Går inte att stänga mitt i en installation. */
 export function UpdateDialog({ notice, currentVersion, onInstall, onLater, onDismissError }: Props) {
   const [showNotes, setShowNotes] = useState(false);
-  const primary = useRef<HTMLButtonElement>(null);
-  const visible = !!notice.promptOpen && !!notice.version && (notice.status === "available" || notice.status === "installing" || notice.status === "error");
+  // Rutan kan dyka upp medan man skriver någon annanstans. Fokus hamnar därför på det ofarliga valet
+  // (Senare/Stäng), så att en lös Enter aldrig startar om appen eller hämtar på nytt.
+  const safe = useRef<HTMLButtonElement>(null);
+  const visible = !!notice.promptOpen && !!notice.version && ["available", "downloading", "ready", "installing", "error"].includes(notice.status);
   const installing = notice.status === "installing";
+  const fetching = notice.status === "available" || notice.status === "downloading";
   const failed = notice.status === "error";
 
-  useEffect(() => { if (visible) primary.current?.focus(); }, [visible, notice.status]);
+  useEffect(() => { if (visible) safe.current?.focus(); }, [visible, notice.status]);
   useEffect(() => {
     if (!visible || installing) return;
     const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") (failed ? onDismissError : onLater)(); };
@@ -29,9 +32,9 @@ export function UpdateDialog({ notice, currentVersion, onInstall, onLater, onDis
           <span className="k">Uppdatering</span>
           <h2 id="update-title">Ny version finns <span className="version-tag">v{notice.version}</span></h2>
           <p className="muted">
-            {failed || installing ? notice.message : `Du kör v${currentVersion}. Programmet startar om efter installationen.`}
+            {failed || installing || fetching || notice.status === "ready" ? notice.message : `Du kör v${currentVersion}. Programmet startar om efter installationen.`}
           </p>
-          {installing && (
+          {(installing || fetching) && (
             <div className="progress" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={percent ?? undefined}>
               <i style={{ width: percent != null ? `${percent}%` : "35%" }} />
             </div>
@@ -42,13 +45,13 @@ export function UpdateDialog({ notice, currentVersion, onInstall, onLater, onDis
           <div className="update-actions">
             {failed ? (
               <>
-                <button type="button" className="btn accent" ref={primary} onClick={onInstall}>Försök igen</button>
-                <button type="button" className="btn" onClick={onDismissError}>Stäng</button>
+                <button type="button" className="btn accent" onClick={onInstall}>Försök igen</button>
+                <button type="button" className="btn" ref={safe} onClick={onDismissError}>Stäng</button>
               </>
             ) : (
               <>
-                <button type="button" className="btn accent" ref={primary} disabled={installing} onClick={onInstall}>{installing ? "Uppdaterar…" : "Installera nu"}</button>
-                <button type="button" className="btn" disabled={installing} onClick={onLater}>Senare</button>
+                <button type="button" className="btn accent" disabled={installing || fetching} onClick={onInstall}>{installing ? "Uppdaterar…" : fetching ? "Hämtar…" : "Starta om nu"}</button>
+                <button type="button" className="btn" ref={safe} disabled={installing} onClick={onLater}>Senare</button>
                 {!installing && <button type="button" className="link" aria-expanded={showNotes} onClick={() => setShowNotes(v => !v)}>Vad är nytt?</button>}
               </>
             )}
