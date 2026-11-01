@@ -17,6 +17,11 @@ on:
         default: stable
         type: choice
         options: [stable, test]
+      universe:
+        description: "Also build and publish TraderGO Universe (Windows + macOS). Off: only Trader_go is released and the published Universe stays as it is."
+        required: false
+        default: true
+        type: boolean
 
 permissions:
   contents: write
@@ -191,12 +196,109 @@ jobs:
           if-no-files-found: error
           path: release-files/*
 
+  # TraderGO Universe, den läsande projektkartan. Egen app med eget program-id och egen
+  # uppdateringsadress (universe/latest.json). Byggs med samma version och kanal som Trader_go och går
+  # genom samma godkännande. Hoppas över om "universe" är avbockat i Run workflow.
+  build-universe:
+    needs: version
+    if: ${{ github.event_name != 'workflow_dispatch' || inputs.universe }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      RELEASE_VERSION: ${{ needs.version.outputs.version }}
+      CHANNEL: ${{ needs.version.outputs.channel }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/trader-go-universe/package-lock.json
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ runner.os == 'macOS' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: apps/trader-go-universe/src-tauri
+          key: universe
+      - name: Install frontend dependencies
+        working-directory: apps/trader-go-universe
+        run: npm ci
+      - name: Run tests and the read-only check
+        working-directory: apps/trader-go-universe
+        run: npm test
+      - name: Set release version and channel identity
+        run: node .github/scripts/prepare-universe.mjs "$CHANNEL" "$RELEASE_VERSION"
+      - name: Prepare updater signing key
+        shell: pwsh
+        env:
+          TAURI_SIGNING_PRIVATE_KEY_B64: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+        run: |
+          if (-not $env:TAURI_SIGNING_PRIVATE_KEY_B64) { throw "Repository secret TAURI_SIGNING_PRIVATE_KEY is missing." }
+          $keyInput = $env:TAURI_SIGNING_PRIVATE_KEY_B64.Trim()
+          $privateKeyPath = Join-Path $env:RUNNER_TEMP "trader-go-updater.key"
+          if ($keyInput.StartsWith("untrusted comment:")) {
+            $value = [Convert]::ToBase64String([Text.UTF8Encoding]::new($false).GetBytes($keyInput))
+          } else {
+            $keyBytes = [Convert]::FromBase64String($keyInput)
+            $decodedText = [Text.Encoding]::UTF8.GetString($keyBytes).Trim()
+            if ($decodedText.StartsWith("untrusted comment:")) {
+              $value = [Convert]::ToBase64String([Text.UTF8Encoding]::new($false).GetBytes($decodedText))
+            } else {
+              [IO.File]::WriteAllBytes($privateKeyPath, $keyBytes)
+              $value = $privateKeyPath
+            }
+          }
+          "TAURI_SIGNING_PRIVATE_KEY=$value" >> $env:GITHUB_ENV
+      # Samma uppdateringsnyckel som Trader_go. Mac-appen blir ad hoc-signerad (inget Apple-konto), så
+      # Gatekeeper frågar vid första starten; uppdateringarna verifieras ändå med Tauris signatur.
+      - name: Build signed installer and updater
+        working-directory: apps/trader-go-universe
+        env:
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: |
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            npm run tauri build -- --target x86_64-pc-windows-msvc --bundles nsis
+          else
+            npm run tauri build -- --target universal-apple-darwin --bundles app,dmg
+          fi
+      - name: Stage Universe release files
+        run: |
+          set -euo pipefail
+          mkdir -p universe-files
+          prefix="TraderGO-Universe_${RELEASE_VERSION}"
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            bundle=$(ls apps/trader-go-universe/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe | head -n1)
+            test -f "$bundle.sig" || { echo "Updater signature not found: $bundle.sig" >&2; exit 1; }
+            cp "$bundle" "universe-files/${prefix}_x64-setup.exe"
+            cp "$bundle.sig" "universe-files/${prefix}_x64-setup.exe.sig"
+          else
+            dir=apps/trader-go-universe/src-tauri/target/universal-apple-darwin/release/bundle
+            archive=$(ls "$dir"/macos/*.app.tar.gz | head -n1)
+            test -f "$archive.sig" || { echo "Updater signature not found: $archive.sig" >&2; exit 1; }
+            cp "$archive" "universe-files/${prefix}_universal.app.tar.gz"
+            cp "$archive.sig" "universe-files/${prefix}_universal.app.tar.gz.sig"
+            cp "$(ls "$dir"/dmg/*.dmg | head -n1)" "universe-files/${prefix}_universal.dmg"
+          fi
+          ls -la universe-files
+      - uses: actions/upload-artifact@v4
+        with:
+          name: universe-${{ runner.os }}
+          if-no-files-found: error
+          path: universe-files/*
+
   approve:
     # Stable-uppdateringen når alla som har appen, så den pausar här tills en godkännare svarar.
     # Test-körningar hoppar över steget. GitHub tillåter inte "required reviewers" i privata repon
     # på gratisplanen, därför sker godkännandet i ett ärende (issue) som endast de listade kan svara i.
-    needs: [version, build-windows]
-    if: ${{ needs.version.outputs.channel == 'stable' }}
+    needs: [version, build-windows, build-universe]
+    if: ${{ always() && needs.version.outputs.channel == 'stable' && needs.build-windows.result == 'success' && (needs.build-universe.result == 'success' || needs.build-universe.result == 'skipped') }}
     runs-on: ubuntu-latest
     timeout-minutes: 300
     permissions:
@@ -215,14 +317,15 @@ jobs:
         run: bash .github/scripts/wait_for_approval.sh
 
   publish:
-    needs: [version, build-windows, approve]
-    if: ${{ always() && needs.version.result == 'success' && needs.build-windows.result == 'success' && (needs.approve.result == 'success' || needs.approve.result == 'skipped') }}
+    needs: [version, build-windows, build-universe, approve]
+    if: ${{ always() && needs.version.result == 'success' && needs.build-windows.result == 'success' && (needs.build-universe.result == 'success' || needs.build-universe.result == 'skipped') && (needs.approve.result == 'success' || needs.approve.result == 'skipped') }}
     runs-on: ubuntu-latest
     env:
       RELEASES_DEPLOY_KEY: ${{ secrets.RELEASES_DEPLOY_KEY }}
       RELEASE_VERSION: ${{ needs.version.outputs.version }}
       RELEASE_TAG: ${{ needs.version.outputs.tag }}
       CHANNEL: ${{ needs.version.outputs.channel }}
+      UNIVERSE_BUILT: ${{ needs.build-universe.result == 'success' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -231,6 +334,13 @@ jobs:
         with:
           pattern: desktop-*
           path: release-files
+          merge-multiple: true
+      # Universe-filerna hålls i en egen mapp och publiceras under universe/, aldrig i roten.
+      - uses: actions/download-artifact@v4
+        if: ${{ env.UNIVERSE_BUILT == 'true' }}
+        with:
+          pattern: universe-*
+          path: universe-files
           merge-multiple: true
       - name: Verify the complete release file set
         shell: bash
@@ -310,6 +420,46 @@ jobs:
               raise SystemExit("The updater manifest is incomplete")
           Path("latest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
           PY
+      - name: Create and validate the Universe updater manifest
+        if: ${{ env.UNIVERSE_BUILT == 'true' }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from urllib.parse import quote
+
+          version = os.environ["RELEASE_VERSION"]
+          base = os.environ["RELEASES_PAGES_URL"] + ("/test" if os.environ["CHANNEL"] == "test" else "") + "/universe"
+          files = Path("universe-files")
+          exe = f"TraderGO-Universe_{version}_x64-setup.exe"
+          mac = f"TraderGO-Universe_{version}_universal.app.tar.gz"
+          dmg = f"TraderGO-Universe_{version}_universal.dmg"
+          for name in [exe, f"{exe}.sig", mac, f"{mac}.sig", dmg]:
+              if not (files / name).is_file() or (files / name).stat().st_size == 0:
+                  raise SystemExit(f"Missing Universe release file: {name}")
+
+          def entry(name):
+              signature = (files / f"{name}.sig").read_text(encoding="utf-8").strip()
+              if not signature:
+                  raise SystemExit(f"Empty updater signature for {name}")
+              return {"signature": signature, "url": f"{base}/{quote(name)}"}
+
+          win, darwin = entry(exe), entry(mac)
+          manifest = {
+              "version": version,
+              "notes": Path("release-notes.txt").read_text(encoding="utf-8").strip(),
+              "pub_date": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+              "platforms": {
+                  "windows-x86_64": win, "windows-x86_64-nsis": win,
+                  "darwin-aarch64": darwin, "darwin-aarch64-app": darwin,
+                  "darwin-x86_64": darwin, "darwin-x86_64-app": darwin,
+              },
+          }
+          Path("universe-latest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          PY
       - name: Create first-time download page
         shell: bash
         run: |
@@ -322,7 +472,12 @@ jobs:
           version = os.environ["RELEASE_VERSION"]
           channel = os.environ["CHANNEL"]
           assets = [("Windows (64-bit)", f"Trader_go_{version}_x64-setup.exe")]
-          links = "\n".join(f'<li><a href="{quote(filename)}">{html.escape(label)}</a></li>' for label, filename in assets)
+          if Path("universe-files").is_dir():
+              assets += [
+                  ("TraderGO Universe, Windows (64-bit)", f"universe/TraderGO-Universe_{version}_x64-setup.exe"),
+                  ("TraderGO Universe, macOS (Intel och Apple Silicon)", f"universe/TraderGO-Universe_{version}_universal.dmg"),
+              ]
+          links = "\n".join(f'<li><a href="{quote(filename, safe="/")}">{html.escape(label)}</a></li>' for label, filename in assets)
           page = f'''<!doctype html><html lang="sv"><meta charset="utf-8"><meta name="viewport" content="width=device-width">
           <meta name="robots" content="noindex">
           <title>Hämta Trader_go</title><style>body{{font:18px system-ui;max-width:720px;margin:64px auto;padding:0 24px;background:#101211;color:#ecefed}}a{{color:#5aa56f}}li{{margin:18px 0}}</style>
@@ -350,6 +505,13 @@ jobs:
           find "$destination" -maxdepth 1 -type f \( -name '*.exe' -o -name '*.sig' -o -name 'latest.json' -o -name 'downloads.html' \) -delete
           cp release-files/* "$destination/"
           cp latest.json downloads.html "$destination/"
+          # Universe: ersätt bara Universes egna filer i universe/. Körs Universe inte, lämnas mappen orörd.
+          if [ "$UNIVERSE_BUILT" = "true" ]; then
+            mkdir -p "$destination/universe"
+            find "$destination/universe" -maxdepth 1 -type f \( -name '*.exe' -o -name '*.sig' -o -name '*.tar.gz' -o -name '*.dmg' -o -name 'latest.json' \) -delete
+            cp universe-files/* "$destination/universe/"
+            cp universe-latest.json "$destination/universe/latest.json"
+          fi
           git -C "$site" checkout --quiet --orphan publish
           git -C "$site" add -A
           git -C "$site" -c user.name="trader-go-ci" -c user.email="ci@trader-go.invalid" commit --quiet -m "Trader_go $RELEASE_VERSION ($CHANNEL)"
@@ -362,8 +524,10 @@ jobs:
           python3 - <<'PY' > "$RUNNER_TEMP/updater-urls.txt"
           import json
           from pathlib import Path
-          manifest = json.loads(Path("latest.json").read_text(encoding="utf-8"))
-          print(*[item["url"] for item in manifest["platforms"].values()], sep="\n")
+          for name in ["latest.json", "universe-latest.json"]:
+              if Path(name).exists():
+                  manifest = json.loads(Path(name).read_text(encoding="utf-8"))
+                  print(*sorted({item["url"] for item in manifest["platforms"].values()}), sep="\n")
           PY
           while IFS= read -r url; do
             ok=false
@@ -385,6 +549,8 @@ jobs:
             release-files/*
             latest.json
             downloads.html
+            universe-files/*
+            universe-latest.json
 
       - name: Publish test pre-release
         # Test-bygget läggs som en förhandsversion under Releases så att det går att ladda ner direkt i repot.
@@ -401,6 +567,9 @@ jobs:
             Testbygge av Trader_go ${{ needs.version.outputs.version }} från commit ${{ github.sha }}. Inte släppt.
 
             Testbygget heter "Trader_go Updater Test" och har eget program-id, så det kan installeras vid sidan av den vanliga appen utan att ersätta den. Det söker uppdateringar bara mot testkanalen.
+            Byggdes TraderGO Universe med heter testbygget "TraderGO Universe Test", också med eget program-id och bara testkanalen.
             Släpp på riktigt genom att köra arbetsflödet med channel = stable.
           files: |
             release-files/*.exe
+            universe-files/*.exe
+            universe-files/*.dmg
