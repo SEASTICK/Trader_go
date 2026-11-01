@@ -38,3 +38,16 @@ projektmappen. Ändra aldrig `identifier` i någon av apparnas `tauri.conf.json`
 Se [.claude/skills/README.md](.claude/skills/README.md). Våra egna regler går före
 tredjepartsskills. Säger `backtest-expert` "Deploy" betyder det ändå bara att idén får gå
 vidare till papper.
+
+## Obsidian
+
+Skillen `obsidian-tradergo` sköter forskning, beslut, strategier, backtestsammanfattningar och
+pappersjournal i Obsidian. Använd den bara när någon uttryckligen ber om en Obsidian-uppgift.
+
+- Valvet är `research/`. Skillen får bara röra `research/TraderGO/`; `.obsidian/` och allt annat
+  är undantaget.
+- Läsning är standard. Nya anteckningar och begärda ändringar är tillåtna, men byta namn,
+  flytta, skriva över, radera, massändringar, nya backlänkar i befintliga anteckningar och
+  ändrad frontmatter kräver en fråga först.
+- Inga lösenord, nycklar eller kontouppgifter i anteckningar.
+- Stora dataset och resultattabeller ligger i repot, inte i Obsidian. Anteckningen länkar dit.
