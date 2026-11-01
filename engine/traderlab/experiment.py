@@ -9,7 +9,7 @@ from typing import Callable
 import numpy as np
 import pandas as pd
 
-from . import backtest
+from . import backtest, stats
 from .costs import ZERO, CostModel
 from .registry import require_registered
 from .report import summarize
@@ -59,15 +59,44 @@ def _baseline(bars: pd.DataFrame, costs: CostModel, attempts: int) -> dict:
     return {k: s[k] for k in ("total_return", "max_drawdown", "sharpe", "t_daily_nw")}
 
 
+def _daily_open_returns(bars: pd.DataFrame) -> pd.Series:
+    """Avkastning per dag från öppning till öppning, som backtestets egen kurva."""
+    r = (bars["open"].shift(-1) / bars["open"] - 1).dropna()
+    return stats.daily_returns(r)
+
+
+def benchmark_stats(res: backtest.BacktestResult, benchmark: pd.DataFrame, name: str) -> dict:
+    """Beta och korrelation mot ett jämförelseindex (BTC), på dagsavkastning. Spår C kräver |beta| <= 0,2."""
+    strat = stats.daily_returns(res.bar_returns)
+    bench = _daily_open_returns(benchmark)
+    both = pd.concat([strat, bench], axis=1, join="inner").dropna()
+    both.columns = ["s", "b"]
+    out = {"name": name, "days": len(both), "beta": None, "correlation": None}
+    if len(both) >= 30 and both["b"].var() > 0:
+        out["beta"] = float(both["s"].cov(both["b"]) / both["b"].var())
+        if both["s"].std() > 0:
+            out["correlation"] = float(both["s"].corr(both["b"]))
+    return out
+
+
 def run_experiment(hypothesis_id: str, repo: Path, bars: pd.DataFrame, strategy: Strategy,
                    costs: CostModel, *, market: str, interval: str, leverage: float = 1.0,
-                   funding: pd.Series | None = None, note: str = "") -> Path:
-    """Kör med normala och stressade kostnader och sparar en JSON-fil som aldrig skrivs över."""
+                   funding: pd.Series | None = None, note: str = "", track: str = "A",
+                   benchmark: pd.DataFrame | None = None, benchmark_name: str = "",
+                   baseline_bars: pd.DataFrame | None = None, baseline_costs: CostModel | None = None) -> Path:
+    """Kör med normala och stressade kostnader och sparar en JSON-fil som aldrig skrivs över.
+
+    track: forskningsspåret (A slå marknaden, B lägre risk, C marknadsneutral).
+    benchmark: staplar att räkna beta och korrelation mot (oftast BTC spot 1d).
+    baseline_bars: staplar för köp-och-behåll om de inte är samma som bars (till exempel för säkrade rutor,
+    där bars är en syntetisk serie och jämförelsen är spot).
+    """
     reg = require_registered(hypothesis_id, repo)
     backtest.check_no_lookahead(strategy, bars)
     target = strategy(bars)
     normal = backtest.run(bars, target, costs, leverage=leverage, funding=funding)
     stressed = backtest.run(bars, target, costs.stressed(), leverage=leverage, funding=funding)
+    base = bars if baseline_bars is None else baseline_bars.reindex(bars.index)
     out = {
         "hypothesis_id": hypothesis_id,
         "registry_commit": reg.registry_commit,
@@ -81,8 +110,10 @@ def run_experiment(hypothesis_id: str, repo: Path, bars: pd.DataFrame, strategy:
         "summary": summarize(normal, reg.attempts).to_dict(),
         "summary_stressed_costs": summarize(stressed, reg.attempts).to_dict(),
         "random_label_t": random_label_control(bars),
-        "baseline_buy_and_hold": _baseline(bars, costs, reg.attempts),
-        "curve": _curve(normal, bars),
+        "baseline_buy_and_hold": _baseline(base, baseline_costs or costs, reg.attempts),
+        "benchmark": benchmark_stats(normal, benchmark, benchmark_name) if benchmark is not None else None,
+        "track": track,
+        "curve": _curve(normal, base),
         "trades": _trades(normal),
         "trades_total": len(normal.trades),
         "position_now": float(normal.position.iloc[-1]) if len(normal.position) else 0.0,
