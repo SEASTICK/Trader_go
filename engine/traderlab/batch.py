@@ -1,5 +1,8 @@
 """Kör alla rutor som har en registrerad hypotes, och exporterar resultaten till appen.
 
+Valfritt per ruta: "period": {"start": "2020-01-01", "end": "2025-01-01"} (slut exkluderat), för att spara
+en ren period till senare.
+
 research/experiments.json kopplar en ruta i appen (E-01 ...) till hypotes, data och strategi:
 
 {
@@ -51,6 +54,11 @@ def run_all(repo: Path, data_dir: Path | None = None, loader=binance.load, only:
         except FileNotFoundError as exc:
             rep.skipped[tile] = f"ingen data: {exc}"
             continue
+        period = spec.get("period") or {}
+        if period.get("start"):
+            bars = bars[bars.index >= pd.Timestamp(period["start"], tz="UTC")]
+        if period.get("end"):
+            bars = bars[bars.index < pd.Timestamp(period["end"], tz="UTC")]
         q = quality.check(bars, spec["interval"])
         if not q.ok:
             rep.skipped[tile] = "datakvalitet: " + "; ".join(q.problems)
@@ -58,7 +66,8 @@ def run_all(repo: Path, data_dir: Path | None = None, loader=binance.load, only:
         try:
             run_experiment(spec["hypothesis"], repo, bars, build(spec["strategy"]["name"], spec["strategy"].get("params"), spec.get("risk")),
                            CostModel(**spec.get("costs", {})), market=f'{spec.get("market", "spot")} {spec["symbol"]}',
-                           interval=spec["interval"], leverage=spec.get("leverage", 1.0), note=f"ruta {tile}")
+                           interval=spec["interval"], leverage=spec.get("leverage", 1.0),
+                           note=f"ruta {tile}" + (f"; datavarningar: {'; '.join(q.warnings)}" if q.warnings else ""))
             rep.ran.append(tile)
         except NotRegisteredError as exc:
             rep.skipped[tile] = f"inte registrerad: {exc}"
@@ -91,6 +100,8 @@ def export_to_app(repo: Path) -> dict:
             "passes": s["passes"],
             "deflated_sharpe": s.get("deflated_sharpe"),
             "stressed_total_return": r["summary_stressed_costs"]["total_return"],
+            "sharpe": s["sharpe"],
+            "baseline": r.get("baseline_buy_and_hold"),
             "costs_bps_per_side": r["costs_bps_per_side"],
             "curve": r.get("curve"),
             "recent_trades": r.get("trades", [])[-20:],

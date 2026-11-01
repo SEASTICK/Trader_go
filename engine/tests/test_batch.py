@@ -44,7 +44,7 @@ def loader(market, symbol, interval, data_dir):
         return make_ar_bars(1500, seed=1)
     if symbol == "GAPUSDT":
         b = make_ar_bars(800, seed=2)
-        return b.drop(index=b.index[100:105])
+        return b.drop(index=b.index[100:120])  # 2,5 % saknas: fel
     raise FileNotFoundError(symbol)
 
 
@@ -53,7 +53,18 @@ def test_batch_runs_only_registered_tiles_with_clean_data(repo):
     assert rep.ran == ["E-01"]
     assert "inte registrerad" in rep.skipped["E-02"]
     assert "ingen data" in rep.skipped["E-03"]
-    assert "datakvalitet" in rep.skipped["E-04"] and "saknade staplar" in rep.skipped["E-04"]
+    assert "datakvalitet" in rep.skipped["E-04"] and "1 %" in rep.skipped["E-04"]
+
+
+def test_period_slicing_keeps_a_clean_holdout(repo):
+    import json as _json
+    plan = _json.loads((repo / "research/experiments.json").read_text())
+    plan["E-01"]["period"] = {"end": "2020-06-01"}
+    (repo / "research/experiments.json").write_text(_json.dumps(plan))
+    git(repo, "add", "-A"); git(repo, "commit", "-qm", "period")
+    batch.run_all(repo, loader=loader, only=["E-01"])
+    out = batch.export_to_app(repo)
+    assert out["E-01"]["period"][1] < "2020-06-01"
 
 
 def test_export_writes_real_results_for_the_app(repo):

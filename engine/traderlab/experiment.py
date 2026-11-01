@@ -52,6 +52,13 @@ def _trades(res: backtest.BacktestResult, last: int = 50) -> list[dict]:
     return out
 
 
+def _baseline(bars: pd.DataFrame, costs: CostModel, attempts: int) -> dict:
+    """Köp-och-behåll på samma staplar och med samma kostnader. Det alla strategier måste slå."""
+    res = backtest.run(bars, pd.Series(1.0, index=bars.index), costs)
+    s = summarize(res, attempts).to_dict()
+    return {k: s[k] for k in ("total_return", "max_drawdown", "sharpe", "t_daily_nw")}
+
+
 def run_experiment(hypothesis_id: str, repo: Path, bars: pd.DataFrame, strategy: Strategy,
                    costs: CostModel, *, market: str, interval: str, leverage: float = 1.0,
                    funding: pd.Series | None = None, note: str = "") -> Path:
@@ -74,6 +81,7 @@ def run_experiment(hypothesis_id: str, repo: Path, bars: pd.DataFrame, strategy:
         "summary": summarize(normal, reg.attempts).to_dict(),
         "summary_stressed_costs": summarize(stressed, reg.attempts).to_dict(),
         "random_label_t": random_label_control(bars),
+        "baseline_buy_and_hold": _baseline(bars, costs, reg.attempts),
         "curve": _curve(normal, bars),
         "trades": _trades(normal),
         "trades_total": len(normal.trades),

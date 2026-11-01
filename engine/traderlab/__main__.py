@@ -79,7 +79,7 @@ def main(argv: list[str] | None = None) -> int:
     bars = binance.load(a.market, a.symbol, a.interval, a.data_dir)
     rep = quality.check(bars, a.interval)
     print(rep.to_markdown(f"{a.market} {a.symbol} {a.interval}"))
-    return 0 if rep.ok else 1
+    return 0 if rep.ok and not rep.warnings else (1 if rep.ok else 2)
 
 
 if __name__ == "__main__":

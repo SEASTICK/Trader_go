@@ -11,11 +11,17 @@ def test_clean_synthetic_data_passes():
 
 
 def test_gap_detected_with_location():
-    bars = make_bars(200, seed=2).drop(index=make_bars(200, seed=2).index[50:53])
+    bars = make_bars(1000, seed=2).drop(index=make_bars(1000, seed=2).index[50:53])
     rep = quality.check(bars, "4h")
     assert rep.missing_bars == 3
     assert rep.largest_gaps[0][2] == 3
-    assert not rep.ok
+    assert rep.ok and any("saknade" in w for w in rep.warnings)  # liten lucka: varning, inte fel
+
+
+def test_many_missing_bars_is_an_error():
+    b = make_bars(200, seed=2)
+    rep = quality.check(b.drop(index=b.index[10:20]), "4h")
+    assert not rep.ok and any("1 %" in p for p in rep.problems)
 
 
 def test_duplicates_and_order():
@@ -38,12 +44,18 @@ def test_outlier_and_stale_run():
     bars = make_bars(300, seed=5, vol=0.005)
     bars.iloc[100, bars.columns.get_loc("close")] *= 1.8
     bars.iloc[100, bars.columns.get_loc("high")] = bars.iloc[100]["close"]
+    flat = bars.iloc[199]["close"]
     for i in range(200, 210):
-        bars.iloc[i, bars.columns.get_loc("close")] = bars.iloc[199]["close"]
+        for col in ("open", "high", "low", "close"):
+            bars.iloc[i, bars.columns.get_loc(col)] = flat
         bars.iloc[i, bars.columns.get_loc("volume")] = 0.0
+    bars.iloc[210, bars.columns.get_loc("open")] = flat
+    bars.iloc[210, bars.columns.get_loc("low")] = min(flat, bars.iloc[210]["low"])
+    bars.iloc[210, bars.columns.get_loc("high")] = max(flat, bars.iloc[210]["high"])
     rep = quality.check(bars, "4h")
     assert any(t.startswith(str(bars.index[100])[:10]) for t, _ in rep.outliers)
     assert rep.stale_runs and rep.stale_runs[0][1] >= 6
+    assert rep.ok and len(rep.warnings) == 2  # äkta kraschar och stillastående pris stoppar inte
 
 
 def test_timezone_and_alignment():
