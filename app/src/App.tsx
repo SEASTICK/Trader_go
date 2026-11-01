@@ -6,11 +6,13 @@ import Overview from "./pages/Overview";
 import Research from "./pages/Research";
 import Hypotheses from "./pages/Hypotheses";
 import Status from "./pages/Status";
+import Market from "./pages/Market";
 import { UpdateDialog } from "./features/updates/UpdateDialog";
 import { useUpdater } from "./features/updates/useUpdater";
 
 const NAV = [
   { id: "Översikt", icon: "home" },
+  { id: "Marknad", icon: "candles" },
   { id: "Research", icon: "flask" },
   { id: "Hypoteser", icon: "list" },
   { id: "Status", icon: "info" },
@@ -99,6 +101,7 @@ export default function App() {
         )}
         <div className="topbar"><span className="saved"><i />Papper · inga riktiga pengar · v{__APP_VERSION__}</span></div>
         {page === "Översikt" && <Overview go={(p) => setPage(p)} />}
+        {page === "Marknad" && <Market />}
         {page === "Research" && <Research />}
         {page === "Hypoteser" && <Hypotheses />}
         {page === "Status" && <Status updater={updater} />}
