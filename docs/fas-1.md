@@ -1,0 +1,77 @@
+# Fas 1: Strategy Research Engine, kartläggning och status
+
+Fas 1-planen jämförd med det som fanns, det som byggts och det som avviker. Våra regler i CLAUDE.md går före
+planen där de krockar.
+
+## 1. Arkitektur
+
+| Del | Var | Status |
+|---|---|---|
+| Forskningsmotor (Python) | `engine/traderlab` | Fanns: data, kvalitetskontroll, backtest, statistik, register, ML med gallrad CV, papper |
+| Skrivbordsapp (Tauri, React) | `app/` | Fanns: Research-rutor, Hypoteser, Status, Papper, Marknad (prisdiagram) |
+| Insamling av marknadsdata i appen | `app/src-tauri/src/market` | Fanns (Edwin): BTCUSDT 4h, lokalt i SQLite |
+| Supabase | – | Fanns inte. Byggs i steg D när kontot finns |
+| Research Engine som separat modul | `engine/traderlab/{indicators,metrics,optimize,fas1}.py`, `strategies/rules.py` | Byggt. Befintliga funktioner är oförändrade (alla äldre tester går igenom) |
+
+## 2. Historisk marknadsdata
+
+| Punkt | Status |
+|---|---|
+| Börs-API för OHLCV | Fanns: Binance publika datafiler med kontrollsumma (`data/binance.py`), utan nycklar |
+| BTC/USDT, minst 5 år 4H | Klart: spot 2017-08 till 2026-09 (9 år), terminer 2020-01 till 2026-09 |
+| 1H, 4H, 1D | Hämtat. **Spot 1h har 43 staplar på fel tid 2017**: kvalitetskontrollen stoppar den tills det är utrett |
+| Luckor, dubbletter, felstaplar | Fanns: `quality.py` (fel stoppar, varningar loggas) |
+| Spara i Supabase | Steg D |
+| Inkrementell synk, pågående vs stängd stapel | Fanns i appens insamlare. Servern får samma i steg D |
+
+## 3. Strategier
+
+Klart i `strategies/rules.py`: ett gemensamt gränssnitt (`StrategySpec` → `Signals` med mål, stop och take-profit),
+versionerade (`namn@version#parameterhash`), konfigurerbara parametrar med sökrymd, long, short och platt, och
+enhetstester. Fyra strategier: `ema_adx_trend`, `donchian_breakout`, `bb_rsi_reversion`, `squeeze_breakout`.
+Indikatorerna (`indicators.py`) är verifierade mot biblioteket `ta`.
+
+## 4. Backtest
+
+| Punkt | Status |
+|---|---|
+| Stapelvis motor, ingen framtidsdata | Fanns. Varje strategi testas med `check_no_lookahead` |
+| Marknadsorder, stop-loss, take-profit | Stop och take-profit är nya, med gap-hantering och stop före take-profit vid dubbelträff |
+| Courtage, spread, slippage, funding, hävstång och likvidation | Fanns |
+| Varje affär registreras | Ja, med orsak till utgång (signal, stop, take-profit, likvidation) |
+| Jämförelse med köp-och-behåll, reproducerbarhet | Ja. Fast frö, och samma id ger samma resultat |
+
+## 5. Nyckeltal
+
+Klart i `metrics.py`: nettoavkastning, CAGR, Sharpe, Sortino, max drawdown, Calmar, profit factor, vinstandel,
+förväntat värde per affär, snittvinst och snittförlust, drawdown-kurva, månadsresultat och resultat per
+marknadsregim (trend upp eller ned × hög eller låg volatilitet, bara med data som var känd vid tillfället).
+Allt sparas per körning.
+
+## 6. Optimering och validering
+
+Klart i `optimize.py` och `fas1.py` enligt `research/fas1-protokoll.md`: Optuna, walk-forward med växande fönster,
+parameterstabilitet, ett orört slutprov och objektiva kriterier skrivna före körning.
+
+**Avvikelse från planen:** strategierna rangordnas inte efter vilken som "vann" och väljs sedan. Med fyra
+strategier och tusentals försök hittar man alltid en vinnare av slump. I stället bedöms varje strategi mot sina i
+förväg registrerade krav, och t-kravet stiger med antalet försök. Rangordningen visas, men den är inget beslut.
+
+## 7. Research Lab i appen
+
+Steg E. **Avvikelse:** en körning som startas med egna parametrar i appen blir antingen en registrerad hypotes
+eller märks `UTFORSKNING`. Utforskning räknas som försök och kan aldrig bli ett beslut. Det följer regel 2 (hypotesen
+skrivs ned före resultatet).
+
+## 8. Backend, Supabase och drift
+
+Steg D: tabeller för staplar, strategier, körningar, affärer och resultat, en jobbkö, radskydd (RLS) och en worker
+på DigitalOcean som deployas från GitHub. Kräver kontona och hemligheterna (se chatten), som aldrig hamnar i Git.
+
+## 9. Test och godkännande
+
+Motorn har enhetstester för data, kvalitet, indikatorer, stop och take-profit, kostnader, framtidsdata,
+walk-forward och reproducerbarhet. Belastningstest görs i steg D.
+
+**Ingen livehandel kan aktiveras i Fas 1:** det finns ingen order- eller nyckelkod, och appen är bara för papper
+(CLAUDE.md).
