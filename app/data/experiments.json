@@ -2,10 +2,10 @@
   {"id": "E-01", "spår": "S-01", "namn": "BTC 4h", "strategi": "Krypto trend/momentum", "grupp": "krypto", "marknad": "Bitcoin", "tidsram": "4h", "riktning": "Long eller platt"},
   {"id": "E-02", "spår": "S-01", "namn": "BTC 1d", "strategi": "Krypto trend/momentum", "grupp": "krypto", "marknad": "Bitcoin", "tidsram": "1d", "riktning": "Long/short"},
   {"id": "E-03", "spår": "S-01", "namn": "ETH 4h", "strategi": "Krypto trend/momentum", "grupp": "krypto", "marknad": "Ethereum", "tidsram": "4h", "riktning": "Long/short"},
-  {"id": "E-04", "spår": "S-01", "namn": "ETH 1d", "strategi": "Krypto trend/momentum", "grupp": "krypto", "marknad": "Ethereum", "tidsram": "1d", "riktning": "Long/short"},
+  {"id": "E-04", "spår": "S-01", "namn": "ETH 1d", "strategi": "Krypto trend/momentum", "grupp": "krypto", "marknad": "Ethereum", "tidsram": "1d", "riktning": "Long eller platt"},
   {"id": "E-05", "spår": "S-02", "namn": "BTC 1h", "strategi": "Krypto mean-reversion", "grupp": "krypto", "marknad": "Bitcoin", "tidsram": "1h", "riktning": "Long/short"},
   {"id": "E-06", "spår": "S-02", "namn": "ETH 1h", "strategi": "Krypto mean-reversion", "grupp": "krypto", "marknad": "Ethereum", "tidsram": "1h", "riktning": "Long/short"},
-  {"id": "E-07", "spår": "S-03", "namn": "BTC terminer 1d", "strategi": "Krypto short / finansieringsränta", "grupp": "terminer", "marknad": "Bitcoin-terminer", "tidsram": "1d", "riktning": "Short"},
+  {"id": "E-07", "spår": "S-03", "namn": "BTC terminer 4h", "strategi": "Krypto short / finansieringsränta", "grupp": "terminer", "marknad": "Bitcoin-terminer", "tidsram": "4h", "riktning": "Long/short"},
   {"id": "E-08", "spår": "S-03", "namn": "ETH terminer 1d", "strategi": "Krypto short / finansieringsränta", "grupp": "terminer", "marknad": "Ethereum-terminer", "tidsram": "1d", "riktning": "Short"},
   {"id": "E-17", "spår": "S-01", "namn": "BTC 4h ML", "strategi": "Maskininlärning (logistisk)", "grupp": "krypto", "marknad": "Bitcoin", "tidsram": "4h", "riktning": "Long eller platt"},
   {"id": "E-09", "spår": "S-04", "namn": "USA-aktier 1 mån", "strategi": "Aktier momentum", "grupp": "aktier", "marknad": "USA-aktier", "tidsram": "1 mån", "riktning": "Long"},
@@ -16,5 +16,6 @@
   {"id": "E-14", "spår": "S-09", "namn": "Insiderköp 1 mån", "strategi": "Insiderköp och 13F", "grupp": "aktier", "marknad": "USA-aktier", "tidsram": "1 mån", "riktning": "Long"},
   {"id": "E-15", "spår": "S-10", "namn": "Makroregimer 1 mån", "strategi": "Makro / regimer", "grupp": "makro", "marknad": "Blandat", "tidsram": "1 mån", "riktning": "Long/short"},
   {"id": "E-16", "spår": "S-11", "namn": "Volatilitet 1d", "strategi": "Volatilitetsstrategier", "grupp": "makro", "marknad": "Index/krypto", "tidsram": "1d", "riktning": "Short"},
+  {"id": "E-18", "spår": "B-00", "namn": "BTC 1d volstyrd", "strategi": "Volatilitetsstyrd köp-och-behåll", "grupp": "krypto", "marknad": "Bitcoin", "tidsram": "1d", "riktning": "Long"},
   {"id": "B-01", "spår": "B-00", "namn": "Köp-och-behåll BTC", "strategi": "Baslinje", "grupp": "baslinje", "marknad": "Bitcoin", "tidsram": "1d", "riktning": "Long"}
 ]
