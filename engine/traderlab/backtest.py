@@ -121,7 +121,18 @@ def run(bars: pd.DataFrame, target: pd.Series, costs: CostModel, leverage: float
             else:
                 liq_lock = None
 
-        if desired != pos:
+        if desired != pos and cur is not None and pos != 0.0 and desired != 0.0 and np.sign(desired) == np.sign(pos):
+            # Samma riktning, ny storlek: handla bara skillnaden. Affären fortsätter (samma inträde).
+            new_qty = np.sign(desired) * abs(desired) * leverage * equity / o[i]
+            c = abs(new_qty - qty) * o[i] * rate
+            equity -= c
+            cur.costs += c
+            total_costs += c
+            seg_pnl -= c
+            qty = new_qty
+            cur.size = max(cur.size, abs(desired))
+            pos = desired
+        elif desired != pos:
             if cur is not None:  # stäng vid öppningen av stapel i
                 c = abs(qty) * o[i] * rate
                 equity -= c

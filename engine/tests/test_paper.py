@@ -105,3 +105,16 @@ def test_closed_only_drops_the_running_bar():
     now = bars.index[-1] + pd.Timedelta(hours=2)  # sista stapeln pågår
     assert len(paper.closed_only(bars, "4h", now)) == 9
     assert len(paper.closed_only(bars, "4h", bars.index[-1] + pd.Timedelta(hours=4))) == 10
+
+
+def test_paper_equals_backtest_with_fractional_resizing(tmp_path):
+    repo = make_repo(tmp_path, "| H-0001 | a | x | READY_FOR_PAPER |\n")
+    spec = dict(SPEC, strategy={"name": "buy_and_hold"}, risk={"target_vol": 0.01, "vol_window": 20,
+                                                               "max_drawdown": None, "max_daily_loss": None})
+    paper.freeze(repo, "P-0002", "H-0001", spec, planned_trades=10, stop_rule="x")
+    bars = make_bars(300, seed=8, vol=0.02)
+    paper.step(repo, "P-0002", bars)
+    from traderlab.strategies.registry import build
+    bt = backtest.run(bars, build("buy_and_hold", None, spec["risk"])(bars), CostModel(**SPEC["costs"]))
+    for e in [e for e in paper._events(repo, "P-0002") if e["type"] == "bar"]:
+        assert e["equity"] == pytest.approx(bt.equity.loc[e["time"]], rel=1e-9)

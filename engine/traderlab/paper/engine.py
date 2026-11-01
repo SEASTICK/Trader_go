@@ -117,7 +117,15 @@ def step(repo: Path, paper_id: str, bars: pd.DataFrame) -> int:
         o = float(bars["open"].iloc[i])
         events = []
         # 1) Fyll beslutet från förra stängningen vid den här öppningen.
-        if s.pending is not None and s.pending != s.pos:
+        if (s.pending is not None and s.pending != s.pos and s.qty != 0 and s.pos != 0 and s.pending != 0
+                and (s.pending > 0) == (s.pos > 0)):
+            # Samma riktning, ny storlek: handla bara skillnaden (samma regel som backtest.run).
+            new_qty = (1 if s.pending > 0 else -1) * abs(s.pending) * s.equity / o
+            c = abs(new_qty - s.qty) * o * rate
+            s.equity -= c
+            events.append({"type": "fill", "time": times[i], "action": "resize", "price": o, "qty": new_qty - s.qty, "cost": c})
+            s.qty, s.pos = new_qty, s.pending
+        elif s.pending is not None and s.pending != s.pos:
             if s.qty != 0:
                 c = abs(s.qty) * o * rate
                 s.equity -= c
