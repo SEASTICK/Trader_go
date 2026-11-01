@@ -3,6 +3,7 @@
 
 mod activity;
 mod db;
+mod market;
 mod safety;
 
 use activity::{Activity, Counts};
@@ -10,7 +11,8 @@ use rusqlite::Connection;
 use serde::Serialize;
 use std::path::PathBuf;
 use std::sync::Mutex;
-use tauri::{Manager, State};
+use std::time::Duration;
+use tauri::{Emitter, Manager, State};
 
 pub struct AppState {
     pub db: Mutex<Connection>,
@@ -89,7 +91,16 @@ fn stop_activity(kind: String, state: State<'_, AppState>) -> Result<Counts, Str
 }
 
 fn main() {
-    tauri::Builder::default()
+    let app = tauri::Builder::default()
+        // One instance: a second launch shows the open window instead of starting a second
+        // market-data collector (src/market).
+        .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+            if let Some(w) = app.get_webview_window("main") {
+                let _ = w.unminimize();
+                let _ = w.show();
+                let _ = w.set_focus();
+            }
+        }))
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_process::init())
         .setup(|app| {
@@ -108,6 +119,20 @@ fn main() {
                 db_path: path,
                 activity: Activity::default(),
             });
+            // Public market data only (no keys, no account, no orders); see docs/marknadsdata.md.
+            let dir = app.path().app_data_dir()?.join("market");
+            let status = app.handle().clone();
+            let bars = app.handle().clone();
+            let collector = market::Collector::start(
+                dir,
+                Box::new(move |s| {
+                    let _ = status.emit(market::STATUS_EVENT, s);
+                }),
+                Box::new(move |b| {
+                    let _ = bars.emit(market::BAR_EVENT, b);
+                }),
+            );
+            app.manage(collector);
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -118,7 +143,17 @@ fn main() {
             start_activity,
             stop_activity,
             prepare_update_install,
+            market::market_status,
+            market::market_series,
+            market::market_bars,
         ])
-        .run(tauri::generate_context!())
+        .build(tauri::generate_context!())
         .expect("fel när Trader_go startades");
+    app.run(|app, event| {
+        if let tauri::RunEvent::Exit = event {
+            // Close the market-data connection and let the last write finish before exiting.
+            app.state::<market::Collector>()
+                .stop(Duration::from_secs(3));
+        }
+    });
 }

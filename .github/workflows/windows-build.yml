@@ -44,6 +44,10 @@ jobs:
           shared-key: build-windows
           save-if: ${{ github.ref == 'refs/heads/main' }}
       - run: npm ci
+      # Rust-testerna (bland annat marknadsdatans lagring, låsfil och återanslutning) på Windows.
+      # Gränssnittet byggs först eftersom Tauri bäddar in dist/ när testerna kompileras.
+      - run: npm run build
+      - run: cargo test --manifest-path src-tauri/Cargo.toml
       # Utan signeringsnyckel: uppdateringsfilerna stängs av här. Riktiga släpp signeras i desktop-release.yml.
       - run: npm run tauri build -- --target x86_64-pc-windows-msvc --bundles nsis --config '{"bundle":{"createUpdaterArtifacts":false}}'
       - uses: actions/upload-artifact@v4

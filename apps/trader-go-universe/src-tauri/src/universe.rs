@@ -126,7 +126,16 @@ pub fn setup(builder: tauri::Builder<Wry>) -> tauri::Builder<Wry> {
             project_map::map_reveal,
             project_map::map_open_obsidian,
             universe_discovery,
+            prepare_update_install,
         ])
+}
+
+/// The shared update hook (app/src/features/updates) asks this right before installing. Universe has
+/// no sessions to wait for and no data of its own to back up (it only reads the project), so it
+/// always allows the install.
+#[tauri::command]
+fn prepare_update_install() -> Result<String, String> {
+    Ok(String::new())
 }
 
 /// How Universe found the project folder (for the diagnostics panel).
