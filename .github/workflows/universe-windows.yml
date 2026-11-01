@@ -1,0 +1,49 @@
+name: Universe Windows check
+
+# Bygger Universes Windows-installation vid pull request, utan att publicera något. Körs bara när
+# något som påverkar Windows-bygget ändras (Windows-minuter kostar dubbelt). Releaser görs i
+# desktop-release.yml.
+on:
+  pull_request:
+    paths:
+      - "apps/trader-go-universe/src-tauri/**"
+      - "apps/trader-go-universe/package.json"
+      - "apps/trader-go-universe/package-lock.json"
+      - ".github/workflows/universe-windows.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: universe-windows-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: apps/trader-go-universe
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/trader-go-universe/package-lock.json
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: apps/trader-go-universe/src-tauri
+          key: universe
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+      - run: npm ci
+      - run: npm test
+      # Utan signeringsnyckel: uppdateringsfilerna stängs av här. Riktiga släpp signeras i desktop-release.yml.
+      - run: npm run tauri build -- --target x86_64-pc-windows-msvc --bundles nsis --config '{"bundle":{"createUpdaterArtifacts":false}}'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: TraderGO-Universe-windows-installer
+          path: apps/trader-go-universe/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
+          retention-days: 7

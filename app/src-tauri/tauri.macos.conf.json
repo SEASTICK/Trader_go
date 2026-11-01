@@ -1,0 +1,16 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "TraderGO",
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "TraderGO",
+        "width": 1200,
+        "height": 800,
+        "minWidth": 700,
+        "minHeight": 500
+      }
+    ]
+  }
+}

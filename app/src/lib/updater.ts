@@ -115,3 +115,9 @@ export async function installUpdate(deps: UpdaterDeps, currentVersion: string, o
   try { await deps.relaunch(); } catch { /* På Windows har installationen redan startat om appen. */ }
   return { ok: true };
 }
+
+/** Kontrollera när fönstret får fokus igen, men inte oftare än var tionde minut. */
+export const FOCUS_MIN_GAP_MS = 10 * 60 * 1000;
+export function shouldCheckOnFocus(lastCheckedAt: number | null, now: number, minGapMs = FOCUS_MIN_GAP_MS): boolean {
+  return lastCheckedAt === null || now - lastCheckedAt >= minGapMs;
+}

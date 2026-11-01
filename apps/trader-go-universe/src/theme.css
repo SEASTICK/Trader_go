@@ -1,0 +1,40 @@
+/* Gemensamt tema för båda apparna: färger (ljust och mörkt), grundstil och uppdateringsdialogen. */
+:root {
+  --bg:#fcfcfb; --side:#f7f7f5; --card:#ffffff; --line:#e8e8e4; --ink:#1b1e1c; --muted:#6a706c;
+  --hover:#f0f0ed; --active:#ececE8; --accent:#3a7a4d; --accent-h:#2f6540; --on-accent:#fff;
+  --good:#2f8a4a; --bad:#c2402f; --warn:#b07a1c; --idle:#9aa09c; --shadow:0 1px 2px rgba(20,25,22,.04),0 8px 24px rgba(20,25,22,.04);
+  --s1:#3a7a4d; --s2:#8d9591;
+}
+:root[data-theme="dark"] {
+  --bg:#101211; --side:#0c0e0d; --card:#161918; --line:#262a28; --ink:#ecefed; --muted:#8d9591;
+  --hover:#1d211f; --active:#222624; --accent:#5aa56f; --accent-h:#6bb67f; --on-accent:#0b120d;
+  --good:#5aa56f; --bad:#e0705f; --warn:#d9a441; --idle:#6c7370; --shadow:none; --s1:#5aa56f; --s2:#7a827e;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#101211; --side:#0c0e0d; --card:#161918; --line:#262a28; --ink:#ecefed; --muted:#8d9591;
+    --hover:#1d211f; --active:#222624; --accent:#5aa56f; --accent-h:#6bb67f; --on-accent:#0b120d;
+    --good:#5aa56f; --bad:#e0705f; --warn:#d9a441; --idle:#6c7370; --shadow:none; --s1:#5aa56f; --s2:#7a827e;
+  }
+}
+* { box-sizing:border-box; }
+html,body,#root { height:100%; margin:0; }
+body { background:var(--bg); color:var(--ink); font-family:"Inter Variable",system-ui,sans-serif; font-size:14px; font-feature-settings:"tnum","cv11"; -webkit-font-smoothing:antialiased; }
+button { font:inherit; color:inherit; cursor:pointer; }
+code { background:var(--hover); border-radius:5px; padding:1px 5px; font-size:12px; }
+h1,h2,h3,h4,p { margin:0; }
+.muted { color:var(--muted); }
+.btn { border:1px solid var(--line); background:var(--card); border-radius:12px; padding:11px 18px; font-weight:600; transition:background .15s; }
+.btn:hover { background:var(--hover); }
+.k { font-size:12px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.06em; }
+.overlay { position:fixed; inset:0; background:rgba(10,12,11,.45); backdrop-filter:blur(4px); display:grid; place-items:center; z-index:50; padding:24px; }
+.modal { display:grid; grid-template-columns:230px 1fr; width:min(860px,100%); min-height:420px; background:var(--card); border-radius:22px; overflow:hidden; box-shadow:0 30px 80px rgba(0,0,0,.3); border:1px solid var(--line); }
+.update-dialog { grid-template-columns:1fr; width:min(460px,100%); min-height:0; }
+.update-body { padding:28px; display:flex; flex-direction:column; gap:12px; }
+.update-body h2 { font-size:22px; letter-spacing:-.02em; }
+.version-tag { font-size:13px; font-weight:600; color:var(--accent); background:color-mix(in srgb,var(--accent) 12%,transparent); padding:2px 8px; border-radius:999px; vertical-align:middle; }
+.progress { height:6px; border-radius:99px; background:var(--hover); overflow:hidden; } .progress i { display:block; height:100%; background:var(--accent); transition:width .25s; }
+.notes { max-height:160px; overflow:auto; background:var(--hover); border-radius:12px; padding:12px 14px; } .notes pre { margin:0; white-space:pre-wrap; font:inherit; }
+.update-actions { display:flex; gap:10px; align-items:center; margin-top:8px; flex-wrap:wrap; }
+.btn.accent { background:var(--accent); color:var(--on-accent); border-color:var(--accent); } .btn.accent:hover { background:var(--accent-h); }
+.btn:disabled,.item:disabled { opacity:.55; cursor:default; }

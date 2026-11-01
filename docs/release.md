@@ -14,7 +14,7 @@ Arbetsflödet måste ligga på `main` för att kunna startas.
 
 ## Så släpper du
 
-1. **Förbered versionen.** Låt `app/package.json`, `app/src-tauri/tauri.conf.json` och `app/src-tauri/Cargo.toml` ha samma version. Lämna fältet *version* tomt i Run workflow så höjs patchnumret automatiskt efter senaste `vX.Y.Z`-taggen. Skriv `app/RELEASE_NOTES.md` om du vill ha egna anteckningar, annars används de senaste commit-meddelandena.
+1. **Förbered versionen.** Låt `app/package.json`, `app/src-tauri/tauri.conf.json` och `app/src-tauri/Cargo.toml` ha samma version. Lämna fältet *version* tomt i Run workflow så blir det föregående version +1 (patch). Både stable- och test-releaser räknas, så numren går bara uppåt. Skriv ett eget nummer bara när du vill ändra mellan- eller huvudversion (till exempel `0.2.0`). Skriv `app/RELEASE_NOTES.md` om du vill ha egna anteckningar, annars används de senaste commit-meddelandena.
 2. **Kör `test` först.** Run workflow med `channel = test`. Vänta tills `version`, `build-windows` och `publish` är gröna, och `approve` är **hoppad över** (grå).
 3. **Kontrollera testet.**
    - `https://seastick.github.io/trader-go-releases/test/latest.json` finns och innehåller `windows-x86_64` och `windows-x86_64-nsis`.
@@ -28,6 +28,21 @@ Arbetsflödet måste ligga på `main` för att kunna startas.
 6. **Kontrollera.** `https://seastick.github.io/trader-go-releases/latest.json` visar nya versionen och releasen `vX.Y.Z` finns.
 
 Taggar som startar arbetsflödet ska bara vara `v*`. Versionsberäkningen läser bara taggar på formen `vX.Y.Z`.
+
+## TraderGO Universe
+
+Universe släpps i samma körning som Trader_go, med samma version, kanal och godkännande. Rutan
+**universe** i Run workflow (förvald) styr det; bockas den av släpps bara Trader_go och den
+publicerade Universe-versionen lämnas orörd.
+
+- Byggs för Windows (x64, NSIS) och macOS (universal, ad hoc-signerad) i jobbet `build-universe`.
+- Publiceras under `universe/` på uppdateringssidan (`test/universe/` för test), med egen
+  `universe/latest.json`. Rotens filer och Trader_go:s `latest.json` rörs inte av Universe.
+- Testbygget heter **TraderGO Universe Test** (`com.seastick.tradergo.universe.updatertest`).
+- Samma uppdateringsnyckel som Trader_go; ingen ny hemlighet behövs.
+- Kontrollera efter `test`: `https://seastick.github.io/trader-go-releases/test/universe/latest.json`
+  innehåller `windows-x86_64` och `darwin-aarch64`.
+- macOS-minuter kostar mer än Windows. Bocka av **universe** när bara Trader_go har ändrats.
 
 ## Engångsuppsättning (görs av människa, aldrig av Claude)
 
@@ -44,5 +59,14 @@ Taggar som startar arbetsflödet ska bara vara `v*`. Versionsberäkningen läser
 
 - Installationsfilen är **inte kodsignerad** för Windows, så SmartScreen kan visa "okänd utgivare" (Mer info → Kör ändå). Uppdateringarna verifieras ändå med Tauris egen signatur.
 - Uppdateringssidan är publik, så installationsfilerna kan hämtas av vem som helst. Lägg inte känsliga strategier eller data i appen.
-- Mac är inte med. Att lägga till det kräver en matris som i Vinstlys `desktop-release.yml` och, för signering på riktigt, ett Apple Developer-konto.
+- Trader_go byggs inte för Mac i CI (Universe gör det). På en Mac: `bash scripts/install-macos.sh`.
+- Mac är inte med för Trader_go. Att lägga till det kräver en matris som i Vinstlys `desktop-release.yml` och, för signering på riktigt, ett Apple Developer-konto.
 - Testa godkännandeskriptet lokalt: `bash .github/scripts/test_wait_for_approval.sh`.
+
+## Tid och Actions-minuter
+
+- Windows-körningar räknas dubbelt mot Linux i privata repon på gratisplanen, så de görs bara när det behövs.
+- `universe-check.yml` (Linux) körs vid ändringar i Universe eller i uppdateringskoden den delar med Trader_go. `universe-windows.yml` bara vid ändringar i Universes Rust-del eller paketfiler.
+- `app-check.yml` (Linux, cirka 1 minut) körs vid ändringar i `app/`. `windows-build.yml` körs bara vid ändringar i `app/src-tauri/`, i paketfilerna eller i release-flödena.
+- Rust-biblioteken cachas (`rust-cache`). Första bygget efter ändrade beroenden eller ny Rust-version tar cirka 14 minuter, vanliga bygge cirka 5 minuter.
+- Appens uppdatering laddar ner hela installationsfilen. Tauris uppdaterare har ingen delta-uppdatering.

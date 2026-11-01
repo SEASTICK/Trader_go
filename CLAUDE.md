@@ -24,6 +24,15 @@ och kombinera små kanter utan att lura oss själva.
   när positionen ligger på terminer.
 - Gallring mellan träning och test när etiketten tittar framåt.
 
+## Skrivbordsapparna
+
+`app/` är **Trader_go** och `apps/trader-go-universe/` är **TraderGO Universe** (projektkartan). Se
+[README.md](README.md), [docs/release.md](docs/release.md) och [docs/universe.md](docs/universe.md).
+Trader_go är bara för papperstrading: lägg aldrig till mäklarkoppling, orderkod eller nyckellagring.
+Universe är bara läsning: den får aldrig skapa, ändra, byta namn på, ta bort eller "reparera" filer i
+projektmappen. Ändra aldrig `identifier` i någon av apparnas `tauri.conf.json`. Obsidian-valvet är
+`research/`.
+
 ## Skills
 
 Se [.claude/skills/README.md](.claude/skills/README.md). Våra egna regler går före

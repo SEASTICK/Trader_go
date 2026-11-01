@@ -9,5 +9,19 @@ node_modules/
 dist/
 app/src-tauri/target/
 app/src-tauri/gen/
-.DS_Store
+engine/.venv/
+.pytest_cache/
+apps/*/src-tauri/target/
+apps/*/src-tauri/gen/
+
+# Obsidian (valvet är research/): delad konfiguration följer med, personliga inställningar och cachar inte.
 research/.obsidian/workspace*.json
+research/.obsidian/cache
+research/.obsidian/graph.json
+research/.obsidian/hotkeys.json
+research/.obsidian/plugins/*/data.json
+research/.trash/
+
+# Systemfiler
+.DS_Store
+Thumbs.db

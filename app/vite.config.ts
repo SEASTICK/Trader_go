@@ -15,6 +15,8 @@ function git(cmd: string, fallback: string): string {
 
 export default defineConfig({
   plugins: [react()],
+  // Appen läser research/registry.md (utanför app/) när den byggs.
+  server: { fs: { allow: [".."] } },
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
     __COMMIT__: JSON.stringify(process.env.CF_PAGES_COMMIT_SHA?.slice(0, 7) ?? git("git rev-parse --short HEAD", "okänd")),
