@@ -1,0 +1,47 @@
+name: Universe check
+
+# Billig kontroll av TraderGO Universe på Linux vid pull request: gränssnittets tester, typkontroll,
+# bygge, kontrollen att appen bara läser, och Rust-testerna (bland annat att projektmappen aldrig
+# ändras). Körs också när Trader_go:s uppdateringskod ändras, eftersom Universe använder den.
+on:
+  pull_request:
+    paths:
+      - "apps/trader-go-universe/**"
+      - "app/src/features/updates/**"
+      - "app/src/lib/updater.ts"
+      - "app/src/lib/version.ts"
+      - ".github/workflows/universe-check.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: universe-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/trader-go-universe
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/trader-go-universe/package-lock.json
+      - run: npm ci
+      - run: npm test
+      # Bygget behövs också före Rust-testerna: Tauri bäddar in dist/ när det kompilerar.
+      - run: npm run build
+      - name: Linux libraries for Tauri
+        run: sudo apt-get update && sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev librsvg2-dev
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: apps/trader-go-universe/src-tauri
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+      - run: cargo test --manifest-path src-tauri/Cargo.toml
