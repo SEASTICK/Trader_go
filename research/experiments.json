@@ -20,7 +20,8 @@
       "fee_bps": 10,
       "spread_bps": 2,
       "slippage_bps": 5
-    }
+    },
+    "track": "A"
   },
   "E-17": {
     "hypothesis": "H-0002",
@@ -45,7 +46,8 @@
       "fee_bps": 10,
       "spread_bps": 2,
       "slippage_bps": 5
-    }
+    },
+    "track": "A"
   },
   "E-18": {
     "hypothesis": "H-0003",
@@ -70,7 +72,8 @@
       "fee_bps": 10,
       "spread_bps": 2,
       "slippage_bps": 5
-    }
+    },
+    "track": "A"
   },
   "E-07": {
     "hypothesis": "H-0004",
@@ -92,7 +95,8 @@
       "fee_bps": 10,
       "spread_bps": 2,
       "slippage_bps": 5
-    }
+    },
+    "track": "A"
   },
   "E-04": {
     "hypothesis": "H-0005",
@@ -109,6 +113,80 @@
         "fast": 1,
         "slow": 50,
         "allow_short": false
+      }
+    },
+    "costs": {
+      "fee_bps": 10,
+      "spread_bps": 2,
+      "slippage_bps": 5
+    },
+    "track": "A"
+  },
+  "E-19": {
+    "hypothesis": "H-0006",
+    "track": "B",
+    "market": "spot",
+    "symbol": "BTCUSDT",
+    "interval": "1d",
+    "period": {
+      "start": "2020-01-01",
+      "end": "2025-01-01"
+    },
+    "strategy": {
+      "name": "ma_cross",
+      "params": {
+        "fast": 1,
+        "slow": 200,
+        "allow_short": false
+      }
+    },
+    "costs": {
+      "fee_bps": 10,
+      "spread_bps": 2,
+      "slippage_bps": 5
+    }
+  },
+  "E-12": {
+    "hypothesis": "H-0007",
+    "track": "C",
+    "market": "spot",
+    "symbol": "ETHBTC",
+    "interval": "1d",
+    "period": {
+      "start": "2020-01-01",
+      "end": "2025-01-01"
+    },
+    "strategy": {
+      "name": "zscore_reversion",
+      "params": {
+        "window": 30,
+        "entry": 2.0
+      }
+    },
+    "costs": {
+      "fee_bps": 10,
+      "spread_bps": 2,
+      "slippage_bps": 5
+    }
+  },
+  "E-20": {
+    "hypothesis": "H-0008",
+    "track": "C",
+    "market": "um",
+    "symbol": "BTCUSDT",
+    "interval": "4h",
+    "period": {
+      "start": "2020-01-01",
+      "end": "2025-01-01"
+    },
+    "funding": true,
+    "hedged": {
+      "spot_symbol": "BTCUSDT"
+    },
+    "strategy": {
+      "name": "funding_carry",
+      "params": {
+        "threshold": 0.0001
       }
     },
     "costs": {

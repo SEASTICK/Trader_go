@@ -14,3 +14,4 @@ Rådata ligger i data/raw/ och committas inte. Den här filen committas.
 | 2026-11-01 13:03 | data.binance.vision | um | ETHUSDT | 4h | 2020-01 till 2026-09 | 81 | - |
 | 2026-11-01 13:04 | data.binance.vision | um | BTCUSDT | fundingRate | 2020-01 till 2026-09 | 81 | - |
 | 2026-11-01 13:05 | data.binance.vision | um | ETHUSDT | fundingRate | 2020-01 till 2026-09 | 81 | - |
+| 2026-11-01 13:26 | data.binance.vision | spot | ETHBTC | 1d | 2020-01 till 2026-09 | 81 | - |

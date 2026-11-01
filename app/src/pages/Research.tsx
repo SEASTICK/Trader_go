@@ -3,7 +3,7 @@ import experiments from "../../data/experiments.json";
 import results from "../../data/results.json";
 import { Sparkline } from "../components/Charts";
 import { Page, Segmented, SimChip } from "../components/ui";
-import { compute, fromResult, kravFör, num, pct, type Computed, type Experiment, type RealResult } from "../lib/experiments";
+import { MÅL, compute, fromResult, kravFör, målFör, num, pct, type Computed, type Experiment, type RealResult } from "../lib/experiments";
 import ExperimentDetail from "./ExperimentDetail";
 import { TrackList } from "./TrackList";
 
@@ -11,6 +11,8 @@ const VIEWS = ["Rutor", "Spår"] as const;
 type View = (typeof VIEWS)[number];
 const SORTS = ["Standard", "Namn", "Avkastning", "t-värde"] as const;
 type Sort = (typeof SORTS)[number];
+const GROUPINGS = ["Mål", "Marknad"] as const;
+type Grouping = (typeof GROUPINGS)[number];
 const GROUPS = [
   { key: "krypto", label: "Krypto", desc: "Bitcoin och Ethereum, köpta och sålda direkt." },
   { key: "terminer", label: "Krypto-terminer", desc: "Short och finansieringsränta. Kräver koll på likvidation." },
@@ -22,7 +24,8 @@ const GROUPS = [
 function Tile({ c, krav: kravAlla, onOpen }: { c: Computed; krav: number; onOpen: () => void }) {
   const up = c.avkastning >= 0;
   const krav = c.krav ?? kravAlla;
-  const passes = c.passes ?? c.t >= krav;
+  // Riktiga resultat bedöms mot alla kriterier i sitt spår, påhittade bara mot t-kravet.
+  const passes = c.klararMål ?? c.passes ?? c.t >= krav;
   return (
     <button type="button" className="rtile" data-group={c.exp.grupp} onClick={onOpen} aria-label={`${c.exp.namn}, öppna detaljer`}>
       <span className="rtile-top"><b>{c.exp.id}</b><span className={c.källa === "HISTORIK" ? "sim-tag real" : "sim-tag"}>{c.källa === "HISTORIK" ? "HISTORIK" : "SIM"}</span></span>
@@ -34,7 +37,7 @@ function Tile({ c, krav: kravAlla, onOpen }: { c: Computed; krav: number; onOpen
       </span>
       <span className="rtile-foot">
         <span>t {num(c.t, 1)} <i>/ krav {num(krav, 1)}</i></span>
-        <span className={passes ? "pass" : "fail"}>{passes ? "över kravet" : "under kravet"}</span>
+        <span className={passes ? "pass" : "fail"}>{c.klararMål === undefined ? (passes ? "över kravet" : "under kravet") : (passes ? "klarar målet" : "klarar inte målet")}</span>
       </span>
     </button>
   );
@@ -43,6 +46,7 @@ function Tile({ c, krav: kravAlla, onOpen }: { c: Computed; krav: number; onOpen
 export default function Research() {
   const [view, setView] = useState<View>("Rutor");
   const [sort, setSort] = useState<Sort>("Standard");
+  const [grouping, setGrouping] = useState<Grouping>("Mål");
   const [open, setOpen] = useState<string | null>(null);
   // JSON-filen skrivs av motorn. Bara poster som är märkta HISTORIK används, allt annat förblir SIM.
   const real = useMemo(() => Object.fromEntries(
@@ -73,9 +77,30 @@ export default function Research() {
           <div className="toolbar">
             <span className="muted">Sortera efter</span>
             <Segmented value={sort} options={[...SORTS]} onChange={setSort} />
+            <span className="muted">Gruppera efter</span>
+            <Segmented value={grouping} options={[...GROUPINGS]} onChange={setGrouping} />
             <SimChip />
           </div>
-          {GROUPS.map((g) => {
+          {grouping === "Mål" && MÅL.map((m) => {
+            const items = sorted.filter((c) => målFör(c.exp) === m.key);
+            if (!items.length) return null;
+            const testade = items.filter((c) => c.källa === "HISTORIK");
+            const klarar = testade.filter((c) => c.klararMål).length;
+            return (
+              <section key={m.key} className="rsection">
+                <div className="rsection-head">
+                  <span className="mål-badge">{m.key}</span>
+                  <h2>{m.label}</h2>
+                  <span className="muted">{m.desc} {testade.length} testade på historik, {klarar} klarar målet.</span>
+                </div>
+                <p className="mål-krav"><b>Krav:</b> {m.krav}</p>
+                <div className="rgrid">
+                  {items.map((c) => <Tile key={c.exp.id} c={c} krav={krav} onOpen={() => setOpen(c.exp.id)} />)}
+                </div>
+              </section>
+            );
+          })}
+          {grouping === "Marknad" && GROUPS.map((g) => {
             const items = sorted.filter((c) => c.exp.grupp === g.key);
             if (!items.length) return null;
             return (

@@ -29,3 +29,13 @@ def funding_contrarian(bars: pd.DataFrame, funding: pd.Series, threshold: float 
     f = last_known_funding(bars, funding)
     pos = np.where(f >= threshold, -1.0, np.where(f <= -threshold, 1.0, 0.0))
     return pd.Series(pos, index=bars.index).where(f.notna(), 0.0)
+
+
+def funding_carry(bars: pd.DataFrame, funding: pd.Series, threshold: float = 0.0001) -> pd.Series:
+    """Kort termin (-1) när longsidan betalar minst `threshold` per avräkning, annars platt.
+
+    Tänkt för säkrade rutor ("hedged" i research/experiments.json), där -1 betyder spot lång och termin kort,
+    så att positionen tar emot finansieringsräntan utan att vara exponerad mot priset.
+    """
+    f = last_known_funding(bars, funding)
+    return pd.Series(np.where(f >= threshold, -1.0, 0.0), index=bars.index).where(f.notna(), 0.0)

@@ -7,7 +7,7 @@ import pandas as pd
 
 from ..ml.walkforward import ml_strategy
 from . import examples
-from .funding import funding_contrarian
+from .funding import funding_carry, funding_contrarian
 
 
 def buy_and_hold(bars: pd.DataFrame) -> pd.Series:
@@ -21,7 +21,11 @@ FACTORIES: dict[str, Callable[..., Callable[[pd.DataFrame], pd.Series]]] = {
     "ml": lambda **p: ml_strategy(**p),
     # Kräver finansieringsräntan: batch skickar med den som parametern `funding` när rutan har "funding": true.
     "funding_contrarian": lambda funding, **p: (lambda b: funding_contrarian(b, funding, **p)),
+    "funding_carry": lambda funding, **p: (lambda b: funding_carry(b, funding, **p)),
 }
+
+# Strategier som får finansieringsräntan som parametern `funding`.
+NEEDS_FUNDING = {"funding_contrarian", "funding_carry"}
 
 
 def build(name: str, params: dict | None = None, risk: dict | None = None) -> Callable[[pd.DataFrame], pd.Series]:
