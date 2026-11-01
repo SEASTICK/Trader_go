@@ -16,6 +16,12 @@ rusqlite = { version = "0.32", features = ["bundled"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 thiserror = "2"
+tauri-plugin-single-instance = "2"
+# Marknadsdata (src/market): publik data, operativsystemets TLS, lokal SQLite.
+ureq = { version = "2", default-features = false, features = ["native-tls"] }
+native-tls = "0.2"
+tungstenite = { version = "0.24", features = ["native-tls"] }
+fastrand = "2"
 
 [dev-dependencies]
 minisign-verify = "0.2"
