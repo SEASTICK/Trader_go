@@ -124,6 +124,18 @@ describe("downloadUpdate och installReady", () => {
     expect(await installReady(r.ready, d, () => {})).toEqual({ ok: false, message: text.error.install });
     expect(d.relaunch).not.toHaveBeenCalled();
   });
+  it("installerar inte när beforeInstall stoppar (pågående session), och den hämtade versionen finns kvar", async () => {
+    const install = vi.fn(async () => {});
+    const d = deps(async () => handle("0.2.0", async () => {}, install), { beforeInstall: async () => "Uppdateringen installeras när 1 papperssession(er) har avslutats." });
+    const r = await downloadUpdate(d, "0.1.0", () => {});
+    if (!r.ok) throw new Error("expected a ready update");
+    expect(await installReady(r.ready, d, () => {})).toEqual({ ok: false, message: "Uppdateringen installeras när 1 papperssession(er) har avslutats." });
+    expect(install).not.toHaveBeenCalled();
+    expect(d.relaunch).not.toHaveBeenCalled();
+    d.beforeInstall = async () => null; // sessionen är slut
+    expect(await installReady(r.ready, d, () => {})).toEqual({ ok: true });
+    expect(install).toHaveBeenCalledOnce();
+  });
   it("fel vid omstart är inte ett installationsfel", async () => {
     const d = deps(async () => handle("0.2.0"), { relaunch: async () => { throw new Error("redan omstartad"); } });
     const r = await downloadUpdate(d, "0.1.0", () => {});

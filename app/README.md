@@ -1,14 +1,32 @@
 # Trader_go-appen
 
-Statisk webbsida (Vite + React + TypeScript). Ingen server, inga nycklar. Datan ligger i
-`app/data/` och läses direkt av appen.
+Vite + React + TypeScript. Samma gränssnitt körs som webbsida (Cloudflare Pages) och som
+datorprogram för macOS och Windows (Tauri v2). Appen handlar inte och ansluter inte till någon
+börs. Datorprogrammet fungerar offline; nätet används bara för att leta efter uppdateringar.
 
 ```bash
 cd app
 npm ci
-npm run dev      # lokalt
-npm run build    # bygger till app/dist
+npm run dev           # webbsidan lokalt
+npm run tauri dev     # datorprogrammet lokalt (kräver Rust)
+cd src-tauri && cargo test
 ```
+
+## Struktur
+
+| Sökväg | Vad |
+|---|---|
+| `src/`, `data/` | Gränssnittet och datan det visar |
+| `src/desktop.tsx` | Sidan *Papper*, syns bara i datorprogrammet |
+| `src-tauri/src/main.rs` | Start och kommandon |
+| `src-tauri/src/db.rs` | SQLite, migreringar, säkerhetskopior |
+| `src/features/updates/`, `src/lib/updater.ts` | Uppdateringar i appen, se [docs/release.md](../docs/release.md) |
+| `src-tauri/src/activity.rs` | Pågående papperssessioner och backtester (installation väntar på dem) |
+| `src-tauri/src/safety.rs` | Spärr som håller appen på papper |
+| `../.github/workflows/desktop-release.yml` | Släpp (startas för hand), se [docs/release.md](../docs/release.md) |
+| `../.github/workflows/windows-build.yml` | Windows-bygge och installationsfil (PR som rör Windows-bygget) |
+| `../.github/workflows/app-check.yml` | Frontendtester och bygge på Linux (PR som rör `app/`) |
+| `../.github/workflows/rust-check.yml` | fmt, clippy och Rust-tester på Linux (PR som rör `src-tauri/`) |
 
 ## Cloudflare Pages (görs av människa, inget hemligt i Git)
 
@@ -17,26 +35,31 @@ npm run build    # bygger till app/dist
 - Build output directory: `dist`
 - Skydda sidan med Cloudflare Access (e-post) så bara ni två kommer in.
 
-Appen visar bara. Den handlar inte och ansluter inte till någon börs.
+På webben syns inte sidan Papper.
 
-## Datorprogram (Tauri, Windows)
+## Uppdateringar
 
-Samma gränssnitt paketeras som ett Windows-program.
+Släpp och uppdateringar beskrivs i [docs/release.md](../docs/release.md). Innan appen
+installerar en uppdatering anropas `prepare_update_install`: den vägrar medan en
+papperssession eller ett backtest pågår och säkerhetskopierar databasen.
 
-```bash
-cd app
-npm ci
-npm run tauri dev     # kör programmet lokalt (kräver Rust)
-npm run tauri build   # bygger installationsfilen
-```
+## Data mellan uppdateringar
 
-GitHub Actions (`.github/workflows/windows-build.yml`) bygger en installationsfil (`.exe`) vid
-varje pull request (ladda ner under körningens **Artifacts**) och vid varje push till `main`.
-Vid push till `main` publiceras den också under **Releases** som `latest` (senaste bygget
-ersätter det förra).
+- Datan ligger i appens datamapp: `~/Library/Application Support/com.seastick.tradergo/` på
+  macOS, `%APPDATA%\com.seastick.tradergo\` på Windows. Installationen byter appen, inte mappen.
+- **Ändra aldrig `identifier` i `tauri.conf.json`.** Datamappen heter som den.
+- Schemaändringar läggs sist i `MIGRATIONS` i `db.rs`. Ändra aldrig en utgiven post.
+- Varje migrering körs i en transaktion. Misslyckas den ändras ingenting.
+- Före migrering och före varje uppdatering sparas en kopia i `backups/` bredvid databasen.
+  De 5 senaste behålls.
+- En äldre app vägrar öppna en databas från en nyare version och ändrar ingenting.
+- En misslyckad nedladdning eller signaturkontroll lämnar den installerade appen orörd.
 
-Installationsfilen är **inte kodsignerad**, så Windows kan visa "okänd utgivare" första
-gången. Välj "Mer info" och "Kör ändå".
+## Regler som gäller
 
-Automatiska uppdateringar är inte påslagna än. De kräver en signeringsnyckel som skapas lokalt
-och läggs som hemlighet i GitHub, aldrig i Git.
+- Ingen livehandel, ingen orderkod, inga mäklar- eller börsnycklar i appen. Från papper till
+  riktiga pengar går via skillen `pengar-grind` och ett uttryckligt beslut.
+- Testerna i `safety.rs` fäller bygget om ett nätverks-, shell- eller HTTP-tillägg eller ett
+  tradingbibliotek läggs till, eller om en affär kan sparas med annat läge än `paper`.
+- Behöver en framtida funktion en hemlighet (t.ex. en API-nyckel för marknadsdata), lägg den i
+  operativsystemets nyckelring (`keyring`), aldrig i SQLite, inställningar eller repot.

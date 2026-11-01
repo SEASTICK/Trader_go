@@ -38,7 +38,10 @@ impl Store {
 
     fn init(conn: Connection) -> rusqlite::Result<Store> {
         conn.execute_batch(SCHEMA)?;
-        conn.execute("INSERT OR IGNORE INTO meta (key, value) VALUES ('schema_version', ?1)", [SCHEMA_VERSION])?;
+        conn.execute(
+            "INSERT OR IGNORE INTO meta (key, value) VALUES ('schema_version', ?1)",
+            [SCHEMA_VERSION],
+        )?;
         Ok(Store { conn })
     }
 
@@ -97,7 +100,13 @@ impl Store {
         Ok(stats)
     }
 
-    pub fn set_live(&mut self, k: &SeriesKey, b: &Bar, event_time: Option<i64>, received_at: i64) -> rusqlite::Result<()> {
+    pub fn set_live(
+        &mut self,
+        k: &SeriesKey,
+        b: &Bar,
+        event_time: Option<i64>,
+        received_at: i64,
+    ) -> rusqlite::Result<()> {
         self.conn.execute(
             "INSERT INTO live_bar (provider, market, symbol, interval, open_time, open, high, low, close, volume,
                                    close_time, event_time, received_at)
@@ -141,12 +150,16 @@ impl Store {
         )
     }
 
+    #[cfg(test)]
     pub fn closed(&self, k: &SeriesKey) -> rusqlite::Result<Vec<Bar>> {
         let mut st = self.conn.prepare(
             "SELECT open_time, open, high, low, close, volume, close_time FROM bars
              WHERE provider=?1 AND market=?2 AND symbol=?3 AND interval=?4 ORDER BY open_time",
         )?;
-        let rows = st.query_map(params![k.provider, k.market, k.symbol, k.interval], row_to_bar)?;
+        let rows = st.query_map(
+            params![k.provider, k.market, k.symbol, k.interval],
+            row_to_bar,
+        )?;
         rows.collect()
     }
 
@@ -157,7 +170,9 @@ impl Store {
             "SELECT open_time FROM bars WHERE provider=?1 AND market=?2 AND symbol=?3 AND interval=?4 ORDER BY open_time",
         )?;
         let times: Vec<i64> = st
-            .query_map(params![k.provider, k.market, k.symbol, k.interval], |r| r.get(0))?
+            .query_map(params![k.provider, k.market, k.symbol, k.interval], |r| {
+                r.get(0)
+            })?
             .collect::<rusqlite::Result<_>>()?;
         let confirmed = self.confirmed_gaps(k)?;
         let mut out = Vec::new();
@@ -172,7 +187,13 @@ impl Store {
         Ok(out)
     }
 
-    pub fn confirm_gap(&mut self, k: &SeriesKey, from: i64, to: i64, at: i64) -> rusqlite::Result<()> {
+    pub fn confirm_gap(
+        &mut self,
+        k: &SeriesKey,
+        from: i64,
+        to: i64,
+        at: i64,
+    ) -> rusqlite::Result<()> {
         self.conn.execute(
             "INSERT OR REPLACE INTO confirmed_gaps (provider, market, symbol, interval, from_open, to_open, confirmed_at)
              VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)",
@@ -185,7 +206,9 @@ impl Store {
         let mut st = self.conn.prepare(
             "SELECT from_open, to_open FROM confirmed_gaps WHERE provider=?1 AND market=?2 AND symbol=?3 AND interval=?4",
         )?;
-        let rows = st.query_map(params![k.provider, k.market, k.symbol, k.interval], |r| Ok((r.get(0)?, r.get(1)?)))?;
+        let rows = st.query_map(params![k.provider, k.market, k.symbol, k.interval], |r| {
+            Ok((r.get(0)?, r.get(1)?))
+        })?;
         rows.collect()
     }
 
@@ -198,14 +221,24 @@ impl Store {
     }
 
     /// En rad i hämtningsloggen. Loggen hålls under LOG_RETENTION_ROWS rader.
-    pub fn log(&mut self, k: &SeriesKey, at: i64, kind: &str, detail: &str, quality: &str) -> rusqlite::Result<()> {
+    pub fn log(
+        &mut self,
+        k: &SeriesKey,
+        at: i64,
+        kind: &str,
+        detail: &str,
+        quality: &str,
+    ) -> rusqlite::Result<()> {
         let tx = self.conn.transaction()?;
         tx.execute(
             "INSERT INTO fetch_log (at, provider, market, symbol, interval, kind, detail, quality)
              VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
             params![at, k.provider, k.market, k.symbol, k.interval, kind, detail, quality],
         )?;
-        tx.execute("DELETE FROM fetch_log WHERE id <= (SELECT MAX(id) FROM fetch_log) - ?1", [LOG_RETENTION_ROWS])?;
+        tx.execute(
+            "DELETE FROM fetch_log WHERE id <= (SELECT MAX(id) FROM fetch_log) - ?1",
+            [LOG_RETENTION_ROWS],
+        )?;
         tx.commit()
     }
 }
@@ -233,7 +266,10 @@ pub struct BarsPage {
 }
 
 fn read_only(path: &Path) -> rusqlite::Result<Connection> {
-    let c = Connection::open_with_flags(path, rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY | rusqlite::OpenFlags::SQLITE_OPEN_NO_MUTEX)?;
+    let c = Connection::open_with_flags(
+        path,
+        rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY | rusqlite::OpenFlags::SQLITE_OPEN_NO_MUTEX,
+    )?;
     c.busy_timeout(std::time::Duration::from_secs(2))?;
     Ok(c)
 }
@@ -246,14 +282,26 @@ pub fn read_series(path: &Path) -> rusqlite::Result<Vec<SeriesInfo>> {
          GROUP BY provider, market, symbol, interval ORDER BY symbol, interval",
     )?;
     let rows = st.query_map([], |r| {
-        Ok(SeriesInfo { provider: r.get(0)?, market: r.get(1)?, symbol: r.get(2)?, interval: r.get(3)?, closed_bars: r.get(4)?,
-                        first_open_time: r.get(5)?, last_open_time: r.get(6)? })
+        Ok(SeriesInfo {
+            provider: r.get(0)?,
+            market: r.get(1)?,
+            symbol: r.get(2)?,
+            interval: r.get(3)?,
+            closed_bars: r.get(4)?,
+            first_open_time: r.get(5)?,
+            last_open_time: r.get(6)?,
+        })
     })?;
     rows.collect()
 }
 
 /// Upp till `limit` stängda staplar före `before` (eller de senaste), i stigande tid. Läser skrivskyddat.
-pub fn read_bars(path: &Path, k: &SeriesKey, before: Option<i64>, limit: u32) -> rusqlite::Result<BarsPage> {
+pub fn read_bars(
+    path: &Path,
+    k: &SeriesKey,
+    before: Option<i64>,
+    limit: u32,
+) -> rusqlite::Result<BarsPage> {
     let c = read_only(path)?;
     let limit = limit.clamp(1, 5000) as i64;
     let mut st = c.prepare(
@@ -262,7 +310,17 @@ pub fn read_bars(path: &Path, k: &SeriesKey, before: Option<i64>, limit: u32) ->
          ORDER BY open_time DESC LIMIT ?6",
     )?;
     let mut bars: Vec<Bar> = st
-        .query_map(params![k.provider, k.market, k.symbol, k.interval, before.unwrap_or(i64::MAX), limit + 1], row_to_bar)?
+        .query_map(
+            params![
+                k.provider,
+                k.market,
+                k.symbol,
+                k.interval,
+                before.unwrap_or(i64::MAX),
+                limit + 1
+            ],
+            row_to_bar,
+        )?
         .collect::<rusqlite::Result<_>>()?;
     let has_more = bars.len() as i64 > limit;
     bars.truncate(limit as usize);
@@ -279,7 +337,11 @@ pub fn read_bars(path: &Path, k: &SeriesKey, before: Option<i64>, limit: u32) ->
     } else {
         None
     };
-    Ok(BarsPage { bars, live, has_more })
+    Ok(BarsPage {
+        bars,
+        live,
+        has_more,
+    })
 }
 
 fn row_to_bar(r: &rusqlite::Row) -> rusqlite::Result<Bar> {
@@ -307,9 +369,17 @@ mod tests {
         let mut s = Store::memory();
         let k = Config::default().key();
         let bars: Vec<Bar> = (0..5).map(|i| test_bar(T0 + i * STEP, STEP)).collect();
-        assert_eq!(s.insert_closed(&k, &bars, "rest", None, 1).unwrap().inserted, 5);
+        assert_eq!(
+            s.insert_closed(&k, &bars, "rest", None, 1)
+                .unwrap()
+                .inserted,
+            5
+        );
         let again = s.insert_closed(&k, &bars, "stream", Some(2), 2).unwrap();
-        assert_eq!((again.inserted, again.duplicates, again.corrections), (0, 5, 0));
+        assert_eq!(
+            (again.inserted, again.duplicates, again.corrections),
+            (0, 5, 0)
+        );
         assert_eq!(s.range(&k).unwrap(), (Some(T0), Some(T0 + 4 * STEP), 5));
     }
 
@@ -319,11 +389,24 @@ mod tests {
         let k = Config::default().key();
         let orig = test_bar(T0, STEP);
         s.insert_closed(&k, &[orig], "rest", None, 1).unwrap();
-        let changed = Bar { close: 106.0, ..orig };
+        let changed = Bar {
+            close: 106.0,
+            ..orig
+        };
         let st = s.insert_closed(&k, &[changed], "rest", None, 2).unwrap();
         assert_eq!(st.corrections, 1);
-        assert_eq!(s.closed(&k).unwrap(), vec![orig], "history is never changed silently");
-        assert_eq!(s.insert_closed(&k, &[changed], "rest", None, 3).unwrap().corrections, 0, "recorded once");
+        assert_eq!(
+            s.closed(&k).unwrap(),
+            vec![orig],
+            "history is never changed silently"
+        );
+        assert_eq!(
+            s.insert_closed(&k, &[changed], "rest", None, 3)
+                .unwrap()
+                .corrections,
+            0,
+            "recorded once"
+        );
         assert_eq!(s.correction_count(&k).unwrap(), 1);
     }
 
@@ -346,11 +429,23 @@ mod tests {
     fn gaps_are_found_and_confirmed_gaps_are_not_reported() {
         let mut s = Store::memory();
         let k = Config::default().key();
-        let bars: Vec<Bar> = [0, 1, 4, 5, 7].iter().map(|i| test_bar(T0 + i * STEP, STEP)).collect();
+        let bars: Vec<Bar> = [0, 1, 4, 5, 7]
+            .iter()
+            .map(|i| test_bar(T0 + i * STEP, STEP))
+            .collect();
         s.insert_closed(&k, &bars, "rest", None, 1).unwrap();
-        assert_eq!(s.missing_ranges(&k, STEP).unwrap(), vec![(T0 + 2 * STEP, T0 + 3 * STEP), (T0 + 6 * STEP, T0 + 6 * STEP)]);
+        assert_eq!(
+            s.missing_ranges(&k, STEP).unwrap(),
+            vec![
+                (T0 + 2 * STEP, T0 + 3 * STEP),
+                (T0 + 6 * STEP, T0 + 6 * STEP)
+            ]
+        );
         s.confirm_gap(&k, T0 + 2 * STEP, T0 + 3 * STEP, 9).unwrap();
-        assert_eq!(s.missing_ranges(&k, STEP).unwrap(), vec![(T0 + 6 * STEP, T0 + 6 * STEP)]);
+        assert_eq!(
+            s.missing_ranges(&k, STEP).unwrap(),
+            vec![(T0 + 6 * STEP, T0 + 6 * STEP)]
+        );
     }
 
     #[test]
@@ -361,21 +456,55 @@ mod tests {
         let k = Config::default().key();
         let bars: Vec<Bar> = (0..10).map(|i| test_bar(T0 + i * STEP, STEP)).collect();
         s.insert_closed(&k, &bars, "rest", None, 1).unwrap();
-        s.set_live(&k, &test_bar(T0 + 10 * STEP, STEP), Some(5), 5).unwrap();
+        s.set_live(&k, &test_bar(T0 + 10 * STEP, STEP), Some(5), 5)
+            .unwrap();
         let latest = read_bars(&db, &k, None, 4).unwrap();
-        assert_eq!(latest.bars.iter().map(|b| (b.open_time - T0) / STEP).collect::<Vec<_>>(), vec![6, 7, 8, 9], "ascending, newest page");
+        assert_eq!(
+            latest
+                .bars
+                .iter()
+                .map(|b| (b.open_time - T0) / STEP)
+                .collect::<Vec<_>>(),
+            vec![6, 7, 8, 9],
+            "ascending, newest page"
+        );
         assert_eq!(latest.live.map(|b| (b.open_time - T0) / STEP), Some(10));
         assert!(latest.has_more);
         let older = read_bars(&db, &k, Some(latest.bars[0].open_time), 4).unwrap();
-        assert_eq!(older.bars.iter().map(|b| (b.open_time - T0) / STEP).collect::<Vec<_>>(), vec![2, 3, 4, 5]);
-        assert!(older.live.is_none(), "the live bar belongs only to the newest page");
+        assert_eq!(
+            older
+                .bars
+                .iter()
+                .map(|b| (b.open_time - T0) / STEP)
+                .collect::<Vec<_>>(),
+            vec![2, 3, 4, 5]
+        );
+        assert!(
+            older.live.is_none(),
+            "the live bar belongs only to the newest page"
+        );
         let oldest = read_bars(&db, &k, Some(older.bars[0].open_time), 4).unwrap();
         assert_eq!(oldest.bars.len(), 2);
         assert!(!oldest.has_more);
         let series = read_series(&db).unwrap();
         assert_eq!(series.len(), 1);
-        assert_eq!((series[0].interval.as_str(), series[0].closed_bars), ("4h", 10));
-        assert!(read_bars(&db, &Config { symbol: "ETHUSDT".into(), ..Config::default() }.key(), None, 10).unwrap().bars.is_empty());
+        assert_eq!(
+            (series[0].interval.as_str(), series[0].closed_bars),
+            ("4h", 10)
+        );
+        assert!(read_bars(
+            &db,
+            &Config {
+                symbol: "ETHUSDT".into(),
+                ..Config::default()
+            }
+            .key(),
+            None,
+            10
+        )
+        .unwrap()
+        .bars
+        .is_empty());
     }
 
     #[test]
@@ -385,7 +514,10 @@ mod tests {
         for i in 0..(LOG_RETENTION_ROWS + 20) {
             s.log(&k, i, "rest", "x", "ok").unwrap();
         }
-        let n: i64 = s.conn().query_row("SELECT COUNT(*) FROM fetch_log", [], |r| r.get(0)).unwrap();
+        let n: i64 = s
+            .conn()
+            .query_row("SELECT COUNT(*) FROM fetch_log", [], |r| r.get(0))
+            .unwrap();
         assert!(n <= LOG_RETENTION_ROWS + 1, "{n} rows");
     }
 }

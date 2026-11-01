@@ -16,7 +16,10 @@ pub const INTERVALS: &[(&str, i64)] = &[
 pub const SYMBOLS: &[&str] = &["BTCUSDT", "ETHUSDT"];
 
 pub fn interval_ms(interval: &str) -> Option<i64> {
-    INTERVALS.iter().find(|(i, _)| *i == interval).map(|(_, ms)| *ms)
+    INTERVALS
+        .iter()
+        .find(|(i, _)| *i == interval)
+        .map(|(_, ms)| *ms)
 }
 
 /// En serie: leverantör, marknad, symbol och tidsram. Tillsammans med öppningstiden är det nyckeln.
@@ -62,7 +65,8 @@ pub fn validate(bar: &Bar, step_ms: i64) -> Result<(), String> {
     if bar.volume < 0.0 {
         return Err("negativ volym".into());
     }
-    if bar.low > bar.open.min(bar.close) || bar.high < bar.open.max(bar.close) || bar.low > bar.high {
+    if bar.low > bar.open.min(bar.close) || bar.high < bar.open.max(bar.close) || bar.low > bar.high
+    {
         return Err("high/low stämmer inte med open/close".into());
     }
     if bar.open_time.rem_euclid(step_ms) != 0 {
@@ -115,17 +119,28 @@ impl Default for Config {
 impl Config {
     pub fn validate(&self) -> Result<(), String> {
         if self.provider != "binance" {
-            return Err(format!("okänd leverantör {}; stöds: binance", self.provider));
+            return Err(format!(
+                "okänd leverantör {}; stöds: binance",
+                self.provider
+            ));
         }
         if self.market != "spot" {
             return Err(format!("okänd marknad {}; stöds: spot", self.market));
         }
         if !SYMBOLS.contains(&self.symbol.as_str()) {
-            return Err(format!("symbolen {} stöds inte; stöds: {}", self.symbol, SYMBOLS.join(", ")));
+            return Err(format!(
+                "symbolen {} stöds inte; stöds: {}",
+                self.symbol,
+                SYMBOLS.join(", ")
+            ));
         }
         if interval_ms(&self.interval).is_none() {
             let all: Vec<&str> = INTERVALS.iter().map(|(i, _)| *i).collect();
-            return Err(format!("tidsramen {} stöds inte; stöds: {}", self.interval, all.join(", ")));
+            return Err(format!(
+                "tidsramen {} stöds inte; stöds: {}",
+                self.interval,
+                all.join(", ")
+            ));
         }
         if !(1..=20_000).contains(&self.warmup_bars) {
             return Err("warmup_bars måste vara 1–20000".into());
@@ -153,7 +168,15 @@ impl Config {
 /// En giltig stapel för tester i hela modulen.
 #[cfg(test)]
 pub fn test_bar(t: i64, step: i64) -> Bar {
-    Bar { open_time: t, open: 100.0, high: 110.0, low: 90.0, close: 105.0, volume: 3.0, close_time: t + step - 1 }
+    Bar {
+        open_time: t,
+        open: 100.0,
+        high: 110.0,
+        low: 90.0,
+        close: 105.0,
+        volume: 3.0,
+        close_time: t + step - 1,
+    }
 }
 
 #[cfg(test)]
@@ -170,9 +193,28 @@ mod tests {
             (Bar { high: 101.0, ..ok }, "high under close"),
             (Bar { low: 0.0, ..ok }, "zero price"),
             (Bar { volume: -1.0, ..ok }, "negative volume"),
-            (Bar { open: f64::NAN, ..ok }, "NaN"),
-            (Bar { open_time: ok.open_time + 1, close_time: ok.close_time + 1, ..ok }, "misaligned"),
-            (Bar { close_time: ok.close_time + 5, ..ok }, "wrong length"),
+            (
+                Bar {
+                    open: f64::NAN,
+                    ..ok
+                },
+                "NaN",
+            ),
+            (
+                Bar {
+                    open_time: ok.open_time + 1,
+                    close_time: ok.close_time + 1,
+                    ..ok
+                },
+                "misaligned",
+            ),
+            (
+                Bar {
+                    close_time: ok.close_time + 5,
+                    ..ok
+                },
+                "wrong length",
+            ),
         ] {
             assert!(validate(&b, step).is_err(), "{why} should be rejected");
         }
@@ -189,10 +231,22 @@ mod tests {
         assert!(Config::default().validate().is_ok());
         assert_eq!(Config::default().step_ms(), 14_400_000);
         for bad in [
-            Config { symbol: "DOGEUSDT".into(), ..Config::default() },
-            Config { interval: "2h".into(), ..Config::default() },
-            Config { market: "um".into(), ..Config::default() },
-            Config { warmup_bars: 0, ..Config::default() },
+            Config {
+                symbol: "DOGEUSDT".into(),
+                ..Config::default()
+            },
+            Config {
+                interval: "2h".into(),
+                ..Config::default()
+            },
+            Config {
+                market: "um".into(),
+                ..Config::default()
+            },
+            Config {
+                warmup_bars: 0,
+                ..Config::default()
+            },
         ] {
             assert!(bad.validate().is_err());
         }

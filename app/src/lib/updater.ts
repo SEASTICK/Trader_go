@@ -10,8 +10,8 @@
  *   4. install + omstart  först när användaren väljer "Starta om nu". Windows-installationen startar
  *                         om appen själv (passiv installation), på macOS byts appen ut och startas om.
  *
- * Trader_go har ingen lokal användardata, så ingen säkerhetskopia tas före installation.
- * Om appen får lokal data ska en säkerhetskopia läggas till före steg 3, som i Vinstly.
+ * Före steg 4 anropas beforeInstall: datorprogrammet vägrar medan en papperssession eller ett
+ * backtest pågår och säkerhetskopierar sin lokala databas (pappersaffärer, backtester).
  */
 import { isNewerVersion, readSnooze, shouldPromptForUpdate, SNOOZE_KEY, UPDATE_SNOOZE_MS } from "./version";
 
@@ -51,6 +51,8 @@ export type UpdaterDeps = {
   relaunch: () => Promise<void>;
   storage: Pick<Storage, "getItem" | "setItem" | "removeItem">;
   now: () => number;
+  /** Null om installationen får fortsätta, annars ett meddelande till användaren. */
+  beforeInstall?: () => Promise<string | null>;
 };
 
 export type CheckOutcome =
@@ -129,8 +131,14 @@ export async function downloadUpdate(deps: UpdaterDeps, currentVersion: string, 
   return { ok: true, ready: { version: handle.version, handle } };
 }
 
-/** Installerar en hämtad och verifierad version och startar om. Anropas bara när användaren valt det. */
+/**
+ * Installerar en hämtad och verifierad version och startar om. Anropas bara när användaren valt det.
+ * Först `beforeInstall`: datorprogrammet vägrar medan en papperssession eller ett backtest pågår och
+ * säkerhetskopierar sin databas. Den hämtade versionen behålls, så den kan installeras senare.
+ */
 export async function installReady(ready: ReadyUpdate, deps: UpdaterDeps, onProgress: (progress: InstallProgress) => void): Promise<InstallOutcome> {
+  const blocked = await deps.beforeInstall?.();
+  if (blocked) return { ok: false, message: blocked };
   onProgress({ phase: "install" });
   try { await ready.handle.install!(); }
   catch (reason) { return { ok: false, message: describeUpdateError(reason, "install") }; }
