@@ -11,8 +11,9 @@ utvecklas, men de ändrar aldrig ett beslut. Följ `obsidian-markdown` för form
 
 ## Var
 
-Lägg anteckningar i `research/notes/` i repot, så att ni båda får dem via Git. Öppna
-`research/` som valv i Obsidian. Fråga innan något skrivs utanför repot.
+Lägg anteckningar i `research/TraderGO/01 Research/` i repot, så att ni båda får dem via Git.
+Öppna `research/` som valv i Obsidian. Skillen `obsidian-tradergo` sätter gränserna: skriv bara
+inom `research/TraderGO/`, och fråga innan något skrivs utanför.
 
 ## En anteckning per hypotes
 
