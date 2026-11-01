@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from "vitest";
-import { checkForUpdate, installUpdate, shouldCheckOnFocus, snoozeUpdate, text, type UpdateHandle, type UpdaterDeps } from "./updater";
+import { checkForUpdate, downloadUpdate, installReady, shouldCheckOnFocus, snoozeUpdate, text, type UpdateHandle, type UpdaterDeps } from "./updater";
 import { compareVersions, isNewerVersion, readSnooze, shouldPromptForUpdate, UPDATE_SNOOZE_MS } from "./version";
 
 function memory(): UpdaterDeps["storage"] {
   const data = new Map<string, string>();
   return { getItem: k => data.get(k) ?? null, setItem: (k, v) => void data.set(k, v), removeItem: k => void data.delete(k) };
 }
-function handle(version: string, install: UpdateHandle["downloadAndInstall"] = async () => {}): UpdateHandle {
-  return { version, body: " Anteckningar ", date: "2026-11-01T10:00:00Z", downloadAndInstall: install, close: vi.fn(async () => {}) };
+function handle(version: string, download: NonNullable<UpdateHandle["download"]> = async () => {}, install: NonNullable<UpdateHandle["install"]> = vi.fn(async () => {})): UpdateHandle {
+  return { version, body: " Anteckningar ", date: "2026-11-01T10:00:00Z", downloadAndInstall: async () => {}, download, install, close: vi.fn(async () => {}) };
 }
 function deps(check: UpdaterDeps["check"], extra: Partial<UpdaterDeps> = {}): UpdaterDeps {
   return { check, relaunch: vi.fn(async () => {}), storage: memory(), now: () => 1_000, ...extra };
@@ -57,6 +57,11 @@ describe("checkForUpdate", () => {
     const r = await checkForUpdate(deps(async () => { throw new Error("request failed: timeout"); }), "0.1.0");
     expect(r).toMatchObject({ kind: "error", message: text.error.networkCheck, detail: "request failed: timeout" });
   });
+  it("en version utan fil för den här plattformen sägs rakt ut", async () => {
+    const raw = "None of the fallback platforms `[\"darwin-aarch64-app\", \"darwin-aarch64\"]` were found in the response `platforms` object";
+    const r = await checkForUpdate(deps(async () => { throw raw; }), "0.1.0");
+    expect(r).toMatchObject({ kind: "error", message: text.error.platform, detail: raw });
+  });
   it("signaturfel blir ett eget meddelande", async () => {
     const r = await checkForUpdate(deps(async () => { throw "signature verification failed"; }), "0.1.0");
     expect(r).toMatchObject({ kind: "error", message: text.error.signature, detail: "signature verification failed" });
@@ -69,39 +74,61 @@ describe("checkForUpdate", () => {
   });
 });
 
-describe("installUpdate", () => {
-  it("hämtar, rapporterar framsteg och startar om", async () => {
-    const phases: string[] = [];
+describe("downloadUpdate och installReady", () => {
+  it("hämtar i bakgrunden och rapporterar framsteg utan att installera", async () => {
+    const install = vi.fn(async () => {});
+    const seen: (number | null)[] = [];
     const d = deps(async () => handle("0.2.0", async onEvent => {
       onEvent?.({ event: "Started", data: { contentLength: 100 } });
       onEvent?.({ event: "Progress", data: { chunkLength: 50 } });
       onEvent?.({ event: "Finished" });
-    }));
-    const r = await installUpdate(d, "0.1.0", p => phases.push(p.phase === "download" ? `download:${p.fraction}` : p.phase));
-    expect(r).toEqual({ ok: true });
-    expect(phases).toEqual(["download:0", "download:0.5", "install", "restart"]);
-    expect(d.relaunch).toHaveBeenCalledOnce();
-  });
-  it("installerar inte om uppdateringen försvunnit", async () => {
-    const d = deps(async () => null);
-    expect(await installUpdate(d, "0.1.0", () => {})).toEqual({ ok: false, message: text.error.gone });
+    }, install));
+    const r = await downloadUpdate(d, "0.1.0", f => seen.push(f));
+    expect(r.ok && r.ready.version).toBe("0.2.0");
+    expect(seen).toEqual([0, 0.5, 1]);
+    expect(install).not.toHaveBeenCalled();
     expect(d.relaunch).not.toHaveBeenCalled();
   });
-  it("installerar aldrig en äldre version", async () => {
+  it("en uppdatering med ogiltig signatur blir ett fel och kan inte installeras", async () => {
     const install = vi.fn(async () => {});
-    const d = deps(async () => handle("0.0.9", install));
-    expect((await installUpdate(d, "0.1.0", () => {})).ok).toBe(false);
+    const d = deps(async () => handle("0.2.0", async () => { throw "the signature verification failed: Invalid signature"; }, install));
+    const r = await downloadUpdate(d, "0.1.0", () => {});
+    expect(r).toMatchObject({ ok: false, message: text.error.signature });
     expect(install).not.toHaveBeenCalled();
   });
-  it("fel vid hämtning startar inte om", async () => {
-    const d = deps(async () => handle("0.2.0", async () => { throw new Error("network down"); }));
-    const r = await installUpdate(d, "0.1.0", () => {});
-    expect(r).toEqual({ ok: false, message: text.error.networkInstall });
+  it("utan nät blir det ett begripligt fel, inget kraschar", async () => {
+    const r = await downloadUpdate(deps(async () => { throw new Error("error sending request: dns error"); }), "0.1.0", () => {});
+    expect(r).toMatchObject({ ok: false, message: text.error.networkCheck });
+  });
+  it("hämtar inte om uppdateringen försvunnit eller är äldre", async () => {
+    expect(await downloadUpdate(deps(async () => null), "0.1.0", () => {})).toMatchObject({ ok: false, message: text.error.gone });
+    const download = vi.fn(async () => {});
+    expect((await downloadUpdate(deps(async () => handle("0.0.9", download)), "0.1.0", () => {})).ok).toBe(false);
+    expect(download).not.toHaveBeenCalled();
+  });
+  it("installerar och startar om först när installReady anropas", async () => {
+    const install = vi.fn(async () => {});
+    const d = deps(async () => handle("0.2.0", async () => {}, install));
+    const r = await downloadUpdate(d, "0.1.0", () => {});
+    if (!r.ok) throw new Error("expected a ready update");
+    const phases: string[] = [];
+    expect(await installReady(r.ready, d, p => phases.push(p.phase))).toEqual({ ok: true });
+    expect(install).toHaveBeenCalledOnce();
+    expect(d.relaunch).toHaveBeenCalledOnce();
+    expect(phases).toEqual(["install", "restart"]);
+  });
+  it("fel vid installation startar inte om", async () => {
+    const d = deps(async () => handle("0.2.0", async () => {}, async () => { throw new Error("permission denied"); }));
+    const r = await downloadUpdate(d, "0.1.0", () => {});
+    if (!r.ok) throw new Error("expected a ready update");
+    expect(await installReady(r.ready, d, () => {})).toEqual({ ok: false, message: text.error.install });
     expect(d.relaunch).not.toHaveBeenCalled();
   });
   it("fel vid omstart är inte ett installationsfel", async () => {
     const d = deps(async () => handle("0.2.0"), { relaunch: async () => { throw new Error("redan omstartad"); } });
-    expect(await installUpdate(d, "0.1.0", () => {})).toEqual({ ok: true });
+    const r = await downloadUpdate(d, "0.1.0", () => {});
+    if (!r.ok) throw new Error("expected a ready update");
+    expect(await installReady(r.ready, d, () => {})).toEqual({ ok: true });
   });
 });
 

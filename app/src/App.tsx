@@ -68,7 +68,7 @@ export default function App() {
                 <button className="item" disabled={updater.notice.status === "checking" || updater.notice.status === "installing"}
                   onClick={() => { void updater.checkNow(false); }}>
                   <Icon name="info" /> Sök efter uppdateringar
-                  <span className="muted right">{updater.notice.status === "available" ? `v${updater.notice.version}` : updater.notice.status === "checking" ? "Söker…" : updater.notice.status === "current" ? "Aktuell" : updater.notice.status === "error" ? "Fel" : ""}</span>
+                  <span className="muted right">{updater.notice.status === "ready" ? `v${updater.notice.version} klar` : updater.notice.status === "available" || updater.notice.status === "downloading" ? `Hämtar v${updater.notice.version}` : updater.notice.status === "checking" ? "Söker…" : updater.notice.status === "current" ? "Aktuell" : updater.notice.status === "error" ? "Fel" : ""}</span>
                 </button>
               )}
               <div className="item static"><Icon name="info" /> Om Trader_go <span className="muted right">v{__APP_VERSION__}</span></div>
@@ -83,11 +83,11 @@ export default function App() {
       </aside>
 
       <main>
-        {updater.enabled && updater.notice.version && (updater.notice.status === "available" || updater.notice.status === "installing") && (
+        {updater.enabled && updater.notice.version && ["available", "downloading", "ready", "installing"].includes(updater.notice.status) && (
           <div className="update-banner" role="status">
-            <span>Ny version <b>v{updater.notice.version}</b> finns. Du kör v{__APP_VERSION__}.</span>
-            <button type="button" className="btn accent" disabled={updater.notice.status === "installing"} onClick={() => { void updater.install(); }}>
-              {updater.notice.status === "installing" ? "Uppdaterar…" : "Uppdatera nu"}
+            <span>Ny version <b>v{updater.notice.version}</b> {updater.notice.status === "ready" ? "är hämtad och verifierad" : "hämtas"}. Du kör v{__APP_VERSION__}.</span>
+            <button type="button" className="btn accent" disabled={updater.notice.status !== "ready"} onClick={updater.openPrompt}>
+              {updater.notice.status === "installing" ? "Uppdaterar…" : updater.notice.status === "ready" ? "Starta om nu" : "Hämtar…"}
             </button>
           </div>
         )}

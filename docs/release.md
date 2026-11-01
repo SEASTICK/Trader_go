@@ -1,6 +1,6 @@
 # Släppa en ny version av Trader_go
 
-Modellen kommer från Vinstly Desktop. Bara Windows än så länge.
+Modellen kommer från Vinstly Desktop. Trader_go byggs för Windows (x64) och macOS (universal: Apple Silicon och Intel), och båda finns i samma `latest.json`.
 
 **Inget publiceras vid push.** Allt startas för hand i GitHub: **Actions → Publish Trader_go release → Run workflow**.
 Arbetsflödet måste ligga på `main` för att kunna startas.
@@ -15,9 +15,9 @@ Arbetsflödet måste ligga på `main` för att kunna startas.
 ## Så släpper du
 
 1. **Förbered versionen.** Låt `app/package.json`, `app/src-tauri/tauri.conf.json` och `app/src-tauri/Cargo.toml` ha samma version. Lämna fältet *version* tomt i Run workflow så blir det föregående version +1 (patch). Både stable- och test-releaser räknas, så numren går bara uppåt. Skriv ett eget nummer bara när du vill ändra mellan- eller huvudversion (till exempel `0.2.0`). Skriv `app/RELEASE_NOTES.md` om du vill ha egna anteckningar, annars används de senaste commit-meddelandena.
-2. **Kör `test` först.** Run workflow med `channel = test`. Vänta tills `version`, `build-windows` och `publish` är gröna, och `approve` är **hoppad över** (grå).
+2. **Kör `test` först.** Run workflow med `channel = test`. Vänta tills `version`, `build-windows`, `build-macos` och `publish` är gröna, och `approve` är **hoppad över** (grå).
 3. **Kontrollera testet.**
-   - `https://seastick.github.io/trader-go-releases/test/latest.json` finns och innehåller `windows-x86_64` och `windows-x86_64-nsis`.
+   - `https://seastick.github.io/trader-go-releases/test/latest.json` finns och innehåller `windows-x86_64`, `windows-x86_64-nsis`, `darwin-aarch64` och `darwin-x86_64`.
    - Förhandsversionen `test-vX.Y.Z` finns under Releases. Ladda ner `.exe`, installera, starta.
    - Kör `test` igen med en högre version. Starta den installerade testappen, välj **Sök efter uppdateringar** i användarmenyn och bekräfta att den installerar, startar om och visar den nya versionen.
 4. **Släpp `stable`** (först när steg 3 fungerat). Run workflow med `channel = stable`.
@@ -59,8 +59,10 @@ publicerade Universe-versionen lämnas orörd.
 
 - Installationsfilen är **inte kodsignerad** för Windows, så SmartScreen kan visa "okänd utgivare" (Mer info → Kör ändå). Uppdateringarna verifieras ändå med Tauris egen signatur.
 - Uppdateringssidan är publik, så installationsfilerna kan hämtas av vem som helst. Lägg inte känsliga strategier eller data i appen.
-- Trader_go byggs inte för Mac i CI (Universe gör det). På en Mac: `bash scripts/install-macos.sh`.
-- Mac är inte med för Trader_go. Att lägga till det kräver en matris som i Vinstlys `desktop-release.yml` och, för signering på riktigt, ett Apple Developer-konto.
+- **Mac:** jobbet `build-macos` bygger en universal-app och en signerad uppdateringsfil (`.app.tar.gz` + `.sig`) med samma uppdateringsnyckel. Appen är ad hoc-signerad; utan Apple Developer-konto frågar Gatekeeper första gången en nedladdad dmg öppnas (högerklicka → Öppna). Uppdateringar som appen själv hämtar påverkas inte. Med hemligheterna `APPLE_CERTIFICATE`, `APPLE_CERTIFICATE_PASSWORD`, `APPLE_SIGNING_IDENTITY`, `APPLE_ID`, `APPLE_PASSWORD` och `APPLE_TEAM_ID` signeras och notariseras den i stället.
+- macOS-minuter kostar mer än Windows-minuter i privata repon.
+- **Så uppdaterar appen sig:** den söker vid start, var 30:e minut och när fönstret får fokus. En nyare version hämtas direkt i bakgrunden och verifieras mot den publika nyckeln; först därefter frågar appen "Starta om nu". En version som inte går att verifiera installeras aldrig. Utan nät märks bara en rad under Status.
+- En Mac-app som byggts lokalt (`bash scripts/install-macos.sh`) har samma program-id och söker samma stable-flöde, så den tar emot nästa godkända stable-release som har en Mac-fil.
 - Testa godkännandeskriptet lokalt: `bash .github/scripts/test_wait_for_approval.sh`.
 
 ## Tid och Actions-minuter
