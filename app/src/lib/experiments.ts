@@ -6,7 +6,20 @@ import { tKrav } from "./stats";
 export type Experiment = {
   id: string; spår: string; namn: string; strategi: string; grupp: string;
   marknad: string; tidsram: string; riktning: string;
+  mål?: Mål;   // forskningsspår (research/tracks.md), standard A
 };
+
+/** Forskningsspåren i research/tracks.md. Kriterierna är bestämda innan något i spåret kördes. */
+export type Mål = "A" | "B" | "C";
+export const MÅL: { key: Mål; label: string; desc: string; krav: string }[] = [
+  { key: "A", label: "Slå marknaden", desc: "Bättre riskjusterad avkastning än att bara köpa och behålla.",
+    krav: "t över kravet, plus även med 2,5 gånger kostnaderna, och högre Sharpe än köp-och-behåll." },
+  { key: "B", label: "Lägre risk", desc: "En jämnare resa med betydligt mindre fall.",
+    krav: "t över kravet, plus även med 2,5 gånger kostnaderna, och minst 40 % mindre största fall än köp-och-behåll." },
+  { key: "C", label: "Marknadsneutral", desc: "Tjänar pengar oavsett om Bitcoin går upp eller ned.",
+    krav: "t över kravet, plus även med 2,5 gånger kostnaderna, och följer Bitcoin högst lite (beta mellan −0,2 och 0,2)." },
+];
+export const målFör = (e: Experiment): Mål => e.mål ?? "A";
 
 export type Trade = { nr: number; datum: string; riktning: "Long" | "Short"; in: number; ut: number; brutto: number; kostnad: number; netto: number };
 export type Position = { läge: "Long" | "Short" | "Ingen"; sedan?: string; storlek?: number; orealiserat?: number };
@@ -20,6 +33,8 @@ export type Computed = {
   passes?: boolean;
   deflated?: number | null;   // Deflated Sharpe, 0..1
   stressad?: number;          // avkastning i procent med 2,5 gånger kostnaderna
+  beta?: number | null;       // mot Bitcoin, dagsavkastning (bara HISTORIK)
+  klararMål?: boolean;        // alla kriterier i rutans spår (bara HISTORIK)
   hypotes?: string;
   registerCommit?: string;
   period?: [string, string];
@@ -112,7 +127,21 @@ export type RealResult = {
                    gross: number; costs: number; funding: number; net: number; liquidated: boolean }[];
   position_now: number;
   result_file: string;
+  sharpe?: number | null;
+  baseline?: { total_return: number; max_drawdown: number; sharpe: number | null; t_daily_nw: number | null } | null;
+  track?: Mål;
+  beta?: number | null;
+  correlation?: number | null;
 };
+
+/** Klarar resultatet alla kriterier i sitt spår? Samma regler som research/tracks.md. */
+export function klararMål(mål: Mål, r: RealResult): boolean {
+  const grund = r.passes && r.stressed_total_return > 0;
+  if (!grund) return false;
+  if (mål === "A") return r.sharpe != null && r.baseline?.sharpe != null && r.sharpe > r.baseline.sharpe;
+  if (mål === "B") return r.baseline != null && Math.abs(r.max_drawdown) <= 0.6 * Math.abs(r.baseline.max_drawdown);
+  return r.beta != null && Math.abs(r.beta) <= 0.2;
+}
 
 /** Gör om ett riktigt resultat till samma form som rutorna använder. Andelar blir procent. */
 export function fromResult(exp: Experiment, r: RealResult): Computed {
@@ -135,6 +164,7 @@ export function fromResult(exp: Experiment, r: RealResult): Computed {
     avkastning: r.total_return * 100, maxDrawdown: r.max_drawdown * 100, antal: r.trades,
     vinstandel: r.win_rate * 100, t: r.t, krav: r.t_required, passes: r.passes,
     deflated: r.deflated_sharpe, stressad: r.stressed_total_return * 100, hypotes: r.hypothesis,
+    beta: r.beta ?? null, klararMål: klararMål(r.track ?? målFör(exp), r),
     registerCommit: r.registry_commit, period: r.period, resultatfil: r.result_file,
     position: pos === 0 ? { läge: "Ingen" } : { läge: pos > 0 ? "Long" : "Short", storlek: Math.round(Math.abs(pos) * 100) },
     kostnadPerAffär: r.costs_bps_per_side / 100,

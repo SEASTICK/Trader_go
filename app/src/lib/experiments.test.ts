@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { compute, fromResult, type Experiment, type RealResult } from "./experiments";
+import { compute, fromResult, klararMål, type Experiment, type RealResult } from "./experiments";
 
 const exp: Experiment = { id: "E-01", spår: "S-01", namn: "BTC 4h", strategi: "Trend", grupp: "krypto", marknad: "Bitcoin", tidsram: "4h", riktning: "Long/short" };
 
@@ -30,5 +30,25 @@ describe("fromResult", () => {
 
   it("påhittade rutor är alltid SIM", () => {
     expect(compute(exp).källa).toBe("SIM");
+  });
+});
+
+describe("klararMål", () => {
+  const base = { passes: true, stressed_total_return: 0.1, sharpe: 1.2, max_drawdown: -0.4, beta: 0.1,
+    baseline: { total_return: 2, max_drawdown: -0.76, sharpe: 1.1, t_daily_nw: 2 } } as unknown as RealResult;
+  it("A kräver högre Sharpe än köp-och-behåll", () => {
+    expect(klararMål("A", base)).toBe(true);
+    expect(klararMål("A", { ...base, sharpe: 1.0 })).toBe(false);
+  });
+  it("B kräver minst 40 % mindre fall", () => {
+    expect(klararMål("B", base)).toBe(true);            // 0,40 <= 0,6 × 0,76
+    expect(klararMål("B", { ...base, max_drawdown: -0.5 })).toBe(false);
+  });
+  it("C kräver låg beta och alla kräver t och stresstest", () => {
+    expect(klararMål("C", base)).toBe(true);
+    expect(klararMål("C", { ...base, beta: -0.3 })).toBe(false);
+    expect(klararMål("C", { ...base, beta: null })).toBe(false);
+    expect(klararMål("C", { ...base, stressed_total_return: -0.01 })).toBe(false);
+    expect(klararMål("A", { ...base, passes: false })).toBe(false);
   });
 });
