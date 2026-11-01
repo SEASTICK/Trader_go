@@ -27,11 +27,15 @@ och kombinera små kanter utan att lura oss själva.
 ## Skrivbordsapparna
 
 `app/` är **Trader_go** och `apps/trader-go-universe/` är **TraderGO Universe** (projektkartan). Se
-[README.md](README.md), [docs/release.md](docs/release.md) och [docs/universe.md](docs/universe.md).
-Trader_go är bara för papperstrading: lägg aldrig till mäklarkoppling, orderkod eller nyckellagring.
-Universe är bara läsning: den får aldrig skapa, ändra, byta namn på, ta bort eller "reparera" filer i
-projektmappen. Ändra aldrig `identifier` i någon av apparnas `tauri.conf.json`. Obsidian-valvet är
-`research/`.
+[README.md](README.md), [app/README.md](app/README.md), [docs/release.md](docs/release.md) och
+[docs/universe.md](docs/universe.md). Släpp görs för hand enligt `docs/release.md`.
+
+- Trader_go är bara för papperstrading: lägg aldrig till mäklarkoppling, orderkod eller nyckellagring.
+- Universe är bara läsning: den får aldrig skapa, ändra, byta namn på, ta bort eller "reparera" filer i
+  projektmappen.
+- Ändra aldrig `identifier` i någon av apparnas `tauri.conf.json`, och ändra aldrig en utgiven
+  migration i `app/src-tauri/src/db.rs`.
+- Obsidian-valvet är `research/`.
 
 ## Skills
 
@@ -51,10 +55,3 @@ pappersjournal i Obsidian. Använd den bara när någon uttryckligen ber om en O
   ändrad frontmatter kräver en fråga först.
 - Inga lösenord, nycklar eller kontouppgifter i anteckningar.
 - Stora dataset och resultattabeller ligger i repot, inte i Obsidian. Anteckningen länkar dit.
-
-## Skrivbordsappen
-
-`app/` är en Tauri-app. Släpp görs för hand enligt [docs/release.md](docs/release.md), se
-också [app/README.md](app/README.md). Appen är bara för papperstrading: lägg
-aldrig till mäklarkoppling, orderkod eller nyckellagring. Ändra aldrig `identifier` eller en
-utgiven migration i `db.rs`.
