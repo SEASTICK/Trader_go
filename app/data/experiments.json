@@ -1,5 +1,5 @@
 [
-  {"id": "E-01", "spår": "S-01", "namn": "BTC 4h", "strategi": "Krypto trend/momentum", "grupp": "krypto", "marknad": "Bitcoin", "tidsram": "4h", "riktning": "Long/short"},
+  {"id": "E-01", "spår": "S-01", "namn": "BTC 4h", "strategi": "Krypto trend/momentum", "grupp": "krypto", "marknad": "Bitcoin", "tidsram": "4h", "riktning": "Long eller platt"},
   {"id": "E-02", "spår": "S-01", "namn": "BTC 1d", "strategi": "Krypto trend/momentum", "grupp": "krypto", "marknad": "Bitcoin", "tidsram": "1d", "riktning": "Long/short"},
   {"id": "E-03", "spår": "S-01", "namn": "ETH 4h", "strategi": "Krypto trend/momentum", "grupp": "krypto", "marknad": "Ethereum", "tidsram": "4h", "riktning": "Long/short"},
   {"id": "E-04", "spår": "S-01", "namn": "ETH 1d", "strategi": "Krypto trend/momentum", "grupp": "krypto", "marknad": "Ethereum", "tidsram": "1d", "riktning": "Long/short"},
