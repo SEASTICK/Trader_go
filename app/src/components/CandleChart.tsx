@@ -7,9 +7,10 @@ import {
 } from "lightweight-charts";
 import {
   applyEvent, fromPage, indicatorValues, INDICATORS, INTERVAL_MS, prepend, sameSeries, tradeMarkers, utc, warmupNote,
-  type BarEvent, type BarsPage, type Candle, type SeriesInfo, type SeriesRef, type TradeEvent,
+  type BarsPage, type Candle, type SeriesInfo, type SeriesRef, type TradeEvent,
 } from "../lib/candles";
 import { STATE_TEXT, useMarketStatus } from "../features/market/useMarketStatus";
+import { subscribeBars, type Listen } from "../lib/barSubscription";
 
 const PAGE = 1000;
 /** Högst så här ofta ritas strömuppdateringar (ms). */
@@ -148,13 +149,8 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel }
     };
     ts?.subscribeVisibleLogicalRangeChange(onRange);
 
-    // Strömmen: samma händelser som insamlingen redan skickar. Buffras och ritas högst var 250:e ms.
-    let queue: BarEvent[] = [];
-    let timer: number | null = null;
-    const flush = () => {
-      timer = null;
-      const events = queue; queue = [];
-      if (events.some(e => e.kind === "resync")) { void load(); return; }
+    // Strömmen: samma händelser som insamlingen redan skickar (lib/barSubscription), högst var 250:e ms.
+    const sub = subscribeBars(listen as Listen, current, events => {
       let next = data.current;
       const cs = candleS.current, vs = volS.current;
       for (const e of events) {
@@ -167,17 +163,11 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel }
         vs?.update(toVol(last));
       }
       if (next !== data.current) { data.current = next; setCandles(next); }
-    };
-    const off = listen<BarEvent>("market-bar", e => {
-      if (!sameSeries(e.payload, current)) return;
-      queue.push(e.payload);
-      if (timer === null) timer = window.setTimeout(flush, FLUSH_MS);
-    });
+    }, () => { void load(); }, FLUSH_MS);
     return () => {
       alive = false;
       ts?.unsubscribeVisibleLogicalRangeChange(onRange);
-      if (timer !== null) window.clearTimeout(timer);
-      void off.then(f => f());
+      sub.close();
     };
   }, [current?.symbol, current?.interval]);
 
@@ -253,7 +243,13 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel }
           <span className={shown.closed ? "muted" : "live"}>{shown.closed ? "stängd" : "pågående"}</span>
         </div>
       )}
-      {stale && <div className="candle-warn">Datan är inte färsk: {STATE_TEXT[status!.state].toLowerCase()}{status!.message ? ` (${status!.message})` : ""}. Senast mottaget {status!.last_received_at ? utc(status!.last_received_at) : "aldrig"}.</div>}
+      {current && status && sameSeries(status, current) && (
+        <div className="candle-meta">
+          <span>Senast mottagen händelse: <b>{status.last_received_at ? utc(status.last_received_at) : "ingen än"}</b>{status.last_received_at ? ` (lokal tid ${new Date(status.last_received_at).toLocaleTimeString("sv-SE")})` : ""}</span>
+          <span>Senaste stängda stapel: <b>{status.last_closed_open_time ? utc(status.last_closed_open_time) : "ingen än"}</b></span>
+        </div>
+      )}
+      {stale && <div className="candle-warn">Datan är inte färsk: {STATE_TEXT[status!.state].toLowerCase()}{status!.message ? ` (${status!.message})` : ""}. Senast kända data visas tills anslutningen är tillbaka.</div>}
       {error && <div className="candle-warn">Kunde inte läsa datalagret: {error}</div>}
       {body}
 

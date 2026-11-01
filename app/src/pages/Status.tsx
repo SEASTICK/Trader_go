@@ -62,7 +62,7 @@ export default function Status({ updater }: { updater: Updater }) {
   );
 }
 
-const time = (ms: number | null) => (ms == null ? "–" : new Date(ms).toLocaleString("sv-SE"));
+const time = (ms: number | null) => (ms == null ? "–" : `${new Date(ms).toLocaleString("sv-SE")} (lokal tid)`);
 const utc = (ms: number | null) => (ms == null ? "–" : new Date(ms).toISOString().slice(0, 16).replace("T", " ") + " UTC");
 
 /** Insamlingen av publik marknadsdata (src-tauri/src/market). Bara läsning, inga nycklar eller order. */

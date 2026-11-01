@@ -207,3 +207,4 @@ h2 { font-size:17px; font-weight:650; letter-spacing:-.01em; }
 .desk progress { width:100%; accent-color:var(--accent); }
 .desk pre { white-space:pre-wrap; font-size:13px; }
 .desk .error { color:var(--bad); }
+.candle-meta { display:flex; gap:18px; flex-wrap:wrap; padding:0 16px 8px; font-size:12px; color:var(--muted); } .candle-meta b { color:var(--ink); font-weight:600; }
