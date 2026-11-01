@@ -42,7 +42,6 @@
 .pm-card strong { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .pm-card span { color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:11px; }
 .pm-card.sel { border-color:var(--accent); box-shadow:0 0 0 2px var(--accent); }
-.pm-card.dim { opacity:.25; }
 .pm-text { white-space:pre-wrap; justify-content:flex-start; }
 .pm-group { width:100%; height:100%; border:1.5px dashed var(--line); border-radius:10px; background:color-mix(in srgb, var(--accent) 4%, transparent); }
 .pm-group.collapsed { background:color-mix(in srgb, var(--accent) 10%, transparent); }
@@ -54,3 +53,11 @@
 .pm-card .react-flow__handle { width:7px; height:7px; background:var(--muted); opacity:0; }
 .pm-card:hover .react-flow__handle, .pm-card.sel .react-flow__handle { opacity:1; }
 .react-flow { --xy-background-color:var(--bg); --xy-minimap-background-color:var(--side); --xy-controls-button-background-color:var(--card); --xy-controls-button-color:var(--ink); --xy-edge-label-background-color:var(--card); --xy-edge-label-color:var(--ink); }
+.pm-search { position:relative; display:inline-flex; }
+.pm-results { position:absolute; top:100%; left:0; z-index:20; display:flex; flex-direction:column; gap:2px; min-width:320px; max-width:520px; max-height:320px; overflow:auto; padding:8px 10px; margin-top:4px; background:var(--card); border:1px solid var(--line); border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,.25); }
+.pm-results .link { text-align:left; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pm-canvas { position:relative; } .pm-note { position:absolute; left:12px; bottom:8px; font-size:12px; }
+.pm-flow { width:100%; height:100%; }
+/* Träffar lyfts fram; övriga kort lämnas orörda (att tona ned hundratals kort kostar ommålning). */
+.pm-hit .pm-card { outline:3px solid var(--accent); outline-offset:2px; background:color-mix(in srgb,var(--accent) 14%,var(--card)); }
+.pm-note-top { top:8px; bottom:auto; z-index:5; background:var(--card); padding:2px 8px; border-radius:8px; }
