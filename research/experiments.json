@@ -46,5 +46,75 @@
       "spread_bps": 2,
       "slippage_bps": 5
     }
+  },
+  "E-18": {
+    "hypothesis": "H-0003",
+    "market": "spot",
+    "symbol": "BTCUSDT",
+    "interval": "1d",
+    "period": {
+      "start": "2020-01-01",
+      "end": "2025-01-01"
+    },
+    "strategy": {
+      "name": "buy_and_hold"
+    },
+    "risk": {
+      "target_vol": 0.02,
+      "vol_window": 30,
+      "max_scale": 1.0,
+      "max_drawdown": null,
+      "max_daily_loss": null
+    },
+    "costs": {
+      "fee_bps": 10,
+      "spread_bps": 2,
+      "slippage_bps": 5
+    }
+  },
+  "E-07": {
+    "hypothesis": "H-0004",
+    "market": "um",
+    "symbol": "BTCUSDT",
+    "interval": "4h",
+    "period": {
+      "start": "2020-01-01",
+      "end": "2025-01-01"
+    },
+    "funding": true,
+    "strategy": {
+      "name": "funding_contrarian",
+      "params": {
+        "threshold": 0.0005
+      }
+    },
+    "costs": {
+      "fee_bps": 10,
+      "spread_bps": 2,
+      "slippage_bps": 5
+    }
+  },
+  "E-04": {
+    "hypothesis": "H-0005",
+    "market": "spot",
+    "symbol": "ETHUSDT",
+    "interval": "1d",
+    "period": {
+      "start": "2020-01-01",
+      "end": "2025-01-01"
+    },
+    "strategy": {
+      "name": "ma_cross",
+      "params": {
+        "fast": 1,
+        "slow": 50,
+        "allow_short": false
+      }
+    },
+    "costs": {
+      "fee_bps": 10,
+      "spread_bps": 2,
+      "slippage_bps": 5
+    }
   }
 }
