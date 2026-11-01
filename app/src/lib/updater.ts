@@ -131,10 +131,12 @@ export async function downloadUpdate(deps: UpdaterDeps, currentVersion: string, 
   return { ok: true, ready: { version: handle.version, handle } };
 }
 
-/** Installerar en hämtad och verifierad version och startar om. Anropas bara när användaren valt det. */
+/**
+ * Installerar en hämtad och verifierad version och startar om. Anropas bara när användaren valt det.
+ * Först `beforeInstall`: datorprogrammet vägrar medan en papperssession eller ett backtest pågår och
+ * säkerhetskopierar sin databas. Den hämtade versionen behålls, så den kan installeras senare.
+ */
 export async function installReady(ready: ReadyUpdate, deps: UpdaterDeps, onProgress: (progress: InstallProgress) => void): Promise<InstallOutcome> {
-  // Spärr och säkerhetskopia (#6) körs precis före installationen, inte vid bakgrundshämtningen:
-  // backupen ska vara färsk, och en pågående papperssession eller ett backtest stoppar bara installationen.
   const blocked = await deps.beforeInstall?.();
   if (blocked) return { ok: false, message: blocked };
   onProgress({ phase: "install" });

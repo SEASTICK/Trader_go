@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { LineChart } from "../components/Charts";
+import { CandleChart } from "../components/CandleChart";
+import { seriesFor } from "../lib/candles";
 import { Icon } from "../components/icons";
-import { Page, SimChip, StatusDot } from "../components/ui";
+import { Page, Segmented, SimChip, StatusDot } from "../components/ui";
 import { num, pct, type Computed } from "../lib/experiments";
 import registryMd from "../../../research/registry.md?raw";
 import { parseRegistry } from "../lib/registry";
@@ -15,6 +18,8 @@ export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: {
   const passes = c.passes ?? c.t >= krav;
   const pos = c.position;
   const recent = [...c.trades].reverse().slice(0, 20);
+  const [tab, setTab] = useState<"Marknad" | "Resultat">("Marknad");
+  const series = seriesFor(exp.marknad, exp.tidsram);
   return (
     <Page
       title={`${exp.id} · ${exp.namn}`}
@@ -38,11 +43,24 @@ export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: {
         <div className="card kpi"><span className="k">t-värde mot krav</span><b>{num(c.t, 1)} <small>/ {num(krav, 1)}</small></b><span className={passes ? "pass" : "fail"}>{passes ? "över kravet" : "under kravet"}</span></div>
       </div>
 
-      <section className="card chart-card">
-        <div className="card-head"><div><h2>Utveckling</h2><p className="muted">Strategin efter kostnader mot baslinjen köp-och-behåll. Start = 100.</p></div></div>
-        <LineChart watermark={real ? null : "SIMULERAD DATA"} labels={c.labels} series={[{ name: exp.namn, data: c.equity, cls: "s1" }, { name: "Baslinje", data: c.baseline, cls: "s2" }]} />
-        <div className="legend"><span><i className="swatch s1" />{exp.namn}</span><span><i className="swatch s2" />Baslinje (köp-och-behåll)</span></div>
-      </section>
+      <div className="detail-tabs">
+        <Segmented value={tab} options={["Marknad", "Resultat"]} onChange={setTab} />
+        <span className="muted">{tab === "Marknad" ? "Instrumentets verkliga priser (OHLCV)" : `Strategins kapital, ${real ? "HISTORIK" : "SIM"}`}</span>
+      </div>
+      {tab === "Marknad" ? (
+        <CandleChart
+          series={series}
+          noSourceReason={`${exp.marknad} har ingen publik datakälla i appen än. Bara Bitcoin och Ethereum (Binance spot) samlas in.`}
+          trades={real ? c.affärer : []}
+          tradesLabel={real ? `Markörer: affärer från det registrerade backtestet ${c.hypotes ?? ""} (HISTORIK)` : undefined}
+        />
+      ) : (
+        <section className="card chart-card">
+          <div className="card-head"><div><h2>Utveckling</h2><p className="muted">Strategin efter kostnader mot baslinjen köp-och-behåll. Start = 100.</p></div></div>
+          <LineChart watermark={real ? null : "SIMULERAD DATA"} labels={c.labels} series={[{ name: exp.namn, data: c.equity, cls: "s1" }, { name: "Baslinje", data: c.baseline, cls: "s2" }]} />
+          <div className="legend"><span><i className="swatch s1" />{exp.namn}</span><span><i className="swatch s2" />Baslinje (köp-och-behåll)</span></div>
+        </section>
+      )}
 
       <div className="split">
         <section className="card pad">
