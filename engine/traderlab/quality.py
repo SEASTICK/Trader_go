@@ -29,7 +29,8 @@ class QualityReport:
     outliers: list[tuple[str, float]] = field(default_factory=list)  # (tid, logavkastning)
     stale_runs: list[tuple[str, int]] = field(default_factory=list)  # (start, längd)
     timezone_ok: bool = True
-    problems: list[str] = field(default_factory=list)
+    problems: list[str] = field(default_factory=list)   # fel: stoppar en körning
+    warnings: list[str] = field(default_factory=list)   # noteras i resultatet: luckor, utstickare, stillastående
 
     @property
     def ok(self) -> bool:
@@ -47,7 +48,11 @@ class QualityReport:
             lines.append("Största luckor:")
             lines += [f"- {a} → {b}: {n} staplar" for a, b, n in self.largest_gaps]
             lines.append("")
-        lines.append("Resultat: **OK**" if self.ok else "Resultat: **PROBLEM**: " + "; ".join(self.problems))
+        if self.ok:
+            lines.append("Resultat: **OK**" + (" med varningar: " + "; ".join(self.warnings) if self.warnings else ""))
+        else:
+            lines.append("Resultat: **FEL**: " + "; ".join(self.problems)
+                         + (" | Varningar: " + "; ".join(self.warnings) if self.warnings else ""))
         return "\n".join(lines)
 
 
@@ -115,11 +120,13 @@ def check(bars: pd.DataFrame, interval: str, outlier_k: float = 12.0, stale_min:
 
     if rep.duplicates: rep.problems.append(f"{rep.duplicates} dubbletter")
     if rep.not_increasing: rep.problems.append(f"{rep.not_increasing} tider som inte stiger")
-    if rep.missing_bars: rep.problems.append(f"{rep.missing_bars} saknade staplar")
+    if rep.missing_bars: rep.warnings.append(f"{rep.missing_bars} saknade staplar")
     if rep.misaligned: rep.problems.append(f"{rep.misaligned} staplar på fel tid")
     if rep.bad_ohlc: rep.problems.append(f"{rep.bad_ohlc} felaktiga OHLC")
     if rep.non_positive_price: rep.problems.append(f"{rep.non_positive_price} priser noll eller negativa")
     if rep.negative_volume: rep.problems.append(f"{rep.negative_volume} negativa volymer")
-    if rep.outliers: rep.problems.append(f"{len(rep.outliers)} utstickare att kontrollera mot annan källa")
-    if rep.stale_runs: rep.problems.append(f"{len(rep.stale_runs)} serier med stillastående pris")
+    if rep.outliers: rep.warnings.append(f"{len(rep.outliers)} utstickare att kontrollera mot annan källa")
+    if rep.stale_runs: rep.warnings.append(f"{len(rep.stale_runs)} serier med stillastående pris")
+    if rep.missing_bars and rep.expected_rows and rep.missing_bars / rep.expected_rows > 0.01:
+        rep.problems.append(f"mer än 1 % av staplarna saknas ({rep.missing_bars})")
     return rep

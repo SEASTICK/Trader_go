@@ -82,6 +82,8 @@ def test_run_experiment_writes_result_with_stress_and_control(repo):
     assert out["summary_stressed_costs"]["costs"] > out["summary"]["costs"]
     assert out["summary"]["t_required"] == 2.0  # 2 försök: max(2,0; 1,96)
     assert "random_label_t" in out and out["simulated"] is False
+    bh = out["baseline_buy_and_hold"]
+    assert set(bh) == {"total_return", "max_drawdown", "sharpe", "t_daily_nw"}
 
 
 def test_short_history_gives_valid_json_without_nan(repo):
