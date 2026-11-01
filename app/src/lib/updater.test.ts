@@ -132,6 +132,35 @@ describe("downloadUpdate och installReady", () => {
   });
 });
 
+describe("beforeInstall (#6) med tvåstegsflödet", () => {
+  it("hämtning i bakgrunden kör inte spärren, installationen gör det och stoppas", async () => {
+    const install = vi.fn(async () => {});
+    const before = vi.fn(async () => "Uppdateringen installeras när 1 papperssession(er) har avslutats.");
+    const d = deps(async () => handle("0.2.0", async () => {}, install), { beforeInstall: before });
+    const r = await downloadUpdate(d, "0.1.0", () => {});
+    if (!r.ok) throw new Error("hämtningen borde lyckas");
+    expect(before).not.toHaveBeenCalled();          // ingen spärr eller backup vid bakgrundshämtning
+    const out = await installReady(r.ready, d, () => {});
+    expect(out).toEqual({ ok: false, message: "Uppdateringen installeras när 1 papperssession(er) har avslutats." });
+    expect(before).toHaveBeenCalledOnce();
+    expect(install).not.toHaveBeenCalled();
+    expect(d.relaunch).not.toHaveBeenCalled();
+  });
+
+  it("säkerhetskopian tas före install och omstart när spärren godkänner", async () => {
+    const order: string[] = [];
+    const install = vi.fn(async () => { order.push("install"); });
+    const d = deps(async () => handle("0.2.0", async () => {}, install), {
+      beforeInstall: async () => { order.push("backup"); return null; },
+      relaunch: async () => { order.push("relaunch"); },
+    });
+    const r = await downloadUpdate(d, "0.1.0", () => {});
+    if (!r.ok) throw new Error("hämtningen borde lyckas");
+    expect(await installReady(r.ready, d, () => {})).toEqual({ ok: true });
+    expect(order).toEqual(["backup", "install", "relaunch"]);
+  });
+});
+
 describe("shouldCheckOnFocus", () => {
   it("kontrollerar första gången och efter tio minuter, inte däremellan", () => {
     expect(shouldCheckOnFocus(null, 1_000)).toBe(true);

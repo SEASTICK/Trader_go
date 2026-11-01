@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "./components/icons";
-import { Segmented } from "./components/ui";
+import { Page, Segmented } from "./components/ui";
+import { isDesktop, Paper } from "./desktop";
 import Overview from "./pages/Overview";
 import Research from "./pages/Research";
 import Hypotheses from "./pages/Hypotheses";
@@ -14,7 +15,12 @@ const NAV = [
   { id: "Hypoteser", icon: "list" },
   { id: "Status", icon: "info" },
 ] as const;
-type PageId = (typeof NAV)[number]["id"];
+// Bara i datorprogrammet; webbversionen har ingen Tauri-brygga.
+const DESKTOP_NAV = [
+  { id: "Papper", icon: "shield" },
+] as const;
+const ALL_NAV = isDesktop ? [...NAV, ...DESKTOP_NAV] : NAV;
+type PageId = (typeof NAV)[number]["id"] | (typeof DESKTOP_NAV)[number]["id"];
 type Theme = "Ljust" | "Mörkt" | "System";
 
 function loadTheme(): Theme {
@@ -50,7 +56,7 @@ export default function App() {
       <aside className="sidebar">
         <div className="brand"><img src="/logo.svg" className="logo" alt="" /><b>Trader_go</b></div>
         <nav>
-          {NAV.map((n) => (
+          {ALL_NAV.map((n) => (
             <button key={n.id} className={page === n.id ? "nav on" : "nav"} onClick={() => setPage(n.id)}>
               <Icon name={n.icon} /> {n.id}
             </button>
@@ -96,6 +102,7 @@ export default function App() {
         {page === "Research" && <Research />}
         {page === "Hypoteser" && <Hypotheses />}
         {page === "Status" && <Status updater={updater} />}
+        {page === "Papper" && <Page title="Papper" sub="Bara papper. Ingen riktig order läggs."><div className="card pad desk"><Paper /></div></Page>}
       </main>
 
       <UpdateDialog notice={updater.notice} currentVersion={__APP_VERSION__} onInstall={() => { void updater.install(); }} onLater={updater.later} onDismissError={updater.dismissError} />

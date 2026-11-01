@@ -91,7 +91,11 @@ pub fn closed_is_behind(last_closed_open: Option<i64>, step: i64, now: i64, grac
 
 /// Har strömmen tystnat? Bedöms mot strömmens takt (Binance: var 2:a sekund, ping var 20:e), inte mot
 /// tidsramen.
-pub fn stream_is_silent(last_received_mono_ms: u128, now_mono_ms: u128, stale_after_ms: u128) -> bool {
+pub fn stream_is_silent(
+    last_received_mono_ms: u128,
+    now_mono_ms: u128,
+    stale_after_ms: u128,
+) -> bool {
     now_mono_ms.saturating_sub(last_received_mono_ms) > stale_after_ms
 }
 
@@ -122,9 +126,15 @@ mod tests {
     #[test]
     fn closed_data_is_behind_only_after_a_missed_close() {
         let t = 1_793_520_000_000;
-        assert!(!closed_is_behind(Some(t), STEP, t + STEP + 1, 60_000), "just after close, the next bar is still open");
+        assert!(
+            !closed_is_behind(Some(t), STEP, t + STEP + 1, 60_000),
+            "just after close, the next bar is still open"
+        );
         assert!(!closed_is_behind(Some(t), STEP, t + 2 * STEP, 60_000));
-        assert!(closed_is_behind(Some(t), STEP, t + 2 * STEP + 120_000, 60_000), "a whole bar closed and never arrived");
+        assert!(
+            closed_is_behind(Some(t), STEP, t + 2 * STEP + 120_000, 60_000),
+            "a whole bar closed and never arrived"
+        );
         assert!(closed_is_behind(None, STEP, t, 60_000));
     }
 
@@ -137,7 +147,15 @@ mod tests {
     #[test]
     fn ready_only_when_connected() {
         let mut s = Status::new("binance", "spot", "BTCUSDT", "4h", "x");
-        for st in [State::Starting, State::Syncing, State::Gap, State::Stale, State::Reconnecting, State::Error, State::Stopped] {
+        for st in [
+            State::Starting,
+            State::Syncing,
+            State::Gap,
+            State::Stale,
+            State::Reconnecting,
+            State::Error,
+            State::Stopped,
+        ] {
             s.set(st, None);
             assert!(!s.ready, "{st:?}");
         }

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { isTauri } from "@tauri-apps/api/core";
+import { invoke, isTauri } from "@tauri-apps/api/core";
 import { check } from "@tauri-apps/plugin-updater";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { checkForUpdate, downloadUpdate, installReady, shouldCheckOnFocus, snoozeUpdate, text, type ReadyUpdate, type UpdaterDeps } from "../../lib/updater";
@@ -25,6 +25,7 @@ const defaultDeps = (): UpdaterDeps => ({
   relaunch,
   storage: window.localStorage,
   now: () => Date.now(),
+  beforeInstall: () => invoke<string>("prepare_update_install").then(() => null, (e: unknown) => String(e)),
 });
 
 /**

@@ -38,7 +38,8 @@ pub struct Collector {
 pub fn load_config(dir: &Path) -> Result<Config, String> {
     let path = dir.join("config.json");
     let cfg = match std::fs::read(&path) {
-        Ok(bytes) => serde_json::from_slice::<Config>(&bytes).map_err(|e| format!("{}: {e}", path.display()))?,
+        Ok(bytes) => serde_json::from_slice::<Config>(&bytes)
+            .map_err(|e| format!("{}: {e}", path.display()))?,
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => Config::default(),
         Err(e) => return Err(format!("{}: {e}", path.display())),
     };
@@ -58,32 +59,82 @@ impl Collector {
             s.updated_at = runner::now_ms();
             let _ = status::write_atomic(&status_file, &s);
             publish(&s);
-            Collector { status: Arc::new(Mutex::new(s)), stop: stop.clone(), handle: Mutex::new(None), _lock: None }
+            Collector {
+                status: Arc::new(Mutex::new(s)),
+                stop: stop.clone(),
+                handle: Mutex::new(None),
+                _lock: None,
+            }
         };
-        let blank = |c: &Config| Status::new(&c.provider, &c.market, &c.symbol, &c.interval, &db.display().to_string());
+        let blank = |c: &Config| {
+            Status::new(
+                &c.provider,
+                &c.market,
+                &c.symbol,
+                &c.interval,
+                &db.display().to_string(),
+            )
+        };
 
         if let Err(e) = std::fs::create_dir_all(&dir) {
-            return fail(blank(&Config::default()), format!("kan inte skapa {}: {e}", dir.display()), publish.as_ref());
+            return fail(
+                blank(&Config::default()),
+                format!("kan inte skapa {}: {e}", dir.display()),
+                publish.as_ref(),
+            );
         }
         let cfg = match load_config(&dir) {
             Ok(c) => c,
-            Err(e) => return fail(blank(&Config::default()), format!("ogiltig inställning: {e}"), publish.as_ref()),
+            Err(e) => {
+                return fail(
+                    blank(&Config::default()),
+                    format!("ogiltig inställning: {e}"),
+                    publish.as_ref(),
+                )
+            }
         };
         // En insamlare per datamapp. Låset släpps när processen avslutas, också vid krasch.
-        let lock = match File::options().create(true).truncate(false).write(true).open(dir.join("collector.lock")) {
+        let lock = match File::options()
+            .create(true)
+            .truncate(false)
+            .write(true)
+            .open(dir.join("collector.lock"))
+        {
             Ok(f) => f,
-            Err(e) => return fail(blank(&cfg), format!("kan inte öppna låsfilen: {e}"), publish.as_ref()),
+            Err(e) => {
+                return fail(
+                    blank(&cfg),
+                    format!("kan inte öppna låsfilen: {e}"),
+                    publish.as_ref(),
+                )
+            }
         };
         if lock.try_lock().is_err() {
-            return fail(blank(&cfg), "en annan TraderGO samlar redan in data i den här datamappen".into(), publish.as_ref());
+            return fail(
+                blank(&cfg),
+                "en annan TraderGO samlar redan in data i den här datamappen".into(),
+                publish.as_ref(),
+            );
         }
         let store = match store::Store::open(&db) {
             Ok(s) => s,
-            Err(e) => return fail(blank(&cfg), format!("kan inte öppna databasen: {e}"), publish.as_ref()),
+            Err(e) => {
+                return fail(
+                    blank(&cfg),
+                    format!("kan inte öppna databasen: {e}"),
+                    publish.as_ref(),
+                )
+            }
         };
         let http = match source::UreqHttp::new() {
             Ok(h) => h,
-            Err(e) => return fail(blank(&cfg), format!("TLS kunde inte startas: {e}"), publish.as_ref()),
+            Err(e) => {
+                return fail(
+                    blank(&cfg),
+                    format!("TLS kunde inte startas: {e}"),
+                    publish.as_ref(),
+                )
+            }
         };
         let status = Arc::new(Mutex::new(blank(&cfg)));
         let status_file2 = status_file.clone();
@@ -91,9 +142,25 @@ impl Collector {
             let _ = status::write_atomic(&status_file2, s);
             publish(s);
         });
-        let runner = runner::Runner::new(&cfg, Box::new(source::Binance::new(http)), store, status.clone(), publish_all, stop.clone(), runner::Timing::default());
-        let handle = std::thread::Builder::new().name("market-collector".into()).spawn(move || runner.run()).ok();
-        Collector { status, stop, handle: Mutex::new(handle), _lock: Some(lock) }
+        let runner = runner::Runner::new(
+            &cfg,
+            Box::new(source::Binance::new(http)),
+            store,
+            status.clone(),
+            publish_all,
+            stop.clone(),
+            runner::Timing::default(),
+        );
+        let handle = std::thread::Builder::new()
+            .name("market-collector".into())
+            .spawn(move || runner.run())
+            .ok();
+        Collector {
+            status,
+            stop,
+            handle: Mutex::new(handle),
+            _lock: Some(lock),
+        }
     }
 
     pub fn snapshot(&self) -> Status {
@@ -127,13 +194,19 @@ mod tests {
     #[test]
     fn a_broken_config_stops_with_an_error_and_no_fallback() {
         let dir = tempfile::tempdir().unwrap();
-        std::fs::write(dir.path().join("config.json"), r#"{"provider":"binance","market":"spot","symbol":"DOGEUSDT","interval":"4h"}"#).unwrap();
+        std::fs::write(
+            dir.path().join("config.json"),
+            r#"{"provider":"binance","market":"spot","symbol":"DOGEUSDT","interval":"4h"}"#,
+        )
+        .unwrap();
         let c = Collector::start(dir.path().to_path_buf(), Box::new(|_| {}));
         let s = c.snapshot();
         assert_eq!(s.state, State::Error);
         assert!(s.message.unwrap().contains("DOGEUSDT"));
         assert!(!s.ready);
-        let file: serde_json::Value = serde_json::from_slice(&std::fs::read(dir.path().join("status.json")).unwrap()).unwrap();
+        let file: serde_json::Value =
+            serde_json::from_slice(&std::fs::read(dir.path().join("status.json")).unwrap())
+                .unwrap();
         assert_eq!(file["state"], "error");
     }
 
@@ -159,9 +232,16 @@ mod tests {
         assert!(s.ready, "inte redo: {:?} {:?}", s.state, s.message);
         assert_eq!(s.closed_bars, 50);
         assert!(s.gaps.is_empty());
-        assert!(s.last_received_at.is_some() && s.last_event_time.is_some(), "inget meddelande från strömmen");
+        assert!(
+            s.last_received_at.is_some() && s.last_event_time.is_some(),
+            "inget meddelande från strömmen"
+        );
         let live = s.live_open_time.unwrap();
-        assert_eq!(s.last_closed_open_time, Some(live - 14_400_000), "pågående stapel direkt efter senaste stängda");
+        assert_eq!(
+            s.last_closed_open_time,
+            Some(live - 14_400_000),
+            "pågående stapel direkt efter senaste stängda"
+        );
         assert_eq!(c.snapshot().state, State::Stopped);
     }
 
