@@ -14,6 +14,7 @@ göra så används rätt skill.
 | `hamta-data` | Historik ska hämtas från öppna källor eller kontrolleras. |
 | `papper-framat` | En strategi med `READY_FOR_PAPER` ska köras framåt på papper. |
 | `riskgranser` | Position, hävstång, short eller nödstopp ska dimensioneras. |
+| `obsidian-tradergo` | Läsa, söka, skapa eller länka anteckningar i `research/TraderGO/`. |
 | `release` | En ny version av appen ska släppas, eller en release-körning har misslyckats. |
 | `app-design` | Något i appen ska byggas eller ändras visuellt. |
 | `ny-ruta` | En ruta ska läggas till i Research, få riktiga siffror eller sållas. |

@@ -87,8 +87,8 @@ export default function UniverseApp() {
           <i /> Diagnostik{status ? ` · ${STATE_LABEL[status.state]}` : ""}{broken ? ` · ${broken} trasiga länkar` : ""}
         </button>
         {updater.enabled && (
-          <button className="btn small" disabled={u.status === "checking" || u.status === "installing"} onClick={() => { if (u.status === "available") updater.openPrompt(); else void updater.checkNow(false); }}>
-            {u.status === "available" ? `v${u.version} finns` : u.status === "checking" ? "Söker…" : u.status === "current" ? "Senaste versionen" : u.status === "error" ? "Uppdateringsfel" : "Sök uppdatering"}
+          <button className="btn small" disabled={u.status === "checking" || u.status === "installing"} onClick={() => { if (u.status === "ready") updater.openPrompt(); else void updater.checkNow(false); }}>
+            {u.status === "ready" ? `v${u.version} klar` : u.status === "available" || u.status === "downloading" ? `Hämtar v${u.version}…` : u.status === "checking" ? "Söker…" : u.status === "current" ? "Senaste versionen" : u.status === "error" ? "Uppdateringsfel" : "Sök uppdatering"}
           </button>
         )}
       </header>

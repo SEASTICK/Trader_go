@@ -12,7 +12,7 @@ arbetet finns i [CLAUDE.md](CLAUDE.md).
 | `engine/` | Forskningsmotorn: data, backtest, statistik, registret. |
 | `research/` | Registret, experimenten och resultaten. Också Obsidian-valvet (`research/TraderGO/` för anteckningar). |
 | `data/` | Beskrivning av datakällor och kvalitet. Rådata stannar på varje dator. |
-| `docs/` | [release.md](docs/release.md) (släpp och uppdateringar), [universe.md](docs/universe.md). |
+| `docs/` | [release.md](docs/release.md) (släpp och uppdateringar), [universe.md](docs/universe.md), [status-punkt-1.md](docs/status-punkt-1.md) (läget för den gemensamma grunden). |
 | `.claude/skills/` | Våra arbetsregler som skills, se [.claude/skills/README.md](.claude/skills/README.md). |
 
 ## Kommandon
