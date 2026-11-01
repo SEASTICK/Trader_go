@@ -1,5 +1,6 @@
 import { Page } from "../components/ui";
 import type { useUpdater } from "../features/updates/useUpdater";
+import { STATE_TEXT, useMarketStatus } from "../features/market/useMarketStatus";
 
 type Updater = ReturnType<typeof useUpdater>;
 
@@ -48,6 +49,7 @@ export default function Status({ updater }: { updater: Updater }) {
           </p>
         )}
       </section>
+      <MarketData />
       <section className="card pad">
         <h2>Det här bygget</h2>
         <dl className="dl" style={{ marginTop: 16 }}>
@@ -57,5 +59,34 @@ export default function Status({ updater }: { updater: Updater }) {
         </dl>
       </section>
     </Page>
+  );
+}
+
+const time = (ms: number | null) => (ms == null ? "–" : new Date(ms).toLocaleString("sv-SE"));
+const utc = (ms: number | null) => (ms == null ? "–" : new Date(ms).toISOString().slice(0, 16).replace("T", " ") + " UTC");
+
+/** Insamlingen av publik marknadsdata (src-tauri/src/market). Bara läsning, inga nycklar eller order. */
+function MarketData() {
+  const { status: m, available } = useMarketStatus();
+  return (
+    <section className="card pad">
+      <h2>Marknadsdata</h2>
+      {!available ? (
+        <p className="muted" style={{ marginTop: 12 }}>Insamlingen körs bara i skrivbordsprogrammet.</p>
+      ) : !m ? (
+        <p className="muted" style={{ marginTop: 12 }}>Väntar på status från insamlingen…</p>
+      ) : (
+        <dl className="dl" style={{ marginTop: 16 }}>
+          <dt>Läge</dt><dd><b>{STATE_TEXT[m.state]}</b>{m.ready ? " · redo som analysunderlag" : " · inte redo"}{m.message ? ` (${m.message})` : ""}</dd>
+          <dt>Källa</dt><dd>{m.provider} {m.market} {m.symbol} {m.interval} <span className="muted">(publik data, inga nycklar)</span></dd>
+          <dt>Senast mottaget</dt><dd>{time(m.last_received_at)} <span className="muted">(serverns händelsetid {utc(m.last_event_time)})</span></dd>
+          <dt>Senaste stängda stapel</dt><dd>{utc(m.last_closed_open_time)} <span className="muted">({m.closed_bars} stängda staplar sparade)</span></dd>
+          <dt>Pågående stapel</dt><dd>{utc(m.live_open_time)} <span className="muted">(används inte som analysunderlag)</span></dd>
+          <dt>Kvalitet</dt><dd>{m.gaps.length} öppna luckor, {m.confirmed_gaps} luckor som källan saknar, {m.corrections} rättelser, {m.rejected} avvisade meddelanden, {m.reconnects} återanslutningar</dd>
+          <dt>Sparas i</dt><dd className="muted">{m.database}</dd>
+        </dl>
+      )}
+      <p className="footnote" style={{ padding: "16px 0 0" }}>Varje dator samlar in själv. Det finns ingen gemensam server, så era datorer har inte en gemensam papperssession.</p>
+    </section>
   );
 }
