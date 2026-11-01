@@ -79,7 +79,7 @@ export default function App() {
                   <span className="muted right">{updater.notice.status === "ready" ? `v${updater.notice.version} klar` : updater.notice.status === "available" || updater.notice.status === "downloading" ? `Hämtar v${updater.notice.version}` : updater.notice.status === "checking" ? "Söker…" : updater.notice.status === "current" ? "Aktuell" : updater.notice.status === "error" ? "Fel" : ""}</span>
                 </button>
               )}
-              <div className="item static"><Icon name="info" /> Om Trader_go <span className="muted right">v{__APP_VERSION__}</span></div>
+              <div className="item static"><Icon name="info" /> Om Trader_go <span className="muted right">v{__APP_VERSION__} · {__COMMIT__}</span></div>
             </div>
           )}
           <button className="user" onClick={() => setMenu(!menu)}>
@@ -99,7 +99,7 @@ export default function App() {
             </button>
           </div>
         )}
-        <div className="topbar"><span className="saved"><i />Papper · inga riktiga pengar · v{__APP_VERSION__}</span></div>
+        <div className="topbar"><span className="saved" title="Version och byggcommit. Samma värden hos er båda = samma program."><i />Papper · inga riktiga pengar · v{__APP_VERSION__} ({__COMMIT__})</span></div>
         {page === "Översikt" && <Overview go={(p) => setPage(p)} />}
         {page === "Marknad" && <Market />}
         {page === "Research" && <Research />}

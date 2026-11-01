@@ -29,7 +29,8 @@ export default defineConfig({
   server: { port: 5174, strictPort: true, fs: { allow: [repo] } },
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
-    __COMMIT__: JSON.stringify(process.env.CF_PAGES_COMMIT_SHA?.slice(0, 7) ?? git("git rev-parse --short HEAD", "okänd")),
+    // Byggcommit, så att två installationer går att jämföra. "+ändrad" = byggt med ocommittade ändringar.
+    __COMMIT__: JSON.stringify(process.env.CF_PAGES_COMMIT_SHA?.slice(0, 7) ?? (git("git rev-parse --short HEAD", "okänd") + (git("git status --porcelain --untracked-files=no", "") ? "+ändrad" : ""))),
     __COMMIT_MSG__: JSON.stringify(git("git log -1 --format=%s", "")),
     __BUILT_AT__: JSON.stringify(new Date().toISOString()),
   },

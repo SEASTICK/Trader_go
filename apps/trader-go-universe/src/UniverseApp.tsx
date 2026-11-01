@@ -81,7 +81,7 @@ export default function UniverseApp() {
       <header className="uv-bar">
         <img src="/universe.svg" className="logo" alt="" />
         <b>TraderGO Universe</b>
-        <span className="muted">v{__APP_VERSION__} · bara läsning</span>
+        <span className="muted" title="Version och byggcommit">v{__APP_VERSION__} ({__COMMIT__}) · bara läsning</span>
         <span className="uv-spacer" />
         <button className={`uv-sync ${status?.state === "error" ? "error" : status?.state === "idle" ? "synced" : ""}${broken ? " warn" : ""}`} onClick={() => setPanel(!panel)}>
           <i /> Diagnostik{status ? ` · ${STATE_LABEL[status.state]}` : ""}{broken ? ` · ${broken} trasiga länkar` : ""}

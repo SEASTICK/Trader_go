@@ -46,17 +46,15 @@ projektmappen skapas, ändras, byter namn eller tas bort.
 
 ## Samarbete: så hämtar ni varandras ändringar
 
-`SEASTICK/Trader_go` (privat) är den gemensamma källan, och `main` är den gemensamma versionen.
+`SEASTICK/Trader_go` (privat) är den gemensamma källan, och båda arbetar direkt på `main`:
+synkronisera → ändra → testa → commit → synkronisera → push. Kommandon, vilka kontroller som ska
+köras före push (direkt på `main` körs ingen CI), och tabellen för pågående arbete finns i
+[docs/samarbete.md](docs/samarbete.md).
 
-1. **Hämta:** `git switch main && git pull`. Universe ser ändringarna direkt (filbevakning), och
-   Obsidian läser samma filer i `research/`.
-2. **Ändra:** gör en egen gren (`git switch -c min-andring`), committa och öppna en pull request
-   mot `main`. Ingen pushar direkt till `main`.
-3. **Kontroller:** pull requesten kör `app-check.yml` och vid behov `windows-build.yml` för
-   Trader_go, `universe-check.yml` och vid behov `universe-windows.yml` för Universe, och
-   `engine-check.yml` för motorn.
-4. **Konflikter:** en appuppdatering rör aldrig repot. Git skriver aldrig över osparade ändringar
-   utan att fråga; committa eller lägg undan dem innan `git pull`.
+- **Hämta:** `git switch main && git pull --ff-only`. Universe ser ändringarna direkt (filbevakning),
+  och Obsidian läser samma filer i `research/`.
+- **Pusha:** först `git pull --rebase`, sedan `git push`. Aldrig `--force`.
+- **En appuppdatering rör aldrig repot,** och en push uppdaterar inte apparna (se nästa avsnitt).
 
 ## Så når en godkänd release de installerade apparna
 
