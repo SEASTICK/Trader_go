@@ -6,6 +6,8 @@ pub mod engine;
 pub mod index;
 pub mod links;
 pub mod obsidian;
+#[cfg(test)]
+mod perf;
 
 use engine::{Engine, MapError};
 use notify_debouncer_full::notify::{
@@ -39,6 +41,8 @@ pub struct Status {
     pub edges: usize,
     pub unconnected: usize,
     pub last_run: u128,
+    /// Hur lång tid senaste genomgången tog (ms), för diagnostiken.
+    pub last_duration_ms: u128,
     /// Diagnostics: connections per kind and explicit links that point at nothing.
     pub by_kind: std::collections::BTreeMap<String, usize>,
     pub broken: Vec<engine::BrokenLink>,
@@ -100,6 +104,7 @@ impl MapService {
                     s.root = root.clone();
                     set_status(s);
                 }
+                let started = Instant::now();
                 match e.reconcile(hints) {
                     Ok(sum) => {
                         set_status(Status {
@@ -110,6 +115,7 @@ impl MapService {
                             edges: sum.edges,
                             unconnected: sum.unconnected,
                             last_run: now_ms(),
+                            last_duration_ms: started.elapsed().as_millis(),
                             by_kind: sum.by_kind,
                             broken: sum.broken,
                         });

@@ -97,10 +97,46 @@ fn file_of(v: &Value) -> Option<&str> {
     }
 }
 
+type Rect = (i64, i64, i64, i64);
+
+/// Upptagna rutor indexerade per rutnätscell, så att en ledig plats hittas genom att titta på
+/// närliggande rutor i stället för alla (tidigare O(N) per kandidat, O(N³) för en ny karta).
+#[derive(Default)]
+struct Occupied {
+    cells: HashMap<(i64, i64), Vec<Rect>>,
+}
+
+impl Occupied {
+    fn cells_of(r: Rect) -> impl Iterator<Item = (i64, i64)> {
+        let (x0, x1) = (r.0.div_euclid(CELL_W), (r.0 + r.2 - 1).div_euclid(CELL_W));
+        let (y0, y1) = (r.1.div_euclid(CELL_H), (r.1 + r.3 - 1).div_euclid(CELL_H));
+        (x0..=x1).flat_map(move |x| (y0..=y1).map(move |y| (x, y)))
+    }
+    fn insert(&mut self, r: Rect) {
+        for c in Self::cells_of(r) {
+            self.cells.entry(c).or_default().push(r);
+        }
+    }
+    fn hits(&self, r: Rect) -> bool {
+        Self::cells_of(r).any(|c| self.cells.get(&c).is_some_and(|v| v.iter().any(|o| overlaps(*o, r))))
+    }
+    /// Tar bort rutor som börjar i `pos` (kortet flyttas av appen till en annan grupp).
+    fn remove_at(&mut self, pos: (i64, i64)) {
+        for v in self.cells.values_mut() {
+            v.retain(|r| (r.0, r.1) != pos);
+        }
+    }
+    fn iter(&self) -> impl Iterator<Item = &Rect> {
+        self.cells.values().flatten()
+    }
+}
+
 struct Placer<'a> {
     layout: &'a mut Layout,
-    occupied: Vec<(i64, i64, i64, i64)>,
-    old_groups: HashMap<String, (i64, i64, i64, i64)>,
+    occupied: Occupied,
+    old_groups: HashMap<String, Rect>,
+    /// Första plats som kan vara ledig per grupp; platser före den är redan tagna.
+    next: HashMap<String, i64>,
 }
 
 impl Placer<'_> {
@@ -127,14 +163,16 @@ impl Placer<'_> {
 
     fn place(&mut self, group: &str) -> (i64, i64) {
         let (ox, oy) = self.origin(group);
-        for i in 0.. {
+        let start = self.next.get(group).copied().unwrap_or(0);
+        for i in start.. {
             let p = (
                 ox + PAD + (i % COLS) * CELL_W,
                 oy + TOP + (i / COLS) * CELL_H,
             );
             let r = (p.0, p.1, NODE_W, NODE_H);
-            if !self.occupied.iter().any(|o| overlaps(*o, r)) {
-                self.occupied.push(r);
+            if !self.occupied.hits(r) {
+                self.occupied.insert(r);
+                self.next.insert(group.to_string(), i + 1);
                 return p;
             }
         }
@@ -181,15 +219,15 @@ pub fn merge(
         .filter(|n| is_type(n, "group"))
         .filter_map(|n| Some((n.get("id")?.as_str()?.to_string(), rect(n))))
         .collect();
-    let occupied = nodes
-        .iter()
-        .filter(|n| !is_type(n, "group"))
-        .map(rect)
-        .collect();
+    let mut occupied = Occupied::default();
+    for n in nodes.iter().filter(|n| !is_type(n, "group")) {
+        occupied.insert(rect(n));
+    }
     let mut placer = Placer {
         layout,
         occupied,
         old_groups,
+        next: HashMap::new(),
     };
 
     let connected: HashSet<&str> = edges
@@ -204,6 +242,10 @@ pub fn merge(
         }
     };
 
+    let mut ids: HashSet<String> = nodes
+        .iter()
+        .filter_map(|n| n.get("id").and_then(Value::as_str).map(String::from))
+        .collect();
     let mut node_of: HashMap<String, usize> = HashMap::new();
     for (i, n) in nodes.iter().enumerate() {
         if let Some(f) = file_of(n) {
@@ -217,12 +259,10 @@ pub fn merge(
             None => {
                 let (x, y) = placer.place(&group);
                 let mut id = format!("f-{}", short_hash(f));
-                while nodes
-                    .iter()
-                    .any(|n| n.get("id").and_then(Value::as_str) == Some(id.as_str()))
-                {
+                while ids.contains(&id) {
                     id = format!("f-{}", short_hash(&(id.clone() + "+")));
                 }
+                ids.insert(id.clone());
                 node_of.insert(f.clone(), nodes.len());
                 nodes.push(json!({"id": id, "type": "file", "file": f, "x": x, "y": y, "width": NODE_W, "height": NODE_H}));
                 placer.layout.files.insert(
@@ -245,7 +285,8 @@ pub fn merge(
                     });
                 // Only cards the app placed and nobody moved follow their group.
                 if meta.group != group && meta.auto == Some(pos) {
-                    placer.occupied.retain(|r| (r.0, r.1) != pos);
+                    placer.occupied.remove_at(pos);
+                    placer.next.clear(); // en plats blev ledig; sök från början igen
                     let (x, y) = placer.place(&group);
                     nodes[i]["x"] = json!(x);
                     nodes[i]["y"] = json!(y);
