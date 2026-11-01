@@ -30,7 +30,8 @@ export function LineChart({ series, labels, height = 280, watermark = "SIMULERAD
   const padL = 8, padR = 52, padT = 12, padB = 26;
   const all = series.flatMap((s) => s.data);
   const min = Math.min(...all), max = Math.max(...all);
-  const lo = min - (max - min) * 0.08, hi = max + (max - min) * 0.08;
+  const pad = (max - min) * 0.08;
+  const lo = min >= 0 ? Math.max(0, min - pad) : min - pad, hi = max + pad;  // kapital kan inte bli negativt
   const n = series[0].data.length;
   const x = (i: number) => padL + (i / (n - 1)) * (width - padL - padR);
   const y = (v: number) => padT + (1 - (v - lo) / (hi - lo)) * (height - padT - padB);

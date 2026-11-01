@@ -2,6 +2,10 @@ import { LineChart } from "../components/Charts";
 import { Icon } from "../components/icons";
 import { Page, SimChip, StatusDot } from "../components/ui";
 import { num, pct, type Computed } from "../lib/experiments";
+import registryMd from "../../../research/registry.md?raw";
+import { parseRegistry } from "../lib/registry";
+
+const decisions = parseRegistry(registryMd).decisions;
 
 export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: { c: Computed; krav: number; total: number; onBack: () => void }) {
   const { exp } = c;
@@ -56,7 +60,7 @@ export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: {
         <section className="card pad">
           <h2>Om testet</h2>
           <dl className="dl" style={{ marginTop: 14 }}>
-            <dt>Status</dt><dd><StatusDot status={real ? "Pågår" : "Idé"} /></dd>
+            <dt>Status</dt><dd><StatusDot status={real ? (c.hypotes && decisions[c.hypotes]) || "Pågår" : "Idé"} /></dd>
             <dt>Hypotes</dt><dd>{real ? <b>{c.hypotes}</b> : <span className="muted">Inte registrerad än (<code>research/registry.md</code>)</span>}</dd>
             {real && c.deflated != null && <><dt>Deflated Sharpe</dt><dd>{num(c.deflated * 100, 0)} % sannolikhet att slå bästa tur efter alla försök</dd></>}
             {real && c.resultatfil && <><dt>Resultatfil</dt><dd><code>{c.resultatfil}</code></dd></>}
