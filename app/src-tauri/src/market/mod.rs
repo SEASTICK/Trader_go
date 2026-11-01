@@ -25,11 +25,13 @@ use std::thread::JoinHandle;
 use std::time::Duration;
 
 pub const STATUS_EVENT: &str = "market-status";
+pub const BAR_EVENT: &str = "market-bar";
 
 pub struct Collector {
     pub status: Arc<Mutex<Status>>,
     stop: Arc<AtomicBool>,
     handle: Mutex<Option<JoinHandle<()>>>,
+    db: PathBuf,
     _lock: Option<File>,
 }
 
@@ -48,7 +50,9 @@ pub fn load_config(dir: &Path) -> Result<Config, String> {
 
 impl Collector {
     /// Startar insamlingen i en egen tråd. `publish` anropas vid varje statusändring.
-    pub fn start(dir: PathBuf, publish: Box<dyn Fn(&Status) + Send>) -> Collector {
+    /// Startar insamlingen i en egen tråd. `publish` anropas vid varje statusändring, `on_bar` för varje ny
+    /// eller uppdaterad stapel (diagrammen lyssnar på den i stället för att öppna egna anslutningar).
+    pub fn start(dir: PathBuf, publish: Box<dyn Fn(&Status) + Send>, on_bar: Box<dyn Fn(&runner::BarEvent) + Send>) -> Collector {
         let db = dir.join("market-data.sqlite");
         let status_file = dir.join("status.json");
         let stop = Arc::new(AtomicBool::new(false));
@@ -58,7 +62,7 @@ impl Collector {
             s.updated_at = runner::now_ms();
             let _ = status::write_atomic(&status_file, &s);
             publish(&s);
-            Collector { status: Arc::new(Mutex::new(s)), stop: stop.clone(), handle: Mutex::new(None), _lock: None }
+            Collector { status: Arc::new(Mutex::new(s)), stop: stop.clone(), handle: Mutex::new(None), db: db.clone(), _lock: None }
         };
         let blank = |c: &Config| Status::new(&c.provider, &c.market, &c.symbol, &c.interval, &db.display().to_string());
 
@@ -91,9 +95,10 @@ impl Collector {
             let _ = status::write_atomic(&status_file2, s);
             publish(s);
         });
-        let runner = runner::Runner::new(&cfg, Box::new(source::Binance::new(http)), store, status.clone(), publish_all, stop.clone(), runner::Timing::default());
+        let runner = runner::Runner::new(&cfg, Box::new(source::Binance::new(http)), store, status.clone(), publish_all, stop.clone(), runner::Timing::default())
+            .with_bar_listener(on_bar);
         let handle = std::thread::Builder::new().name("market-collector".into()).spawn(move || runner.run()).ok();
-        Collector { status, stop, handle: Mutex::new(handle), _lock: Some(lock) }
+        Collector { status, stop, handle: Mutex::new(handle), db, _lock: Some(lock) }
     }
 
     pub fn snapshot(&self) -> Status {
@@ -120,6 +125,26 @@ pub fn market_status(state: tauri::State<'_, Collector>) -> Status {
     state.snapshot()
 }
 
+/// Serier som datalagret har staplar för. Diagrammen visar bara dessa tidsramar.
+#[tauri::command]
+pub fn market_series(state: tauri::State<'_, Collector>) -> Result<Vec<store::SeriesInfo>, String> {
+    if !state.db.exists() {
+        return Ok(vec![]);
+    }
+    store::read_series(&state.db).map_err(|e| e.to_string())
+}
+
+/// Stängda staplar (och den pågående på första sidan) för en serie som stöds. Bara läsning.
+#[tauri::command]
+pub fn market_bars(symbol: String, interval: String, before: Option<i64>, limit: Option<u32>, state: tauri::State<'_, Collector>) -> Result<store::BarsPage, String> {
+    let cfg = Config { symbol, interval, ..Config::default() };
+    cfg.validate()?;
+    if !state.db.exists() {
+        return Ok(store::BarsPage { bars: vec![], live: None, has_more: false });
+    }
+    store::read_bars(&state.db, &cfg.key(), before, limit.unwrap_or(1000)).map_err(|e| e.to_string())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -128,7 +153,7 @@ mod tests {
     fn a_broken_config_stops_with_an_error_and_no_fallback() {
         let dir = tempfile::tempdir().unwrap();
         std::fs::write(dir.path().join("config.json"), r#"{"provider":"binance","market":"spot","symbol":"DOGEUSDT","interval":"4h"}"#).unwrap();
-        let c = Collector::start(dir.path().to_path_buf(), Box::new(|_| {}));
+        let c = Collector::start(dir.path().to_path_buf(), Box::new(|_| {}), Box::new(|_| {}));
         let s = c.snapshot();
         assert_eq!(s.state, State::Error);
         assert!(s.message.unwrap().contains("DOGEUSDT"));
@@ -144,7 +169,7 @@ mod tests {
     fn real_network_collects_closed_history_and_a_live_bar() {
         let dir = tempfile::tempdir().unwrap();
         std::fs::write(dir.path().join("config.json"), r#"{"provider":"binance","market":"spot","symbol":"BTCUSDT","interval":"4h","warmup_bars":50}"#).unwrap();
-        let c = Collector::start(dir.path().to_path_buf(), Box::new(|_| {}));
+        let c = Collector::start(dir.path().to_path_buf(), Box::new(|_| {}), Box::new(|_| {}));
         let end = std::time::Instant::now() + Duration::from_secs(30);
         while std::time::Instant::now() < end {
             let s = c.snapshot();
@@ -169,8 +194,8 @@ mod tests {
     fn a_second_collector_on_the_same_folder_is_refused() {
         let dir = tempfile::tempdir().unwrap();
         // Ingen nätverksåtkomst behövs: den första håller låset även om den inte kommer någonstans.
-        let first = Collector::start(dir.path().to_path_buf(), Box::new(|_| {}));
-        let second = Collector::start(dir.path().to_path_buf(), Box::new(|_| {}));
+        let first = Collector::start(dir.path().to_path_buf(), Box::new(|_| {}), Box::new(|_| {}));
+        let second = Collector::start(dir.path().to_path_buf(), Box::new(|_| {}), Box::new(|_| {}));
         assert_eq!(second.snapshot().state, State::Error);
         assert!(second.snapshot().message.unwrap().contains("en annan"));
         first.stop(Duration::from_secs(15));

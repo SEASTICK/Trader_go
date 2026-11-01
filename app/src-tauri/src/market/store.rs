@@ -210,6 +210,78 @@ impl Store {
     }
 }
 
+/// En serie som finns i databasen, för att visa bara tidsramar som datalagret faktiskt har.
+#[derive(Debug, Clone, serde::Serialize, PartialEq)]
+pub struct SeriesInfo {
+    pub provider: String,
+    pub market: String,
+    pub symbol: String,
+    pub interval: String,
+    pub closed_bars: i64,
+    pub first_open_time: i64,
+    pub last_open_time: i64,
+}
+
+#[derive(Debug, Clone, serde::Serialize, PartialEq)]
+pub struct BarsPage {
+    /// Stängda staplar i stigande tid.
+    pub bars: Vec<Bar>,
+    /// Den pågående stapeln om den hör till sidan med de senaste staplarna.
+    pub live: Option<Bar>,
+    /// Det finns äldre staplar före den första på sidan.
+    pub has_more: bool,
+}
+
+fn read_only(path: &Path) -> rusqlite::Result<Connection> {
+    let c = Connection::open_with_flags(path, rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY | rusqlite::OpenFlags::SQLITE_OPEN_NO_MUTEX)?;
+    c.busy_timeout(std::time::Duration::from_secs(2))?;
+    Ok(c)
+}
+
+/// Serier med minst en stängd stapel. Läser skrivskyddat.
+pub fn read_series(path: &Path) -> rusqlite::Result<Vec<SeriesInfo>> {
+    let c = read_only(path)?;
+    let mut st = c.prepare(
+        "SELECT provider, market, symbol, interval, COUNT(*), MIN(open_time), MAX(open_time) FROM bars
+         GROUP BY provider, market, symbol, interval ORDER BY symbol, interval",
+    )?;
+    let rows = st.query_map([], |r| {
+        Ok(SeriesInfo { provider: r.get(0)?, market: r.get(1)?, symbol: r.get(2)?, interval: r.get(3)?, closed_bars: r.get(4)?,
+                        first_open_time: r.get(5)?, last_open_time: r.get(6)? })
+    })?;
+    rows.collect()
+}
+
+/// Upp till `limit` stängda staplar före `before` (eller de senaste), i stigande tid. Läser skrivskyddat.
+pub fn read_bars(path: &Path, k: &SeriesKey, before: Option<i64>, limit: u32) -> rusqlite::Result<BarsPage> {
+    let c = read_only(path)?;
+    let limit = limit.clamp(1, 5000) as i64;
+    let mut st = c.prepare(
+        "SELECT open_time, open, high, low, close, volume, close_time FROM bars
+         WHERE provider=?1 AND market=?2 AND symbol=?3 AND interval=?4 AND open_time < ?5
+         ORDER BY open_time DESC LIMIT ?6",
+    )?;
+    let mut bars: Vec<Bar> = st
+        .query_map(params![k.provider, k.market, k.symbol, k.interval, before.unwrap_or(i64::MAX), limit + 1], row_to_bar)?
+        .collect::<rusqlite::Result<_>>()?;
+    let has_more = bars.len() as i64 > limit;
+    bars.truncate(limit as usize);
+    bars.reverse();
+    let live = if before.is_none() {
+        c.query_row(
+            "SELECT open_time, open, high, low, close, volume, close_time FROM live_bar
+             WHERE provider=?1 AND market=?2 AND symbol=?3 AND interval=?4",
+            params![k.provider, k.market, k.symbol, k.interval],
+            row_to_bar,
+        )
+        .optional()?
+        .filter(|l| bars.last().is_none_or(|b| l.open_time > b.open_time))
+    } else {
+        None
+    };
+    Ok(BarsPage { bars, live, has_more })
+}
+
 fn row_to_bar(r: &rusqlite::Row) -> rusqlite::Result<Bar> {
     Ok(Bar {
         open_time: r.get(0)?,
@@ -279,6 +351,31 @@ mod tests {
         assert_eq!(s.missing_ranges(&k, STEP).unwrap(), vec![(T0 + 2 * STEP, T0 + 3 * STEP), (T0 + 6 * STEP, T0 + 6 * STEP)]);
         s.confirm_gap(&k, T0 + 2 * STEP, T0 + 3 * STEP, 9).unwrap();
         assert_eq!(s.missing_ranges(&k, STEP).unwrap(), vec![(T0 + 6 * STEP, T0 + 6 * STEP)]);
+    }
+
+    #[test]
+    fn charts_read_pages_backwards_and_the_live_bar_separately() {
+        let dir = tempfile::tempdir().unwrap();
+        let db = dir.path().join("m.sqlite");
+        let mut s = Store::open(&db).unwrap();
+        let k = Config::default().key();
+        let bars: Vec<Bar> = (0..10).map(|i| test_bar(T0 + i * STEP, STEP)).collect();
+        s.insert_closed(&k, &bars, "rest", None, 1).unwrap();
+        s.set_live(&k, &test_bar(T0 + 10 * STEP, STEP), Some(5), 5).unwrap();
+        let latest = read_bars(&db, &k, None, 4).unwrap();
+        assert_eq!(latest.bars.iter().map(|b| (b.open_time - T0) / STEP).collect::<Vec<_>>(), vec![6, 7, 8, 9], "ascending, newest page");
+        assert_eq!(latest.live.map(|b| (b.open_time - T0) / STEP), Some(10));
+        assert!(latest.has_more);
+        let older = read_bars(&db, &k, Some(latest.bars[0].open_time), 4).unwrap();
+        assert_eq!(older.bars.iter().map(|b| (b.open_time - T0) / STEP).collect::<Vec<_>>(), vec![2, 3, 4, 5]);
+        assert!(older.live.is_none(), "the live bar belongs only to the newest page");
+        let oldest = read_bars(&db, &k, Some(older.bars[0].open_time), 4).unwrap();
+        assert_eq!(oldest.bars.len(), 2);
+        assert!(!oldest.has_more);
+        let series = read_series(&db).unwrap();
+        assert_eq!(series.len(), 1);
+        assert_eq!((series[0].interval.as_str(), series[0].closed_bars), ("4h", 10));
+        assert!(read_bars(&db, &Config { symbol: "ETHUSDT".into(), ..Config::default() }.key(), None, 10).unwrap().bars.is_empty());
     }
 
     #[test]

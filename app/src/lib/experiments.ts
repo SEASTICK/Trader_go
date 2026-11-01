@@ -25,6 +25,8 @@ export type Computed = {
   period?: [string, string];
   resultatfil?: string;
   trades: Trade[];
+  /** Riktiga affärer med tider och priser (bara HISTORIK), för markörer i prisdiagrammet. */
+  affärer?: { entry_time: string; exit_time: string | null; side: string; entry_price: number; exit_price: number | null }[];
   equity: number[];
   baseline: number[];
   labels: string[];
@@ -132,6 +134,7 @@ export function fromResult(exp: Experiment, r: RealResult): Computed {
   const pos = r.position_now;
   return {
     exp, källa: "HISTORIK", trades, equity: curve.strategy, baseline, labels,
+    affärer: r.recent_trades.map(({ entry_time, exit_time, side, entry_price, exit_price }) => ({ entry_time, exit_time, side, entry_price, exit_price })),
     avkastning: r.total_return * 100, maxDrawdown: r.max_drawdown * 100, antal: r.trades,
     vinstandel: r.win_rate * 100, t: r.t, krav: r.t_required, passes: r.passes,
     deflated: r.deflated_sharpe, stressad: r.stressed_total_return * 100, hypotes: r.hypothesis,

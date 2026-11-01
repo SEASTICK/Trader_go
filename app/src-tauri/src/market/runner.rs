@@ -76,6 +76,18 @@ pub fn woke_from_sleep(mono: Duration, wall: Duration) -> bool {
     wall.saturating_sub(mono) > Duration::from_secs(10)
 }
 
+/// En stapel till diagrammen. `resync`: staplar kom via REST (ikappkörning eller lucka); läs om slutet.
+#[derive(Debug, Clone, serde::Serialize, PartialEq)]
+pub struct BarEvent {
+    pub provider: String,
+    pub market: String,
+    pub symbol: String,
+    pub interval: String,
+    /// live | closed | resync
+    pub kind: &'static str,
+    pub bar: Option<super::model::Bar>,
+}
+
 enum Exit {
     Stop,
     Reconnect(String),
@@ -89,6 +101,7 @@ pub struct Runner {
     timing: Timing,
     pub status: Arc<Mutex<Status>>,
     publish: Box<dyn Fn(&Status) + Send>,
+    on_bar: Box<dyn Fn(&BarEvent) + Send>,
     stop: Arc<AtomicBool>,
     last_publish: Option<Instant>,
 }
@@ -98,7 +111,18 @@ impl Runner {
         assert_eq!(cfg.provider, src.name(), "konfigurationen och källan måste vara samma leverantör");
         // Aldrig tätare än tio uteblivna meddelanden i strömmens egen takt.
         let stale_after = Duration::from_secs(cfg.stale_after_secs).max(src.stream_period() * 10);
-        Runner { src, store, sync: Sync::new(cfg), stale_after, timing, status, publish, stop, last_publish: None }
+        Runner { src, store, sync: Sync::new(cfg), stale_after, timing, status, publish, on_bar: Box::new(|_| {}), stop, last_publish: None }
+    }
+
+    /// Diagrammen lyssnar här i stället för att öppna egna anslutningar.
+    pub fn with_bar_listener(mut self, f: Box<dyn Fn(&BarEvent) + Send>) -> Self {
+        self.on_bar = f;
+        self
+    }
+
+    fn emit_bar(&self, kind: &'static str, bar: Option<super::model::Bar>) {
+        let k = &self.sync.key;
+        (self.on_bar)(&BarEvent { provider: k.provider.clone(), market: k.market.clone(), symbol: k.symbol.clone(), interval: k.interval.clone(), kind, bar });
     }
 
     fn stopping(&self) -> bool {
@@ -144,7 +168,9 @@ impl Runner {
     fn catch_up(&mut self) -> Result<Vec<(i64, i64)>, SyncError> {
         let rep = self.sync.backfill(self.src.as_ref(), &mut self.store, now_ms())?;
         self.status.lock().unwrap().rejected += rep.rejected as u64;
-        self.sync.fill_gaps(self.src.as_ref(), &mut self.store, now_ms())
+        let gaps = self.sync.fill_gaps(self.src.as_ref(), &mut self.store, now_ms())?;
+        self.emit_bar("resync", None);
+        Ok(gaps)
     }
 
     pub fn run(mut self) {
@@ -228,17 +254,28 @@ impl Runner {
                                 s.last_event_time = Some(event_time);
                             }
                             match self.sync.apply(&mut self.store, &bar, closed, event_time, received) {
-                                Ok(Applied::GapDetected { .. }) => match self.catch_up() {
-                                    Ok(gaps) if gaps.is_empty() => self.update(Some((State::Connected, None)), true),
-                                    Ok(gaps) => self.update(Some((State::Gap, Some(format!("{} luckor kunde inte fyllas än", gaps.len())))), true),
-                                    Err(e) => return Exit::Reconnect(format!("kunde inte fylla luckan: {e}")),
-                                },
+                                Ok(Applied::GapDetected { .. }) => {
+                                    self.emit_bar("closed", Some(bar));
+                                    match self.catch_up() {
+                                        Ok(gaps) if gaps.is_empty() => self.update(Some((State::Connected, None)), true),
+                                        Ok(gaps) => self.update(Some((State::Gap, Some(format!("{} luckor kunde inte fyllas än", gaps.len())))), true),
+                                        Err(e) => return Exit::Reconnect(format!("kunde inte fylla luckan: {e}")),
+                                    }
+                                }
                                 Ok(Applied::Rejected(why)) => {
                                     self.status.lock().unwrap().rejected += 1;
                                     self.update(None, false);
                                     let _ = why;
                                 }
-                                Ok(Applied::Closed { .. }) => self.update(Some((State::Connected, None)), true),
+                                Ok(Applied::Closed { .. }) => {
+                                    self.emit_bar("closed", Some(bar));
+                                    self.update(Some((State::Connected, None)), true)
+                                }
+                                Ok(Applied::Live) => {
+                                    self.emit_bar("live", Some(bar));
+                                    let restore = self.status.lock().unwrap().state == State::Stale;
+                                    self.update(restore.then_some((State::Connected, None)), false);
+                                }
                                 Ok(_) => {
                                     let restore = self.status.lock().unwrap().state == State::Stale;
                                     self.update(restore.then_some((State::Connected, None)), false);
@@ -415,7 +452,10 @@ mod tests {
         let fake_bars = Arc::new(src);
         // Börsen får stapel 4 och 5 medan anslutningen är nere.
         let runner_src: Box<dyn Source> = Box::new(ArcSource(fake_bars.clone()));
-        let runner = Runner::new(&cfg, runner_src, Store::memory(), status.clone(), Box::new(move |s| seen2.lock().unwrap().push(s.state)), stop.clone(), timing);
+        let bars_seen = Arc::new(Mutex::new(Vec::<(&'static str, Option<i64>)>::new()));
+        let bars_seen2 = bars_seen.clone();
+        let runner = Runner::new(&cfg, runner_src, Store::memory(), status.clone(), Box::new(move |s| seen2.lock().unwrap().push(s.state)), stop.clone(), timing)
+            .with_bar_listener(Box::new(move |e| bars_seen2.lock().unwrap().push((e.kind, e.bar.map(|b| b.open_time)))));
         let probe = status.clone();
         let handle = std::thread::spawn(move || runner.run());
 
@@ -445,6 +485,15 @@ mod tests {
         let states = seen.lock().unwrap().clone();
         assert_eq!(states.last(), Some(&State::Stopped));
         assert!(states.contains(&State::Reconnecting) && states.contains(&State::Connected), "{states:?}");
+        let bars = bars_seen.lock().unwrap().clone();
+        assert!(bars.contains(&("live", Some(T0 + 4 * STEP))), "live update reaches the charts: {bars:?}");
+        // Stapel 5 når diagrammen antingen som "closed" från strömmen eller, om REST-ikappkörningen efter
+        // återanslutningen hann först, som en "resync" efter live-stapel 4 (strömmens kopia är då en dubblett).
+        let live4 = bars.iter().position(|e| *e == ("live", Some(T0 + 4 * STEP))).unwrap();
+        assert!(bars.contains(&("closed", Some(T0 + 5 * STEP))) || bars[live4..].iter().any(|(k, _)| *k == "resync"),
+            "new closed bar reaches the charts: {bars:?}");
+        assert!(bars.iter().any(|(k, _)| *k == "resync"), "REST catch-up tells the charts to reload: {bars:?}");
+        assert!(!bars.contains(&("closed", Some(T0 + 3 * STEP))), "a repeated closed bar is not sent again: {bars:?}");
     }
 
     struct ArcSource(Arc<WsSource>);

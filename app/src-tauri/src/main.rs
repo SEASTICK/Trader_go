@@ -23,13 +23,20 @@ fn main() {
         .setup(|app| {
             let dir = app.path().app_data_dir()?.join("market");
             let handle = app.handle().clone();
-            let collector = market::Collector::start(dir, Box::new(move |s| {
-                let _ = handle.emit(market::STATUS_EVENT, s);
-            }));
+            let bars = app.handle().clone();
+            let collector = market::Collector::start(
+                dir,
+                Box::new(move |s| {
+                    let _ = handle.emit(market::STATUS_EVENT, s);
+                }),
+                Box::new(move |b| {
+                    let _ = bars.emit(market::BAR_EVENT, b);
+                }),
+            );
             app.manage(collector);
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![market::market_status])
+        .invoke_handler(tauri::generate_handler![market::market_status, market::market_series, market::market_bars])
         .build(tauri::generate_context!())
         .expect("fel när Trader_go startades");
     app.run(|app, event| {
