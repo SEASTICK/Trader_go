@@ -1,5 +1,8 @@
 """Kör alla rutor som har en registrerad hypotes, och exporterar resultaten till appen.
 
+Valfritt per ruta: "funding": true laddar finansieringsräntan (terminer). Den dras då i backtestet (long betalar
+positiv ränta) och skickas till strategin funding_contrarian.
+
 Valfritt per ruta: "period": {"start": "2020-01-01", "end": "2025-01-01"} (slut exkluderat), för att spara
 en ren period till senare.
 
@@ -43,7 +46,8 @@ def load_plan(repo: Path) -> dict:
     return json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
 
 
-def run_all(repo: Path, data_dir: Path | None = None, loader=binance.load, only: list[str] | None = None) -> BatchReport:
+def run_all(repo: Path, data_dir: Path | None = None, loader=binance.load, only: list[str] | None = None,
+            funding_loader=binance.load_funding) -> BatchReport:
     rep = BatchReport()
     data_dir = data_dir or repo / "data"
     for tile, spec in load_plan(repo).items():
@@ -63,10 +67,20 @@ def run_all(repo: Path, data_dir: Path | None = None, loader=binance.load, only:
         if not q.ok:
             rep.skipped[tile] = "datakvalitet: " + "; ".join(q.problems)
             continue
+        funding = None
+        params = dict(spec["strategy"].get("params") or {})
+        if spec.get("funding"):
+            try:
+                funding = funding_loader(spec["symbol"], data_dir)
+            except FileNotFoundError as exc:
+                rep.skipped[tile] = f"ingen finansieringsränta: {exc}"
+                continue
+            if spec["strategy"]["name"] == "funding_contrarian":
+                params["funding"] = funding
         try:
-            run_experiment(spec["hypothesis"], repo, bars, build(spec["strategy"]["name"], spec["strategy"].get("params"), spec.get("risk")),
+            run_experiment(spec["hypothesis"], repo, bars, build(spec["strategy"]["name"], params, spec.get("risk")),
                            CostModel(**spec.get("costs", {})), market=f'{spec.get("market", "spot")} {spec["symbol"]}',
-                           interval=spec["interval"], leverage=spec.get("leverage", 1.0),
+                           interval=spec["interval"], leverage=spec.get("leverage", 1.0), funding=funding,
                            note=f"ruta {tile}" + (f"; datavarningar: {'; '.join(q.warnings)}" if q.warnings else ""))
             rep.ran.append(tile)
         except NotRegisteredError as exc:
