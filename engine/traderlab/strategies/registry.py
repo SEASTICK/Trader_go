@@ -7,6 +7,7 @@ import pandas as pd
 
 from ..ml.walkforward import ml_strategy
 from . import examples
+from .funding import funding_contrarian
 
 
 def buy_and_hold(bars: pd.DataFrame) -> pd.Series:
@@ -18,6 +19,8 @@ FACTORIES: dict[str, Callable[..., Callable[[pd.DataFrame], pd.Series]]] = {
     "ma_cross": lambda **p: (lambda b: examples.ma_cross(b, **p)),
     "zscore_reversion": lambda **p: (lambda b: examples.zscore_reversion(b, **p)),
     "ml": lambda **p: ml_strategy(**p),
+    # Kräver finansieringsräntan: batch skickar med den som parametern `funding` när rutan har "funding": true.
+    "funding_contrarian": lambda funding, **p: (lambda b: funding_contrarian(b, funding, **p)),
 }
 
 
