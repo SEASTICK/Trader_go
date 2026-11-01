@@ -119,3 +119,20 @@ def test_random_labels_have_no_edge_before_costs():
     from traderlab.experiment import random_label_control
     ts = [random_label_control(make_bars(3000, seed=s, vol=0.01), seed=s) for s in range(8)]
     assert np.mean(np.abs(ts)) < 1.5
+
+
+def test_resizing_in_same_direction_only_pays_for_the_traded_difference():
+    bars = from_closes([100] * 50)
+    target = pd.Series([0.5 + 0.02 * ((i % 3) - 1) for i in range(50)], index=bars.index)
+    res = backtest.run(bars, target, CostModel(fee_bps=10, spread_bps=0, slippage_bps=0))
+    held = target.shift(1).fillna(0.0).iloc[:-1]
+    traded = held.diff().abs().fillna(held.abs()).sum()
+    assert res.total_costs == pytest.approx(traded * 0.001, rel=0.02)
+    assert len(res.trades) == 1  # en affär som ändrar storlek, inte 48 affärer
+
+
+def test_flip_still_pays_close_and_open():
+    bars = from_closes([100] * 6)
+    target = pd.Series([1, -1, -1, -1, -1, -1], index=bars.index, dtype=float)
+    res = backtest.run(bars, target, CostModel(fee_bps=10, spread_bps=0, slippage_bps=0))
+    assert res.total_costs == pytest.approx(0.001 + 0.002 * (1 - 0.001), rel=1e-3)  # in, sedan ut + in vid vändning
