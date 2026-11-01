@@ -7,6 +7,12 @@ Regler (CLAUDE.md):
 - Terminer: finansieringsränta betalas av den som håller positionen vid avräkningen. Likvidation
   kontrolleras mot stapelns högsta och lägsta pris (isolerad marginal).
 
+Valfritt stop-loss och take-profit: avstånd i pris, beräknade vid stängningen av signalstapeln. Nivån sätts
+vid inträdet (fyllningspris ± avstånd) och ligger fast under affären. Träffas nivån under en stapel stängs
+affären på nivån, eller på öppningen om priset gapar förbi den. Träffas båda samma stapel antas stop-loss
+först (det försiktiga antagandet). Efter en stop eller take-profit öppnas ingen ny affär i samma riktning
+förrän signalen har ändrats.
+
 Position anges som andel av kapitalet i [-1, 1]. Positivt = long, negativt = short.
 Med hävstång L blir exponeringen L gånger positionen.
 """
@@ -35,6 +41,9 @@ class Trade:
     funding: float = 0.0    # betald (+) eller mottagen (-) finansieringsränta
     liquidated: bool = False
     bars_held: int = 0
+    exit_reason: str | None = None   # "signal", "stop", "take_profit" eller "liquidation"
+    stop_price: float | None = None
+    take_profit_price: float | None = None
 
     @property
     def net_pnl(self) -> float:
@@ -82,7 +91,8 @@ def _funding_by_bar(index: pd.DatetimeIndex, funding: pd.Series | None) -> np.nd
 
 
 def run(bars: pd.DataFrame, target: pd.Series, costs: CostModel, leverage: float = 1.0,
-        maintenance_margin: float = 0.005, funding: pd.Series | None = None) -> BacktestResult:
+        maintenance_margin: float = 0.005, funding: pd.Series | None = None,
+        stop_distance: pd.Series | None = None, take_profit_distance: pd.Series | None = None) -> BacktestResult:
     """Kör ett backtest.
 
     target: målposition per stapel, beräknad vid stängning. NaN räknas som 0. Värden klipps till [-1, 1].
@@ -97,6 +107,10 @@ def run(bars: pd.DataFrame, target: pd.Series, costs: CostModel, leverage: float
     h = bars["high"].to_numpy(dtype=float)
     l = bars["low"].to_numpy(dtype=float)
     tgt = target.to_numpy()
+    sd = (stop_distance.reindex(bars.index).to_numpy(dtype=float) if stop_distance is not None
+          else np.full(len(bars), np.nan))
+    td = (take_profit_distance.reindex(bars.index).to_numpy(dtype=float) if take_profit_distance is not None
+          else np.full(len(bars), np.nan))
     fund = _funding_by_bar(bars.index, funding)
     rate = costs.per_side
     n = len(bars)
@@ -116,7 +130,7 @@ def run(bars: pd.DataFrame, target: pd.Series, costs: CostModel, leverage: float
     for i in range(n - 1):
         desired = tgt[i - 1] if i >= 1 else 0.0
         if liq_lock is not None:
-            if desired == liq_lock:
+            if desired != 0.0 and np.sign(desired) == np.sign(liq_lock):
                 desired = 0.0
             else:
                 liq_lock = None
@@ -139,6 +153,7 @@ def run(bars: pd.DataFrame, target: pd.Series, costs: CostModel, leverage: float
                 cur.costs += c
                 total_costs += c
                 cur.exit_time, cur.exit_price = bars.index[i], o[i]
+                cur.exit_reason = "signal"
                 cur = None
                 qty = 0.0
             pos = desired
@@ -152,6 +167,38 @@ def run(bars: pd.DataFrame, target: pd.Series, costs: CostModel, leverage: float
                             size=abs(pos), equity_at_entry=equity + c, costs=c)
                 trades.append(cur)
                 seg_pnl = -c
+                if i >= 1 and np.isfinite(sd[i - 1]) and sd[i - 1] > 0:
+                    cur.stop_price = o[i] - sd[i - 1] if qty > 0 else o[i] + sd[i - 1]
+                if i >= 1 and np.isfinite(td[i - 1]) and td[i - 1] > 0:
+                    cur.take_profit_price = o[i] + td[i - 1] if qty > 0 else o[i] - td[i - 1]
+
+        if cur is not None and (cur.stop_price is not None or cur.take_profit_price is not None):
+            sp, tp = cur.stop_price, cur.take_profit_price
+            exit_px = reason = None
+            if qty > 0:
+                if sp is not None and l[i] <= sp:
+                    exit_px, reason = min(o[i], sp), "stop"
+                elif tp is not None and h[i] >= tp:
+                    exit_px, reason = max(o[i], tp), "take_profit"
+            else:
+                if sp is not None and h[i] >= sp:
+                    exit_px, reason = max(o[i], sp), "stop"
+                elif tp is not None and l[i] <= tp:
+                    exit_px, reason = min(o[i], tp), "take_profit"
+            if exit_px is not None:
+                cur.bars_held += 1
+                pnl = qty * (exit_px - o[i])
+                f = qty * o[i] * fund[i]
+                c = abs(qty) * exit_px * rate
+                equity += pnl - f - c
+                cur.gross_pnl += pnl
+                cur.funding += f
+                cur.costs += c
+                total_funding += f
+                total_costs += c
+                cur.exit_time, cur.exit_price, cur.exit_reason = bars.index[i], exit_px, reason
+                liq_lock = pos
+                cur, qty, pos, seg_pnl = None, 0.0, 0.0, 0.0
 
         if cur is not None:
             cur.bars_held += 1
@@ -166,6 +213,7 @@ def run(bars: pd.DataFrame, target: pd.Series, costs: CostModel, leverage: float
                 cur.gross_pnl += bar_pnl
                 cur.liquidated = True
                 cur.exit_time, cur.exit_price = bars.index[i], liq_price
+                cur.exit_reason = "liquidation"
                 liquidations += 1
                 liq_lock = pos
                 cur, qty, pos, seg_pnl = None, 0.0, 0.0, 0.0
