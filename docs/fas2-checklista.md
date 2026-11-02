@@ -1,10 +1,10 @@
 # Fas 2 – Utvecklingsplan
 
-**7 av 40 uppgifter verifierade · 8 arbetsområden.**
+**8 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `c27a9e0`.
+H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `949c44a`.
 
-PR #69 granskad; regimkoden är ännu inte mergad eller driftsatt
+PR #69 omgranskad; två tidigare fynd rättade, current() efter lucka i svansen återstår. Ej mergat eller driftsatt.
 
 ## Uppdateringsregler
 
@@ -34,20 +34,23 @@ PR #69 granskad; regimkoden är ännu inte mergad eller driftsatt
 
 ## 2. Bygg och verifiera regimmodulen
 
-2/5 verifierade.
+3/5 verifierade.
 
 - [x] **F2-201** Beräkna trend och volatilitet enligt det registrerade protokollet
-  - Underlag: [docs/fas2-regim-granskning-69.md](fas2-regim-granskning-69.md) — c27a9e0: verifierat på kompletta, UTC-justerade 4H-serier. Samtliga 206 Python-tester passerar, inklusive 19 regimtestfall. PR ännu inte mergad.
-  - Verifierat i PR #69; ej mergat, driftsatt eller publicerat.
-- [ ] **F2-202** Implementera tre dagars hysteres och omedelbara skyddslägen **Pågår.**
-  - Granskad PR #69 c27a9e0. Kalenderluckor och tidsvalidering behöver rättas före slutgodkännande.
+  - Underlag: [docs/fas2-regim-granskning-69.md](fas2-regim-granskning-69.md) — 949c44a (kod 496d8aa): oberoende omgranskning, 223 Python-tester inklusive 36 regimtestfall passerar. Kalenderhysteres, rutnät och föregående dags uppslag verifierade.
+  - Verifierat i PR #69, ännu inte mergat, driftsatt eller publicerat.
+- [x] **F2-202** Implementera tre dagars hysteres och omedelbara skyddslägen
+  - Underlag: [docs/fas2-regim-granskning-69.md](fas2-regim-granskning-69.md) — 949c44a (kod 496d8aa): oberoende omgranskning, 223 Python-tester inklusive 36 regimtestfall passerar. Kalenderhysteres, rutnät och föregående dags uppslag verifierade.
+  - Verifierat i PR #69, ännu inte mergat, driftsatt eller publicerat.
 - [x] **F2-203** Använd bara föregående stängda dags läge på varje 4H-stapel
-  - Underlag: [docs/fas2-regim-granskning-69.md](fas2-regim-granskning-69.md) — c27a9e0: verifierat på kompletta, UTC-justerade 4H-serier. Samtliga 206 Python-tester passerar, inklusive 19 regimtestfall. PR ännu inte mergad.
-  - Verifierat i PR #69; ej mergat, driftsatt eller publicerat.
+  - Underlag: [docs/fas2-regim-granskning-69.md](fas2-regim-granskning-69.md) — 949c44a (kod 496d8aa): oberoende omgranskning, 223 Python-tester inklusive 36 regimtestfall passerar. Kalenderhysteres, rutnät och föregående dags uppslag verifierade.
+  - Verifierat i PR #69, ännu inte mergat, driftsatt eller publicerat.
 - [ ] **F2-204** Hantera uppvärmning, ofullständiga dagar, dataluckor och ogiltiga tidsstämplar **Pågår.**
-  - Granskad PR #69 c27a9e0. Kalenderluckor och tidsvalidering behöver rättas före slutgodkännande.
+  - Underlag: [docs/fas2-regim-granskning-69.md](fas2-regim-granskning-69.md) — 949c44a: current() kan returnera äldre läge efter saknad/ofullständig dag i seriens svans. Syntetiskt reproducerat; regression och rättning återstår.
+  - Får inte bockas av förrän current() matchar läget för nästa stapel även efter luckor i svansen.
 - [ ] **F2-205** Granska regimkoden och verifiera tester för framtidsläckage och dagsgränser **Pågår.**
-  - Granskad PR #69 c27a9e0. Kalenderluckor och tidsvalidering behöver rättas före slutgodkännande.
+  - Underlag: [docs/fas2-regim-granskning-69.md](fas2-regim-granskning-69.md) — 949c44a: current() kan returnera äldre läge efter saknad/ofullständig dag i seriens svans. Syntetiskt reproducerat; regression och rättning återstår.
+  - Får inte bockas av förrän current() matchar läget för nästa stapel även efter luckor i svansen.
 
 ## 3. Bygg den adaptiva strategiväljaren
 

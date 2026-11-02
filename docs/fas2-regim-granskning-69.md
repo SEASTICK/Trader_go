@@ -25,3 +25,25 @@ Proverna ovan använder enbart syntetisk data. Ingen verklig forskningskörning,
 F2-201 och F2-203 är verifierade i PR-committen och får markeras klara med denna avgränsning. F2-202, F2-204 och F2-205 kvarstår tills luckhantering/tidsvalidering är rättad och granskad. Mergad kod, worker, Supabase och appintegration är separata steg och är inte klara genom detta deltest.
 
 Nästa steg: rätta de två fynden i PR #69, kör relevanta tester, ange ny commit och uppdatera `docs/fas2-status.json`. Återanvänd H-0013:s registrerade parametrar och kör inga nya försök på verklig data i denna leverans.
+
+## Omgranskning av 949c44a (kodrättning 496d8aa)
+
+Exakt granskad PR-head: `949c44acc2ee01a99acdd47a9997cdbf05725c75`. Båda tidigare fynden är rättade: kalenderluckan nollställer hysteresen, och UTC-justering/tidsram valideras uttryckligt utan medianinferens. En isolerad körning av hela Python-sviten gav **223 passerade tester**, inklusive **36 regimtestfall**. De två tidigare oberoende reproduktionsproven passerar nu också.
+
+F2-201, F2-202 och F2-203 är verifierade på denna kodversion. Den strikta kalenderhanteringen med cirka 200 kompletta dagars ny uppvärmning efter en lucka kan behållas: inget pris imputeras och protokollets parametrar ändras inte. En glest samplad serie som fortfarande ligger på 4H-rutnätet kan inte alltid skiljas från saknade staplar utan ytterligare metadata; att den ger `okänt` är en redovisad begränsning, inte ett påstående om komplett data.
+
+### Kvarvarande P2: `current()` kan ge ett gammalt läge efter en lucka vid seriens slut
+
+I `engine/traderlab/regime.py:130–133` returneras fortfarande sista värdet i `daily(bars)`. Kalendern där slutar vid den senast kompletta dagen. Om dagen efter den är ofullständig/saknas och det finns enstaka staplar från nästa dag, utelämnas luckan i svansen. Då kan `current()` ge ett gammalt handelsläge trots att rätt läge för nästa stapel är `okänt`. `per_bar()` har redan korrekt exakt uppslag och är inte drabbat av detta prov.
+
+Oberoende syntetiskt reproducerat på 400 dygn, 4H, `make_bars(..., seed=7, vol=.02)`: ta bort hela näst sista dygnet och behåll bara 00:00-stapeln på sista dygnet. Resultat:
+
+- Sista observerade stapel: 2021-02-03 00:00 UTC.
+- Föregående kalenderdag: 2021-02-02, saknad.
+- `per_bar(bars).iloc[-1]`: `okänt`.
+- `current(bars)`: `ned/låg vol` från 2021-02-01.
+- Nästa 4H-stapel ligger fortfarande 2021-02-03 och ska också ha `okänt`.
+
+Rätta `current()` så att den använder exakt föregående kalenderdag för den **nästa stapeln**, utifrån uttrycklig tidsram, och returnerar `okänt` när den dagen inte är komplett. Återställ en tydlig beskrivning av detta kontrakt. Regressionstesta saknad och ofullständig föregående dag nära seriens slut, liksom en vanlig påbörjad sista dag och en komplett sista dag. Ett bra kontrakt är att `current(bars)` alltid matchar `per_bar(next_bar, daily(bars), interval)` på samma indataserie.
+
+**Bedömning:** de två ursprungliga fynden är åtgärdade. F2-204 och F2-205 lämnas öppna tills kantfallet ovan har rättats och verifierats. PR:en är inte mergad, ingen riktig data har körts och inget är driftsatt eller publicerat i denna granskning. Strategiväljaren bör vänta på denna sista rättning.

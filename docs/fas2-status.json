@@ -3,7 +3,7 @@
   "title": "Fas 2 – Adaptive Strategy Engine",
   "hypothesis": "H-0013",
   "updated": "2026-11-02",
-  "reviewed_revision": "c27a9e0",
+  "reviewed_revision": "949c44a",
   "note": "Klar betyder verifierad. Kod som bara finns lokalt eller tester utan granskning är inte slutgodkända.",
   "groups": [
     {
@@ -83,17 +83,22 @@
           "evidence": [
             {
               "file": "docs/fas2-regim-granskning-69.md",
-              "detail": "c27a9e0: verifierat på kompletta, UTC-justerade 4H-serier. Samtliga 206 Python-tester passerar, inklusive 19 regimtestfall. PR ännu inte mergad."
+              "detail": "949c44a (kod 496d8aa): oberoende omgranskning, 223 Python-tester inklusive 36 regimtestfall passerar. Kalenderhysteres, rutnät och föregående dags uppslag verifierade."
             }
           ],
-          "note": "Verifierat i PR #69; ej mergat, driftsatt eller publicerat."
+          "note": "Verifierat i PR #69, ännu inte mergat, driftsatt eller publicerat."
         },
         {
           "id": "F2-202",
           "title": "Implementera tre dagars hysteres och omedelbara skyddslägen",
-          "status": "in_progress",
-          "evidence": [],
-          "note": "Granskad PR #69 c27a9e0. Kalenderluckor och tidsvalidering behöver rättas före slutgodkännande."
+          "status": "done",
+          "evidence": [
+            {
+              "file": "docs/fas2-regim-granskning-69.md",
+              "detail": "949c44a (kod 496d8aa): oberoende omgranskning, 223 Python-tester inklusive 36 regimtestfall passerar. Kalenderhysteres, rutnät och föregående dags uppslag verifierade."
+            }
+          ],
+          "note": "Verifierat i PR #69, ännu inte mergat, driftsatt eller publicerat."
         },
         {
           "id": "F2-203",
@@ -102,24 +107,34 @@
           "evidence": [
             {
               "file": "docs/fas2-regim-granskning-69.md",
-              "detail": "c27a9e0: verifierat på kompletta, UTC-justerade 4H-serier. Samtliga 206 Python-tester passerar, inklusive 19 regimtestfall. PR ännu inte mergad."
+              "detail": "949c44a (kod 496d8aa): oberoende omgranskning, 223 Python-tester inklusive 36 regimtestfall passerar. Kalenderhysteres, rutnät och föregående dags uppslag verifierade."
             }
           ],
-          "note": "Verifierat i PR #69; ej mergat, driftsatt eller publicerat."
+          "note": "Verifierat i PR #69, ännu inte mergat, driftsatt eller publicerat."
         },
         {
           "id": "F2-204",
           "title": "Hantera uppvärmning, ofullständiga dagar, dataluckor och ogiltiga tidsstämplar",
           "status": "in_progress",
-          "evidence": [],
-          "note": "Granskad PR #69 c27a9e0. Kalenderluckor och tidsvalidering behöver rättas före slutgodkännande."
+          "evidence": [
+            {
+              "file": "docs/fas2-regim-granskning-69.md",
+              "detail": "949c44a: current() kan returnera äldre läge efter saknad/ofullständig dag i seriens svans. Syntetiskt reproducerat; regression och rättning återstår."
+            }
+          ],
+          "note": "Får inte bockas av förrän current() matchar läget för nästa stapel även efter luckor i svansen."
         },
         {
           "id": "F2-205",
           "title": "Granska regimkoden och verifiera tester för framtidsläckage och dagsgränser",
           "status": "in_progress",
-          "evidence": [],
-          "note": "Granskad PR #69 c27a9e0. Kalenderluckor och tidsvalidering behöver rättas före slutgodkännande."
+          "evidence": [
+            {
+              "file": "docs/fas2-regim-granskning-69.md",
+              "detail": "949c44a: current() kan returnera äldre läge efter saknad/ofullständig dag i seriens svans. Syntetiskt reproducerat; regression och rättning återstår."
+            }
+          ],
+          "note": "Får inte bockas av förrän current() matchar läget för nästa stapel även efter luckor i svansen."
         }
       ]
     },
@@ -370,5 +385,5 @@
       ]
     }
   ],
-  "reviewed_scope": "PR #69 granskad; regimkoden är ännu inte mergad eller driftsatt"
+  "reviewed_scope": "PR #69 omgranskad; två tidigare fynd rättade, current() efter lucka i svansen återstår. Ej mergat eller driftsatt."
 }
