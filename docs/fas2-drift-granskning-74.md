@@ -65,3 +65,12 @@ Granskad PR-head: `e0c41ca80787b9e3308db7f33eb5910eb2370a31`, kod `d01dccd`, mer
 Gemensam status: **29/40 verifierade**. F2-605 står kvar som `in_progress` eftersom paketet ännu inte är uppladdat, migrationen inte är applicerad och driftsmiljön inte är verifierad. Lokalt PostgreSQL-test är inte ett Supabase/PostgREST-test med riktiga JWT.
 
 **Bedömning:** PR #74 och driftsättningsunderlaget är kodmässigt godkända för merge på `e0c41ca`, förutsatt grön CI och bevarad granskad kod. Inga öppna fynd kvar från denna granskning. Efter merge ska exakt slutlig commit och paket-SHA identifieras inför det separata driftbeslutet. Ingen uppladdning, molnmigration, driftsättning, riktig H-0013-körning, slutprovsläsning eller publicering har gjorts i omgranskningen. Inget är godkänt för papper/live.
+
+
+## Slutpaket efter merge – 2026-11-02
+
+PR #74 är mergad som `dee88eb65196b17879b2fc22c0b7521ad37501c3`. Engine check på samma mergecommit är grön. Jämförelsen mot godkänd `e0c41ca` innehåller endast de tre dokumentfilerna; runtimekoden är oförändrad.
+
+Codex eget bygge av mergecommiten ger `tradergo-research-dee88eb65196.tar.gz`, 651 788 byte, SHA256 `62c7d8e482ef6a1755d670f74a7631c221469e61259a09b285f32627936c8575`. Det är byte för byte identiskt med paketet i `dist/research-release/`. Uppackad verifiering godkänner 186 filer och rätt revision.
+
+Paket och plan är därmed konkreta inför driftbeslutet. Inget är uppladdat, migrerat eller driftsatt i denna kontroll. F2-605 förblir öppen, gemensam status 29/40. Ett driftgodkännande omfattar planens uppgradering och kontroller, men ingen H-0013-forskningskörning eller slutprovsåtkomst. Backup, faktiskt tjänste-/katalogläge och Supabase-rättigheter kontrolleras i driftplanens steg; de påstås inte vara verifierade av paketbygget.

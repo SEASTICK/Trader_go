@@ -2,9 +2,9 @@
 
 **29 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `e0c41ca`.
+H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `dee88eb65196b17879b2fc22c0b7521ad37501c3`.
 
-PR #74 omgranskad på e0c41ca (kod d01dccd): båda fynd rättade. 538 Python-tester, tre PGlite-sviter och båda lokala PostgreSQL-samtidighetstester passerar; paket ombyggt och verifierat. Kodmässigt godkänd för merge när CI är grönt. Ingen uppladdning, migration, driftsättning eller riktig körning.
+PR #74 mergad som dee88eb, Engine check grön. Eget slutpaketbygge är byteidentiskt med levererat paket och verifierar 186 filer. Granskad runtimekod oförändrad. F2-605 väntar på utförd drift; inget uppladdat, migrerat, driftsatt eller kört mot riktig data i kontrollen.
 
 ## Uppdateringsregler
 
@@ -122,7 +122,7 @@ PR #74 omgranskad på e0c41ca (kod d01dccd): båda fynd rättade. 538 Python-tes
   - Kodmässigt verifierat lokalt. Faktisk migration och Supabase-/driftkontroller återstår i F2-605.
 - [x] **F2-602** Anslut H-0013 till samma enda worker med lease och skydd mot dubbla resultat
   - Underlag: [docs/fas2-drift-granskning-74.md](fas2-drift-granskning-74.md) — eb15650: utbrutet workerlås och revisionslogg återverifierade med riktiga processer. 532 Python-tester och lokal PostgreSQL-samtidighet passerar; en reservation/publicering och fencing verifierade.
-  - Lås och revisionslogg återverifierade i PR #74, worker-koden är oförändrad i d01dccd. PR #74 kodmässigt godkänd på e0c41ca; ingen ny worker driftsatt.
+  - PR #74 mergad som dee88eb, lås och revisionslogg lokalt verifierade. Ingen ny worker driftsatt i denna kontroll.
 - [x] **F2-603** Begränsa dataläsningen till verifierade frysta arkiv innan några filer öppnas
   - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — a852aa3 (kod cd9701d): Exakta manifestnamn före arkivläsning, SHA256 och CHECKSUM samt stapel-/fundinghash verifierade på syntetiska 120 arkiv; 2019/2025 öppnas inte.
   - Arkivkontrollen är oförändrad i 2160c6e och fortsatt verifierad på syntetiska arkiv. PR #73 kodmässigt godkänd på 445178d; ingen riktig datakörning eller driftsättning.
@@ -131,7 +131,8 @@ PR #74 omgranskad på e0c41ca (kod d01dccd): båda fynd rättade. 538 Python-tes
   - PR #73 mergad som d6f2eae, med godkänd kod 445178d. Lokalt verifierad. Faktiska Supabase-/driftkontroller återstår i F2-605.
 - [ ] **F2-605** Driftsätt verifierad kod med loggar, resursgränser och dokumenterad återgång **Pågår.**
   - Underlag: [docs/fas2-drift-granskning-74.md](fas2-drift-granskning-74.md) — e0c41ca: godkänt underlag efter omgranskning, 538 Python-tester och lokala SQL-/samtidighetstester passerar. Paket SHA256 11dd7a0faabd24f8939ec2c64ea3d59b0d2a33787f0c710e3833d702e7b7378b; 186 filer verifierar.
-  - Underlaget är godkänt för merge när CI är grönt. Ingen uppladdning, Supabase-migration, driftsättning eller H-0013-körning gjord. F2-605 kan godkännas först efter utförd driftverifiering.
+  - Underlag: [docs/fas2-drift-granskning-74.md](fas2-drift-granskning-74.md) — Slutpaket dee88eb: Engine check grön, 651 788 byte och SHA256 62c7d8e482ef6a1755d670f74a7631c221469e61259a09b285f32627936c8575. Eget bygge byteidentiskt; 186 filer verifierar.
+  - PR #74 mergad och slutpaketet verifierat. Själva driftsättningen och 0005-migrationen är inte utförda i kontrollen; F2-605 förblir in_progress.
 
 ## 7. Visa Fas 2 i Research Lab
 

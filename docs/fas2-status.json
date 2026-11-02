@@ -3,7 +3,7 @@
   "title": "Fas 2 – Adaptive Strategy Engine",
   "hypothesis": "H-0013",
   "updated": "2026-11-02",
-  "reviewed_revision": "e0c41ca",
+  "reviewed_revision": "dee88eb65196b17879b2fc22c0b7521ad37501c3",
   "note": "Klar betyder verifierad. Kod som bara finns lokalt eller tester utan granskning är inte slutgodkända.",
   "groups": [
     {
@@ -366,7 +366,7 @@
               "detail": "eb15650: utbrutet workerlås och revisionslogg återverifierade med riktiga processer. 532 Python-tester och lokal PostgreSQL-samtidighet passerar; en reservation/publicering och fencing verifierade."
             }
           ],
-          "note": "Lås och revisionslogg återverifierade i PR #74, worker-koden är oförändrad i d01dccd. PR #74 kodmässigt godkänd på e0c41ca; ingen ny worker driftsatt."
+          "note": "PR #74 mergad som dee88eb, lås och revisionslogg lokalt verifierade. Ingen ny worker driftsatt i denna kontroll."
         },
         {
           "id": "F2-603",
@@ -400,9 +400,13 @@
             {
               "file": "docs/fas2-drift-granskning-74.md",
               "detail": "e0c41ca: godkänt underlag efter omgranskning, 538 Python-tester och lokala SQL-/samtidighetstester passerar. Paket SHA256 11dd7a0faabd24f8939ec2c64ea3d59b0d2a33787f0c710e3833d702e7b7378b; 186 filer verifierar."
+            },
+            {
+              "file": "docs/fas2-drift-granskning-74.md",
+              "detail": "Slutpaket dee88eb: Engine check grön, 651 788 byte och SHA256 62c7d8e482ef6a1755d670f74a7631c221469e61259a09b285f32627936c8575. Eget bygge byteidentiskt; 186 filer verifierar."
             }
           ],
-          "note": "Underlaget är godkänt för merge när CI är grönt. Ingen uppladdning, Supabase-migration, driftsättning eller H-0013-körning gjord. F2-605 kan godkännas först efter utförd driftverifiering."
+          "note": "PR #74 mergad och slutpaketet verifierat. Själva driftsättningen och 0005-migrationen är inte utförda i kontrollen; F2-605 förblir in_progress."
         }
       ]
     },
@@ -489,5 +493,5 @@
       ]
     }
   ],
-  "reviewed_scope": "PR #74 omgranskad på e0c41ca (kod d01dccd): båda fynd rättade. 538 Python-tester, tre PGlite-sviter och båda lokala PostgreSQL-samtidighetstester passerar; paket ombyggt och verifierat. Kodmässigt godkänd för merge när CI är grönt. Ingen uppladdning, migration, driftsättning eller riktig körning."
+  "reviewed_scope": "PR #74 mergad som dee88eb, Engine check grön. Eget slutpaketbygge är byteidentiskt med levererat paket och verifierar 186 filer. Granskad runtimekod oförändrad. F2-605 väntar på utförd drift; inget uppladdat, migrerat, driftsatt eller kört mot riktig data i kontrollen."
 }
