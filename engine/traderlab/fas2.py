@@ -9,7 +9,7 @@ inläsningen från arkiven slutar före det.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 
 import numpy as np
@@ -33,14 +33,31 @@ def _ts(t) -> pd.Timestamp:
     return t.tz_localize("UTC") if t.tz is None else t.tz_convert("UTC")
 
 
-def check_development(bars: pd.DataFrame, funding: pd.Series) -> None:
-    """Avvisar indata utanför utvecklingsperioden innan något räknas (punkt 11)."""
+def check_development(bars: pd.DataFrame, funding: pd.Series, start=None, end=None,
+                      effective: pd.Series | None = None) -> None:
+    """Avvisar indata och perioder utanför utvecklingsperioden innan något räknas (punkt 11).
+
+    Varje publik ingång anropar den först: staplar, finansieringsränta och eventuella dagslägen måste ligga i
+    [2020-01-01, 2025-01-01), och en period måste ha 2020-01-01 <= start < slut <= 2025-01-01.
+    """
     lo, hi = _ts(DEV_START), _ts(HOLDOUT_START)
-    for name, index in (("Staplarna", bars.index), ("Finansieringsräntan", funding.index)):
+    inputs = [("Staplarna", bars.index), ("Finansieringsräntan", funding.index)]
+    if effective is not None:
+        inputs.append(("Dagslägena", effective.index))
+    for name, index in inputs:
+        if not isinstance(index, pd.DatetimeIndex) or index.tz is None or index.tz.utcoffset(None) != pd.Timedelta(0):
+            raise ValueError(f"{name} måste ha ett DatetimeIndex i UTC")
         if len(index) and index.max() >= hi:
             raise ValueError(f"{name} når slutprovet ({index.max()}); data från {HOLDOUT_START} får inte läsas i Fas 2")
         if len(index) and index.min() < lo:
             raise ValueError(f"{name} börjar före {DEV_START} ({index.min()}); ingen data före utvecklingsperioden används")
+    a = _ts(start) if start is not None else None
+    b = _ts(end) if end is not None else None
+    for name, t in (("start", a), ("slut", b)):
+        if t is not None and not lo <= t <= hi:
+            raise ValueError(f"Periodens {name} {t.date()} ligger utanför utvecklingsperioden {DEV_START}–{HOLDOUT_START}")
+    if a is not None and b is not None and a >= b:
+        raise ValueError(f"Periodens start {a.date()} måste ligga före slutet {b.date()}")
 
 
 def load_development(data_dir: Path) -> tuple[pd.DataFrame, pd.Series]:
@@ -63,6 +80,7 @@ def _day_labels(bars: pd.DataFrame, effective: pd.Series) -> pd.Series:
 def regime_stats(bars: pd.DataFrame, funding: pd.Series, candidate: str, costs: CostModel = COSTS,
                  effective: pd.Series | None = None) -> dict[str, dict]:
     """Kandidaten i alla fyra lägen med handelsreglerna (punkt 1), bedömd per läge (punkt 2–4)."""
+    check_development(bars, funding, effective=effective)
     effective = regime.daily(bars) if effective is None else effective
     book = adaptive.Playbook.of({label: candidate for label in regime.LABELS})
     sig = adaptive.signals(bars, book, effective=effective)
@@ -100,6 +118,7 @@ def select(by_candidate: dict[str, dict[str, dict]]) -> adaptive.Playbook:
 
 def train(bars: pd.DataFrame, funding: pd.Series, end, costs: CostModel = COSTS) -> dict:
     """Väljer spelboken på staplar från 2020-01-01 till `end`, exklusivt (punkt 6). Inget efter `end` läses."""
+    check_development(bars, funding, DEV_START, end)
     lo, hi = _ts(DEV_START), _ts(end)
     tb = bars[(bars.index >= lo) & (bars.index < hi)]
     tf = funding[(funding.index >= lo) & (funding.index < hi)]
@@ -120,6 +139,7 @@ def evaluate_window(bars: pd.DataFrame, funding: pd.Series, book: adaptive.Playb
     platt före den; kandidaten måste ge en ny inträdessignal. Positionen stängs senast vid öppningen av fönstrets
     näst sista stapel. Avkastning och affärer räknas bara inom fönstret.
     """
+    check_development(bars, funding, start, end)
     a, b = _ts(start), _ts(end)
     hist = bars[(bars.index >= _ts(DEV_START)) & (bars.index < b)]
     if (hist.index >= a).sum() < 3:
@@ -141,17 +161,30 @@ def evaluate_window(bars: pd.DataFrame, funding: pd.Series, book: adaptive.Playb
     entered = pd.Series([bar_label[t.entry_time] for t in trades], dtype=object)
     per_regime = {label: {"days": int((day_label == label).sum()), "trades": int((entered == label).sum())}
                   for label in list(regime.LABELS) + [regime.UNKNOWN]}
+    # Fönstrets egna belopp har fönstrets startkapital 1,0 som enhet (WalkForward räknar om dem).
     return window, {"test": [str(a.date()), str(b.date())], "per_regime": per_regime, "trades": len(trades),
-                    "costs": res.total_costs, "funding": res.total_funding}
+                    "local_return": float(window.equity.iloc[-1] - 1) if len(window.equity) else 0.0,
+                    "local_costs": res.total_costs, "local_funding": res.total_funding}
+
+
+def _rescale(t: backtest.Trade, capital: float) -> backtest.Trade:
+    """Affären i den ihopsatta kurvans enhet: belopp gånger fönstrets ingående kapital, priser och andelar lika."""
+    return replace(t, equity_at_entry=t.equity_at_entry * capital, gross_pnl=t.gross_pnl * capital,
+                   costs=t.costs * capital, funding=t.funding * capital)
+
+
+CAPITAL_BASE = ("Startkapital 1,0 vid 2022-01-01. Kurvan, affärernas belopp, kostnader och finansieringsränta har "
+                "samma enhet; ett fönsters belopp är fönstrets egna gånger kapitalet vid fönstrets början. Fält som "
+                "börjar med local_ har fönstrets startkapital 1,0 som enhet.")
 
 
 @dataclass
 class WalkForward:
     windows: list[dict]
     returns: pd.Series                      # ihopsatt avkastning per stapel utanför urvalet
-    trades: list[backtest.Trade]
-    total_costs: float
-    total_funding: float
+    trades: list[backtest.Trade]            # i den ihopsatta kurvans enhet (CAPITAL_BASE)
+    total_costs: float                      # i samma enhet
+    total_funding: float                    # i samma enhet
     final: dict                             # slutlig spelbok, vald på hela utvecklingsperioden
     config: dict = field(default_factory=dict)
 
@@ -170,15 +203,19 @@ def walk_forward(bars: pd.DataFrame, funding: pd.Series, costs: CostModel = COST
     check_development(bars, funding)
     edges = [_ts(t) for t in TEST_STARTS] + [_ts(HOLDOUT_START)]
     windows, parts, trades, c, f = [], [], [], 0.0, 0.0
+    capital = 1.0
     for a, b in zip(edges[:-1], edges[1:]):
         trained = train(bars, funding, a, costs)
         book = adaptive.Playbook.from_dict(trained["playbook"])
         res, info = evaluate_window(bars, funding, book, a, b, costs)
-        windows.append({**trained, **info})
+        end_capital = capital * (1 + info["local_return"])
+        windows.append({**trained, **info, "capital_start": capital, "capital_end": end_capital,
+                        "costs": info["local_costs"] * capital, "funding": info["local_funding"] * capital})
         parts.append(res.bar_returns)
-        trades += res.trades
-        c += res.total_costs
-        f += res.total_funding
+        trades += [_rescale(t, capital) for t in res.trades]
+        c += info["local_costs"] * capital
+        f += info["local_funding"] * capital
+        capital = end_capital
     returns = pd.concat(parts)
     if returns.index.has_duplicates or not returns.index.is_monotonic_increasing:
         raise AssertionError("Testfönstren överlappar")
@@ -188,5 +225,5 @@ def walk_forward(bars: pd.DataFrame, funding: pd.Series, costs: CostModel = COST
               "dev_start": DEV_START, "test_starts": TEST_STARTS, "holdout_start": HOLDOUT_START,
               "min_trades": MIN_TRADES, "costs_bps": {"fee": costs.fee_bps, "spread": costs.spread_bps,
                                                       "slippage": costs.slippage_bps},
-              "candidates": {k: v for k, v in adaptive.CANDIDATES.items()}}
+              "candidates": {k: v for k, v in adaptive.CANDIDATES.items()}, "capital_base": CAPITAL_BASE}
     return WalkForward(windows, returns, trades, c, f, final, config)

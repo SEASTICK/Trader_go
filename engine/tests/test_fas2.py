@@ -154,7 +154,7 @@ def test_a_position_still_open_is_closed_at_the_second_to_last_open_with_costs(d
     notional = last.size * last.equity_at_entry
     rate = fas2.COSTS.per_side
     assert last.costs == pytest.approx(rate * notional * (1 + last.exit_price / last.entry_price))
-    assert res.position.iloc[-1] == 0.0 and info["costs"] == pytest.approx(last.costs)
+    assert res.position.iloc[-1] == 0.0 and info["local_costs"] == pytest.approx(last.costs)
 
 
 def test_warmup_uses_history_from_2020_but_no_data_after_the_window(dev):
@@ -211,7 +211,8 @@ def test_stitched_curve_has_no_overlap_and_matches_the_windows(dev, wf_bb):
     for w, a, b in zip(wf_bb.windows, edges[:-1], edges[1:]):
         res, info = fas2.evaluate_window(bars, funding, ALL_BB, a, b)
         pd.testing.assert_series_equal(r[(r.index >= a) & (r.index < b)], res.bar_returns, check_freq=False)
-        assert info["costs"] == w["costs"] and info["funding"] == w["funding"]
+        assert info["local_costs"] == w["local_costs"] and info["local_funding"] == w["local_funding"]
+        assert w["costs"] == pytest.approx(w["local_costs"] * w["capital_start"])
         parts.append(res)
     assert len(wf_bb.trades) == sum(len(p.trades) for p in parts) > 0
     pd.testing.assert_series_equal(wf_bb.equity, (1 + r).cumprod(), check_freq=False)
@@ -307,3 +308,148 @@ def test_real_archive_reader_never_opens_holdout_files(tmp_path):
         (folder / f"BTCUSDT-4h-{month}.zip").write_bytes(b"not a zip")
     picked = fas2.binance._bounded_files(sorted(folder.glob("*.zip")), UTC("2020-01-01"), UTC("2025-01-01"))
     assert [p.name for p in picked] == ["BTCUSDT-4h-2024-12.zip"]
+
+
+# Slutprovsskydd i varje publik ingång
+
+@pytest.fixture
+def no_compute(monkeypatch):
+    """Varje beräkning efter kontrollen ska vara oanropad när indata avvisas."""
+    def fail(*a, **k):
+        raise AssertionError("beräkningen anropades trots förbjudna indata")
+    for target, name in ((fas2.regime, "daily"), (fas2.regime, "per_bar"), (fas2.adaptive, "signals"),
+                         (fas2.backtest, "run"), (fas2.stats, "daily_returns")):
+        monkeypatch.setattr(target, name, fail)
+
+
+def holdout_bars():
+    return make_bars(12, interval="4h", seed=9, start="2025-01-01")  # 2025-01-01 och 2025-01-02, som i granskningen
+
+
+@pytest.fixture(scope="module")
+def short_dev():
+    bars = make_bars(400 * 6, interval="4h", seed=3, vol=0.015)
+    return bars, funding_for(bars)
+
+
+def entries(bars, funding, effective=None, start="2023-01-01", end="2023-07-01"):
+    return {
+        "check_development": lambda: fas2.check_development(bars, funding, start, end, effective),
+        "regime_stats": lambda: fas2.regime_stats(bars, funding, BB, effective=effective),
+        "train": lambda: fas2.train(bars, funding, end),
+        "evaluate_window": lambda: fas2.evaluate_window(bars, funding, ALL_BB, start, end),
+        "walk_forward": lambda: fas2.walk_forward(bars, funding),
+    }
+
+
+@pytest.mark.parametrize("entry", ["check_development", "regime_stats", "train", "evaluate_window", "walk_forward"])
+@pytest.mark.parametrize("case", ["holdout_bars", "holdout_funding", "early_bars", "early_funding", "naive_index"])
+def test_every_entry_rejects_forbidden_data_before_computing(short_dev, no_compute, entry, case):
+    bars, funding = short_dev
+    if case == "holdout_bars":
+        bars = pd.concat([bars, holdout_bars()])
+    elif case == "holdout_funding":
+        funding = pd.concat([funding, funding_for(holdout_bars())])
+    elif case == "early_bars":
+        bars = pd.concat([make_bars(6, interval="4h", seed=9, start="2019-12-31"), bars])
+    elif case == "early_funding":
+        funding = pd.concat([pd.Series(0.0001, index=[UTC("2019-12-31 16:00")]), funding])
+    else:
+        bars = bars.tz_convert(None)
+    with pytest.raises(ValueError, match="slutprovet|före|UTC"):
+        entries(bars, funding)[entry]()
+
+
+def test_supplied_daily_labels_from_the_holdout_are_rejected(short_dev, no_compute):
+    bars, funding = short_dev
+    labels = pd.Series("upp/låg vol", index=pd.date_range("2020-01-01", "2025-01-01", freq="D", tz="UTC"), dtype=object)
+    with pytest.raises(ValueError, match="Dagslägena når slutprovet"):
+        fas2.regime_stats(bars, funding, BB, effective=labels)
+
+
+@pytest.mark.parametrize("call, match", [
+    (lambda b, f: fas2.train(b, f, "2025-01-03"), "utanför"),           # granskningens prov
+    (lambda b, f: fas2.train(b, f, "2020-01-01"), "före slutet"),
+    (lambda b, f: fas2.train(b, f, "2019-06-01"), "utanför"),
+    (lambda b, f: fas2.evaluate_window(b, f, ALL_BB, "2025-01-01", "2025-01-03"), "utanför"),  # granskningens prov
+    (lambda b, f: fas2.evaluate_window(b, f, ALL_BB, "2024-12-01", "2025-01-02"), "utanför"),
+    (lambda b, f: fas2.evaluate_window(b, f, ALL_BB, "2019-12-01", "2020-06-01"), "utanför"),
+    (lambda b, f: fas2.evaluate_window(b, f, ALL_BB, "2023-07-01", "2023-01-01"), "före slutet"),
+    (lambda b, f: fas2.evaluate_window(b, f, ALL_BB, "2023-01-01", "2023-01-01"), "före slutet"),
+])
+def test_forbidden_periods_are_rejected_before_computing(short_dev, no_compute, call, match):
+    with pytest.raises(ValueError, match=match):
+        call(*short_dev)
+
+
+def test_holdout_data_passed_with_an_allowed_period_is_still_rejected(short_dev, no_compute):
+    bars, funding = short_dev
+    with pytest.raises(ValueError, match="slutprovet"):
+        fas2.evaluate_window(pd.concat([bars, holdout_bars()]), funding, ALL_BB, "2021-01-01", "2021-02-01")
+    with pytest.raises(ValueError, match="slutprovet"):
+        fas2.train(pd.concat([bars, holdout_bars()]), funding, "2021-01-01")
+
+
+# Gemensam kapitalbas
+
+def fake_window(local_return, cost, fund):
+    """Ett fönster med känt utfall på lokalt startkapital 1,0: en affär vars nettoresultat är hela avkastningen."""
+    def evaluate(bars, funding, book, start, end, costs=fas2.COSTS):
+        a = fas2._ts(start)
+        idx = pd.DatetimeIndex([a, a + pd.Timedelta(hours=4)])
+        eq = pd.Series([1.0, 1.0 + local_return], index=idx)
+        trade = backtest.Trade(entry_time=idx[0], entry_price=100.0, side="Long", size=1.0, equity_at_entry=1.0,
+                               exit_time=idx[1], exit_price=100.0 * (1 + local_return), gross_pnl=local_return + cost + fund,
+                               costs=cost, funding=fund, exit_reason="signal")
+        res = backtest.BacktestResult(equity=eq, position=pd.Series(0.0, index=idx), trades=[trade],
+                                      total_costs=cost, total_funding=fund)
+        return res, {"test": [str(a.date()), str(fas2._ts(end).date())], "per_regime": {}, "trades": 1,
+                     "local_return": local_return, "local_costs": cost, "local_funding": fund}
+    return evaluate
+
+
+@pytest.fixture
+def stitched(monkeypatch, short_dev):
+    trained = {"train": ["2020-01-01", "x"], "playbook": ALL_BB.to_dict(), "playbook_id": ALL_BB.id, "candidates": {}}
+    monkeypatch.setattr(fas2, "train", lambda *a, **k: dict(trained))
+
+    def run(returns, cost=0.01, fund=0.02):
+        it = iter(returns)
+        monkeypatch.setattr(fas2, "evaluate_window", lambda *a, **k: fake_window(next(it), cost, fund)(*a, **k))
+        return fas2.walk_forward(*short_dev)
+    return run
+
+
+def test_review_example_six_windows_doubling(stitched):
+    wf = stitched([1.0] * 6)
+    assert wf.equity.iloc[-1] == pytest.approx(64.0)
+    assert wf.total_costs == pytest.approx(0.63)
+    assert wf.total_funding == pytest.approx(1.26)
+    assert sum(t.net_pnl for t in wf.trades) == pytest.approx(63.0)
+
+
+@pytest.mark.parametrize("returns", [[1.0, -0.5, 0.2, 0.0, 0.1, -0.3], [-0.2, -0.2, 0.5, 0.5, -0.4, 0.05]])
+def test_amounts_follow_the_capital_at_each_window_start(stitched, returns):
+    wf = stitched(returns, cost=0.003, fund=-0.001)
+    capital = np.cumprod([1.0] + [1 + r for r in returns])
+    assert [w["capital_start"] for w in wf.windows] == pytest.approx(list(capital[:-1]))
+    assert [w["capital_end"] for w in wf.windows] == pytest.approx(list(capital[1:]))
+    assert wf.equity.iloc[-1] == pytest.approx(capital[-1])
+    assert sum(t.net_pnl for t in wf.trades) == pytest.approx(capital[-1] - 1)
+    assert wf.total_costs == pytest.approx(0.003 * capital[:-1].sum())
+    assert wf.total_funding == pytest.approx(-0.001 * capital[:-1].sum())
+    for t, c in zip(wf.trades, capital[:-1]):
+        assert t.equity_at_entry == pytest.approx(c) and t.entry_price == 100.0 and t.size == 1.0
+    assert [w["local_costs"] for w in wf.windows] == [0.003] * 6
+    assert "capital_base" in wf.config
+
+
+def test_real_non_flat_walk_forward_reconciles_trades_with_the_curve(wf_bb):
+    local = [w["local_return"] for w in wf_bb.windows]
+    assert len(set(round(r, 9) for r in local)) > 1, "windows have different capital development"
+    assert sum(t.net_pnl for t in wf_bb.trades) == pytest.approx(wf_bb.equity.iloc[-1] - 1)
+    for w in wf_bb.windows:
+        inside = wf_bb.returns[(wf_bb.returns.index >= UTC(w["test"][0])) & (wf_bb.returns.index < UTC(w["test"][1]))]
+        assert (1 + inside).prod() == pytest.approx(1 + w["local_return"])
+    starts = [w["capital_start"] for w in wf_bb.windows]
+    assert starts[0] == 1.0 and starts[1:] == pytest.approx([w["capital_end"] for w in wf_bb.windows[:-1]])
