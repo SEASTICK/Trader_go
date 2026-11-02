@@ -19,7 +19,7 @@ const NAV = [
   { id: "Översikt", icon: "home" },
   { id: "Marknad", icon: "candles" },
   { id: "Research", icon: "flask" },
-  { id: "Research Lab", icon: "flask" },
+  { id: "Research Lab", icon: "lab" },
   { id: "Hypoteser", icon: "list" },
   { id: "Status", icon: "info" },
 ] as const;
