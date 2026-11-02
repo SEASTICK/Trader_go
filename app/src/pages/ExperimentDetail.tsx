@@ -50,7 +50,9 @@ export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: {
       <div className="kpis">
         <div className="card kpi"><span className="k">Avkastning efter kostnader</span><b className={c.avkastning >= 0 ? "up" : "down"}>{pct(c.avkastning)}</b><span className="muted">{c.stressad !== undefined ? `Med 2,5× kostnader: ${pct(c.stressad)}` : ""}</span></div>
         <div className="card kpi"><span className="k">Största nedgång</span><b>{pct(c.maxDrawdown)}</b><span className="muted">Från topp till botten</span></div>
-        <div className="card kpi"><span className="k">Affärer</span><b>{c.antal}</b><span className="muted">{num(c.vinstandel, 0)} % vinnande</span></div>
+        {c.portfölj
+          ? <div className="card kpi"><span className="k">Ombalanseringar</span><b>{c.antal}</b><span className="muted">{num(c.vinstandel, 0)} % positiva månader · {c.portfölj.universum.length} mynt</span></div>
+          : <div className="card kpi"><span className="k">Affärer</span><b>{c.antal}</b><span className="muted">{num(c.vinstandel, 0)} % vinnande</span></div>}
         <div className="card kpi"><span className="k">t-värde mot krav</span><b>{num(c.t, 1)} <small>/ {num(krav, 1)}</small></b><span className={passes ? "pass" : "fail"}>{passes ? "över kravet" : "under kravet"}</span></div>
       </div>
 
@@ -68,10 +70,12 @@ export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: {
         />
       ) : (
         <section className="card chart-card">
-          <div className="card-head"><div><h2>Utveckling</h2><p className="muted">Strategin efter kostnader mot baslinjen köp-och-behåll. Start = 100.</p></div></div>
-          {!c.baseline.length && <p className="muted">Jämförelsekurva saknas i källresultatet. Ingen ersättningskurva visas.</p>}
+          <div className="card-head"><div><h2>Utveckling</h2><p className="muted">{c.portfölj ? "Portföljen efter kostnader och finansieringsränta. Start = 100." : "Strategin efter kostnader mot baslinjen köp-och-behåll. Start = 100."}</p></div></div>
+          {!c.baseline.length && !c.portfölj && <p className="muted">Jämförelsekurva saknas i källresultatet. Ingen ersättningskurva visas.</p>}
           <LineChart watermark={null} labels={c.labels} series={[{ name: exp.namn, data: c.equity, cls: "s1" }, ...(c.baseline.length ? [{ name: "Baslinje", data: c.baseline, cls: "s2" }] : [])]} />
-          <div className="legend"><span><i className="swatch s1" />{exp.namn}</span><span><i className="swatch s2" />Baslinje (köp-och-behåll{fas1 ? ", bara pris utan finansieringsränta" : ""})</span></div>
+          <div className="legend"><span><i className="swatch s1" />{exp.namn}</span>{c.portfölj
+            ? <span className="muted">Marknadsneutral (lika mycket long som short): målet är att tjäna oavsett om marknaden går upp eller ned, så kurvan jämförs med noll, inte med BTC.</span>
+            : <span><i className="swatch s2" />Baslinje (köp-och-behåll{fas1 ? ", bara pris utan finansieringsränta" : ""})</span>}</div>
           {fas1 && <p className="footnote" style={{ padding: "8px 0 0" }}>Kurvan är ihopsatt av sex halvår utanför urvalet (walk-forward): parametrarna för varje halvår valdes bara på data före det.</p>}
         </section>
       )}
@@ -119,6 +123,7 @@ export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: {
         </section>
       </div>
 
+{!c.portfölj && (
       <section className="card table-card">
         <div className="card-head"><div><h2>Senaste affärer</h2><p className="muted">De {recent.length} senaste av {c.antal}. Siffror i procent.</p></div></div>
         <div className="ttable" role="table">
@@ -131,6 +136,7 @@ export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: {
           ))}
         </div>
       </section>
+      )}
 
       <section className="card pad">
         <h2><Icon name="alert" size={16} /> Innan du tror på ett resultat</h2>

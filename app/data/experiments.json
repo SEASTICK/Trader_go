@@ -23,5 +23,7 @@
   {"id": "E-22", "spår": "F1", "namn": "BTC terminer 4h Donchian", "strategi": "Donchian-utbrott", "grupp": "terminer", "marknad": "Bitcoin-terminer", "tidsram": "4h", "riktning": "Long/short", "mål": "A"},
   {"id": "E-23", "spår": "F1", "namn": "BTC terminer 4h BB+RSI", "strategi": "Bollinger + RSI återgång", "grupp": "terminer", "marknad": "Bitcoin-terminer", "tidsram": "4h", "riktning": "Long/short", "mål": "A"},
   {"id": "E-24", "spår": "F1", "namn": "BTC terminer 4h kläm", "strategi": "Volatilitetskläm-utbrott", "grupp": "terminer", "marknad": "Bitcoin-terminer", "tidsram": "4h", "riktning": "Long/short", "mål": "A"},
+  {"id": "E-25", "spår": "X1", "namn": "11 terminer momentum", "strategi": "Long starkast 5, short svagast 5, varje vecka", "grupp": "terminer", "marknad": "11 krypto-terminer", "tidsram": "1d", "riktning": "Marknadsneutral", "mål": "C"},
+  {"id": "E-26", "spår": "X2", "namn": "11 terminer funding-carry", "strategi": "Short högst ränta 5, long lägst 5, varje vecka", "grupp": "terminer", "marknad": "11 krypto-terminer", "tidsram": "1d", "riktning": "Marknadsneutral", "mål": "C"},
   {"id": "B-01", "spår": "B-00", "namn": "Köp-och-behåll BTC", "strategi": "Baslinje", "grupp": "baslinje", "marknad": "Bitcoin", "tidsram": "1d", "riktning": "Long"}
 ]

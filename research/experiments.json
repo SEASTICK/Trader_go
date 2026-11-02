@@ -238,5 +238,15 @@
     "strategy": {
       "name": "squeeze_breakout"
     }
+  },
+  "E-25": {
+    "hypothesis": "H-0014",
+    "phase": "xs",
+    "track": "C"
+  },
+  "E-26": {
+    "hypothesis": "H-0015",
+    "phase": "xs",
+    "track": "C"
   }
 }
