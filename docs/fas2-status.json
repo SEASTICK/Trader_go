@@ -285,7 +285,7 @@
           "evidence": [
             {
               "file": "engine/tests/test_fas2_eval.py",
-              "detail": "bbc7181 (gren fas2-utvardering): köp-och-behåll, varje kandidat ensam, likaviktad blandning och riskfilter körs genom samma sex fönster och konventioner som H-0013; alla har exakt samma staplar. Blandningen är medelvärdet av två kurvor utan ombalansering. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; tio avsiktliga fel fångas. Endast syntetisk data."
+              "detail": "bbc7181 (gren fas2-utvardering): köp-och-behåll, varje kandidat ensam, likaviktad blandning och riskfilter körs genom samma sex fönster och konventioner som H-0013; alla har exakt samma staplar. Blandningen är medelvärdet av två kurvor utan ombalansering. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; nio avsiktliga fel fångas. Endast syntetisk data."
             }
           ],
           "note": "Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
@@ -297,7 +297,7 @@
           "evidence": [
             {
               "file": "engine/tests/test_fas2_eval.py",
-              "detail": "bbc7181: kostnadsstress 2,5 gånger med fönstrens egna spelböcker; riskmodell 1× med finansieringsränta, ATR-stop och backtestmotorns likvidation; stop-utgångar, likvidationer, exponering och omsättning redovisas. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; tio avsiktliga fel fångas. Endast syntetisk data."
+              "detail": "bbc7181: kostnadsstress 2,5 gånger med fönstrens egna spelböcker; riskmodell 1× med finansieringsränta, ATR-stop och backtestmotorns likvidation; stop-utgångar, likvidationer, exponering och omsättning redovisas. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; nio avsiktliga fel fångas. Endast syntetisk data."
             }
           ],
           "note": "Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
@@ -309,7 +309,7 @@
           "evidence": [
             {
               "file": "engine/tests/test_fas2_eval.py",
-              "detail": "bbc7181: permutationstest per dygn av kända dagslägen (okänt kvar), frö 0, 200 som standard, hela walk-forward med urval körs om; varje permutations Sharpe och spelböcker sparas, p-värde k/n och (k+1)/(n+1). Slumpkontroll på 2022–2024. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; tio avsiktliga fel fångas. Endast syntetisk data."
+              "detail": "bbc7181: permutationstest per dygn av kända dagslägen (okänt kvar), frö 0, 200 som standard, hela walk-forward med urval körs om; varje permutations Sharpe och spelböcker sparas, p-värde k/n och (k+1)/(n+1). Slumpkontroll på 2022–2024. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; nio avsiktliga fel fångas. Endast syntetisk data."
             }
           ],
           "note": "Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
@@ -321,7 +321,7 @@
           "evidence": [
             {
               "file": "engine/tests/test_fas2_eval.py",
-              "detail": "bbc7181: block-bootstrap av Sharpe, alla 81 fasta spelböcker genom samma fönster, Deflated Sharpe med 81 försök (standard- och spelboksvarians), resultat per läge, per år och utan bästa året. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; tio avsiktliga fel fångas. Endast syntetisk data."
+              "detail": "bbc7181: block-bootstrap av Sharpe, alla 81 fasta spelböcker genom samma fönster, Deflated Sharpe med 81 försök (standard- och spelboksvarians), resultat per läge, per år och utan bästa året. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; nio avsiktliga fel fångas. Endast syntetisk data."
             }
           ],
           "note": "Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
@@ -333,7 +333,7 @@
           "evidence": [
             {
               "file": "engine/tests/test_fas2_eval.py",
-              "detail": "bbc7181: alla fem kriterier med det registrerade t-kravet 2,67 (dagens krav redovisas), MORE_RESEARCH bara om alla gäller; varje körning sparas som ny fil (completed/aborted/invalid) utan överskrivning, avbruten körning sparas och felet visas, och körningen kräver registrerad H-0013. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; tio avsiktliga fel fångas. Endast syntetisk data."
+              "detail": "bbc7181: alla fem kriterier med det registrerade t-kravet 2,67 (dagens krav redovisas), MORE_RESEARCH bara om alla gäller; varje körning sparas som ny fil (completed/aborted/invalid) utan överskrivning, avbruten körning sparas och felet visas, och körningen kräver registrerad H-0013. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; nio avsiktliga fel fångas. Endast syntetisk data."
             }
           ],
           "note": "Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
