@@ -1,0 +1,73 @@
+# Deployar forskningsworkern till servern (DigitalOcean) när motorn eller registret ändras på main.
+# Hemligheter: SERVER_HOST, SERVER_SSH_KEY, SUPABASE_URL, SUPABASE_SERVICE_KEY. Saknas de hoppas allt över.
+# Servern får aldrig börsnycklar: workern använder bara publik marknadsdata och skriver papper och historik.
+name: Server deploy
+
+on:
+  push:
+    branches: [main]
+    paths: ["engine/**", "research/registry.md", "deploy/**", ".github/workflows/server-deploy.yml"]
+  workflow_dispatch:
+
+concurrency:
+  group: server-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SERVER_HOST: ${{ secrets.SERVER_HOST }}
+    steps:
+      - name: Finns servern konfigurerad?
+        id: cfg
+        run: |
+          if [ -z "$SERVER_HOST" ]; then
+            echo "SERVER_HOST saknas, hoppar över deploy."; echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.cfg.outputs.skip == 'false'
+
+      - name: SSH-nyckel
+        if: steps.cfg.outputs.skip == 'false'
+        env:
+          SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SERVER_SSH_KEY" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -T 15 -t ed25519 "$SERVER_HOST" >> ~/.ssh/known_hosts
+          echo "SSH=ssh -i $HOME/.ssh/id_deploy -o BatchMode=yes root@$SERVER_HOST" >> "$GITHUB_ENV"
+
+      - name: Förbered servern (rsync och mappar)
+        if: steps.cfg.outputs.skip == 'false'
+        run: $SSH 'command -v rsync >/dev/null || (apt-get update -q && DEBIAN_FRONTEND=noninteractive apt-get install -y -q rsync); install -d /opt/tradergo /opt/tradergo/research; install -d -m 700 /etc/tradergo'
+
+      - name: Kopiera koden
+        if: steps.cfg.outputs.skip == 'false'
+        run: |
+          rsync -az --delete -e "ssh -i $HOME/.ssh/id_deploy -o BatchMode=yes" \
+            --exclude '.venv' --exclude '__pycache__' --exclude '.pytest_cache' \
+            engine deploy "root@$SERVER_HOST:/opt/tradergo/"
+          rsync -az -e "ssh -i $HOME/.ssh/id_deploy -o BatchMode=yes" research/registry.md "root@$SERVER_HOST:/opt/tradergo/research/"
+
+      - name: Miljöfil med Supabase-nycklar (skrivs via stdin, syns inte i loggen)
+        if: steps.cfg.outputs.skip == 'false'
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          test -n "$SUPABASE_URL" && test -n "$SUPABASE_SERVICE_KEY" || { echo "Supabase-hemligheter saknas" >&2; exit 1; }
+          printf 'SUPABASE_URL=%s\nSUPABASE_SERVICE_KEY=%s\n' "$SUPABASE_URL" "$SUPABASE_SERVICE_KEY" \
+            | $SSH 'umask 077 && cat > /etc/tradergo/worker.env'
+
+      - name: Installera och starta om workern
+        if: steps.cfg.outputs.skip == 'false'
+        run: $SSH 'bash /opt/tradergo/deploy/setup.sh'
