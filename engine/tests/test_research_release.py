@@ -60,7 +60,9 @@ def test_package_carries_revision_manifest_and_what_the_worker_reads(package):
                    "scripts/verify-research-release.py",
                    "data/audits/fas1-20261102/frozen-6a84c4f44026b6be270ed2f9395edace5edbd598dfdf683428b9f025a64c042c.json"):
         assert needed in manifest["files"], needed
-    assert not [f for f in manifest["files"] if f.endswith(".env") or "/.env" in f or f.startswith("app/src")]
+    # Inga hemligheter: den enda .env-filen är REVISION.env, som bara anger commiten.
+    assert [f for f in manifest["files"] if f.endswith(".env") or "/.env" in f] == ["REVISION.env"]
+    assert not [f for f in manifest["files"] if f.startswith("app/src")]
     assert verify_release.verify(root)["commit"] == manifest["commit"]
 
 
