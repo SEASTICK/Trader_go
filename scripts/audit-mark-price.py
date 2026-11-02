@@ -51,7 +51,7 @@ def main():
         extra=pd.concat(recovered)
         extra=extra[~extra.index.duplicated()]
         frames.append(extra)
-    marks=pd.concat(frames)
+    marks=pd.concat(frames).sort_index()
     expected=pd.date_range('2020-01-01','2025-01-01',freq='4h',inclusive='left',tz='UTC')
     report=quality.check(marks,'4h')
     if not marks.index.equals(expected) or not report.ok or (marks[['open','high','low','close']]<=0).any().any():raise ValueError('Invalid/incomplete mark-price series')
@@ -84,6 +84,7 @@ def main():
                     ratio=balance/(abs(q)*worst);minratio=min(minratio,float(ratio));checked+=1
                     if ratio<=.01:
                         possible.append(dict(entry_time=trade.entry_time.isoformat(),bar=t.isoformat(),side=trade.side,margin_ratio=float(ratio),threshold_05=liquidation_threshold(trade.entry_price,q,collateral,cost,paid,.005),threshold_1=liquidation_threshold(trade.entry_price,q,collateral,cost,paid,.01)))
+        if trades!=len(normal.trades) or not checked:raise ValueError('Trade coverage differs from original')
         results.append(dict(hypothesis=proof['hypothesis_id'],trades=trades,checked_trade_bars=checked,minimum_margin_to_mark_notional=minratio,possible_hits=possible,original_reproduction_exact=True,decision='REJECT'))
     out=dict(protocol='docs/fas1-mark-price-protocol.md',protocol_commit='9261e05',recovery_protocol_commit='7839e8a' if recovery.exists() else None,script_sha256=digest(Path(__file__).read_bytes()),period=['2020-01-01','2025-01-01'],holdout_loaded=False,leverage=1,maintenance_rates=[.005,.01],quality=asdict(report),mark_bars=len(marks),mark_dataset_sha256=digest(marks.to_csv(float_format='%.17g').encode()),files=entries,results=results,passed=all(not r['possible_hits'] for r in results),limitations=['Fixed maintenance-rate verification; no historical risk tiers or liquidation fee model','Entire exit bar and adverse funding-price bounds are conservative; intrabar order unknown','Legacy results are preserved, not relabelled exchange-exact'])
     (folder/'verification.json').write_text(json.dumps(clean(out),indent=2,allow_nan=False))
