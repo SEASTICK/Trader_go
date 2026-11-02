@@ -51,14 +51,32 @@ kan köas förrän 0005 finns. Den gamla koden med 0005 skulle däremot skicka e
 
 ## Återgång
 
-- **Koden** (steg 5–6 gick fel): `systemctl stop tradergo-research-worker`, peka `current` tillbaka på den
-  föregående releasen (`ln -sfn /opt/tradergo/releases/<föregående> /opt/tradergo/current`), installera den
-  releasens tjänstefil, kör `systemctl daemon-reload` och starta. Är 0005 redan applicerad får ingen H-0013-körning
-  finnas köad. Avbryt den annars först, eftersom den gamla koden inte har H-0013-ingången.
-- **Databasen** (steg 7 gick fel eller ska backas): kör `supabase/rollback/0005_h0013_queue_down.sql` i SQL
-  Editor. Den vägrar om H-0013-körningar finns: inga resultat eller försök raderas i tysthet. Den rör inga tabeller.
-  Efter återgången kan 0005 appliceras igen.
-- **Data:** inget i återgången tar bort data. Försöksfilerna i `/var/lib/tradergo/h0013-attempts` ligger kvar.
+Ordningen är omvänd mot driftsättningen: H-0013-kön stängs i databasen innan den gamla koden får reservera
+jobb. Den gamla workern har ingen H-0013-ingång och skulle annars skicka ett H-0013-jobb till Fas
+1-reproduktionen.
+
+1. **Stoppa workern kontrollerat:** `systemctl stop tradergo-research-worker`. Vänta tills den är `inactive`. Ett
+   pågående jobb avbryts, och dess försök sparas enligt PR #73.
+2. **Stäng kön i databasen** (om 0005 är applicerad): kör `supabase/rollback/0005_h0013_queue_down.sql` i SQL
+   Editor. Skriptet tar samma rådgivande lås som all köning:
+   - Har en köning redan låset, väntar återgången tills köningen är klar. Den nya körningen syns då, och
+     återgången vägrar utan att ändra något.
+   - Startar en köning medan återgången har låset, väntar den. När låset släpps är `research_enqueue_h0013` borta,
+     och köningen avbryts (`H-0013-kön är stängd`) innan något sparas.
+   - Finns H-0013-körningar, även historiska, vägrar återgången. Inga resultat eller försök raderas för att den
+     ska gå igenom. Då stannar databasen på 0005, och den nya koden ska vara kvar (gå till steg 3 bara om
+     återgången lyckades).
+3. **Byt tillbaka koden** först när 0005 är borttagen, eller när 0005 aldrig applicerades: peka `current` på den
+   föregående releasen (`ln -sfn /opt/tradergo/releases/<föregående> /opt/tradergo/current`), installera den
+   releasens tjänstefil, kör `systemctl daemon-reload` och starta.
+4. **Kontrollera** med `check-single-worker.sh` från den releasen (finns den inte där: `systemctl is-active`,
+   `pgrep -f traderlab.research_engine.worker` och journalen).
+
+Kan återgången inte köras eftersom H-0013-körningar finns, är den gamla koden inte ett säkert läge. Rätta då
+felet i den nya releasen och driftsätt den igen, i stället för att backa koden.
+
+**Data:** inget i återgången tar bort data. Försöksfilerna i `/var/lib/tradergo/h0013-attempts` ligger kvar.
+Efter en lyckad återgång kan 0005 appliceras igen.
 
 ## Verifierat lokalt (ingen server, inget moln)
 
@@ -67,13 +85,19 @@ kan köas förrän 0005 finns. Den gamla koden med 0005 skulle däremot skicka e
   Under giltig lease reserveras inget. Exakt en av samtidiga publiceringar lyckas. Gammal token publicerar aldrig
   medan en ny worker tar om jobbet (försök 2), och en avbruten körning behåller slotten. Utan det rådgivande låset
   i köningen (med en kort `pg_sleep` som vidgar fönstret) fångar testet kapplöpningen.
+- `scripts/run-h0013-concurrency-local.sh test-h0013-rollback-concurrency.mjs`: återgång och köning samtidigt
+  med riktiga anslutningar. När köningen startar först väntar återgången och vägrar sedan utan ändring. När
+  återgången startar först avbryts den väntande köningen, och inget H-0013-jobb blir kvar. Kontrollen visar att
+  samma kapplöpning utan låset lämnar 1 jobb och 0 funktioner. Tas köningens kontroll efter låset bort, blir ett
+  jobb kvar.
 - `scripts/test-h0013-rollback.mjs` (PGlite): vägrar med H-0013-körningar, återställer `prosrc`, inställningar och
   rättigheter för `research_finish` exakt som en databas med bara 0001–0004, behåller data, och 0005 kan
   appliceras igen.
 - `engine/tests/test_research_release.py`: paketet är reproducerbart och verifierar. Ändrade, extra och saknade
   filer samt fel revision avvisas. Inga hemligheter ingår. Tjänsten läser `REVISION.env`, och `install.sh`
   verifierar före installation. Kontrollskriptet ändrar ingenting. En andra worker kan inte ta låset (riktiga
-  processer), och workern loggar sin revision.
+  processer), och workern loggar sin revision. Revisionskontrollen godkänner en tidig träff i 1 MiB journal och
+  avvisar både saknad revision och misslyckad `journalctl`. Den tidigare pipen gav exit 141 (SIGPIPE) i samma prov.
 
 ## Kvar efter detta underlag
 

@@ -156,3 +156,54 @@ def test_worker_logs_its_revision_at_start(tmp_path, monkeypatch, caplog):
     with caplog.at_level(logging.INFO, logger="research-worker"):
         worker.main()
     assert f"revision={'a' * 40}" in caplog.text
+
+
+# Granskning av PR #74, P2: revisionskontrollen får inte falla på SIGPIPE
+
+FAKE_JOURNAL = """#!/bin/bash
+case "$FAKE_JOURNAL" in
+  fail) echo "journal broken" >&2; exit 1 ;;
+  missing) yes "worker log line without the marker" | head -c 1048576 ;;
+  late) yes "noise noise noise noise" | head -c 1048576; echo "revision=$FAKE_REV" ;;
+  *) echo "revision=$FAKE_REV"; yes "noise noise noise noise" | head -c 1048576 ;;
+esac
+"""
+REV = "b" * 40
+
+
+def _journal_check(tmp_path, mode, command=None):
+    (tmp_path / "journalctl").write_text(FAKE_JOURNAL)
+    (tmp_path / "journalctl").chmod(0o755)
+    script = REPO / "services/research-worker/check-single-worker.sh"
+    command = command or f'source "{script}"; journal_shows_revision tradergo-research-worker.service {REV} && echo OK'
+    env = {"PATH": f"{tmp_path}:/usr/bin:/bin", "FAKE_JOURNAL": mode, "FAKE_REV": REV}
+    return subprocess.run(["bash", "-c", command], capture_output=True, text=True, env=env)
+
+
+@pytest.mark.parametrize("mode", ["early", "late"])
+def test_revision_found_in_a_large_journal_passes(tmp_path, mode):
+    out = _journal_check(tmp_path, mode)
+    assert out.returncode == 0 and out.stdout.strip() == "OK", out.stderr
+
+
+def test_missing_revision_fails(tmp_path):
+    out = _journal_check(tmp_path, "missing")
+    assert out.returncode == 1 and "journalen visar inte revision" in out.stderr
+
+
+def test_failing_journalctl_fails_with_its_own_message(tmp_path):
+    out = _journal_check(tmp_path, "fail")
+    assert out.returncode == 1 and "journalctl kunde inte läsa journalen" in out.stderr
+
+
+def test_the_old_pipeline_failed_with_sigpipe_on_an_early_match(tmp_path):
+    """Kontroll av provet: den tidigare `journalctl | grep -q` under pipefail avvisade en korrekt journal."""
+    old = f"set -euo pipefail; journalctl -u x --no-pager | grep -q revision={REV} && echo OK"
+    out = _journal_check(tmp_path, "early", old)
+    assert out.returncode == 141
+
+
+def test_sourcing_the_check_runs_no_checks(tmp_path):
+    out = subprocess.run(["bash", "-c", f'source "{REPO}/services/research-worker/check-single-worker.sh"; echo sourced'],
+                         capture_output=True, text=True, env={"PATH": f"{tmp_path}:/usr/bin:/bin"})
+    assert out.returncode == 0 and out.stdout.strip() == "sourced"

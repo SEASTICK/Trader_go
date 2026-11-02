@@ -3,6 +3,11 @@
 -- ingen data. Vägrar om någon H-0013-körning finns, så att inget resultat eller försök går förlorat i tysthet.
 begin;
 
+-- Samma rådgivande lås som all köning (0003–0005). En köning som redan har låset blir klar först och syns då i
+-- kontrollen nedan, så återgången vägrar. En köning som startar efter detta väntar på låset och avbryts sedan av
+-- research_enqueue_h0013, eftersom funktionen är borttagen när låset släpps.
+select pg_advisory_xact_lock(78219341);
+
 do $$
 begin
   if exists(select 1 from public.runs where hypothesis_id = 'H-0013') then
