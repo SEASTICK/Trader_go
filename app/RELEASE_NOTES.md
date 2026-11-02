@@ -1,7 +1,5 @@
-Research Lab för historisk strategiutforskning
+Research Lab visar nu de fyra registrerade Fas 1-resultaten även utan serveranslutning, med REJECT-beslut, jämförelse, walk-forward och full spårbarhet.
 
-- Logga in som projektmedlem, välj strategi och köa historiska körningar på servern.
-- Följ körstatus, avbryt egna jobb och visa sparade nyckeltal, kapitalutveckling, drawdown och affärer.
-- Supabase och separat Python-worker ger säker jobbreservation, återhämtning och spårbara resultat.
-- Fyra regelstrategier och tidigare Fas 1-forskning ingår i projektet. Utforskning ger inget automatiskt godkännande för papperstest.
-- Historiska perioder med saknade eller felaktiga källdata stoppas. Ingen livehandel ingår.
+Historiska terminsdiagram visar verkliga in- och utträden från testerna. Kapitalutvecklingen jämförs med köp och behåll på samma verifierade data. Sökning och sortering gör resultaten lättare att granska.
+
+Alla fyra strategier förblir REJECT. Ingen livehandel eller godkännande för papperstest ingår.

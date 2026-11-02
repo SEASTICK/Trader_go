@@ -1,0 +1,14 @@
+{
+  "dataset_sha256": "6a84c4f44026b6be270ed2f9395edace5edbd598dfdf683428b9f025a64c042c",
+  "display_file": "app/data/fas1-market.json",
+  "display_sha256": "03052d3c54b33b458c8689bd6073c87558af61e550186c2eff0969b40a615054",
+  "closed_rows": 6576,
+  "period": [
+    "2022-01-01",
+    "2025-01-01"
+  ],
+  "market": "um",
+  "baseline_stats_exactly_match_original": true,
+  "baseline_sampling": "Exact lookup at original strategy timestamps; no interpolation",
+  "holdout_loaded": false
+}

@@ -33,6 +33,7 @@ def main(argv: list[str] | None = None) -> int:
     f.add_argument("--funding", action="store_true", help="Hämta finansieringsränta i stället (bara um)")
     b = sub.add_parser("batch", help="Kör alla registrerade rutor i research/experiments.json och exportera till appen")
     b.add_argument("--only", nargs="*", help="Bara dessa rutor, till exempel E-01")
+    sub.add_parser("fas1-export", help="Exportera registrerade Fas 1-resultat till Research Lab utan att köra nya tester")
     sub.add_parser("export", help="Exportera senaste resultat per ruta till app/data/results.json")
     pp = sub.add_parser("paper", help="Pappershandel framåt: step eller status för en fryst strategi")
     pp.add_argument("action", choices=["step", "status"])
@@ -42,6 +43,11 @@ def main(argv: list[str] | None = None) -> int:
     k.add_argument("n", type=int)
 
     a = p.parse_args(argv)
+    if a.cmd == "fas1-export":
+        from .research_engine.export_registered import export_registered
+        out = export_registered(REPO)
+        print(f"Exporterade {len(out)} registrerade resultat till app/data/registered-results.json")
+        return 0
     if a.cmd == "krav":
         print(f"{stats.t_krav(a.n):.2f}")
         return 0

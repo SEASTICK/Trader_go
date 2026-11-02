@@ -26,6 +26,8 @@ const alpha = (hex: string, a: number) => {
 type Props = {
   /** Serien rutan handlar om, eller null om marknaden saknar en datakälla i appen. */
   series: SeriesRef | null;
+  /** Verified closed historical bars bundled with the app; disables live IO. */
+  historical?: Candle[];
   /** Visas när series är null. */
   noSourceReason?: string;
   /** Riktiga affärer från ett registrerat backtest (HISTORIK). Aldrig simulerade. */
@@ -37,7 +39,7 @@ type Props = {
  * Prisdiagram med instrumentets verkliga OHLCV från datalagret. Används av alla detaljvyer för handel.
  * Ingen egen anslutning: staplarna läses med `market_bars` och uppdateras av insamlingens `market-bar`.
  */
-export function CandleChart({ series, noSourceReason, trades = [], tradesLabel }: Props) {
+export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, historical }: Props) {
   const desktop = isTauri();
   const { status } = useMarketStatus();
   const [available, setAvailable] = useState<SeriesInfo[] | null>(null);
@@ -52,13 +54,13 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel }
 
   // Vilka tidsramar datalagret faktiskt har för instrumentet.
   useEffect(() => {
-    if (!desktop || !series) return;
+    if (historical || !desktop || !series) return;
     let alive = true;
     invoke<SeriesInfo[]>("market_series").then(s => { if (alive) setAvailable(s); }).catch(e => alive && setError(String(e)));
     return () => { alive = false; };
-  }, [desktop, series?.symbol, status?.closed_bars ? 1 : 0]);
+  }, [desktop, historical, series?.symbol, status?.closed_bars ? 1 : 0]);
 
-  const intervals = useMemo(() => (available ?? []).filter(s => series && s.provider === series.provider && s.market === series.market && s.symbol === series.symbol).map(s => s.interval), [available, series]);
+  const intervals = useMemo(() => historical && series ? [series.interval] : (available ?? []).filter(s => series && s.provider === series.provider && s.market === series.market && s.symbol === series.symbol).map(s => s.interval), [available, series, historical]);
   const current: SeriesRef | null = series && intervals.includes(tf) ? { ...series, interval: tf } : null;
   const step = current ? INTERVAL_MS[current.interval] : 0;
 
@@ -129,6 +131,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel }
   // Historik: senaste sidan, och äldre sidor när man panorerar bakåt.
   useEffect(() => {
     if (!current) return;
+    if (historical) { redraw(historical); chart.current?.timeScale().fitContent(); return; }
     let alive = true;
     let loadingOlder = false;
     const load = () => invoke<BarsPage>("market_bars", { symbol: current.symbol, interval: current.interval, limit: PAGE })
@@ -169,7 +172,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel }
       ts?.unsubscribeVisibleLogicalRangeChange(onRange);
       sub.close();
     };
-  }, [current?.symbol, current?.interval]);
+  }, [current?.symbol, current?.interval, historical]);
 
   // Indikatorer: beräknas från stängningspriserna i diagrammet; tomt under uppvärmningen.
   useEffect(() => {
@@ -203,9 +206,9 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel }
   );
 
   let body: JSX.Element;
-  if (!desktop) body = empty("Ingen prisdata här", "Prisdiagrammet läser datalagret i skrivbordsappen. I webbläsaren finns ingen riktig OHLCV, och ingen simulerad data visas i stället.");
+  if (!desktop && !historical) body = empty("Ingen prisdata här", "Prisdiagrammet läser datalagret i skrivbordsappen. I webbläsaren finns ingen riktig OHLCV, och ingen simulerad data visas i stället.");
   else if (!series) body = empty("Ingen datakälla för den här marknaden", noSourceReason ?? "Appen samlar bara in data för marknader med en publik datakälla. Inget simulerat pris visas i stället.");
-  else if (available === null && !error) body = empty("Läser datalagret…", "");
+  else if (!historical && available === null && !error) body = empty("Läser datalagret…", "");
   else if (!current) body = empty(
     `${series.symbol} ${tf || series.interval} samlas inte in`,
     intervals.length ? `Datalagret har ${series.symbol} i ${intervals.join(", ")}. Välj en av dem ovan; tidsramen byts aldrig bara på etiketten.` : `Datalagret har ingen data för ${series.symbol} än. Insamlingen styrs i appens datamapp (market/config.json, se docs/marknadsdata.md).`,
@@ -218,7 +221,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel }
         <div className="candle-title">
           <b>{series ? series.symbol : "–"}</b>
           <span className="muted">{series ? `${series.provider === "binance" ? "Binance" : series.provider} ${series.market}` : "ingen leverantör"}</span>
-          <span className="chip-live" title="Riktiga priser från datalagret. Resultatet i rutan är fortfarande HISTORIK eller SIM, inte livehandel.">REALTIDSDATA</span>
+          <span className="chip-live" title={historical ? "Kontrollsummerade stängda staplar från det historiska datasetet." : "Riktiga priser från datalagret. Resultatet i rutan är fortfarande HISTORIK eller SIM, inte livehandel."}>{historical ? "HISTORIK" : "REALTIDSDATA"}</span>
           {current && status && sameSeries(status, current) && (
             <span className={`candle-state ${status.ready ? "ok" : "warn"}`}>{STATE_TEXT[status.state]}</span>
           )}
@@ -226,6 +229,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel }
         {series && intervals.length > 0 && (
           <div className="candle-tools">
             {intervals.map(i => <button key={i} className={i === tf ? "on" : ""} onClick={() => setTf(i)}>{i}</button>)}
+            {historical && <button onClick={() => chart.current?.timeScale().fitContent()}>Hela perioden</button>}
             <span className="sep" />
             {INDICATORS.map(i => (
               <button key={i.id} className={active.includes(i.id) ? "on" : ""} onClick={() => setActive(a => a.includes(i.id) ? a.filter(x => x !== i.id) : [...a, i.id])}>{i.label}</button>

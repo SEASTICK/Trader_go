@@ -1,29 +1,17 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
-import { LineChart } from "../../components/Charts";
-import { Page } from "../../components/ui";
+import { FormEvent, lazy, Suspense, useEffect, useRef, useState } from "react";
+import { Page, Segmented } from "../../components/ui";
 import { ResearchApi, Result, Run } from "./api";
 import "./research.css";
+import { Chart, number } from "./ResultViews";
+const RegisteredResults = lazy(() => import("./RegisteredResults"));
 
 const NAMES: Record<string, string> = { ema_adx_trend: "EMA / ADX-trend", donchian_breakout: "Donchian-utbrott",
   bb_rsi_reversion: "Bollinger / RSI", squeeze_breakout: "Squeeze-utbrott" };
 const STATUS = { queued: "I kö", running: "Körs", done: "Klar", failed: "Misslyckad", cancelled: "Avbruten" };
 const message = (e: unknown) => e instanceof Error ? e.message : "Ett oväntat fel inträffade.";
-function number(value: unknown, percent = false) {
-  return typeof value === "number" && Number.isFinite(value)
-    ? (percent ? (value * 100).toFixed(2) + " %" : value.toLocaleString("sv-SE", { maximumFractionDigits: 2 })) : "—";
-}
-function Chart({ curve, baseline, drawdown = false }: { curve: Result["curves"]; baseline?: Result["curves"]; drawdown?: boolean }) {
-  const data = drawdown ? curve.drawdown.map(v => v * 100) : curve.equity.map(v => v * 100000);
-  const other = baseline?.equity.map(v => v * 100000);
-  const all = [...data, ...(other ?? [])];
-  if (data.length < 2 || !all.every(Number.isFinite)) return <p>Diagramdata saknas.</p>;
-  if (Math.max(...all) === Math.min(...all)) return <p>Oförändrad kurva: {number(data[0])}{drawdown ? " %" : ""}</p>;
-  return <LineChart labels={curve.t.map(t => t.slice(0, 10))} watermark={null}
-    series={[{ name: drawdown ? "Drawdown (%)" : "Kapital (start 100 000)", data, cls: "s1" },
-      ...(other && other.length === data.length ? [{ name: "Köp och behåll", data: other, cls: "s2" }] : [])]} />;
-}
 
 export default function ResearchLab() {
+  const [view, setView] = useState<"Registrerade resultat" | "Utforskning">("Registrerade resultat");
   const api = useRef(new ResearchApi()).current;
   const [connected, setConnected] = useState(false);
   const [email, setEmail] = useState(""); const [password, setPassword] = useState("");
@@ -84,8 +72,10 @@ export default function ResearchLab() {
     catch (e) { setError(message(e)); }
     finally { setBusy(false); }
   }
-  return <Page title="Research Lab" sub="Historisk utforskning på servern. Inga riktiga order."
+  return <Page title="Research Lab" sub="Registrerad forskning och historisk utforskning. Inga riktiga order."
     actions={connected && <button className="btn" onClick={() => { api.signOut(); setConnected(false); setRuns([]); setSelected(""); setResult(null); setError(""); }}>Logga ut</button>}>
+    <Segmented value={view} options={["Registrerade resultat", "Utforskning"]} onChange={setView} />
+    {view === "Registrerade resultat" ? <Suspense fallback={<p>Läser registrerade resultat…</p>}><RegisteredResults /></Suspense> : <>
     {error && <div className="card pad" role="alert">{error}</div>}
     {connected && connectionError && <div className="card pad" role="alert">{connectionError}</div>}
     {!connected ? <form className="card pad research-form" onSubmit={login}>
@@ -95,7 +85,7 @@ export default function ResearchLab() {
       <button className="btn accent" disabled={busy}>{busy ? "Loggar in…" : "Logga in"}</button>
     </form> : <>
       <form className="card pad research-form" onSubmit={enqueue}>
-        <h2>Ny utforskning</h2><p className="muted">UTFORSKNING · BTC/USDT · kostnader 10 + 2 + 5 bps per sida · startkapital 100 000.
+        <h2>Ny utforskning</h2><p className="muted">UTFORSKNING · BTC/USDT · avgift 10, spread 2 och slippage 5 bps (spread räknas som halva per sida) · startkapital 100 000.
           Slutprovet från 2025 är låst. Utforskning ger inget godkännande för papperstest.</p>
         <div className="research-grid">
           <label>Strategi<select value={strategy} onChange={e => setStrategy(e.target.value)}>{Object.entries(NAMES).map(([id, name]) => <option key={id} value={id}>{name}</option>)}</select></label>
@@ -139,6 +129,7 @@ export default function ResearchLab() {
           <details><summary>Parametrar och fullständiga nyckeltal</summary><pre>{JSON.stringify({ params: result.effective_params, stats: result.stats }, null, 2)}</pre></details>
         </div>
       </>}
+    </>}
     </>}
   </Page>;
 }

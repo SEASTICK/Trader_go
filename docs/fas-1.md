@@ -13,14 +13,16 @@ kärnfunktion från sådant som fortfarande saknar slutverifiering.
 | 2. Historik | Binance-källa, 1H/4H/1D-stöd; frysta fem år UM BTCUSDT 4H med funding, SHA256, full täckning och Supabase-återläsning; dubblettskydd | Spotluckan kvar; den äldre uppgiften om 43 feljusteringar kan inte reproduceras; automatisk schemalagd serversynk och tidig warmup kräver mer arbete |
 | 3. Strategier | Fyra versionerade strategier, parametrar, indikatorreferenser och signaltester; reproduktion med 1 120 parameterförsök | Ingen strategi är godkänd för papper; nya idéer kräver nya registreringar |
 | 4. Backtest | Tester för nästa öppning, framtidsläckage, stop/TP/gap, kostnader/funding, affärslogg och reproducerbarhet; samma UM buy-and-hold | Oberoende mark-price-/likvidationsvalidering är inte gjord |
-| 5. Nyckeltal | Motorns statistik, kurvor, affärer, månads-/regimresultat och auditmetadata | Full integration av registrerade Fas 1-resultat i appen |
+| 5. Nyckeltal | Motorns statistik, kurvor, affärer, månads-/regimresultat och auditmetadata | Registrerade Fas 1-resultat visas nu i Research Lab via explicit adapter; vidare desktopverifiering återstår |
 | 6. Optimering | Registrerat protokoll, Optuna, walk-forward, kostnadsstress, stabilitet, osäkerhet och bevarade auditförsök | Slutprovet förblir låst; alla fyra är REJECT |
-| 7. Research Lab | Stable: medlemsinloggning, utforskningsjobb, status, avbrott, verkliga resultat, equity/drawdown/affärer | Registrerade körningar, jämförelsevyer, candle-entry/exit, filter och walk-forward-vyer |
-| 8. Molndrift | Supabase/RLS, riktig samtidighetskontroll, kö/lease/fencing, separat systemd-worker och recovery-test | Automatisk backup, provad återställning, larm och bredare belastningstest |
-| 9. Godkännande | 136 Python-tester; föregående frontend/Rust-/releasekontroller och verifierat molnflöde | Installerad Stable-desktop E2E, sista regression/driftmätning, dokumenterat Fas 1-godkännande |
+| 7. Research Lab | Medlemsinloggning och utforskningskö; ny registrerad offlinevy med jämförelse, kriterier, UM-candles/markörer, equity/drawdown, affärer, filter/sortering och walk-forward | Start av nya registrerade jobb från UI; installerad Stable-verifiering |
+| 8. Molndrift | Supabase/RLS, riktig samtidighetskontroll, kö/lease/fencing, separat systemd-worker och recovery-test | Användaren bekräftar DO-backup 7 dagar och daglig Supabase-backup; isolerad forskningsdataåterställning provad. Leverantörsåterställning, larm och bredare belastningstest kvar |
+| 9. Godkännande | 144 Python-tester och 49 frontendtester; webbvyn granskad i båda teman; isolerad återställning med identiska värden/RLS; tidigare Rust-/molnkontroller | Installerad Stable-desktop E2E, sista regression/driftmätning, dokumenterat Fas 1-godkännande |
 
 Ingen livehandel. Ingen strategi får gå vidare till papper på grund av denna
 tekniska reproduktion. Äldre status nedan är historik och ersätts av tabellen ovan.
+Senaste leverans: `docs/research-lab-registered.md` och `docs/research-backup-restore.md`.
+Backupens leverantörspolicyer är användarbekräftade, inte API-verifierade.
 
 ## Ursprunglig kartläggning (bevarad)
 

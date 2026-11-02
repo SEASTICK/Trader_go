@@ -12,7 +12,7 @@ export type Candle = Bar & { closed: boolean };
 
 /** Rutornas marknader som datalagret kan ha riktig data för. Övriga marknader har ingen OHLCV i appen. */
 const SYMBOLS: Record<string, string> = { Bitcoin: "BTCUSDT", Ethereum: "ETHUSDT" };
-export type SeriesRef = { provider: "binance"; market: "spot"; symbol: string; interval: string };
+export type SeriesRef = { provider: "binance"; market: "spot" | "um"; symbol: string; interval: string };
 
 export function seriesFor(marknad: string, tidsram: string): SeriesRef | null {
   const symbol = SYMBOLS[marknad];

@@ -1,0 +1,24 @@
+{
+  "isolated_restore": "PASS",
+  "all_typed_values_equal": true,
+  "rls_after_restore": "PASS",
+  "counts": {
+    "candles": 11916,
+    "funding_rates": 5481,
+    "strategies": 0,
+    "hypotheses": 0,
+    "research_members": 1,
+    "runs": 5,
+    "run_results": 3,
+    "run_trades": 7
+  },
+  "auth_accounts_restored": false,
+  "provider_disaster_recovery_tested": false,
+  "backup_sha256": "a2a60a883aa7c355660df59234d3b0ab25004d4cb7065f29e5f66ddaa5f65bc2",
+  "provider_backups": {
+    "digitalocean_retention_days": 7,
+    "supabase_daily_backups": true,
+    "verification_method": "user confirmation 2026-11-02",
+    "provider_restore_tested": false
+  }
+}

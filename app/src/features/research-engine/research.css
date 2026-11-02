@@ -10,3 +10,19 @@
 .research-table progress { width:80px; accent-color:var(--accent); }
 .research-hash { overflow-wrap:anywhere; }
 .research-form + .card p,.research-grid + p { margin-top:8px; }
+.research-json { white-space:pre-wrap; overflow-wrap:anywhere; max-height:480px; overflow:auto; }
+.research-table code { display:block; max-width:300px; overflow-wrap:anywhere; white-space:normal; }
+.research-grid label { min-width:0; }
+.research-table th,.research-table td { vertical-align:top; }
+.research-table td:not(:first-child) { white-space:nowrap; }
+.research-table .btn { min-width:160px; text-align:left; }
+@media (max-width:1100px) {
+  .registered-comparison th:nth-child(4),.registered-comparison td:nth-child(4),
+  .registered-comparison th:nth-child(5),.registered-comparison td:nth-child(5) { display:none; }
+}
+@media (max-width:850px) {
+  .registered-comparison th:nth-child(3),.registered-comparison td:nth-child(3) { display:none; }
+  .registered-comparison .btn { min-width:120px; }
+}
+.research-table td { white-space:nowrap; }
+.research-table .btn { white-space:normal; }
