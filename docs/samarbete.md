@@ -70,4 +70,5 @@ du börjar. Ta bort raden när det är pushat.
 
 | Vem | Vad | Filer/delar | Sedan |
 |---|---|---|---|
+| Philip (Claude) | Tvärsnitt över många terminer (H-0014 momentum, H-0015 funding-carry) och färdplan | `research/xs-protokoll.md`, `research/registry.md` (nya rader sist), `engine/traderlab/{portfolio,xs}.py`, `docs/vagen-till-avkastning.md` | 2026-11-02 |
 | Edwin (Claude) | Fas 2, Adaptive Strategy Engine (H-0013): motor + kö + worker + app | `research/fas2-protokoll.md`, `research/registry.md` (ny rad sist), `engine/traderlab/{regime,adaptive,fas2}.py`, ny Supabase-migration, worker, Research Lab | 2026-11-02 |
