@@ -10,6 +10,10 @@ import Market from "./pages/Market";
 import ResearchLab from "./features/research-engine/ResearchLab";
 import { UpdateDialog } from "./features/updates/UpdateDialog";
 import { useUpdater } from "./features/updates/useUpdater";
+import { Intro } from "./components/Intro";
+import { prefersReducedMotion, readLaunch } from "./lib/launch";
+
+function storage(): Storage | null { try { return window.localStorage; } catch { return null; } }
 
 const NAV = [
   { id: "Översikt", icon: "home" },
@@ -39,6 +43,10 @@ export default function App() {
   const [settings, setSettings] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const updater = useUpdater(__APP_VERSION__);
+  const [launch] = useState(() => readLaunch(storage(), __APP_VERSION__));
+  const [reduced] = useState(prefersReducedMotion);
+  // Vid "minska rörelse" hoppas startintrot över helt; uppdateringsbeskedet visas ändå, utan rörelse.
+  const [intro, setIntro] = useState(() => launch.kind === "update" || !reduced);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -102,6 +110,7 @@ export default function App() {
           </div>
         )}
         <div className="topbar"><span className="saved" title="Version och byggcommit. Samma värden hos er båda = samma program."><i />Papper · inga riktiga pengar · v{__APP_VERSION__} ({__COMMIT__})</span></div>
+        <div className="page-anim" key={page}>
         {page === "Översikt" && <Overview go={(p) => setPage(p)} />}
         {page === "Marknad" && <Market />}
         {page === "Research" && <Research />}
@@ -109,7 +118,10 @@ export default function App() {
         {page === "Hypoteser" && <Hypotheses />}
         {page === "Status" && <Status updater={updater} />}
         {page === "Papper" && <Page title="Papper" sub="Bara papper. Ingen riktig order läggs."><div className="card pad desk"><Paper /></div></Page>}
+        </div>
       </main>
+
+      {intro && <Intro kind={launch.kind} version={__APP_VERSION__} previous={launch.previous} reduced={reduced} onDone={() => setIntro(false)} />}
 
       <UpdateDialog notice={updater.notice} currentVersion={__APP_VERSION__} onInstall={() => { void updater.install(); }} onLater={updater.later} onDismissError={updater.dismissError} />
 
