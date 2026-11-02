@@ -2,9 +2,9 @@
 
 **29 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `445178d`.
+H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `eb15650`.
 
-PR #73 omgranskad på 445178d (kod 2160c6e): båda fynd rättade. 521 Python-tester inklusive 8 riktiga processtester och båda PGlite-sviterna passerar; egna signal- och SQL-felprov verifierade. Kodmässigt godkänd för merge när CI är grönt. Ingen migration, driftsättning eller riktig körning.
+PR #73 mergad som d6f2eae. PR #74 granskad på eb15650: 532 Python-tester och lokal PostgreSQL-samtidighet verifierade; reproducerbart paket ombyggt med samma SHA256. Fynd: rollback vid samtidig köning och SIGPIPE i revisionskontroll. Ingen uppladdning, migration, driftsättning eller riktig körning.
 
 ## Uppdateringsregler
 
@@ -119,17 +119,19 @@ PR #73 omgranskad på 445178d (kod 2160c6e): båda fynd rättade. 521 Python-tes
 
 - [x] **F2-601** Skapa ett separat strikt kökontrakt för H-0013 med autentisering och RLS
   - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — 445178d (kod 2160c6e): oberoende omgranskning godkänd. 521 Python-tester, 8 riktiga signal-/processtester och båda PGlite-kösviterna passerar. Tidigare SIGTERM-felprov sparar nu försöket; felaktiga SQL-kriterier och beslut avvisas utan ändrad lease.
-  - Kodmässigt verifierad lokalt. PR #73 godkänd för merge när CI är grönt; faktisk Supabase-samtidighet och driftverifiering återstår i F2-605.
+  - PR #73 mergad som d6f2eae, med godkänd kod 445178d. Lokalt verifierad. Faktiska Supabase-/driftkontroller återstår i F2-605.
 - [x] **F2-602** Anslut H-0013 till samma enda worker med lease och skydd mot dubbla resultat
-  - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — 445178d (kod 2160c6e): oberoende omgranskning godkänd. 521 Python-tester, 8 riktiga signal-/processtester och båda PGlite-kösviterna passerar. Tidigare SIGTERM-felprov sparar nu försöket; felaktiga SQL-kriterier och beslut avvisas utan ändrad lease.
-  - Kodmässigt verifierad lokalt. PR #73 godkänd för merge när CI är grönt; faktisk Supabase-samtidighet och driftverifiering återstår i F2-605.
+  - Underlag: [docs/fas2-drift-granskning-74.md](fas2-drift-granskning-74.md) — eb15650: utbrutet workerlås och revisionslogg återverifierade med riktiga processer. 532 Python-tester och lokal PostgreSQL-samtidighet passerar; en reservation/publicering och fencing verifierade.
+  - Kodmässigt verifierad lokalt. F2-605 har separata öppna fynd; ingen ny worker har driftsatts.
 - [x] **F2-603** Begränsa dataläsningen till verifierade frysta arkiv innan några filer öppnas
   - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — a852aa3 (kod cd9701d): Exakta manifestnamn före arkivläsning, SHA256 och CHECKSUM samt stapel-/fundinghash verifierade på syntetiska 120 arkiv; 2019/2025 öppnas inte.
   - Arkivkontrollen är oförändrad i 2160c6e och fortsatt verifierad på syntetiska arkiv. PR #73 kodmässigt godkänd på 445178d; ingen riktig datakörning eller driftsättning.
 - [x] **F2-604** Testa avbrott, timeout, återförsök och återhämtning efter workeromstart
   - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — 445178d (kod 2160c6e): oberoende omgranskning godkänd. 521 Python-tester, 8 riktiga signal-/processtester och båda PGlite-kösviterna passerar. Tidigare SIGTERM-felprov sparar nu försöket; felaktiga SQL-kriterier och beslut avvisas utan ändrad lease.
-  - Kodmässigt verifierad lokalt. PR #73 godkänd för merge när CI är grönt; faktisk Supabase-samtidighet och driftverifiering återstår i F2-605.
-- [ ] **F2-605** Driftsätt verifierad kod med loggar, resursgränser och dokumenterad återgång
+  - PR #73 mergad som d6f2eae, med godkänd kod 445178d. Lokalt verifierad. Faktiska Supabase-/driftkontroller återstår i F2-605.
+- [ ] **F2-605** Driftsätt verifierad kod med loggar, resursgränser och dokumenterad återgång **Pågår.**
+  - Underlag: [docs/fas2-drift-granskning-74.md](fas2-drift-granskning-74.md) — eb15650: paketbygge ger d8fda17ab9be853d3edab0d3d1dfd571708d4269a429178f8e1a892d1b8992e1. Underlag granskat; samtidighetsfel i rollback och SIGPIPE i journalmatchning behöver rättas före merge/drift.
+  - Underlag finns, men PR #74 ej godkänd. Ingen uppladdning, Supabase-migration, driftsättning eller H-0013-körning gjord.
 
 ## 7. Visa Fas 2 i Research Lab
 
