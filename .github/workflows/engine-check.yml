@@ -6,6 +6,12 @@ on:
     paths:
       - "engine/**"
       - ".github/workflows/engine-check.yml"
+  # Även direkt-push till main (docs/samarbete.md): fångar ett rött main direkt, inte först vid nästa PR.
+  push:
+    branches: [main]
+    paths:
+      - "engine/**"
+      - ".github/workflows/engine-check.yml"
   workflow_dispatch:
 
 permissions:

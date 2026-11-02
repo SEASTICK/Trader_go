@@ -11,6 +11,15 @@ on:
       - "app/src/lib/updater.ts"
       - "app/src/lib/version.ts"
       - ".github/workflows/universe-check.yml"
+  # Även direkt-push till main (docs/samarbete.md): fångar ett rött main direkt, inte först vid nästa PR.
+  push:
+    branches: [main]
+    paths:
+      - "apps/trader-go-universe/**"
+      - "app/src/features/updates/**"
+      - "app/src/lib/updater.ts"
+      - "app/src/lib/version.ts"
+      - ".github/workflows/universe-check.yml"
   workflow_dispatch:
 
 permissions:
