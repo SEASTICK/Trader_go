@@ -1,0 +1,36 @@
+[Unit]
+Description=TraderGO historical research worker (no live orders)
+After=network-online.target
+Wants=network-online.target
+ConditionPathExists=/etc/tradergo/queue-ready
+
+[Service]
+Type=simple
+User=tradergo
+Group=tradergo
+WorkingDirectory=/opt/tradergo/current/engine
+Environment=PYTHONPATH=/opt/tradergo/current/engine
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PYTHONUNBUFFERED=1
+Environment=OMP_NUM_THREADS=1
+Environment=OPENBLAS_NUM_THREADS=1
+Environment=MKL_NUM_THREADS=1
+LoadCredential=research.env:/etc/tradergo/research.env
+ExecStart=/opt/tradergo/venv/bin/python -m traderlab.research_engine.worker --env-file %d/research.env --data-dir /var/lib/tradergo
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=45
+KillMode=control-group
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/tradergo
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+MemoryMax=2G
+CPUQuota=150%
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target

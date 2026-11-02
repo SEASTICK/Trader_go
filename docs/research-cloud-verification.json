@@ -1,0 +1,32 @@
+{
+  "member_session": "PASS",
+  "member_cannot_claim": "PASS",
+  "member_cannot_direct_write": "PASS",
+  "nonmember_session": "PASS",
+  "idempotency": "PASS",
+  "holdout_protection": "PASS",
+  "run_ids": [
+    "59cd09e6-72ff-4901-8e59-082f662c5200",
+    "7dfa6c25-428a-4160-a839-5dfb24fbe667",
+    "5c088b2f-3d91-4ef9-8ef2-4fd68df73d5d",
+    "05acd0b8-f7fd-4ecd-980d-b964ad5ed08a"
+  ],
+  "queue_worker_result": "PASS",
+  "identical_repeat": "PASS",
+  "cancellation": "PASS",
+  "invalid_params": "PASS",
+  "states": {
+    "5c088b2f-3d91-4ef9-8ef2-4fd68df73d5d": "cancelled",
+    "59cd09e6-72ff-4901-8e59-082f662c5200": "done",
+    "7dfa6c25-428a-4160-a839-5dfb24fbe667": "done",
+    "05acd0b8-f7fd-4ecd-980d-b964ad5ed08a": "failed"
+  },
+  "fingerprint": "200f45fe5d92d76db726f3c3ffd5e3e6d831369ccf617ffafdded43680a7969f",
+  "startup_issue": "corrected systemd credential mode handling",
+  "real_concurrent_claims": "PASS",
+  "restart_expired_lease_recovery": "PASS",
+  "stale_token_rejection": "PASS",
+  "recovery_run_id": "7676a8cd-3613-45cc-b460-70c5537a21a2",
+  "ui_login_and_real_result_view": "PASS",
+  "temporary_test_accounts_removed": true
+}

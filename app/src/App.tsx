@@ -7,6 +7,7 @@ import Research from "./pages/Research";
 import Hypotheses from "./pages/Hypotheses";
 import Status from "./pages/Status";
 import Market from "./pages/Market";
+import ResearchLab from "./features/research-engine/ResearchLab";
 import { UpdateDialog } from "./features/updates/UpdateDialog";
 import { useUpdater } from "./features/updates/useUpdater";
 
@@ -14,6 +15,7 @@ const NAV = [
   { id: "Översikt", icon: "home" },
   { id: "Marknad", icon: "candles" },
   { id: "Research", icon: "flask" },
+  { id: "Research Lab", icon: "flask" },
   { id: "Hypoteser", icon: "list" },
   { id: "Status", icon: "info" },
 ] as const;
@@ -103,6 +105,7 @@ export default function App() {
         {page === "Översikt" && <Overview go={(p) => setPage(p)} />}
         {page === "Marknad" && <Market />}
         {page === "Research" && <Research />}
+        {page === "Research Lab" && <ResearchLab />}
         {page === "Hypoteser" && <Hypotheses />}
         {page === "Status" && <Status updater={updater} />}
         {page === "Papper" && <Page title="Papper" sub="Bara papper. Ingen riktig order läggs."><div className="card pad desk"><Paper /></div></Page>}
