@@ -19,7 +19,9 @@ LOG = logging.getLogger("research-worker")
 
 def child(job, data_dir, output):
     try:
-        if job.get("kind") == "registered":
+        if job.get("kind") == "registered" and job.get("hypothesis_id") == "H-0013":
+            from .h0013 import run_job
+        elif job.get("kind") == "registered":
             from .registered import run_job
         else:
             from .runner import run_job
@@ -40,6 +42,14 @@ def stop(process):
     if process.is_alive():
         process.kill()
         process.join(5)
+
+
+def timeout_for(job) -> int:
+    """H-0013 får två timmar (200 permutationer och 81 spelböcker); allt annat 30 minuter."""
+    if job.get("kind") == "registered" and job.get("hypothesis_id") == "H-0013":
+        from .h0013 import TIMEOUT
+        return TIMEOUT
+    return 1800
 
 
 def execute(store, job, data_dir, stopping, timeout=1800):
@@ -124,7 +134,7 @@ def main():
             job = store.rpc("research_claim", {"p_worker": socket.gethostname()})
             if job:
                 LOG.info("run=%s started", job["id"])
-                execute(store, job, args.data_dir, lambda: halted)
+                execute(store, job, args.data_dir, lambda: halted, timeout=timeout_for(job))
         except ConnectionFailure as exc:
             # Ingen ny körning medan pågående process har förlorat anslutningen.
             LOG.warning("%s", exc)
