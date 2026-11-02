@@ -2,26 +2,33 @@
 
 ## Aktuell verifierad status 2026-11-02
 
-**Hela Fas 1 är inte klar.** Stable 0.1.14 innehåller molnkopplingen och de registrerade offline-resultaten.
+**Hela Fas 1 är inte klar.** Stable 0.1.17 innehåller molnkopplingen och de registrerade offline-resultaten.
 Senaste data-/strategiauditen beskrivs i `docs/fas1-data-audit-20261102.md`;
 molnverifieringen i `docs/research-cloud-setup.md`. Tabellen skiljer färdig
 kärnfunktion från sådant som fortfarande saknar slutverifiering.
 
+Verifieringen avser desktopkällan `153e422` (Stable 0.1.17) och serverkällan
+`4d2ba56`. PR #59 och #61 mergades därefter och ingår inte i den publicerade
+appen eller den driftsatta workern. Deras nya export/serverkod behöver separat
+granskning. Det nya deployflödet 41441143904 hoppade över driftsättning eftersom
+SERVER_HOST saknas. På dropleten verifierades fortfarande exakt en aktiv
+TraderGO-worker, `tradergo-research-worker.service`.
+
 | Del | Verifierat | Kvar före slutgodkännande |
 |---|---|---|
 | 1. Arkitektur | Frontend, Rust, Python, databas, återanvändning och separat worker kartlagda; molnmodulen implementerad | Ingen separat arkitekturblockerare |
-| 2. Historik | Binance-källa, 1H/4H/1D-stöd; frysta fem år UM BTCUSDT 4H med funding, SHA256, full täckning och Supabase-återläsning; dubblettskydd | Spotluckan kvar; den äldre uppgiften om 43 feljusteringar kan inte reproduceras; automatisk schemalagd serversynk och tidig warmup kräver mer arbete |
+| 2. Historik | Binance-källa, 1H/4H/1D-stöd; frysta fem år UM BTCUSDT 4H med funding, SHA256, full täckning och Supabase-återläsning; dubblettskydd | Spotluckan kvar; den äldre uppgiften om 43 feljusteringar kan inte reproduceras; tidig UM-warmup rättad och provad mot januari 2020; automatisk schemalagd serversynk återstår |
 | 3. Strategier | Fyra versionerade strategier, parametrar, indikatorreferenser och signaltester; reproduktion med 1 120 parameterförsök | Ingen strategi är godkänd för papper; nya idéer kräver nya registreringar |
 | 4. Backtest | Tester för nästa öppning, framtidsläckage, stop/TP/gap, kostnader/funding, affärslogg och reproducerbarhet; samma UM buy-and-hold | Oberoende mark-price-/likvidationsvalidering är inte gjord |
-| 5. Nyckeltal | Motorns statistik, kurvor, affärer, månads-/regimresultat och auditmetadata | Registrerade Fas 1-resultat visas nu i Research Lab via explicit adapter; vidare desktopverifiering återstår |
+| 5. Nyckeltal | Motorns statistik, kurvor, affärer, månads-/regimresultat och auditmetadata | Registrerade Fas 1-resultat visas nu i Research Lab via explicit adapter; första historikritning provad i Mac-kandidat 0.1.15; slutpaketets manuella kontroll återstår |
 | 6. Optimering | Registrerat protokoll, Optuna, walk-forward, kostnadsstress, stabilitet, osäkerhet och bevarade auditförsök | Slutprovet förblir låst; alla fyra är REJECT |
-| 7. Research Lab | Medlemsinloggning och utforskningskö; ny registrerad offlinevy med jämförelse, kriterier, UM-candles/markörer, equity/drawdown, affärer, filter/sortering och walk-forward | Start av nya registrerade jobb från UI; Windows-GUI och första diagramomritning kräver fortsatt kontroll |
+| 7. Research Lab | Medlemsinloggning och utforskningskö; ny registrerad offlinevy med jämförelse, kriterier, UM-candles/markörer, equity/drawdown, affärer, filter/sortering och walk-forward | Start av nya registrerade jobb från UI; Windows-GUI saknar testdator. Historikens synlighet/hela period rättad och webbtestad; slutpaketets Mac-kontroll avbruten av appverktygets anslutningsfel |
 | 8. Molndrift | Supabase/RLS, riktig samtidighetskontroll, kö/lease/fencing, separat systemd-worker och recovery-test | Användaren bekräftar DO-backup 7 dagar och daglig Supabase-backup; isolerad forskningsdataåterställning provad. Leverantörsåterställning, larm och bredare belastningstest kvar |
-| 9. Godkännande | 144 Python-tester och 49 frontendtester; webbvyn granskad i båda teman; isolerad återställning med identiska värden/RLS; tidigare Rust-/molnkontroller | Mac-uppdatering 0.1.12 → 0.1.14 och registrerad vy verifierade. Windows-GUI, diagrammets första omritning, sista driftkontroller och dokumenterat Fas 1-godkännande kvar |
+| 9. Godkännande | 145 Python-tester och 52 frontendtester; webbvyn granskad i båda teman; isolerad återställning med identiska värden/RLS; tidigare Rust-/molnkontroller | Mac-uppdatering 0.1.12 → 0.1.14 och registrerad vy verifierade. Windows-GUI (användaren har bara Mac), manuellt Mac-slutprov (verktygsanslutning blockerad), tom marknadscanvas observerad även i 0.1.14, sista driftkontroller och dokumenterat Fas 1-godkännande kvar |
 
 Ingen livehandel. Ingen strategi får gå vidare till papper på grund av denna
 tekniska reproduktion. Äldre status nedan är historik och ersätts av tabellen ovan.
-Senaste leverans: `docs/research-lab-registered.md` och `docs/research-backup-restore.md`.
+Senaste leverans: `docs/research-chart-viewport.md`, `docs/research-lab-registered.md` och `docs/research-backup-restore.md`.
 Backupens leverantörspolicyer är användarbekräftade, inte API-verifierade.
 
 ## Ursprunglig kartläggning (bevarad)

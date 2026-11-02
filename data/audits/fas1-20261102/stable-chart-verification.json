@@ -1,0 +1,65 @@
+{
+  "version": "0.1.17",
+  "source_commit": "153e42292eb6a6ccdf03d5ba6fd604eb9de5498a",
+  "workflow_run": 41439841229,
+  "files": {
+    "mac/Trader_go_0.1.17_universal.app.tar.gz": "0c24c387d04919a01b0e3850d9a58d1e714fa7f6886789c06135c98e301ba752",
+    "mac/Trader_go_0.1.17_universal.app.tar.gz.sig": "fc15cb210efd447666ae0c83ae785db5c6d3b07f7976c90f553e2d477f456c9b",
+    "mac/Trader_go_0.1.17_universal.dmg": "b5d76e85b7c4af5c38f77b5f228238d4720c691a32b90a725f48ddbd1320c93e",
+    "windows/Trader_go_0.1.17_x64-setup.exe": "aba85a15e4c85972133287de17a749afe5cef76d65555e4734f6cdc99e28f7e3",
+    "windows/Trader_go_0.1.17_x64-setup.exe.sig": "bff1b9115676e2915fac75dcd54f9ff2d7deb56b41670a12f955a76243905910"
+  },
+  "mac_version": "0.1.17",
+  "mac_identifier": "com.seastick.tradergo",
+  "mac_architectures": [
+    "x86_64",
+    "arm64"
+  ],
+  "minisign_mac": true,
+  "minisign_windows": true,
+  "tampered_artifacts_rejected": true,
+  "mac_codesign_verify": true,
+  "python_tests_mac": 145,
+  "python_tests_ubuntu": 145,
+  "frontend_tests_local": 52,
+  "frontend_build_local": true,
+  "manual_mac_final": "blocked: app control timeouts after reconnect",
+  "manual_mac_prior_candidate": "0.1.15 first historical paint observed",
+  "manual_windows": "not tested: user has only Mac",
+  "server_source_commit": "4d2ba567a8ba7529ab77b9122a8d848a33ec1f9b",
+  "server_worker_active": true,
+  "server_worker_restarts": 0,
+  "frontend_tests_ci": {
+    "mac": 52,
+    "windows": 52
+  },
+  "workflow_conclusion": "success",
+  "release_url": "https://github.com/SEASTICK/Trader_go/releases/tag/v0.1.17",
+  "public": {
+    "version": "0.1.17",
+    "platforms": [
+      "windows-x86_64",
+      "windows-x86_64-nsis",
+      "darwin-aarch64",
+      "darwin-aarch64-app",
+      "darwin-x86_64",
+      "darwin-x86_64-app"
+    ],
+    "verified_urls": {
+      "https://seastick.github.io/trader-go-releases/Trader_go_0.1.17_x64-setup.exe": {
+        "sha256": "aba85a15e4c85972133287de17a749afe5cef76d65555e4734f6cdc99e28f7e3",
+        "bytes": 4261236,
+        "signature_matches": true
+      },
+      "https://seastick.github.io/trader-go-releases/Trader_go_0.1.17_universal.app.tar.gz": {
+        "sha256": "0c24c387d04919a01b0e3850d9a58d1e714fa7f6886789c06135c98e301ba752",
+        "bytes": 10087592,
+        "signature_matches": true
+      }
+    }
+  },
+  "superseded_unpublished_runs": [
+    41438099369,
+    41439279841
+  ]
+}

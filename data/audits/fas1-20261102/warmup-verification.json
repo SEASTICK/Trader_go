@@ -1,0 +1,24 @@
+{
+  "source_commit": "4d2ba56",
+  "market": "um",
+  "period_start": "2020-01-01T00:00:00Z",
+  "period_end": "2020-02-01T00:00:00Z",
+  "real_checksummed_archives": 2,
+  "warmup_bars": 0,
+  "funding_validation": {
+    "events": 93,
+    "max_delay_ms": 2.0,
+    "timestamp_policy": "original timestamps; one event within 60s of each 8h boundary"
+  },
+  "trades": 0,
+  "repeat_exact": true,
+  "result_sha256": "bfb664881809ec7bb46cbcb30d1fc11c2994859dd649655c6a140e8a6e2272d1",
+  "warnings": [
+    "UTFORSKNING: inget registrerat strategibeslut",
+    "Andra b\u00f6rsk\u00e4llan \u00e4r inte verifierad; inga utstickare har tagits bort",
+    "BTCUSDT \u00e4r ett i f\u00f6rv\u00e4g valt instrument; ingen slutsats om andra marknader",
+    "Perioden \u00e4r historiskt anv\u00e4nd; den utg\u00f6r inget or\u00f6rt slutprov",
+    "Terminer anv\u00e4nder kontrakts-OHLC, inte separat mark price; likvidationsmodell vid 1x",
+    "Endast 0 av 600 uppv\u00e4rmningsstaplar finns f\u00f6re perioden; indikatorer v\u00e4rms f\u00e4rdigt inom perioden och ingen saknad data fylls i"
+  ]
+}
