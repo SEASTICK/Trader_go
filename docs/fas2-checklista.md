@@ -59,7 +59,8 @@ PR #69 mergad i 29e44ec. PR #70 granskad: handelsregler verifierade; spelbokskon
 
 - [ ] **F2-301** Inför ett versionshanterat kontrakt för spelbok, läge och målposition **Pågår.**
   - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — 8e6617d: saknat/tomt/motsägande kandidatmanifest accepteras och direkt konstruktor kan kringgå valideringen. Kontraktsrättning och regressionstester återstår.
-  - F2-301 lämnas öppen tills alla konstruktorvägar och inlästa kandidatversioner är strikt verifierade.
+  - Underlag: [engine/tests/test_adaptive.py](../engine/tests/test_adaptive.py) — 9128008 (PR #70, gren fas2-valjare): from_dict kräver exakt fälten contract/choices/candidates och ett manifest som exakt motsvarar valens kandidater och låsta versioner (platt som null); saknat, tomt, extra och motsägande manifest avvisas. Direkt konstruktion valideras: fyra unika lägen, bara tillåtna kandidater, normaliserad ordning. Round-trip, stabila id och 81 spelböcker oförändrade. 74 väljartester och hela Python-sviten, 327 tester, passerar lokalt; den tidigare koden fäller 17 av väljartesterna. Handelsreglerna oförändrade. Endast syntetisk data.
+  - Rättat i 9128008 efter granskning av 8e6617d. Väntar på Codex omgranskning; ej mergat, driftsatt eller publicerat.
 - [x] **F2-302** Koppla fasta EMA/ADX- och Bollinger/RSI-kandidater samt platt läge
   - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — 8e6617d (kod a483162): oberoende granskning och 306 passerade Python-testfall, varav 53 adaptiva. Kandidater, riktning, byte, nästa öppning och stop verifierade.
   - Verifierad PR-kod; ännu inte mergad, driftsatt eller publicerad.

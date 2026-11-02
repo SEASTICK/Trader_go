@@ -154,9 +154,13 @@
             {
               "file": "docs/fas2-valjare-granskning-70.md",
               "detail": "8e6617d: saknat/tomt/motsägande kandidatmanifest accepteras och direkt konstruktor kan kringgå valideringen. Kontraktsrättning och regressionstester återstår."
+            },
+            {
+              "file": "engine/tests/test_adaptive.py",
+              "detail": "9128008 (PR #70, gren fas2-valjare): from_dict kräver exakt fälten contract/choices/candidates och ett manifest som exakt motsvarar valens kandidater och låsta versioner (platt som null); saknat, tomt, extra och motsägande manifest avvisas. Direkt konstruktion valideras: fyra unika lägen, bara tillåtna kandidater, normaliserad ordning. Round-trip, stabila id och 81 spelböcker oförändrade. 74 väljartester och hela Python-sviten, 327 tester, passerar lokalt; den tidigare koden fäller 17 av väljartesterna. Handelsreglerna oförändrade. Endast syntetisk data."
             }
           ],
-          "note": "F2-301 lämnas öppen tills alla konstruktorvägar och inlästa kandidatversioner är strikt verifierade."
+          "note": "Rättat i 9128008 efter granskning av 8e6617d. Väntar på Codex omgranskning; ej mergat, driftsatt eller publicerat."
         },
         {
           "id": "F2-302",
