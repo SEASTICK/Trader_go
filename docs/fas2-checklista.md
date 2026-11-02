@@ -1,6 +1,6 @@
 # Fas 2 – Utvecklingsplan
 
-**29 av 40 uppgifter verifierade · 8 arbetsområden.**
+**28 av 40 uppgifter verifierade · 8 arbetsområden.**
 
 H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `eb15650`.
 
@@ -115,11 +115,12 @@ PR #73 mergad som d6f2eae. PR #74 granskad på eb15650: 532 Python-tester och lo
 
 ## 6. Supabase och DigitalOcean
 
-4/5 verifierade.
+3/5 verifierade.
 
-- [x] **F2-601** Skapa ett separat strikt kökontrakt för H-0013 med autentisering och RLS
+- [ ] **F2-601** Skapa ett separat strikt kökontrakt för H-0013 med autentisering och RLS **Pågår.**
   - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — 445178d (kod 2160c6e): oberoende omgranskning godkänd. 521 Python-tester, 8 riktiga signal-/processtester och båda PGlite-kösviterna passerar. Tidigare SIGTERM-felprov sparar nu försöket; felaktiga SQL-kriterier och beslut avvisas utan ändrad lease.
-  - PR #73 mergad som d6f2eae, med godkänd kod 445178d. Lokalt verifierad. Faktiska Supabase-/driftkontroller återstår i F2-605.
+  - Underlag: [scripts/test-h0013-rollback-concurrency.mjs](../scripts/test-h0013-rollback-concurrency.mjs) — d01dccd: research_enqueue_h0013 kontrollerar efter det rådgivande låset att funktionen fortfarande finns (stängd kö avbryter köningen innan något sparas). Lokalt: test-h0013-rollback-concurrency.mjs (PostgreSQL 17, båda ordningarna och en kontroll utan lås), test-h0013-concurrency.mjs, test-h0013-queue.mjs, test-research-queue.mjs och test-h0013-rollback.mjs passerar; Python 538 tester. Inget uppladdat, migrerat eller driftsatt.
+  - Köningsfunktionen i 0005 ändrad i d01dccd; tidigare verifiering täcker inte längre exakt koden. Behöver omgranskas.
 - [x] **F2-602** Anslut H-0013 till samma enda worker med lease och skydd mot dubbla resultat
   - Underlag: [docs/fas2-drift-granskning-74.md](fas2-drift-granskning-74.md) — eb15650: utbrutet workerlås och revisionslogg återverifierade med riktiga processer. 532 Python-tester och lokal PostgreSQL-samtidighet passerar; en reservation/publicering och fencing verifierade.
   - Kodmässigt verifierad lokalt. F2-605 har separata öppna fynd; ingen ny worker har driftsatts.
@@ -131,7 +132,8 @@ PR #73 mergad som d6f2eae. PR #74 granskad på eb15650: 532 Python-tester och lo
   - PR #73 mergad som d6f2eae, med godkänd kod 445178d. Lokalt verifierad. Faktiska Supabase-/driftkontroller återstår i F2-605.
 - [ ] **F2-605** Driftsätt verifierad kod med loggar, resursgränser och dokumenterad återgång **Pågår.**
   - Underlag: [docs/fas2-drift-granskning-74.md](fas2-drift-granskning-74.md) — eb15650: paketbygge ger d8fda17ab9be853d3edab0d3d1dfd571708d4269a429178f8e1a892d1b8992e1. Underlag granskat; samtidighetsfel i rollback och SIGPIPE i journalmatchning behöver rättas före merge/drift.
-  - Underlag finns, men PR #74 ej godkänd. Ingen uppladdning, Supabase-migration, driftsättning eller H-0013-körning gjord.
+  - Underlag: [docs/fas2-driftsattning.md](fas2-driftsattning.md) — d01dccd (PR #74): återgången tar köningens rådgivande lås och research_enqueue_h0013 kontrollerar efter låset att den finns, så en lyckad återgång aldrig lämnar ett H-0013-jobb; återgångsordningen stänger kön i databasen innan gammal kod startar. Revisionskontrollen läser hela journalen och matchar utan pipe (ingen SIGPIPE), med fel för saknad revision och misslyckad journalctl. Lokalt: test-h0013-rollback-concurrency.mjs (PostgreSQL 17, båda ordningarna och en kontroll utan lås), test-h0013-concurrency.mjs, test-h0013-queue.mjs, test-research-queue.mjs och test-h0013-rollback.mjs passerar; Python 538 tester. Inget uppladdat, migrerat eller driftsatt.
+  - Rättat i d01dccd efter granskning av eb15650. Väntar på Codex omgranskning; riktig driftsättning och migration kräver uttryckligt ja.
 
 ## 7. Visa Fas 2 i Research Lab
 

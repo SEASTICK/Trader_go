@@ -347,14 +347,18 @@
         {
           "id": "F2-601",
           "title": "Skapa ett separat strikt kökontrakt för H-0013 med autentisering och RLS",
-          "status": "done",
+          "status": "in_progress",
           "evidence": [
             {
               "file": "docs/fas2-ko-granskning-73.md",
               "detail": "445178d (kod 2160c6e): oberoende omgranskning godkänd. 521 Python-tester, 8 riktiga signal-/processtester och båda PGlite-kösviterna passerar. Tidigare SIGTERM-felprov sparar nu försöket; felaktiga SQL-kriterier och beslut avvisas utan ändrad lease."
+            },
+            {
+              "file": "scripts/test-h0013-rollback-concurrency.mjs",
+              "detail": "d01dccd: research_enqueue_h0013 kontrollerar efter det rådgivande låset att funktionen fortfarande finns (stängd kö avbryter köningen innan något sparas). Lokalt: test-h0013-rollback-concurrency.mjs (PostgreSQL 17, båda ordningarna och en kontroll utan lås), test-h0013-concurrency.mjs, test-h0013-queue.mjs, test-research-queue.mjs och test-h0013-rollback.mjs passerar; Python 538 tester. Inget uppladdat, migrerat eller driftsatt."
             }
           ],
-          "note": "PR #73 mergad som d6f2eae, med godkänd kod 445178d. Lokalt verifierad. Faktiska Supabase-/driftkontroller återstår i F2-605."
+          "note": "Köningsfunktionen i 0005 ändrad i d01dccd; tidigare verifiering täcker inte längre exakt koden. Behöver omgranskas."
         },
         {
           "id": "F2-602",
@@ -400,9 +404,13 @@
             {
               "file": "docs/fas2-drift-granskning-74.md",
               "detail": "eb15650: paketbygge ger d8fda17ab9be853d3edab0d3d1dfd571708d4269a429178f8e1a892d1b8992e1. Underlag granskat; samtidighetsfel i rollback och SIGPIPE i journalmatchning behöver rättas före merge/drift."
+            },
+            {
+              "file": "docs/fas2-driftsattning.md",
+              "detail": "d01dccd (PR #74): återgången tar köningens rådgivande lås och research_enqueue_h0013 kontrollerar efter låset att den finns, så en lyckad återgång aldrig lämnar ett H-0013-jobb; återgångsordningen stänger kön i databasen innan gammal kod startar. Revisionskontrollen läser hela journalen och matchar utan pipe (ingen SIGPIPE), med fel för saknad revision och misslyckad journalctl. Lokalt: test-h0013-rollback-concurrency.mjs (PostgreSQL 17, båda ordningarna och en kontroll utan lås), test-h0013-concurrency.mjs, test-h0013-queue.mjs, test-research-queue.mjs och test-h0013-rollback.mjs passerar; Python 538 tester. Inget uppladdat, migrerat eller driftsatt."
             }
           ],
-          "note": "Underlag finns, men PR #74 ej godkänd. Ingen uppladdning, Supabase-migration, driftsättning eller H-0013-körning gjord."
+          "note": "Rättat i d01dccd efter granskning av eb15650. Väntar på Codex omgranskning; riktig driftsättning och migration kräver uttryckligt ja."
         }
       ]
     },
