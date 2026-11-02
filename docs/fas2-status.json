@@ -3,7 +3,7 @@
   "title": "Fas 2 – Adaptive Strategy Engine",
   "hypothesis": "H-0013",
   "updated": "2026-11-02",
-  "reviewed_revision": "efb43fc",
+  "reviewed_revision": "a5e8fc3",
   "note": "Klar betyder verifierad. Kod som bara finns lokalt eller tester utan granskning är inte slutgodkända.",
   "groups": [
     {
@@ -222,7 +222,7 @@
               "detail": "efb43fc: omstrukturerad walk-forward återverifierad med 442 tester och separat 35-affärers jämförelse mot c5068e1. Identiska avkastningar, affärer, kostnader, funding och spelboksval."
             }
           ],
-          "note": "PR #71 mergad som 793e9f0. Refaktorn i PR #72 är återverifierad, men PR #72 har separata öppna fynd och är inte godkänd för merge."
+          "note": "PR #71 mergad som 793e9f0. Refaktorn i PR #72 återverifierad; fas2.py är oförändrad i rättningen ab97a0a. PR #72 kodmässigt godkänd på a5e8fc3, merge kräver grön CI."
         },
         {
           "id": "F2-402",
@@ -234,7 +234,7 @@
               "detail": "efb43fc: omstrukturerad walk-forward återverifierad med 442 tester och separat 35-affärers jämförelse mot c5068e1. Identiska avkastningar, affärer, kostnader, funding och spelboksval."
             }
           ],
-          "note": "PR #71 mergad som 793e9f0. Refaktorn i PR #72 är återverifierad, men PR #72 har separata öppna fynd och är inte godkänd för merge."
+          "note": "PR #71 mergad som 793e9f0. Refaktorn i PR #72 återverifierad; fas2.py är oförändrad i rättningen ab97a0a. PR #72 kodmässigt godkänd på a5e8fc3, merge kräver grön CI."
         },
         {
           "id": "F2-403",
@@ -246,7 +246,7 @@
               "detail": "efb43fc: omstrukturerad walk-forward återverifierad med 442 tester och separat 35-affärers jämförelse mot c5068e1. Identiska avkastningar, affärer, kostnader, funding och spelboksval."
             }
           ],
-          "note": "PR #71 mergad som 793e9f0. Refaktorn i PR #72 är återverifierad, men PR #72 har separata öppna fynd och är inte godkänd för merge."
+          "note": "PR #71 mergad som 793e9f0. Refaktorn i PR #72 återverifierad; fas2.py är oförändrad i rättningen ab97a0a. PR #72 kodmässigt godkänd på a5e8fc3, merge kräver grön CI."
         },
         {
           "id": "F2-404",
@@ -258,7 +258,7 @@
               "detail": "efb43fc: omstrukturerad walk-forward återverifierad med 442 tester och separat 35-affärers jämförelse mot c5068e1. Identiska avkastningar, affärer, kostnader, funding och spelboksval."
             }
           ],
-          "note": "PR #71 mergad som 793e9f0. Refaktorn i PR #72 är återverifierad, men PR #72 har separata öppna fynd och är inte godkänd för merge."
+          "note": "PR #71 mergad som 793e9f0. Refaktorn i PR #72 återverifierad; fas2.py är oförändrad i rättningen ab97a0a. PR #72 kodmässigt godkänd på a5e8fc3, merge kräver grön CI."
         },
         {
           "id": "F2-405",
@@ -270,7 +270,7 @@
               "detail": "efb43fc: omstrukturerad walk-forward återverifierad med 442 tester och separat 35-affärers jämförelse mot c5068e1. Identiska avkastningar, affärer, kostnader, funding och spelboksval."
             }
           ],
-          "note": "PR #71 mergad som 793e9f0. Refaktorn i PR #72 är återverifierad, men PR #72 har separata öppna fynd och är inte godkänd för merge."
+          "note": "PR #71 mergad som 793e9f0. Refaktorn i PR #72 återverifierad; fas2.py är oförändrad i rättningen ab97a0a. PR #72 kodmässigt godkänd på a5e8fc3, merge kräver grön CI."
         }
       ]
     },
@@ -281,50 +281,38 @@
         {
           "id": "F2-501",
           "title": "Jämför med köp-och-behåll, varje kandidat ensam och en likaviktad blandning",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-utvardering-granskning-72.md",
-              "detail": "efb43fc (kod bbc7181): Avkastningsjämförelser verifierade, men blandningens position och riskmått behöver korrekt kapitalviktning och tydliga exponerings-/omsättningsmått."
-            },
-            {
-              "file": "engine/tests/test_fas2_eval.py",
-              "detail": "ab97a0a (PR #72): blandningens nettoposition och bruttoexponering viktas med halvornas aktuella kapital (long kapital 2 + platt kapital 1 ger 2/3; long + short ger netto 0, brutto 1); kurva, Sharpe, affärsbelopp och kriterier oförändrade. 70 utvärderingstester och hela Python-sviten, 478 tester, passerar lokalt; nio av tio avsiktliga fel fångas (skyddet i all_playbooks är dubblerat av curve). Endast syntetisk data."
+              "detail": "a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov."
             }
           ],
-          "note": "Rättat i ab97a0a efter granskning av efb43fc. Väntar på Codex omgranskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
+          "note": "Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår."
         },
         {
           "id": "F2-502",
           "title": "Verifiera kostnadsstress, funding och riskmodell för H-0013",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-utvardering-granskning-72.md",
-              "detail": "efb43fc (kod bbc7181): Normalt valda spelböcker återanvänds vid 2,5× kostnadsstress; funding, 1× och ATR-stop verifierade via befintlig motor och syntetiska tester."
-            },
-            {
-              "file": "engine/tests/test_fas2_eval.py",
-              "detail": "ab97a0a: omsättning räknas nu som handlat belopp från affärerna på gemensam kapitalbas, och exponering redovisas som netto, brutto och tid i marknaden med definitioner (gäller alla kurvor). 70 utvärderingstester och hela Python-sviten, 478 tester, passerar lokalt; nio av tio avsiktliga fel fångas (skyddet i all_playbooks är dubblerat av curve). Endast syntetisk data."
+              "detail": "a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov."
             }
           ],
-          "note": "Riskrapporteringens definitioner ändrade i ab97a0a; den tidigare verifieringen av efb43fc täcker inte längre exakt dessa fält. Behöver omgranskas."
+          "note": "Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår."
         },
         {
           "id": "F2-503",
           "title": "Kör förregistrerad permutation och slumpkontroll med fullständig försöksredovisning",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-utvardering-granskning-72.md",
-              "detail": "efb43fc (kod bbc7181): Permutation med omkört urval och slumpkontroll finns; direkt permutationstest måste avvisa slutprov före regimberäkning."
-            },
-            {
-              "file": "engine/tests/test_fas2_eval.py",
-              "detail": "ab97a0a (PR #72): permutation_test och regime_results kontrollerar staplar, finansieringsränta, tillförda lägen och avkastning före all beräkning, även med n=0; färdiga permutationer sparas direkt i körningsposten. 70 utvärderingstester och hela Python-sviten, 478 tester, passerar lokalt; nio av tio avsiktliga fel fångas (skyddet i all_playbooks är dubblerat av curve). Endast syntetisk data."
+              "detail": "a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov."
             }
           ],
-          "note": "Rättat i ab97a0a efter granskning av efb43fc. Väntar på Codex omgranskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
+          "note": "Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår."
         },
         {
           "id": "F2-504",
@@ -333,26 +321,22 @@
           "evidence": [
             {
               "file": "docs/fas2-utvardering-granskning-72.md",
-              "detail": "efb43fc (kod bbc7181): Bootstrap, DSR med 81 försök, uppräkning av spelböcker, regimresultat, år och utan bästa året kodgranskade och syntetiskt testade. Full riktig kontrollkörning ej gjord."
+              "detail": "a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov."
             }
           ],
-          "note": "Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat."
+          "note": "Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår."
         },
         {
           "id": "F2-505",
           "title": "Bedöm alla fem förregistrerade kriterier och spara även negativa eller avbrutna försök",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-utvardering-granskning-72.md",
-              "detail": "efb43fc (kod bbc7181): Kriterier och exklusiv försöksfil fungerar; aborted-filen saknar färdigräknade delresultat. Sju färdiga sammanfattningar förlorades i oberoende avbrottsprov."
-            },
-            {
-              "file": "engine/tests/test_fas2_eval.py",
-              "detail": "ab97a0a (PR #72): avbrutet försök sparas med konfiguration, stegstatus och alla färdiga delresultat (också enskilda permutationer och spelböcker), utan beslut och utan överskrivning; körningen sparar kodrevision och SHA-256 för inlästa data. 70 utvärderingstester och hela Python-sviten, 478 tester, passerar lokalt; nio av tio avsiktliga fel fångas (skyddet i all_playbooks är dubblerat av curve). Endast syntetisk data."
+              "detail": "a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov."
             }
           ],
-          "note": "Rättat i ab97a0a efter granskning av efb43fc. Väntar på Codex omgranskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
+          "note": "Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår."
         }
       ]
     },
@@ -480,5 +464,5 @@
       ]
     }
   ],
-  "reviewed_scope": "PR #71 mergad som 793e9f0. PR #72 granskad på efb43fc: walk-forward återverifierad, stress och osäkerhetsredovisning verifierade syntetiskt. Tre fynd före merge: direkt slutprovsskydd, blandningens riskmått och bevarade delresultat vid avbrott. Ingen riktig körning, driftsättning eller publicering."
+  "reviewed_scope": "PR #71 mergad som 793e9f0. PR #72 omgranskad på a5e8fc3 (kod ab97a0a): alla tre fynd rättade, 478 syntetiska Python-testfall och separata reproduktionsprov passerar. Kodmässigt godkänd för merge när CI är grönt. Ingen riktig körning, merge, driftsättning eller publicering i omgranskningen."
 }

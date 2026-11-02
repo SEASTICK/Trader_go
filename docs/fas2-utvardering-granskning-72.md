@@ -4,7 +4,7 @@ Granskad PR-head: `efb43fc89932f40e38ad318f1f53d6eb7be51da0`, kod `bbc7181`, met
 
 Bara syntetiska data och isolerade tillfälliga resultatfiler har använts. Inget riktigt dataset eller slutprov har lästs, och ingen merge, driftsättning eller publicering görs i denna granskning.
 
-## Fynd före merge
+## Ursprungliga fynd före rättning
 
 ### P1 – direkt permutationstest beräknar regimer innan slutprovsskyddet
 
@@ -52,3 +52,19 @@ Metodtolkningarna U1–U18 kan behållas med ovanstående rättning av riskmått
 F2-401 och F2-403–405 återverifieras efter omstruktureringen. F2-502 och F2-504 är kodmässigt verifierade på syntetisk data. F2-501, F2-503 och F2-505 är `in_progress` för fynden ovan. Gemensam status: **22/40 verifierade**.
 
 **PR #72 är inte godkänd för merge ännu.** Nästa kontroll är rättade direkta dataingångar, kapitalviktad och tydligt definierad riskrapportering samt bevarade delresultat vid avbrott. Inget strategiresultat har bedömts och inget godkänns för papper/live.
+
+
+## Omgranskning av rättningarna – 2026-11-02
+
+Granskad PR-head: `a5e8fc3e04501615450ac42a10671f851158f3d0`, kod `ab97a0a`, merge av granskningsunderlaget `d40b7c6`. Tidigare fynd ovan bevaras som historik och är nu rättade.
+
+- **P1 rättad:** `_guard` kontrollerar staplar/funding/tillförda etiketter före beräkning i `curve`, `permutation_test`, `all_playbooks` och `regime_results`. Den senare kontrollerar också avkastningsseriens period. Eget direktprov med syntetiska slutprovsstaplar avvisas före regimberäkning för permutation n=0/n=1 och för en tom spelbokslista. Det täcker även det tomma loopfall där det inte räcker med skydd i en underfunktion.
+- **P2 rättad:** blandningen viktar positionerna med delportföljernas kapital vid stapelns början och skiljer på netto, brutto och tid i marknaden. Omsättning summerar affärernas in-/utnotional på gemensam kapitalbas, inte förändringen av nettovikten. Definitioner sparas i konfigurationen. Eget long/platt-prov ger 2/3; long/short ger netto 0, brutto 1 och tid i marknaden 1. Passiv viktglidning utan affärer ger omsättning 0. Regressionsproven behåller den oombalanserade kurvan, Sharpe och affärsbeloppen; kriteriefunktionen är oförändrad.
+- **P3 rättad:** `progress` bevarar konfiguration, färdiga delresultat, stegstatus och kontrollernas färdiga iterationer. `run` sparar detta vid fångade avbrott och tar bort beslut. Eget avbrottsprov vid spelböckerna behåller H-0013, stress, alla fem jämförelser, walk-forward, kriterier och konfiguration; spelbokssteget är `incomplete` och beslut saknas. Regressionerna täcker även avbrott mitt i permutationer/spelböcker och skydd mot överskrivning.
+- Körningsposten har nu kodcommit med flagga för smutsig motor samt SHA256 för inlästa staplar/funding. Ett eget prov verifierar att datafingeravtrycket ändras när ett pris ändras. Detta identifierar inlästa värden; verifiering mot det frysta arkivmanifestet och tillförlitlig revisionsmetadata i ett driftsatt paket ska fortsatt hanteras i arbetsområde 6.
+- Exakt PR-head kördes i isolerad arkivkopia: **478 Python-testfall passerar**, inklusive **70 utvärderingstestfall**. Samma ofarliga lokala joblib-varning om fysiska CPU-kärnor förekommer. CI Engine check var fortfarande `IN_PROGRESS` vid senaste kontrollen; det ska vara grönt före merge.
+- `fas2.py`, backtestmotorn, protokollet, strategierna och frysta resultat är oförändrade sedan den tidigare granskningen. Tidigare verifieringar gäller fortsatt.
+
+F2-501 till F2-505 är nu kodmässigt verifierade; F2-502 återgodkänns med de nya uttryckliga riskdefinitionerna. Gemensam status: **25/40 verifierade**. Detta avser implementation och syntetisk verifiering, inte genomförd forskning mot det riktiga datasetet. Ingen full riktig körning med 200 permutationer och 81 spelböcker har gjorts här.
+
+**Bedömning:** PR #72 är kodmässigt godkänd för merge på `a5e8fc3`, förutsatt grön CI och bevarad granskad kod. Inga öppna fynd kvar från denna granskning. Nästa kontroll är arbetsområde 6: strikt H-0013-kökontrakt, samma enda worker, verifierat och avgränsat dataset, lease/fencing, avbrott/återförsök och spårbart driftsättningspaket. Progress ligger ännu i processminnet tills ett fångat avbrott sparas; varaktig återhämtning efter hård process-/serverkrasch är en senare workeruppgift. Ingen riktig data, slutprovsåtkomst, merge, driftsättning eller publicering har utförts i omgranskningen. Inget är godkänt för papper/live.
