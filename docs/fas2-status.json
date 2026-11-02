@@ -3,7 +3,7 @@
   "title": "Fas 2 – Adaptive Strategy Engine",
   "hypothesis": "H-0013",
   "updated": "2026-11-02",
-  "reviewed_revision": "866d393",
+  "reviewed_revision": "8e6617d",
   "note": "Klar betyder verifierad. Kod som bara finns lokalt eller tester utan granskning är inte slutgodkända.",
   "groups": [
     {
@@ -90,7 +90,7 @@
               "detail": "866d393 (kod ebc5d38): oberoende slutgranskning godkänd. 253 Python-tester, inklusive 66 regimtestfall, passerar. Tidigare felprov samt nästa-stapel-kontrakt på 1h/4h/1d verifierade."
             }
           ],
-          "note": "Kod godkänd för merge i PR #69; inget är driftsatt, publicerat eller kört på riktig data."
+          "note": "Regimmodulen är mergad via PR #69 i 29e44ec, kod oförändrad mot granskad 866d393. Ej driftsatt eller publicerad."
         },
         {
           "id": "F2-202",
@@ -102,7 +102,7 @@
               "detail": "866d393 (kod ebc5d38): oberoende slutgranskning godkänd. 253 Python-tester, inklusive 66 regimtestfall, passerar. Tidigare felprov samt nästa-stapel-kontrakt på 1h/4h/1d verifierade."
             }
           ],
-          "note": "Kod godkänd för merge i PR #69; inget är driftsatt, publicerat eller kört på riktig data."
+          "note": "Regimmodulen är mergad via PR #69 i 29e44ec, kod oförändrad mot granskad 866d393. Ej driftsatt eller publicerad."
         },
         {
           "id": "F2-203",
@@ -114,7 +114,7 @@
               "detail": "866d393 (kod ebc5d38): oberoende slutgranskning godkänd. 253 Python-tester, inklusive 66 regimtestfall, passerar. Tidigare felprov samt nästa-stapel-kontrakt på 1h/4h/1d verifierade."
             }
           ],
-          "note": "Kod godkänd för merge i PR #69; inget är driftsatt, publicerat eller kört på riktig data."
+          "note": "Regimmodulen är mergad via PR #69 i 29e44ec, kod oförändrad mot granskad 866d393. Ej driftsatt eller publicerad."
         },
         {
           "id": "F2-204",
@@ -126,7 +126,7 @@
               "detail": "866d393 (kod ebc5d38): oberoende slutgranskning godkänd. 253 Python-tester, inklusive 66 regimtestfall, passerar. Tidigare felprov samt nästa-stapel-kontrakt på 1h/4h/1d verifierade."
             }
           ],
-          "note": "Kod godkänd för merge i PR #69; inget är driftsatt, publicerat eller kört på riktig data."
+          "note": "Regimmodulen är mergad via PR #69 i 29e44ec, kod oförändrad mot granskad 866d393. Ej driftsatt eller publicerad."
         },
         {
           "id": "F2-205",
@@ -138,7 +138,7 @@
               "detail": "866d393 (kod ebc5d38): oberoende slutgranskning godkänd. 253 Python-tester, inklusive 66 regimtestfall, passerar. Tidigare felprov samt nästa-stapel-kontrakt på 1h/4h/1d verifierade."
             }
           ],
-          "note": "Kod godkänd för merge i PR #69; inget är driftsatt, publicerat eller kört på riktig data."
+          "note": "Regimmodulen är mergad via PR #69 i 29e44ec, kod oförändrad mot granskad 866d393. Ej driftsatt eller publicerad."
         }
       ]
     },
@@ -152,59 +152,59 @@
           "status": "in_progress",
           "evidence": [
             {
-              "file": "engine/tests/test_adaptive.py",
-              "detail": "a483162 (gren fas2-valjare): Playbook-kontrakt h0013-adaptive/1.0.0 med låsta kandidatversioner, stabila id, alla 81 spelböcker, from_dict avvisar annan kontrakts- eller kandidatversion. AdaptiveSignals ger målposition, stop, läge, vald kandidat, spelbok och byten per stapel. 53 nya väljartester, 119 regim- och väljartester och hela Python-sviten, 306 tester, passerar lokalt. Sex avsiktliga regelfel fångas. Endast syntetisk data."
+              "file": "docs/fas2-valjare-granskning-70.md",
+              "detail": "8e6617d: saknat/tomt/motsägande kandidatmanifest accepteras och direkt konstruktor kan kringgå valideringen. Kontraktsrättning och regressionstester återstår."
             }
           ],
-          "note": "Väntar på Codex granskning; ej mergat, ingen träning/walk-forward, kö, worker eller app, ej driftsatt eller publicerat."
+          "note": "F2-301 lämnas öppen tills alla konstruktorvägar och inlästa kandidatversioner är strikt verifierade."
         },
         {
           "id": "F2-302",
           "title": "Koppla fasta EMA/ADX- och Bollinger/RSI-kandidater samt platt läge",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
-              "file": "engine/tests/test_adaptive.py",
-              "detail": "a483162 (gren fas2-valjare): ema_adx_trend 1.0.0 och bb_rsi_reversion 1.0.0 med SPECS standardparametrar, oförändrade och jämförda mot strategiernas egna signaler, samt platt. Okänt är alltid platt. 53 nya väljartester, 119 regim- och väljartester och hela Python-sviten, 306 tester, passerar lokalt. Sex avsiktliga regelfel fångas. Endast syntetisk data."
+              "file": "docs/fas2-valjare-granskning-70.md",
+              "detail": "8e6617d (kod a483162): oberoende granskning och 306 passerade Python-testfall, varav 53 adaptiva. Kandidater, riktning, byte, nästa öppning och stop verifierade."
             }
           ],
-          "note": "Väntar på Codex granskning; ej mergat, ingen träning/walk-forward, kö, worker eller app, ej driftsatt eller publicerat."
+          "note": "Verifierad PR-kod; ännu inte mergad, driftsatt eller publicerad."
         },
         {
           "id": "F2-303",
           "title": "Begränsa long till upp-lägen och short till ned-lägen",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
-              "file": "engine/tests/test_adaptive.py",
-              "detail": "a483162 (gren fas2-valjare): Long bara i upp-lägen och short bara i ned-lägen, prövat för alla fyra lägen, okänt, tre kandidater och båda riktningarna; signal mot trenden blir platt. 53 nya väljartester, 119 regim- och väljartester och hela Python-sviten, 306 tester, passerar lokalt. Sex avsiktliga regelfel fångas. Endast syntetisk data."
+              "file": "docs/fas2-valjare-granskning-70.md",
+              "detail": "8e6617d (kod a483162): oberoende granskning och 306 passerade Python-testfall, varav 53 adaptiva. Kandidater, riktning, byte, nästa öppning och stop verifierade."
             }
           ],
-          "note": "Väntar på Codex granskning; ej mergat, ingen träning/walk-forward, kö, worker eller app, ej driftsatt eller publicerat."
+          "note": "Verifierad PR-kod; ännu inte mergad, driftsatt eller publicerad."
         },
         {
           "id": "F2-304",
           "title": "Stäng vid läges- och kandidatbyte utan att återuppta en gammal affär",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
-              "file": "engine/tests/test_adaptive.py",
-              "detail": "a483162 (gren fas2-valjare): Läges- och kandidatbyte, även ny spelbok vid fönstergräns, stänger vid nästa öppning; gammal affär tas inte upp igen, inträde kräver ny signal tidigast stapeln efter bytet. Samma kandidat vid fönstergräns behåller positionen. 53 nya väljartester, 119 regim- och väljartester och hela Python-sviten, 306 tester, passerar lokalt. Sex avsiktliga regelfel fångas. Endast syntetisk data."
+              "file": "docs/fas2-valjare-granskning-70.md",
+              "detail": "8e6617d (kod a483162): oberoende granskning och 306 passerade Python-testfall, varav 53 adaptiva. Kandidater, riktning, byte, nästa öppning och stop verifierade."
             }
           ],
-          "note": "Väntar på Codex granskning; ej mergat, ingen träning/walk-forward, kö, worker eller app, ej driftsatt eller publicerat."
+          "note": "Verifierad PR-kod; ännu inte mergad, driftsatt eller publicerad."
         },
         {
           "id": "F2-305",
           "title": "Verifiera nästa öppning, ATR-stop och alla bytesfall med syntetiska tester",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
-              "file": "engine/tests/test_adaptive.py",
-              "detail": "a483162 (gren fas2-valjare): Med backtest.run: fyllning vid nästa öppning, ATR-stop satt vid inträdet, stängning vid öppningen för nytt läge, inget återinträde efter stop utan ny signal. Prefix ger samma beslut; läget för beslutet är regimmodulens läge för nästa stapel. 53 nya väljartester, 119 regim- och väljartester och hela Python-sviten, 306 tester, passerar lokalt. Sex avsiktliga regelfel fångas. Endast syntetisk data."
+              "file": "docs/fas2-valjare-granskning-70.md",
+              "detail": "8e6617d (kod a483162): oberoende granskning och 306 passerade Python-testfall, varav 53 adaptiva. Kandidater, riktning, byte, nästa öppning och stop verifierade."
             }
           ],
-          "note": "Väntar på Codex granskning; ej mergat, ingen träning/walk-forward, kö, worker eller app, ej driftsatt eller publicerat."
+          "note": "Verifierad PR-kod; ännu inte mergad, driftsatt eller publicerad."
         }
       ]
     },
@@ -414,5 +414,5 @@
       ]
     }
   ],
-  "reviewed_scope": "PR #69 regimmodul godkänd för merge efter oberoende granskning. Ej mergad, driftsatt eller publicerad."
+  "reviewed_scope": "PR #69 mergad i 29e44ec. PR #70 granskad: handelsregler verifierade; spelbokskontraktet behöver rättas före merge. Ej driftsatt eller publicerat."
 }
