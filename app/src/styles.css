@@ -214,3 +214,50 @@ h2 { font-size:17px; font-weight:650; letter-spacing:-.01em; }
 .desk pre { white-space:pre-wrap; font-size:13px; }
 .desk .error { color:var(--bad); }
 .candle-meta { display:flex; gap:18px; flex-wrap:wrap; padding:0 16px 8px; font-size:12px; color:var(--muted); } .candle-meta b { color:var(--ink); font-weight:600; }
+
+/* ---------- Animationer ----------
+   Introt vid start och efter uppdatering, sidbyten och rutor. Allt stängs av med systemets "minska rörelse". */
+.intro { position:fixed; inset:0; z-index:200; display:grid; place-items:center; background:var(--bg); cursor:pointer;
+  animation:intro-in .25s ease-out both; transition:opacity .38s ease, transform .38s ease; }
+.intro.leaving { opacity:0; transform:scale(1.015); pointer-events:none; }
+.intro-card { display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px; width:min(420px,86vw); }
+.intro-logo { width:76px; height:76px; border-radius:20px; box-shadow:0 12px 30px color-mix(in srgb,var(--accent) 30%,transparent);
+  animation:intro-pop .55s cubic-bezier(.2,1.4,.4,1) both; }
+.intro-chart { width:100%; height:auto; aspect-ratio:280/90; overflow:visible; margin:4px 0 2px; }
+.intro-line { fill:none; stroke:var(--accent); stroke-width:3; stroke-linecap:round; stroke-linejoin:round;
+  stroke-dasharray:1; stroke-dashoffset:1; animation:intro-draw 1.05s .2s cubic-bezier(.65,0,.35,1) forwards; }
+.intro-area { opacity:0; animation:intro-fade .6s .85s ease-out forwards; }
+.intro-dot { fill:var(--accent); opacity:0; transform-origin:280px 18px; animation:intro-dot 1.2s 1.15s ease-out forwards; }
+.intro-title { font-size:30px; letter-spacing:-.03em; opacity:0; animation:intro-up .5s .45s ease-out forwards; }
+.intro-sub { color:var(--muted); font-size:14px; opacity:0; animation:intro-up .5s .6s ease-out forwards; max-width:360px; line-height:1.5; }
+.intro-version { color:var(--accent); }
+.intro-btn { opacity:0; animation:intro-up .45s 1.1s ease-out forwards; margin-top:6px; }
+.intro-check { width:76px; height:76px; animation:intro-pop .55s cubic-bezier(.2,1.4,.4,1) both; }
+.intro-check circle { fill:color-mix(in srgb,var(--accent) 12%,transparent); stroke:var(--accent); stroke-width:3.5;
+  stroke-dasharray:1; stroke-dashoffset:1; animation:intro-draw .7s .1s ease-out forwards; }
+.intro-check path { fill:none; stroke:var(--accent); stroke-width:4.5; stroke-linecap:round; stroke-linejoin:round;
+  stroke-dasharray:1; stroke-dashoffset:1; animation:intro-draw .45s .7s ease-out forwards; }
+@keyframes intro-in { from { opacity:0; } }
+@keyframes intro-pop { from { opacity:0; transform:scale(.6) translateY(6px); } }
+@keyframes intro-draw { to { stroke-dashoffset:0; } }
+@keyframes intro-fade { to { opacity:1; } }
+@keyframes intro-up { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+@keyframes intro-dot { 0% { opacity:0; transform:scale(.3); } 30% { opacity:1; transform:scale(1.4); } 60%,100% { opacity:1; transform:scale(1); } }
+
+/* Sidbyte: ny sida glider in. Kort och rutor kommer i en kort våg. */
+.page-anim { animation:page-in .28s ease-out both; }
+@keyframes page-in { from { opacity:0; transform:translateY(6px); } }
+.kpis > .card, .rgrid > * { animation:rise .38s ease-out both; }
+.kpis > .card:nth-child(2) { animation-delay:.04s; } .kpis > .card:nth-child(3) { animation-delay:.08s; } .kpis > .card:nth-child(4) { animation-delay:.12s; }
+.rgrid > :nth-child(2) { animation-delay:.03s; } .rgrid > :nth-child(3) { animation-delay:.06s; } .rgrid > :nth-child(4) { animation-delay:.09s; }
+.rgrid > :nth-child(5) { animation-delay:.12s; } .rgrid > :nth-child(6) { animation-delay:.15s; } .rgrid > :nth-child(7) { animation-delay:.18s; }
+.rgrid > :nth-child(n+8) { animation-delay:.21s; }
+@keyframes rise { from { opacity:0; transform:translateY(10px); } }
+.nav { transition:background .15s, color .15s; }
+.btn { transition:background .15s, border-color .15s, transform .1s; } .btn:active { transform:scale(.98); }
+.update-banner { animation:banner-in .35s ease-out both; }
+@keyframes banner-in { from { opacity:0; transform:translateY(-8px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration:.01ms !important; animation-delay:0s !important; transition-duration:.01ms !important; }
+}
