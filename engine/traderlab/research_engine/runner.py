@@ -132,7 +132,10 @@ def evaluate(job, bars, funding=None):
 def run_job(job: dict, data_dir: Path, output: Path):
     spec, params, start, end = validate(job)
     step = interval_delta(job["interval"])
-    warmup = max(pd.Timestamp("2019-09-01", tz="UTC"), start - 600 * step)
+    # UM monthly archives used by Phase 1 are verified from January 2020.
+    # Never request unavailable 2019 archives or substitute spot prices.
+    archive_floor = "2020-01-01" if job["market"] == "um" else "2019-09-01"
+    warmup = max(pd.Timestamp(archive_floor, tz="UTC"), start - 600 * step)
     first, last = warmup.strftime("%Y-%m"), (end - pd.Timedelta(seconds=1)).strftime("%Y-%m")
     progress = output.with_suffix(".progress")
     files = []
@@ -165,6 +168,11 @@ def run_job(job: dict, data_dir: Path, output: Path):
     funding = pd.concat(rates) if rates else None
     progress.write_text("0.5")
     result = evaluate(job, bars, funding)
+    warmup_bars = int((bars.index < start).sum())
+    if warmup_bars < 600:
+        result["warnings"].append(
+            f"Endast {warmup_bars} av 600 uppvärmningsstaplar finns före perioden; "
+            "indikatorer värms färdigt inom perioden och ingen saknad data fylls i")
     dataset_hash = hashlib.sha256(bars.to_csv(float_format="%.17g").encode())
     if funding is not None:
         dataset_hash.update(funding.to_csv(float_format="%.17g").encode())
@@ -176,7 +184,7 @@ def run_job(job: dict, data_dir: Path, output: Path):
                                    "period_start", "period_end", "capital", "costs")}
     metadata = {"contract_version": 1, "dataset_sha256": dataset_hash.hexdigest(),
                 "engine_sha256": code_hash.hexdigest(), "configuration": config,
-                "source_files": files, "warmup_start": warmup.isoformat(), "seed": 0,
+                "source_files": files, "warmup_start": warmup.isoformat(), "warmup_bars": warmup_bars, "seed": 0,
                 "runtime": {"python": platform.python_version(),
                             **{p: version(p) for p in ("numpy", "pandas", "scipy", "ta")}}}
     metadata["fingerprint"] = hashlib.sha256(json.dumps(metadata, sort_keys=True).encode()).hexdigest()

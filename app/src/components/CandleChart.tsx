@@ -12,6 +12,8 @@ import {
 import { STATE_TEXT, useMarketStatus } from "../features/market/useMarketStatus";
 import { subscribeBars, type Listen } from "../lib/barSubscription";
 
+import { observeChartViewport } from "../lib/chartViewport";
+
 const PAGE = 1000;
 /** Högst så här ofta ritas strömuppdateringar (ms). */
 const FLUSH_MS = 250;
@@ -66,6 +68,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
 
   const box = useRef<HTMLDivElement>(null);
   const chart = useRef<IChartApi | null>(null);
+  const viewport = useRef<ReturnType<typeof observeChartViewport> | null>(null);
   const candleS = useRef<ISeriesApi<"Candlestick"> | null>(null);
   const volS = useRef<ISeriesApi<"Histogram"> | null>(null);
   const lines = useRef<Map<string, ISeriesApi<"Line">>>(new Map());
@@ -81,7 +84,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
     const v = (n: string) => css.getPropertyValue(n).trim();
     colors.current = { up: v("--good"), down: v("--bad"), ind: [v("--ind1"), v("--ind2"), v("--ind3")], entry: v("--mark-entry"), exit: v("--mark-exit") };
     const c = createChart(box.current, {
-      autoSize: true,
+      autoSize: false,
       layout: { background: { type: ColorType.Solid, color: v("--card") }, textColor: v("--muted"), fontFamily: "Inter Variable, system-ui, sans-serif", panes: { separatorColor: v("--line"), enableResize: false } },
       grid: { vertLines: { color: v("--line") }, horzLines: { color: v("--line") } },
       crosshair: { mode: CrosshairMode.Normal },
@@ -94,12 +97,15 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
     c.panes()[1]?.setHeight(90);
     chart.current = c; candleS.current = cs; volS.current = vs;
     markersApi.current = createSeriesMarkers(cs, []);
+    viewport.current = observeChartViewport(box.current, c);
     c.subscribeCrosshairMove(p => {
       if (!p.time) { setHover(null); return; }
       const t = (p.time as number) * 1000;
       setHover(data.current.find(x => x.open_time === t) ?? null);
     });
     return () => {
+      viewport.current?.close();
+      viewport.current = null;
       c.remove();
       chart.current = null; candleS.current = null; volS.current = null; markersApi.current = null; lines.current.clear();
       data.current = []; setCandles([]); setHover(null);
@@ -131,7 +137,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
   // Historik: senaste sidan, och äldre sidor när man panorerar bakåt.
   useEffect(() => {
     if (!current) return;
-    if (historical) { redraw(historical); chart.current?.timeScale().fitContent(); return; }
+    if (historical) { redraw(historical); viewport.current?.fitWhenVisible(); return; }
     let alive = true;
     let loadingOlder = false;
     const load = () => invoke<BarsPage>("market_bars", { symbol: current.symbol, interval: current.interval, limit: PAGE })

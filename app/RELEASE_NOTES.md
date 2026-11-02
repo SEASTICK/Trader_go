@@ -1,5 +1,3 @@
-Research Lab visar nu de fyra registrerade Fas 1-resultaten även utan serveranslutning, med REJECT-beslut, jämförelse, walk-forward och full spårbarhet.
+Historiska prisdiagram ritas om när de blir synliga, även efter att ha skapats längre ned på sidan. Vald zoom behålls när du lämnar och återvänder till diagrammet.
 
-Historiska terminsdiagram visar verkliga in- och utträden från testerna. Kapitalutvecklingen jämförs med köp och behåll på samma verifierade data. Sökning och sortering gör resultaten lättare att granska.
-
-Alla fyra strategier förblir REJECT. Ingen livehandel eller godkännande för papperstest ingår.
+Research Lab visar de fyra registrerade Fas 1-resultaten utan serveranslutning. Alla fyra förblir REJECT. Ingen livehandel eller godkännande för papperstest ingår.
