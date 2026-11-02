@@ -1,0 +1,37 @@
+{
+  "2017-08": {
+    "rows": 356,
+    "misaligned": 0,
+    "sample": [],
+    "first": "2017-08-17 04:00:00+00:00",
+    "sha256": "5bb9ba06a86363aef0c7481148ecf00d96383b1bc794f28454c1177ee500a61b"
+  },
+  "2017-09": {
+    "rows": 713,
+    "misaligned": 0,
+    "sample": [],
+    "first": "2017-09-01 00:00:00+00:00",
+    "sha256": "d1e21aef67c8cd565e57fd422c7faab3fe709d0d5f04e85fbce8aafe0b1c6cdd"
+  },
+  "2017-10": {
+    "rows": 744,
+    "misaligned": 0,
+    "sample": [],
+    "first": "2017-10-01 00:00:00+00:00",
+    "sha256": "8b3de5650f1aebe4c923eda13aca8a25b5b73b95fa4e0b6cf47fd5abfac00eca"
+  },
+  "2017-11": {
+    "rows": 720,
+    "misaligned": 0,
+    "sample": [],
+    "first": "2017-11-01 00:00:00+00:00",
+    "sha256": "3df1d2c3378f0aab1b7bb64901e87f2f4cf71fccecbb12a48cd917770a7ba77c"
+  },
+  "2017-12": {
+    "rows": 744,
+    "misaligned": 0,
+    "sample": [],
+    "first": "2017-12-01 00:00:00+00:00",
+    "sha256": "9b86b43c9a649065cc1e7f3b8fe4825e614d9e8ca43808b74a0efe96465bd90c"
+  }
+}

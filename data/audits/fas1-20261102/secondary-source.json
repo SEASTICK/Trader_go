@@ -1,0 +1,113 @@
+{
+  "comparison": "Coinbase BTC-USD spot vs Binance BTCUSDT perpetual; distinct instruments, no substitutions",
+  "results": [
+    {
+      "time": "2020-03-12 08:00:00+00:00",
+      "binance_return": -0.20306041210115922,
+      "coinbase_return": -0.17691462113704914,
+      "difference_percentage_points": 2.614579096411007,
+      "same_direction": true,
+      "source": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2020-03-12T04%3A00%3A00%2B00%3A00&end=2020-03-12T12%3A00%3A00%2B00%3A00&granularity=3600",
+      "sha256": "0bd855d7aff863f470c62bf59804de4a3af89dfc73554d1041c8b91161fde45f"
+    },
+    {
+      "time": "2020-03-12 20:00:00+00:00",
+      "binance_return": -0.23629874696477593,
+      "coinbase_return": -0.19550339216621604,
+      "difference_percentage_points": 4.0795354798559895,
+      "same_direction": true,
+      "source": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2020-03-12T16%3A00%3A00%2B00%3A00&end=2020-03-13T00%3A00%3A00%2B00%3A00&granularity=3600",
+      "sha256": "ea08fa6051b250453822ce0bdfe9c3454bc51d38282d5546b426de1b18c951d9"
+    },
+    {
+      "time": "2020-03-16 04:00:00+00:00",
+      "binance_return": -0.0963257763342007,
+      "coinbase_return": -0.09236641656702593,
+      "difference_percentage_points": 0.3959359767174764,
+      "same_direction": true,
+      "source": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2020-03-16T00%3A00%3A00%2B00%3A00&end=2020-03-16T08%3A00%3A00%2B00%3A00&granularity=3600",
+      "sha256": "4dbb62089481e87bc0aecefc7191fdd499f86efd64e95b7eae203c63f88a094f"
+    },
+    {
+      "time": "2020-03-16 12:00:00+00:00",
+      "binance_return": 0.12193564802164936,
+      "coinbase_return": 0.12701168906432825,
+      "difference_percentage_points": 0.5076041042678892,
+      "same_direction": true,
+      "source": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2020-03-16T08%3A00%3A00%2B00%3A00&end=2020-03-16T16%3A00%3A00%2B00%3A00&granularity=3600",
+      "sha256": "5ea570449b4a884c4a9b8511ea564fc294d055bced9cf0df44853de77357ef3c"
+    },
+    {
+      "time": "2020-05-10 00:00:00+00:00",
+      "binance_return": -0.10233482742855671,
+      "coinbase_return": -0.09459789603039037,
+      "difference_percentage_points": 0.7736931398166336,
+      "same_direction": true,
+      "source": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2020-05-09T20%3A00%3A00%2B00%3A00&end=2020-05-10T04%3A00%3A00%2B00%3A00&granularity=3600",
+      "sha256": "8726da803cb855add9831820f3d15b9f1959f4fe316c077418d7d1a22482b14c"
+    },
+    {
+      "time": "2021-01-11 20:00:00+00:00",
+      "binance_return": 0.09243849712945362,
+      "coinbase_return": 0.10009513808986537,
+      "difference_percentage_points": 0.7656640960411742,
+      "same_direction": true,
+      "source": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2021-01-11T16%3A00%3A00%2B00%3A00&end=2021-01-12T00%3A00%3A00%2B00%3A00&granularity=3600",
+      "sha256": "e8cf5c7b9d716d8d39f3db7039b19545874ce1537553665c65c0aa77c49e0eb3"
+    },
+    {
+      "time": "2021-01-29 08:00:00+00:00",
+      "binance_return": 0.13744546046884842,
+      "coinbase_return": 0.1480679385683079,
+      "difference_percentage_points": 1.0622478099459487,
+      "same_direction": true,
+      "source": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2021-01-29T04%3A00%3A00%2B00%3A00&end=2021-01-29T12%3A00%3A00%2B00%3A00&granularity=3600",
+      "sha256": "eeb5b77e00879dd05a7315ba1845e602cc83ce11ed6f7581999789224d76cd6d"
+    },
+    {
+      "time": "2021-02-08 12:00:00+00:00",
+      "binance_return": 0.10312684883083278,
+      "coinbase_return": 0.11011455420761052,
+      "difference_percentage_points": 0.6987705376777731,
+      "same_direction": true,
+      "source": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2021-02-08T08%3A00%3A00%2B00%3A00&end=2021-02-08T16%3A00%3A00%2B00%3A00&granularity=3600",
+      "sha256": "e2dca6bdc1e246d56a94932bc5dca2f978573f4745af4bafca65c82ae2741f31"
+    },
+    {
+      "time": "2021-04-18 00:00:00+00:00",
+      "binance_return": -0.09125342654082758,
+      "coinbase_return": -0.06098134396823385,
+      "difference_percentage_points": 3.027208257259373,
+      "same_direction": true,
+      "source": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2021-04-17T20%3A00%3A00%2B00%3A00&end=2021-04-18T04%3A00%3A00%2B00%3A00&granularity=3600",
+      "sha256": "8bb602ff4e4b2eb57477b00bd881e8d7cf1bb70474b4caac5de1aea8a228b448"
+    },
+    {
+      "time": "2021-05-12 20:00:00+00:00",
+      "binance_return": -0.093714636419854,
+      "coinbase_return": -0.09106923029462577,
+      "difference_percentage_points": 0.26454061252282335,
+      "same_direction": true,
+      "source": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2021-05-12T16%3A00%3A00%2B00%3A00&end=2021-05-13T00%3A00%3A00%2B00%3A00&granularity=3600",
+      "sha256": "5d306661d997c4364059538f04b104a28fa8bcd61b77a793a9b7f0f71ced1109"
+    },
+    {
+      "time": "2021-05-21 12:00:00+00:00",
+      "binance_return": -0.1097843001139136,
+      "coinbase_return": -0.10438063670588404,
+      "difference_percentage_points": 0.5403663408029558,
+      "same_direction": true,
+      "source": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2021-05-21T08%3A00%3A00%2B00%3A00&end=2021-05-21T16%3A00%3A00%2B00%3A00&granularity=3600",
+      "sha256": "ece057d6d7e1906f41008f9334a7e39ab1276033ab686a830e0b75eb6fec218a"
+    },
+    {
+      "time": "2021-12-04 04:00:00+00:00",
+      "binance_return": -0.09603667777371783,
+      "coinbase_return": -0.09013235292422062,
+      "difference_percentage_points": 0.5904324849497211,
+      "same_direction": true,
+      "source": "https://api.exchange.coinbase.com/products/BTC-USD/candles?start=2021-12-04T00%3A00%3A00%2B00%3A00&end=2021-12-04T08%3A00%3A00%2B00%3A00&granularity=3600",
+      "sha256": "89f20548167b19d843b7e6a842c471faac8dff390832617699bca91c9392ef5e"
+    }
+  ]
+}

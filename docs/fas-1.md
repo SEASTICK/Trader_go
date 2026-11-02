@@ -1,5 +1,29 @@
 # Fas 1: Strategy Research Engine, kartläggning och status
 
+## Aktuell verifierad status 2026-11-02
+
+**Hela Fas 1 är inte klar.** Stable 0.1.12 innehåller den första molnkopplingen.
+Senaste data-/strategiauditen beskrivs i `docs/fas1-data-audit-20261102.md`;
+molnverifieringen i `docs/research-cloud-setup.md`. Tabellen skiljer färdig
+kärnfunktion från sådant som fortfarande saknar slutverifiering.
+
+| Del | Verifierat | Kvar före slutgodkännande |
+|---|---|---|
+| 1. Arkitektur | Frontend, Rust, Python, databas, återanvändning och separat worker kartlagda; molnmodulen implementerad | Ingen separat arkitekturblockerare |
+| 2. Historik | Binance-källa, 1H/4H/1D-stöd; frysta fem år UM BTCUSDT 4H med funding, SHA256, full täckning och Supabase-återläsning; dubblettskydd | Spotluckan kvar; den äldre uppgiften om 43 feljusteringar kan inte reproduceras; automatisk schemalagd serversynk och tidig warmup kräver mer arbete |
+| 3. Strategier | Fyra versionerade strategier, parametrar, indikatorreferenser och signaltester; reproduktion med 1 120 parameterförsök | Ingen strategi är godkänd för papper; nya idéer kräver nya registreringar |
+| 4. Backtest | Tester för nästa öppning, framtidsläckage, stop/TP/gap, kostnader/funding, affärslogg och reproducerbarhet; samma UM buy-and-hold | Oberoende mark-price-/likvidationsvalidering är inte gjord |
+| 5. Nyckeltal | Motorns statistik, kurvor, affärer, månads-/regimresultat och auditmetadata | Full integration av registrerade Fas 1-resultat i appen |
+| 6. Optimering | Registrerat protokoll, Optuna, walk-forward, kostnadsstress, stabilitet, osäkerhet och bevarade auditförsök | Slutprovet förblir låst; alla fyra är REJECT |
+| 7. Research Lab | Stable: medlemsinloggning, utforskningsjobb, status, avbrott, verkliga resultat, equity/drawdown/affärer | Registrerade körningar, jämförelsevyer, candle-entry/exit, filter och walk-forward-vyer |
+| 8. Molndrift | Supabase/RLS, riktig samtidighetskontroll, kö/lease/fencing, separat systemd-worker och recovery-test | Automatisk backup, provad återställning, larm och bredare belastningstest |
+| 9. Godkännande | 136 Python-tester; föregående frontend/Rust-/releasekontroller och verifierat molnflöde | Installerad Stable-desktop E2E, sista regression/driftmätning, dokumenterat Fas 1-godkännande |
+
+Ingen livehandel. Ingen strategi får gå vidare till papper på grund av denna
+tekniska reproduktion. Äldre status nedan är historik och ersätts av tabellen ovan.
+
+## Ursprunglig kartläggning (bevarad)
+
 Fas 1-planen jämförd med det som fanns, det som byggts och det som avviker. Våra regler i CLAUDE.md går före
 planen där de krockar.
 

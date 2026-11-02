@@ -1,0 +1,10 @@
+{
+  "complete": true,
+  "strategies": [
+    "ema_adx_trend",
+    "donchian_breakout",
+    "bb_rsi_reversion",
+    "squeeze_breakout"
+  ],
+  "paper_approval": false
+}

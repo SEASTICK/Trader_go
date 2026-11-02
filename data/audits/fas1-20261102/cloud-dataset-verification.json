@@ -1,0 +1,14 @@
+{
+  "dataset_sha256": "6a84c4f44026b6be270ed2f9395edace5edbd598dfdf683428b9f025a64c042c",
+  "candles": 10962,
+  "funding_events": 5481,
+  "existing_candles_verified": 0,
+  "existing_funding_verified": 0,
+  "round_trip_exact": true,
+  "duplicate_insert_idempotent": true,
+  "holdout_loaded": false,
+  "period": [
+    "2020-01-01",
+    "2025-01-01"
+  ]
+}

@@ -1,0 +1,58 @@
+[
+  {
+    "hypothesis_id": "H-0011",
+    "strategy": "bb_rsi_reversion",
+    "original_stats_identical": true,
+    "original_curves_identical": true,
+    "original_final_params_identical": true,
+    "decision": "REJECT",
+    "criteria": {
+      "t_at_least_required": false,
+      "stressed_costs_positive": false,
+      "sharpe_above_buy_and_hold": false,
+      "stability_at_least_half": false
+    }
+  },
+  {
+    "hypothesis_id": "H-0010",
+    "strategy": "donchian_breakout",
+    "original_stats_identical": true,
+    "original_curves_identical": true,
+    "original_final_params_identical": true,
+    "decision": "REJECT",
+    "criteria": {
+      "t_at_least_required": false,
+      "stressed_costs_positive": false,
+      "sharpe_above_buy_and_hold": false,
+      "stability_at_least_half": true
+    }
+  },
+  {
+    "hypothesis_id": "H-0009",
+    "strategy": "ema_adx_trend",
+    "original_stats_identical": true,
+    "original_curves_identical": true,
+    "original_final_params_identical": true,
+    "decision": "REJECT",
+    "criteria": {
+      "t_at_least_required": false,
+      "stressed_costs_positive": false,
+      "sharpe_above_buy_and_hold": false,
+      "stability_at_least_half": true
+    }
+  },
+  {
+    "hypothesis_id": "H-0012",
+    "strategy": "squeeze_breakout",
+    "original_stats_identical": true,
+    "original_curves_identical": true,
+    "original_final_params_identical": true,
+    "decision": "REJECT",
+    "criteria": {
+      "t_at_least_required": false,
+      "stressed_costs_positive": true,
+      "sharpe_above_buy_and_hold": true,
+      "stability_at_least_half": true
+    }
+  }
+]

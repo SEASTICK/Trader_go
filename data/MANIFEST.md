@@ -18,3 +18,12 @@ Rådata ligger i data/raw/ och committas inte. Den här filen committas.
 | 2026-11-01 18:02 | data.binance.vision | spot | BTCUSDT | 1h | 2017-08 till 2026-09 | 110 | - |
 | 2026-11-01 18:03 | data.binance.vision | spot | BTCUSDT | 4h | 2017-08 till 2026-09 | 29 | - |
 | 2026-11-01 18:03 | data.binance.vision | spot | BTCUSDT | 1d | 2017-08 till 2026-09 | 29 | - |
+
+## Fryst Fas 1-dataset 2026-11-02
+
+Binance USDⓈ-M BTCUSDT 4H, 2020-01-01 till exklusivt 2025-01-01.
+120 SHA256-verifierade originalarkiv, 10 962 staplar och 5 481 fundinghändelser.
+Dataset-id `6a84c4f44026b6be270ed2f9395edace5edbd598dfdf683428b9f025a64c042c`.
+Manifest och kontrollrapporter: `data/audits/fas1-20261102/`.
+Full serie lagrad och exakt återläst i Supabase. Inget slutprov läst i auditen.
+Råfiler ligger separat på forskningsservern och committas inte.

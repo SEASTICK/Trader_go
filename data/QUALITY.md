@@ -1,5 +1,18 @@
 # Datakvalitet
 
+## Aktuell audit 2026-11-02
+
+Se `docs/fas1-data-audit-20261102.md` och `data/audits/fas1-20261102/`.
+Terminer 4H 2020–2024 är nu kontrollerade: 10 962 staplar utan luckor, 5 481
+fundinghändelser och tolv utstickare jämförda med Coinbase och bevarade.
+Spotluckan nedan återfinns även i API:t. De tidigare påstådda 43 feljusterade
+1H-staplarna från 2017 kunde inte reproduceras med nya kontrollsummerade arkiv;
+orsaken i det gamla underlaget är inte fastställd. Detta godkänner inte hela
+spotserien. BTC:s förhandsval begränsar slutsatserna till detta instrument och
+eliminerar inte urvals-/överlevnadsproblematik.
+
+## Tidigare rapport 2026-11-01 (bevarad)
+
 Kontrollerat med `python -m traderlab check` (skillen `hamta-data`). Rådata i `data/raw/` committas inte,
 se `MANIFEST.md`.
 
