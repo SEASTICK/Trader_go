@@ -52,3 +52,14 @@ senaste export. Frontendtester kontrollerar periodgräns, komplett 4H-rutnät,
 OHLC och samma dataset/baslinje. Webbvyn granskas i ljust och mörkt tema med
 sökning, sortering, beslut och verkliga diagram. Desktop-/Windows-provning
 redovisas separat efter release; ett godkänt webbtest är inte ett desktoptest.
+
+## Prestanda och plattformar
+
+Två identiska treårskörningar på Ubuntu-dropleten tog 1,90 och 1,61 sekunder,
+med toppminne cirka 89 MiB och 4,03 MB materialiserade utdata. Resultaten var
+exakt identiska; detta är inte ett belastningstest av samtidiga köjobb.
+DigitalOceans do-agent och research-workern var aktiva; disken hade 113 GiB ledigt.
+
+Första Windowsbygget stoppade ett kontrollsummefel orsakat av CRLF-utcheckning.
+JSON låses nu till LF via .gitattributes; testet av originalhasharna behålls.
+Ingen felaktig version publicerades.

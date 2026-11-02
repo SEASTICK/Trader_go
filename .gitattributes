@@ -2,3 +2,6 @@
 * text=auto
 # Signed test fixtures must stay byte-identical on every OS.
 app/src-tauri/tests/fixtures/** binary
+
+# Research provenance hashes must be identical on Windows, macOS and Linux.
+*.json text eol=lf
