@@ -219,7 +219,7 @@
           "evidence": [
             {
               "file": "engine/tests/test_fas2.py",
-              "detail": "80d8847 (gren fas2-walkforward): train() läser bara staplar och finansieringsränta från 2020-01-01 till fönstrets början; ändrade test- och framtidsdata ändrar inte valet i något av de sex fönstren, och träningen ser inget vid eller efter gränsen. 42 nya tester, hela Python-sviten 369 tester passerar lokalt. Nio avsiktliga fel fångas. Tolkningar i docs/fas2-walkforward-tolkningar.md (b55427b, skrivna före koden). Endast syntetisk data."
+              "detail": "80d8847 (gren fas2-walkforward): train() läser bara staplar och finansieringsränta från 2020-01-01 till fönstrets början; ändrade test- och framtidsdata ändrar inte valet i något av de sex fönstren, och träningen ser inget vid eller efter gränsen. 42 nya tester, hela Python-sviten 369 tester passerar lokalt. Åtta avsiktliga fel fångas. Tolkningar i docs/fas2-walkforward-tolkningar.md (b55427b, skrivna före koden). Endast syntetisk data."
             }
           ],
           "note": "Väntar på Codex granskning; ej mergat, ingen riktig data, kö, worker eller app, ej driftsatt eller publicerat."
@@ -231,7 +231,7 @@
           "evidence": [
             {
               "file": "engine/tests/test_fas2.py",
-              "detail": "80d8847 (gren fas2-walkforward): select(): bäst Sharpe bland kandidater med minst 20 affärer inledda i läget och t > 0; gränsfall 19/20/21 affärer, t 0/negativt/saknat/1e-9, exakt lika Sharpe ger ema_adx_trend, inga valbara ger platt per läge. 42 nya tester, hela Python-sviten 369 tester passerar lokalt. Nio avsiktliga fel fångas. Tolkningar i docs/fas2-walkforward-tolkningar.md (b55427b, skrivna före koden). Endast syntetisk data."
+              "detail": "80d8847 (gren fas2-walkforward): select(): bäst Sharpe bland kandidater med minst 20 affärer inledda i läget och t > 0; gränsfall 19/20/21 affärer, t 0/negativt/saknat/1e-9, exakt lika Sharpe ger ema_adx_trend, inga valbara ger platt per läge. 42 nya tester, hela Python-sviten 369 tester passerar lokalt. Åtta avsiktliga fel fångas. Tolkningar i docs/fas2-walkforward-tolkningar.md (b55427b, skrivna före koden). Endast syntetisk data."
             }
           ],
           "note": "Väntar på Codex granskning; ej mergat, ingen riktig data, kö, worker eller app, ej driftsatt eller publicerat."
@@ -243,7 +243,7 @@
           "evidence": [
             {
               "file": "engine/tests/test_fas2.py",
-              "detail": "80d8847 (gren fas2-walkforward): Sex fönster 2022-01 till 2024-07 med exakta gränser; uppvärmning från 2020-01-01 utan data efter fönstret; platt start, spelboken gäller från fönstrets första stapel och varje affär kräver ny inträdessignal efter starten. 42 nya tester, hela Python-sviten 369 tester passerar lokalt. Nio avsiktliga fel fångas. Tolkningar i docs/fas2-walkforward-tolkningar.md (b55427b, skrivna före koden). Endast syntetisk data."
+              "detail": "80d8847 (gren fas2-walkforward): Sex fönster 2022-01 till 2024-07 med exakta gränser; uppvärmning från 2020-01-01 utan data efter fönstret; platt start, spelboken gäller från fönstrets första stapel och varje affär kräver ny inträdessignal efter starten. 42 nya tester, hela Python-sviten 369 tester passerar lokalt. Åtta avsiktliga fel fångas. Tolkningar i docs/fas2-walkforward-tolkningar.md (b55427b, skrivna före koden). Endast syntetisk data."
             }
           ],
           "note": "Väntar på Codex granskning; ej mergat, ingen riktig data, kö, worker eller app, ej driftsatt eller publicerat."
@@ -255,7 +255,7 @@
           "evidence": [
             {
               "file": "engine/tests/test_fas2.py",
-              "detail": "80d8847 (gren fas2-walkforward): Ihopsatt kurva utan överlapp, lika med fönstrens egna kurvor; kostnad och finansieringsränta räknas en gång och stämmer mot affärerna; positionen stängs senast vid näst sista öppningen. Varje fönster sparar spelbok, tränings- och testperiod, kandidatstatistik per läge samt dagar och affärer per läge. 42 nya tester, hela Python-sviten 369 tester passerar lokalt. Nio avsiktliga fel fångas. Tolkningar i docs/fas2-walkforward-tolkningar.md (b55427b, skrivna före koden). Endast syntetisk data."
+              "detail": "80d8847 (gren fas2-walkforward): Ihopsatt kurva utan överlapp, lika med fönstrens egna kurvor; kostnad och finansieringsränta räknas en gång och stämmer mot affärerna; positionen stängs senast vid näst sista öppningen. Varje fönster sparar spelbok, tränings- och testperiod, kandidatstatistik per läge samt dagar och affärer per läge. 42 nya tester, hela Python-sviten 369 tester passerar lokalt. Åtta avsiktliga fel fångas. Tolkningar i docs/fas2-walkforward-tolkningar.md (b55427b, skrivna före koden). Endast syntetisk data."
             }
           ],
           "note": "Väntar på Codex granskning; ej mergat, ingen riktig data, kö, worker eller app, ej driftsatt eller publicerat."
@@ -267,7 +267,7 @@
           "evidence": [
             {
               "file": "engine/tests/test_fas2.py",
-              "detail": "80d8847 (gren fas2-walkforward): Slutlig spelbok vald på 2020-01-01 till 2025-01-01, märkt med kontraktet h0013-adaptive/1.0.0, spelbokens id och h0013-walk-forward/1.0.0; samma data ger identiskt resultat; staplar eller finansieringsränta från 2025 eller före 2020 avvisas innan något räknas; arkivläsningen slutar före 2025-01-01. 42 nya tester, hela Python-sviten 369 tester passerar lokalt. Nio avsiktliga fel fångas. Tolkningar i docs/fas2-walkforward-tolkningar.md (b55427b, skrivna före koden). Endast syntetisk data."
+              "detail": "80d8847 (gren fas2-walkforward): Slutlig spelbok vald på 2020-01-01 till 2025-01-01, märkt med kontraktet h0013-adaptive/1.0.0, spelbokens id och h0013-walk-forward/1.0.0; samma data ger identiskt resultat; staplar eller finansieringsränta från 2025 eller före 2020 avvisas innan något räknas; arkivläsningen slutar före 2025-01-01. 42 nya tester, hela Python-sviten 369 tester passerar lokalt. Åtta avsiktliga fel fångas. Tolkningar i docs/fas2-walkforward-tolkningar.md (b55427b, skrivna före koden). Endast syntetisk data."
             }
           ],
           "note": "Väntar på Codex granskning; ej mergat, ingen riktig data, kö, worker eller app, ej driftsatt eller publicerat."
