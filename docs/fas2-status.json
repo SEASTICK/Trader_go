@@ -359,14 +359,18 @@
         {
           "id": "F2-602",
           "title": "Anslut H-0013 till samma enda worker med lease och skydd mot dubbla resultat",
-          "status": "done",
+          "status": "in_progress",
           "evidence": [
             {
               "file": "docs/fas2-ko-granskning-73.md",
               "detail": "445178d (kod 2160c6e): oberoende omgranskning godkänd. 521 Python-tester, 8 riktiga signal-/processtester och båda PGlite-kösviterna passerar. Tidigare SIGTERM-felprov sparar nu försöket; felaktiga SQL-kriterier och beslut avvisas utan ändrad lease."
+            },
+            {
+              "file": "engine/tests/test_research_release.py",
+              "detail": "f2db904: workerns lås på datakatalogen är utbrutet till acquire_single_worker_lock och provat med riktiga processer (en andra worker blockeras, låset frigörs när den första är borta); workern loggar revision vid start. Lokal verifiering: run-h0013-concurrency-local.sh (PostgreSQL 17, åtta anslutningar) passerar och fångar saknat köningslås; test-h0013-rollback.mjs passerar; test-h0013-queue.mjs och test-research-queue.mjs passerar; Python 532 tester, varav 11 för paket, verifiering, tjänst, lås och revision. Inget är uppladdat, migrerat eller driftsatt."
             }
           ],
-          "note": "Kodmässigt verifierad lokalt. PR #73 godkänd för merge när CI är grönt; faktisk Supabase-samtidighet och driftverifiering återstår i F2-605."
+          "note": "Workerns start och lås ändrade i f2db904; tidigare verifiering täcker inte längre exakt koden. Behöver omgranskas."
         },
         {
           "id": "F2-603",
@@ -395,9 +399,14 @@
         {
           "id": "F2-605",
           "title": "Driftsätt verifierad kod med loggar, resursgränser och dokumenterad återgång",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "docs/fas2-driftsattning.md",
+              "detail": "f2db904 (gren fas2-drift): reproducerbart versionsmärkt paket med REVISION.env och release.json, verifiering före installation, tjänsten läser TRADERGO_REVISION, read-only kontroll av exakt en worker, migrationsordning (kod först, 0005 sist) och återgång med rollback-SQL som vägrar när H-0013-körningar finns. Lokal verifiering: run-h0013-concurrency-local.sh (PostgreSQL 17, åtta anslutningar) passerar och fångar saknat köningslås; test-h0013-rollback.mjs passerar; test-h0013-queue.mjs och test-research-queue.mjs passerar; Python 532 tester, varav 11 för paket, verifiering, tjänst, lås och revision. Inget är uppladdat, migrerat eller driftsatt."
+            }
+          ],
+          "note": "Underlag för granskning. Riktig driftsättning och migration kräver godkänd granskning och uttryckligt ja från Edwin; ingen H-0013-körning ingår."
         }
       ]
     },
