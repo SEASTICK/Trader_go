@@ -3,7 +3,7 @@
   "title": "Fas 2 – Adaptive Strategy Engine",
   "hypothesis": "H-0013",
   "updated": "2026-11-02",
-  "reviewed_revision": "74d46e3",
+  "reviewed_revision": "c5068e1",
   "note": "Klar betyder verifierad. Kod som bara finns lokalt eller tester utan granskning är inte slutgodkända.",
   "groups": [
     {
@@ -215,14 +215,14 @@
         {
           "id": "F2-401",
           "title": "Välj kandidat per läge enbart på respektive träningsfönster",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-walkforward-granskning-71.md",
-              "detail": "74d46e3: direktanrop till train/evaluate_window kan använda förbjudna perioder. Gemensamt slutprovsskydd och periodvalidering behöver kompletteras."
+              "detail": "c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade."
             }
           ],
-          "note": "Ej godkänd före rättning och syntetisk regression av granskningsfynden."
+          "note": "Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen."
         },
         {
           "id": "F2-402",
@@ -231,34 +231,34 @@
           "evidence": [
             {
               "file": "docs/fas2-walkforward-granskning-71.md",
-              "detail": "74d46e3 (kod 80d8847): oberoende granskning, 369 passerade testfall inklusive 42 fas2-tester. Urvalsgränser, tie-break, platt, versionsmärkning och deterministisk återkörning verifierade."
+              "detail": "c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade."
             }
           ],
-          "note": "Verifierad PR-kod; ännu inte mergad, driftsatt eller körd på riktig data."
+          "note": "Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen."
         },
         {
           "id": "F2-403",
           "title": "Kör sex halvårsfönster med korrekt uppvärmning och platt start",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-walkforward-granskning-71.md",
-              "detail": "74d46e3: direktanrop till train/evaluate_window kan använda förbjudna perioder. Gemensamt slutprovsskydd och periodvalidering behöver kompletteras."
+              "detail": "c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade."
             }
           ],
-          "note": "Ej godkänd före rättning och syntetisk regression av granskningsfynden."
+          "note": "Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen."
         },
         {
           "id": "F2-404",
           "title": "Sätt ihop testkurvan och spara varje fönsters val, dagar och affärer",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-walkforward-granskning-71.md",
-              "detail": "74d46e3: kostnader, funding och affärsbelopp behöver skalas till samma kapitalbas som den ihopsatta kurvan."
+              "detail": "c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade."
             }
           ],
-          "note": "Ej godkänd före rättning och syntetisk regression av granskningsfynden."
+          "note": "Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen."
         },
         {
           "id": "F2-405",
@@ -267,10 +267,10 @@
           "evidence": [
             {
               "file": "docs/fas2-walkforward-granskning-71.md",
-              "detail": "74d46e3 (kod 80d8847): oberoende granskning, 369 passerade testfall inklusive 42 fas2-tester. Urvalsgränser, tie-break, platt, versionsmärkning och deterministisk återkörning verifierade."
+              "detail": "c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade."
             }
           ],
-          "note": "Verifierad PR-kod; ännu inte mergad, driftsatt eller körd på riktig data."
+          "note": "Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen."
         }
       ]
     },
@@ -439,5 +439,5 @@
       ]
     }
   ],
-  "reviewed_scope": "PR #69 och #70 mergade. PR #71 granskad: urvalsgränser och reproducerbarhet verifierade; direkt slutprovsskydd och gemensam kapitalbas behöver rättas före merge. Ej driftsatt eller publicerat."
+  "reviewed_scope": "PR #69 och #70 mergade. PR #71 omgranskad och kodmässigt godkänd för merge på c5068e1: periodskydd och gemensam kapitalbas verifierade med 408 syntetiska Python-testfall samt oberoende reproduktionsprov. Ej mergad, driftsatt eller publicerad i denna granskning."
 }

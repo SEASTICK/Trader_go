@@ -1,10 +1,10 @@
 # Fas 2 – Utvecklingsplan
 
-**17 av 40 uppgifter verifierade · 8 arbetsområden.**
+**20 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `74d46e3`.
+H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `c5068e1`.
 
-PR #69 och #70 mergade. PR #71 granskad: urvalsgränser och reproducerbarhet verifierade; direkt slutprovsskydd och gemensam kapitalbas behöver rättas före merge. Ej driftsatt eller publicerat.
+PR #69 och #70 mergade. PR #71 omgranskad och kodmässigt godkänd för merge på c5068e1: periodskydd och gemensam kapitalbas verifierade med 408 syntetiska Python-testfall samt oberoende reproduktionsprov. Ej mergad, driftsatt eller publicerad i denna granskning.
 
 ## Uppdateringsregler
 
@@ -75,23 +75,23 @@ PR #69 och #70 mergade. PR #71 granskad: urvalsgränser och reproducerbarhet ver
 
 ## 4. Träning och walk-forward
 
-2/5 verifierade.
+5/5 verifierade.
 
-- [ ] **F2-401** Välj kandidat per läge enbart på respektive träningsfönster **Pågår.**
-  - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — 74d46e3: direktanrop till train/evaluate_window kan använda förbjudna perioder. Gemensamt slutprovsskydd och periodvalidering behöver kompletteras.
-  - Ej godkänd före rättning och syntetisk regression av granskningsfynden.
+- [x] **F2-401** Välj kandidat per läge enbart på respektive träningsfönster
+  - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade.
+  - Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen.
 - [x] **F2-402** Kräv minst 20 inledda affärer och positivt t-värde, annars platt
-  - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — 74d46e3 (kod 80d8847): oberoende granskning, 369 passerade testfall inklusive 42 fas2-tester. Urvalsgränser, tie-break, platt, versionsmärkning och deterministisk återkörning verifierade.
-  - Verifierad PR-kod; ännu inte mergad, driftsatt eller körd på riktig data.
-- [ ] **F2-403** Kör sex halvårsfönster med korrekt uppvärmning och platt start **Pågår.**
-  - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — 74d46e3: direktanrop till train/evaluate_window kan använda förbjudna perioder. Gemensamt slutprovsskydd och periodvalidering behöver kompletteras.
-  - Ej godkänd före rättning och syntetisk regression av granskningsfynden.
-- [ ] **F2-404** Sätt ihop testkurvan och spara varje fönsters val, dagar och affärer **Pågår.**
-  - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — 74d46e3: kostnader, funding och affärsbelopp behöver skalas till samma kapitalbas som den ihopsatta kurvan.
-  - Ej godkänd före rättning och syntetisk regression av granskningsfynden.
+  - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade.
+  - Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen.
+- [x] **F2-403** Kör sex halvårsfönster med korrekt uppvärmning och platt start
+  - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade.
+  - Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen.
+- [x] **F2-404** Sätt ihop testkurvan och spara varje fönsters val, dagar och affärer
+  - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade.
+  - Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen.
 - [x] **F2-405** Versionsmärk slutlig spelbok och verifiera reproducerbarhet utan slutprov
-  - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — 74d46e3 (kod 80d8847): oberoende granskning, 369 passerade testfall inklusive 42 fas2-tester. Urvalsgränser, tie-break, platt, versionsmärkning och deterministisk återkörning verifierade.
-  - Verifierad PR-kod; ännu inte mergad, driftsatt eller körd på riktig data.
+  - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade.
+  - Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen.
 
 ## 5. Utvärdering och robusthet
 
