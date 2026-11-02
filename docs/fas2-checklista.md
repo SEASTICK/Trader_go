@@ -1,6 +1,6 @@
 # Fas 2 – Utvecklingsplan
 
-**20 av 40 uppgifter verifierade · 8 arbetsområden.**
+**16 av 40 uppgifter verifierade · 8 arbetsområden.**
 
 H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `c5068e1`.
 
@@ -75,33 +75,43 @@ PR #69 och #70 mergade. PR #71 omgranskad och kodmässigt godkänd för merge p�
 
 ## 4. Träning och walk-forward
 
-5/5 verifierade.
+1/5 verifierade.
 
-- [x] **F2-401** Välj kandidat per läge enbart på respektive träningsfönster
+- [ ] **F2-401** Välj kandidat per läge enbart på respektive träningsfönster **Pågår.**
   - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade.
-  - Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen.
+  - Kod omstrukturerad i bbc7181 (run_window, stitch, tillförda dagslägen för permutationstestet). Beteendet är oförändrat enligt de befintliga fas2-testerna, men den granskade koden c5068e1 täcker inte längre exakt denna version. Behöver omgranskas.
 - [x] **F2-402** Kräv minst 20 inledda affärer och positivt t-värde, annars platt
   - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade.
   - Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen.
-- [x] **F2-403** Kör sex halvårsfönster med korrekt uppvärmning och platt start
+- [ ] **F2-403** Kör sex halvårsfönster med korrekt uppvärmning och platt start **Pågår.**
   - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade.
-  - Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen.
-- [x] **F2-404** Sätt ihop testkurvan och spara varje fönsters val, dagar och affärer
+  - Kod omstrukturerad i bbc7181 (run_window, stitch, tillförda dagslägen för permutationstestet). Beteendet är oförändrat enligt de befintliga fas2-testerna, men den granskade koden c5068e1 täcker inte längre exakt denna version. Behöver omgranskas.
+- [ ] **F2-404** Sätt ihop testkurvan och spara varje fönsters val, dagar och affärer **Pågår.**
   - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade.
-  - Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen.
-- [x] **F2-405** Versionsmärk slutlig spelbok och verifiera reproducerbarhet utan slutprov
+  - Kod omstrukturerad i bbc7181 (run_window, stitch, tillförda dagslägen för permutationstestet). Beteendet är oförändrat enligt de befintliga fas2-testerna, men den granskade koden c5068e1 täcker inte längre exakt denna version. Behöver omgranskas.
+- [ ] **F2-405** Versionsmärk slutlig spelbok och verifiera reproducerbarhet utan slutprov **Pågår.**
   - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade.
-  - Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen.
+  - Kod omstrukturerad i bbc7181 (run_window, stitch, tillförda dagslägen för permutationstestet). Beteendet är oförändrat enligt de befintliga fas2-testerna, men den granskade koden c5068e1 täcker inte längre exakt denna version. Behöver omgranskas.
 
 ## 5. Utvärdering och robusthet
 
 0/5 verifierade.
 
-- [ ] **F2-501** Jämför med köp-och-behåll, varje kandidat ensam och en likaviktad blandning
-- [ ] **F2-502** Verifiera kostnadsstress, funding och riskmodell för H-0013
-- [ ] **F2-503** Kör förregistrerad permutation och slumpkontroll med fullständig försöksredovisning
-- [ ] **F2-504** Redovisa osäkerhet, 81 spelböcker, regimresultat och resultat utan bästa året
-- [ ] **F2-505** Bedöm alla fem förregistrerade kriterier och spara även negativa eller avbrutna försök
+- [ ] **F2-501** Jämför med köp-och-behåll, varje kandidat ensam och en likaviktad blandning **Pågår.**
+  - Underlag: [engine/tests/test_fas2_eval.py](../engine/tests/test_fas2_eval.py) — bbc7181 (gren fas2-utvardering): köp-och-behåll, varje kandidat ensam, likaviktad blandning och riskfilter körs genom samma sex fönster och konventioner som H-0013; alla har exakt samma staplar. Blandningen är medelvärdet av två kurvor utan ombalansering. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; tio avsiktliga fel fångas. Endast syntetisk data.
+  - Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat.
+- [ ] **F2-502** Verifiera kostnadsstress, funding och riskmodell för H-0013 **Pågår.**
+  - Underlag: [engine/tests/test_fas2_eval.py](../engine/tests/test_fas2_eval.py) — bbc7181: kostnadsstress 2,5 gånger med fönstrens egna spelböcker; riskmodell 1× med finansieringsränta, ATR-stop och backtestmotorns likvidation; stop-utgångar, likvidationer, exponering och omsättning redovisas. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; tio avsiktliga fel fångas. Endast syntetisk data.
+  - Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat.
+- [ ] **F2-503** Kör förregistrerad permutation och slumpkontroll med fullständig försöksredovisning **Pågår.**
+  - Underlag: [engine/tests/test_fas2_eval.py](../engine/tests/test_fas2_eval.py) — bbc7181: permutationstest per dygn av kända dagslägen (okänt kvar), frö 0, 200 som standard, hela walk-forward med urval körs om; varje permutations Sharpe och spelböcker sparas, p-värde k/n och (k+1)/(n+1). Slumpkontroll på 2022–2024. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; tio avsiktliga fel fångas. Endast syntetisk data.
+  - Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat.
+- [ ] **F2-504** Redovisa osäkerhet, 81 spelböcker, regimresultat och resultat utan bästa året **Pågår.**
+  - Underlag: [engine/tests/test_fas2_eval.py](../engine/tests/test_fas2_eval.py) — bbc7181: block-bootstrap av Sharpe, alla 81 fasta spelböcker genom samma fönster, Deflated Sharpe med 81 försök (standard- och spelboksvarians), resultat per läge, per år och utan bästa året. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; tio avsiktliga fel fångas. Endast syntetisk data.
+  - Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat.
+- [ ] **F2-505** Bedöm alla fem förregistrerade kriterier och spara även negativa eller avbrutna försök **Pågår.**
+  - Underlag: [engine/tests/test_fas2_eval.py](../engine/tests/test_fas2_eval.py) — bbc7181: alla fem kriterier med det registrerade t-kravet 2,67 (dagens krav redovisas), MORE_RESEARCH bara om alla gäller; varje körning sparas som ny fil (completed/aborted/invalid) utan överskrivning, avbruten körning sparas och felet visas, och körningen kräver registrerad H-0013. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; tio avsiktliga fel fångas. Endast syntetisk data.
+  - Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat.
 
 ## 6. Supabase och DigitalOcean
 

@@ -215,14 +215,14 @@
         {
           "id": "F2-401",
           "title": "Välj kandidat per läge enbart på respektive träningsfönster",
-          "status": "done",
+          "status": "in_progress",
           "evidence": [
             {
               "file": "docs/fas2-walkforward-granskning-71.md",
               "detail": "c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade."
             }
           ],
-          "note": "Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen."
+          "note": "Kod omstrukturerad i bbc7181 (run_window, stitch, tillförda dagslägen för permutationstestet). Beteendet är oförändrat enligt de befintliga fas2-testerna, men den granskade koden c5068e1 täcker inte längre exakt denna version. Behöver omgranskas."
         },
         {
           "id": "F2-402",
@@ -239,38 +239,38 @@
         {
           "id": "F2-403",
           "title": "Kör sex halvårsfönster med korrekt uppvärmning och platt start",
-          "status": "done",
+          "status": "in_progress",
           "evidence": [
             {
               "file": "docs/fas2-walkforward-granskning-71.md",
               "detail": "c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade."
             }
           ],
-          "note": "Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen."
+          "note": "Kod omstrukturerad i bbc7181 (run_window, stitch, tillförda dagslägen för permutationstestet). Beteendet är oförändrat enligt de befintliga fas2-testerna, men den granskade koden c5068e1 täcker inte längre exakt denna version. Behöver omgranskas."
         },
         {
           "id": "F2-404",
           "title": "Sätt ihop testkurvan och spara varje fönsters val, dagar och affärer",
-          "status": "done",
+          "status": "in_progress",
           "evidence": [
             {
               "file": "docs/fas2-walkforward-granskning-71.md",
               "detail": "c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade."
             }
           ],
-          "note": "Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen."
+          "note": "Kod omstrukturerad i bbc7181 (run_window, stitch, tillförda dagslägen för permutationstestet). Beteendet är oförändrat enligt de befintliga fas2-testerna, men den granskade koden c5068e1 täcker inte längre exakt denna version. Behöver omgranskas."
         },
         {
           "id": "F2-405",
           "title": "Versionsmärk slutlig spelbok och verifiera reproducerbarhet utan slutprov",
-          "status": "done",
+          "status": "in_progress",
           "evidence": [
             {
               "file": "docs/fas2-walkforward-granskning-71.md",
               "detail": "c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade."
             }
           ],
-          "note": "Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen."
+          "note": "Kod omstrukturerad i bbc7181 (run_window, stitch, tillförda dagslägen för permutationstestet). Beteendet är oförändrat enligt de befintliga fas2-testerna, men den granskade koden c5068e1 täcker inte längre exakt denna version. Behöver omgranskas."
         }
       ]
     },
@@ -281,37 +281,62 @@
         {
           "id": "F2-501",
           "title": "Jämför med köp-och-behåll, varje kandidat ensam och en likaviktad blandning",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "engine/tests/test_fas2_eval.py",
+              "detail": "bbc7181 (gren fas2-utvardering): köp-och-behåll, varje kandidat ensam, likaviktad blandning och riskfilter körs genom samma sex fönster och konventioner som H-0013; alla har exakt samma staplar. Blandningen är medelvärdet av två kurvor utan ombalansering. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; tio avsiktliga fel fångas. Endast syntetisk data."
+            }
+          ],
+          "note": "Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
         },
         {
           "id": "F2-502",
           "title": "Verifiera kostnadsstress, funding och riskmodell för H-0013",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "engine/tests/test_fas2_eval.py",
+              "detail": "bbc7181: kostnadsstress 2,5 gånger med fönstrens egna spelböcker; riskmodell 1× med finansieringsränta, ATR-stop och backtestmotorns likvidation; stop-utgångar, likvidationer, exponering och omsättning redovisas. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; tio avsiktliga fel fångas. Endast syntetisk data."
+            }
+          ],
+          "note": "Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
         },
         {
           "id": "F2-503",
           "title": "Kör förregistrerad permutation och slumpkontroll med fullständig försöksredovisning",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "engine/tests/test_fas2_eval.py",
+              "detail": "bbc7181: permutationstest per dygn av kända dagslägen (okänt kvar), frö 0, 200 som standard, hela walk-forward med urval körs om; varje permutations Sharpe och spelböcker sparas, p-värde k/n och (k+1)/(n+1). Slumpkontroll på 2022–2024. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; tio avsiktliga fel fångas. Endast syntetisk data."
+            }
+          ],
+          "note": "Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
         },
         {
           "id": "F2-504",
           "title": "Redovisa osäkerhet, 81 spelböcker, regimresultat och resultat utan bästa året",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "engine/tests/test_fas2_eval.py",
+              "detail": "bbc7181: block-bootstrap av Sharpe, alla 81 fasta spelböcker genom samma fönster, Deflated Sharpe med 81 försök (standard- och spelboksvarians), resultat per läge, per år och utan bästa året. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; tio avsiktliga fel fångas. Endast syntetisk data."
+            }
+          ],
+          "note": "Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
         },
         {
           "id": "F2-505",
           "title": "Bedöm alla fem förregistrerade kriterier och spara även negativa eller avbrutna försök",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "engine/tests/test_fas2_eval.py",
+              "detail": "bbc7181: alla fem kriterier med det registrerade t-kravet 2,67 (dagens krav redovisas), MORE_RESEARCH bara om alla gäller; varje körning sparas som ny fil (completed/aborted/invalid) utan överskrivning, avbruten körning sparas och felet visas, och körningen kräver registrerad H-0013. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; tio avsiktliga fel fångas. Endast syntetisk data."
+            }
+          ],
+          "note": "Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
         }
       ]
     },
