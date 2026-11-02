@@ -27,7 +27,9 @@ def main():
    entry=dict(name=name,source=url,sha256=digest(raw),format='zip')
   except HTTPError as exc:
    if exc.code!=404:raise
-   start=pd.Timestamp(day,tz='UTC')-pd.Timedelta(hours=4);end=pd.Timestamp(day,tz='UTC')+pd.Timedelta(days=1,hours=4)
+   day_start=pd.Timestamp(day,tz='UTC')
+   start=monthly.index[monthly.index<day_start].max()
+   end=monthly.index[monthly.index>=day_start+pd.Timedelta(days=1)].min()+pd.Timedelta(hours=4)
    url='https://fapi.binance.com/fapi/v1/markPriceKlines?'+urlencode(dict(symbol='BTCUSDT',interval='4h',startTime=int(start.timestamp()*1000),endTime=int(end.timestamp()*1000)-1,limit=1000))
    path=folder/(day+'-api.json')
    if not path.exists():path.write_bytes(urlopen(url,timeout=30).read())
