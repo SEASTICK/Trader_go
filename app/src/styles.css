@@ -164,6 +164,10 @@ h2 { font-size:17px; font-weight:650; letter-spacing:-.01em; }
 .rsection { margin-top:28px; } .rsection:first-of-type { margin-top:4px; }
 .rsection-head { display:flex; align-items:baseline; gap:10px; margin:0 0 12px; flex-wrap:wrap; }
 .rsection-head h2 { font-size:18px; } .rsection-head .muted { font-size:13px; }
+.rtile.untested { --tile:transparent; background:var(--card,#fff); color:var(--ink); border:1px dashed color-mix(in srgb,var(--muted) 55%,transparent); min-height:150px; }
+.rtile.untested .sim-tag { background:color-mix(in srgb,var(--muted) 18%,transparent); color:var(--muted); }
+.rtile-empty { margin-top:auto; padding-top:10px; font-size:12px; color:var(--muted); line-height:1.45; }
+.ttr.wf { grid-template-columns: 2fr 1fr 1fr; }
 .mål-badge { display:inline-grid; place-items:center; width:22px; height:22px; border-radius:6px; background:var(--ink); color:var(--bg,#fff); font-size:12px; font-weight:700; align-self:center; }
 .mål-krav { margin:-4px 0 12px; font-size:13px; color:var(--muted); line-height:1.5; }
 .rsection-head .gdot { width:12px; height:12px; border-radius:3px; align-self:center; }

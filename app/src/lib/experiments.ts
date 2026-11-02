@@ -35,6 +35,7 @@ export type Computed = {
   stressad?: number;          // avkastning i procent med 2,5 gånger kostnaderna
   beta?: number | null;       // mot Bitcoin, dagsavkastning (bara HISTORIK)
   klararMål?: boolean;        // alla kriterier i rutans spår (bara HISTORIK)
+  fas1?: { windows: NonNullable<RealResult["windows"]>; stability: number | null; runId: string };
   hypotes?: string;
   registerCommit?: string;
   period?: [string, string];
@@ -126,12 +127,17 @@ export type RealResult = {
   costs_bps_per_side: number;
   curve: { t: string[]; strategy: number[]; buy_and_hold: (number | null)[] } | null;
   recent_trades: { entry_time: string; exit_time: string | null; side: string; entry_price: number; exit_price: number | null;
-                   gross: number; costs: number; funding: number; net: number; liquidated: boolean }[];
+                   gross: number | null; costs: number | null; funding: number | null; net: number; liquidated: boolean;
+                   exit_reason?: string | null }[];
   position_now: number;
   result_file: string;
   sharpe?: number | null;
   baseline?: { total_return: number; max_drawdown: number; sharpe: number | null; t_daily_nw: number | null } | null;
   track?: Mål;
+  phase?: "fas1";
+  strategy_run_id?: string;
+  stability?: number | null;
+  windows?: { test: [string, string]; sharpe_in_sample: number | null; sharpe_out_of_sample: number | null }[];
   beta?: number | null;
   correlation?: number | null;
 };
@@ -156,8 +162,8 @@ export function fromResult(exp: Experiment, r: RealResult): Computed {
     riktning: t.side === "Short" ? "Short" : "Long",
     in: t.entry_price,
     ut: t.exit_price ?? t.entry_price,
-    brutto: t.gross * 100,
-    kostnad: (t.costs + t.funding) * 100,
+    brutto: t.gross == null ? NaN : t.gross * 100,
+    kostnad: t.costs == null || t.funding == null ? NaN : (t.costs + t.funding) * 100,
     netto: t.net * 100,
   }));
   const pos = r.position_now;
@@ -168,6 +174,7 @@ export function fromResult(exp: Experiment, r: RealResult): Computed {
     vinstandel: r.win_rate * 100, t: r.t, krav: r.t_required, passes: r.passes,
     deflated: r.deflated_sharpe, stressad: r.stressed_total_return * 100, hypotes: r.hypothesis,
     beta: r.beta ?? null, klararMål: klararMål(r.track ?? målFör(exp), r),
+    fas1: r.phase === "fas1" ? { windows: r.windows ?? [], stability: r.stability ?? null, runId: r.strategy_run_id ?? "" } : undefined,
     registerCommit: r.registry_commit, period: r.period, resultatfil: r.result_file,
     position: pos === 0 ? { läge: "Ingen" } : { läge: pos > 0 ? "Long" : "Short", storlek: Math.round(Math.abs(pos) * 100) },
     kostnadPerAffär: r.costs_bps_per_side / 100,

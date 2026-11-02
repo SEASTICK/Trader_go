@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import experiments from "../../data/experiments.json";
 import results from "../../data/results.json";
 import { Sparkline } from "../components/Charts";
-import { Page, Segmented, SimChip } from "../components/ui";
+import { Page, Segmented } from "../components/ui";
 import { MÅL, compute, fromResult, kravFör, målFör, num, pct, type Computed, type Experiment, type RealResult } from "../lib/experiments";
 import ExperimentDetail from "./ExperimentDetail";
 import { TrackList } from "./TrackList";
@@ -22,6 +22,16 @@ const GROUPS = [
 ];
 
 function Tile({ c, krav: kravAlla, onOpen }: { c: Computed; krav: number; onOpen: () => void }) {
+  if (c.källa !== "HISTORIK") {
+    return (
+      <button type="button" className="rtile untested" data-group={c.exp.grupp} onClick={onOpen} aria-label={`${c.exp.namn}, inte testad, öppna`}>
+        <span className="rtile-top"><b>{c.exp.id}</b><span className="sim-tag">EJ TESTAD</span></span>
+        <span className="rtile-name">{c.exp.namn}</span>
+        <span className="rtile-sub">{c.exp.strategi}</span>
+        <span className="rtile-empty">Ingen registrerad hypotes än. Inga siffror visas förrän den är testad på riktig historik.</span>
+      </button>
+    );
+  }
   const up = c.avkastning >= 0;
   const krav = c.krav ?? kravAlla;
   // Riktiga resultat bedöms mot alla kriterier i sitt spår, påhittade bara mot t-kravet.
@@ -58,8 +68,10 @@ export default function Research() {
   const sorted = useMemo(() => {
     const a = [...all];
     if (sort === "Namn") a.sort((x, y) => x.exp.namn.localeCompare(y.exp.namn, "sv"));
-    if (sort === "Avkastning") a.sort((x, y) => y.avkastning - x.avkastning);
-    if (sort === "t-värde") a.sort((x, y) => y.t - x.t);
+    const tested = (c: Computed) => (c.källa === "HISTORIK" ? 1 : 0);
+    if (sort === "Avkastning") a.sort((x, y) => tested(y) - tested(x) || y.avkastning - x.avkastning);
+    if (sort === "t-värde") a.sort((x, y) => tested(y) - tested(x) || y.t - x.t);
+    if (sort === "Standard") a.sort((x, y) => tested(y) - tested(x));
     return a;
   }, [all, sort]);
 
@@ -79,7 +91,6 @@ export default function Research() {
             <Segmented value={sort} options={[...SORTS]} onChange={setSort} />
             <span className="muted">Gruppera efter</span>
             <Segmented value={grouping} options={[...GROUPINGS]} onChange={setGrouping} />
-            <SimChip />
           </div>
           {grouping === "Mål" && MÅL.map((m) => {
             const items = sorted.filter((c) => målFör(c.exp) === m.key);
@@ -123,8 +134,8 @@ export default function Research() {
           )}
           <p className="footnote">
             {antalRiktiga === 0
-              ? "Alla siffror är påhittade exempel, märkta SIM. Ingen ruta har ett riktigt resultat, och inget är registrerat som hypotes än."
-              : `${antalRiktiga} av ${all.length} rutor har ett riktigt backtest på historik (HISTORIK). Övriga är påhittade exempel (SIM). Ett backtest är inte en prognos.`}
+              ? "Ingen ruta har ett riktigt resultat än."
+              : `${antalRiktiga} av ${all.length} rutor har ett riktigt backtest på historik (HISTORIK). Övriga är idéer som inte är testade och visar inga siffror. Ett backtest är inte en prognos.`}
           </p>
         </>
       )}

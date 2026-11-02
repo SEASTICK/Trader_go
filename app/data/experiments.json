@@ -19,5 +19,9 @@
   {"id": "E-18", "spår": "B-00", "namn": "BTC 1d volstyrd", "strategi": "Volatilitetsstyrd köp-och-behåll", "grupp": "krypto", "marknad": "Bitcoin", "tidsram": "1d", "riktning": "Long"},
   {"id": "E-19", "spår": "S-01", "namn": "BTC 1d över 200-dagars", "strategi": "Long över 200-dagarsmedlet, annars platt", "grupp": "krypto", "marknad": "Bitcoin", "tidsram": "1d", "riktning": "Long eller platt", "mål": "B"},
   {"id": "E-20", "spår": "S-03", "namn": "BTC säkrad ränta 4h", "strategi": "Spot lång och termin kort när räntan är positiv", "grupp": "terminer", "marknad": "Bitcoin spot och termin", "tidsram": "4h", "riktning": "Säkrad", "mål": "C"},
+  {"id": "E-21", "spår": "F1", "namn": "BTC terminer 4h EMA/ADX", "strategi": "EMA-trend med ADX-filter", "grupp": "terminer", "marknad": "Bitcoin-terminer", "tidsram": "4h", "riktning": "Long/short", "mål": "A"},
+  {"id": "E-22", "spår": "F1", "namn": "BTC terminer 4h Donchian", "strategi": "Donchian-utbrott", "grupp": "terminer", "marknad": "Bitcoin-terminer", "tidsram": "4h", "riktning": "Long/short", "mål": "A"},
+  {"id": "E-23", "spår": "F1", "namn": "BTC terminer 4h BB+RSI", "strategi": "Bollinger + RSI återgång", "grupp": "terminer", "marknad": "Bitcoin-terminer", "tidsram": "4h", "riktning": "Long/short", "mål": "A"},
+  {"id": "E-24", "spår": "F1", "namn": "BTC terminer 4h kläm", "strategi": "Volatilitetskläm-utbrott", "grupp": "terminer", "marknad": "Bitcoin-terminer", "tidsram": "4h", "riktning": "Long/short", "mål": "A"},
   {"id": "B-01", "spår": "B-00", "namn": "Köp-och-behåll BTC", "strategi": "Baslinje", "grupp": "baslinje", "marknad": "Bitcoin", "tidsram": "1d", "riktning": "Long"}
 ]

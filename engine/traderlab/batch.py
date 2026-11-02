@@ -65,6 +65,8 @@ def run_all(repo: Path, data_dir: Path | None = None, loader=binance.load, only:
     for tile, spec in load_plan(repo).items():
         if only and tile not in only:
             continue
+        if spec.get("phase") == "fas1":
+            continue  # körs av traderlab.fas1 (walk-forward), inte här
         try:
             bars = loader(spec.get("market", "spot"), spec["symbol"], spec["interval"], data_dir)
         except FileNotFoundError as exc:
@@ -132,6 +134,43 @@ def run_all(repo: Path, data_dir: Path | None = None, loader=binance.load, only:
     return rep
 
 
+def _export_fas1(repo: Path, tile: str, r: dict, path: Path) -> dict:
+    """Fas 1-resultat (walk-forward) i samma form som övriga rutor. Köp-och-behåll räknas från terminsdatan."""
+    st, cv = r["stats"], r["curves"]
+    bh = None
+    try:
+        bars = binance.load("um", "BTCUSDT", "4h", repo / "data")
+        t = pd.DatetimeIndex(pd.to_datetime(cv["t"], utc=True))
+        o = bars["open"].shift(-1).reindex(t)
+        bh = [round(float(v) / float(o.iloc[0]) * 100, 4) if pd.notna(v) else None for v in o]
+    except (FileNotFoundError, KeyError, IndexError):
+        pass
+    trades = r.get("trades", [])
+    return {
+        "source": "HISTORIK", "phase": "fas1", "hypothesis": r["hypothesis_id"], "registry_commit": r["registry_commit"],
+        "run_at": r["run_at"], "period": [r["out_of_sample"][0], cv["t"][-1]],
+        "total_return": st["net_return"], "max_drawdown": st["max_drawdown"], "trades": st["trades"],
+        "win_rate": st["win_rate"] or 0.0, "t": r["t_daily_nw"], "t_required": r["t_required"],
+        "passes": bool(r["criteria"]["t_at_least_required"]), "deflated_sharpe": r.get("deflated_sharpe"),
+        "stressed_total_return": r["stressed_total_return"], "sharpe": st["sharpe"],
+        "track": r.get("track", "A"), "beta": (r.get("benchmark") or {}).get("beta"),
+        "correlation": (r.get("benchmark") or {}).get("correlation"),
+        "baseline": {**r["baseline_buy_and_hold"], "t_daily_nw": None},
+        "costs_bps_per_side": r["costs_bps_per_side"],
+        "curve": {"t": cv["t"], "strategy": [round(v * 100, 4) for v in cv["equity"]], "buy_and_hold": bh or [None] * len(cv["t"])},
+        "recent_trades": [{"entry_time": t["entry_time"], "exit_time": t["exit_time"], "side": t["side"],
+                           "entry_price": t["entry_price"], "exit_price": t["exit_price"], "gross": None, "costs": None,
+                           "funding": None, "net": t["net"], "liquidated": t["exit_reason"] == "liquidation",
+                           "exit_reason": t["exit_reason"]} for t in trades[-20:]],
+        "position_now": 0.0,
+        "strategy_run_id": r.get("final_run_id"), "final_params": r.get("final_params"),
+        "stability": r.get("stability"), "criteria": r.get("criteria"),
+        "windows": [{"test": w["test"], "sharpe_in_sample": w["sharpe_in_sample"], "sharpe_out_of_sample": w["sharpe_out_of_sample"]} for w in r.get("windows", [])],
+        "stats": {k: st.get(k) for k in ("cagr", "sortino", "calmar", "profit_factor", "expectancy", "exit_reasons", "by_regime")},
+        "result_file": path.relative_to(repo).as_posix(),
+    }
+
+
 def export_to_app(repo: Path) -> dict:
     """Skriver app/data/results.json med det senaste resultatet per ruta. Bara riktiga körningar."""
     plan = load_plan(repo)
@@ -142,6 +181,9 @@ def export_to_app(repo: Path) -> dict:
         if not files:
             continue
         r = json.loads(files[-1].read_text(encoding="utf-8"))
+        if r.get("phase") == "fas1":
+            out[tile] = _export_fas1(repo, tile, r, files[-1])
+            continue
         s = r["summary"]
         out[tile] = {
             "source": "HISTORIK",
