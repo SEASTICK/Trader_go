@@ -64,7 +64,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="shell">
+    <div className={intro ? "shell behind-intro" : "shell"}>
       <aside className="sidebar">
         <div className="brand"><img src="/logo.svg" className="logo" alt="" /><b>Trader_go</b></div>
         <nav>
@@ -110,7 +110,7 @@ export default function App() {
           </div>
         )}
         <div className="topbar"><span className="saved" title="Version och byggcommit. Samma värden hos er båda = samma program."><i />Papper · inga riktiga pengar · v{__APP_VERSION__} ({__COMMIT__})</span></div>
-        <div className="page-anim" key={page}>
+        <div className="page-anim" key={intro ? `${page}-intro` : page}>
         {page === "Översikt" && <Overview go={(p) => setPage(p)} />}
         {page === "Marknad" && <Market />}
         {page === "Research" && <Research />}
