@@ -3,7 +3,7 @@
   "title": "Fas 2 – Adaptive Strategy Engine",
   "hypothesis": "H-0013",
   "updated": "2026-11-02",
-  "reviewed_revision": "a852aa3",
+  "reviewed_revision": "445178d",
   "note": "Klar betyder verifierad. Kod som bara finns lokalt eller tester utan granskning är inte slutgodkända.",
   "groups": [
     {
@@ -347,14 +347,14 @@
         {
           "id": "F2-601",
           "title": "Skapa ett separat strikt kökontrakt för H-0013 med autentisering och RLS",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-ko-granskning-73.md",
-              "detail": "a852aa3 (kod cd9701d): Medlemsåtkomst och fast jobb verifierade; SQL:s resultatkontrakt behöver exakta booleska kriterier, konsekvent beslut och booleskt holdout_loaded."
+              "detail": "445178d (kod 2160c6e): oberoende omgranskning godkänd. 521 Python-tester, 8 riktiga signal-/processtester och båda PGlite-kösviterna passerar. Tidigare SIGTERM-felprov sparar nu försöket; felaktiga SQL-kriterier och beslut avvisas utan ändrad lease."
             }
           ],
-          "note": "Lokal syntetisk verifiering och PGlite. PR #73 ej godkänd för merge; 0005 inte applicerad och ingen worker driftsatt."
+          "note": "Kodmässigt verifierad lokalt. PR #73 godkänd för merge när CI är grönt; faktisk Supabase-samtidighet och driftverifiering återstår i F2-605."
         },
         {
           "id": "F2-602",
@@ -363,10 +363,10 @@
           "evidence": [
             {
               "file": "docs/fas2-ko-granskning-73.md",
-              "detail": "a852aa3 (kod cd9701d): Samma worker och globala slot, två timmars H-0013-timeout, lease/fencing och skydd mot andra publiceringar verifierade lokalt. Verklig konkurrens/drift återstår."
+              "detail": "445178d (kod 2160c6e): oberoende omgranskning godkänd. 521 Python-tester, 8 riktiga signal-/processtester och båda PGlite-kösviterna passerar. Tidigare SIGTERM-felprov sparar nu försöket; felaktiga SQL-kriterier och beslut avvisas utan ändrad lease."
             }
           ],
-          "note": "Lokal syntetisk verifiering och PGlite. PR #73 ej godkänd för merge; 0005 inte applicerad och ingen worker driftsatt."
+          "note": "Kodmässigt verifierad lokalt. PR #73 godkänd för merge när CI är grönt; faktisk Supabase-samtidighet och driftverifiering återstår i F2-605."
         },
         {
           "id": "F2-603",
@@ -378,19 +378,19 @@
               "detail": "a852aa3 (kod cd9701d): Exakta manifestnamn före arkivläsning, SHA256 och CHECKSUM samt stapel-/fundinghash verifierade på syntetiska 120 arkiv; 2019/2025 öppnas inte."
             }
           ],
-          "note": "Lokal syntetisk verifiering och PGlite. PR #73 ej godkänd för merge; 0005 inte applicerad och ingen worker driftsatt."
+          "note": "Arkivkontrollen är oförändrad i 2160c6e och fortsatt verifierad på syntetiska arkiv. PR #73 kodmässigt godkänd på 445178d; ingen riktig datakörning eller driftsättning."
         },
         {
           "id": "F2-604",
           "title": "Testa avbrott, timeout, återförsök och återhämtning efter workeromstart",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-ko-granskning-73.md",
-              "detail": "a852aa3 (kod cd9701d): SQL-leaseåterförsök och FakeProcess-stopp passerar, men riktig spawn-process slutar med SIGTERM -15 och sparar 0 försöksfiler vid normalt worker.stop."
+              "detail": "445178d (kod 2160c6e): oberoende omgranskning godkänd. 521 Python-tester, 8 riktiga signal-/processtester och båda PGlite-kösviterna passerar. Tidigare SIGTERM-felprov sparar nu försöket; felaktiga SQL-kriterier och beslut avvisas utan ändrad lease."
             }
           ],
-          "note": "Lokal syntetisk verifiering och PGlite. PR #73 ej godkänd för merge; 0005 inte applicerad och ingen worker driftsatt."
+          "note": "Kodmässigt verifierad lokalt. PR #73 godkänd för merge när CI är grönt; faktisk Supabase-samtidighet och driftverifiering återstår i F2-605."
         },
         {
           "id": "F2-605",
@@ -484,5 +484,5 @@
       ]
     }
   ],
-  "reviewed_scope": "PR #72 mergad som d25f444. PR #73 granskad på a852aa3: 513 syntetiska Python-tester och båda lokala PGlite-kötester passerar. Två oberoende fynd före merge: normalstopp tappar försöksfil och SQL accepterar felaktiga kriterier/beslut. Ingen migration, driftsättning eller riktig körning."
+  "reviewed_scope": "PR #73 omgranskad på 445178d (kod 2160c6e): båda fynd rättade. 521 Python-tester inklusive 8 riktiga processtester och båda PGlite-sviterna passerar; egna signal- och SQL-felprov verifierade. Kodmässigt godkänd för merge när CI är grönt. Ingen migration, driftsättning eller riktig körning."
 }
