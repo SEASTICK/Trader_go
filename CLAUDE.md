@@ -55,3 +55,12 @@ pappersjournal i Obsidian. Använd den bara när någon uttryckligen ber om en O
   ändrad frontmatter kräver en fråga först.
 - Inga lösenord, nycklar eller kontouppgifter i anteckningar.
 - Stora dataset och resultattabeller ligger i repot, inte i Obsidian. Anteckningen länkar dit.
+
+## Fas 2 – gemensam checklista
+
+Efter varje kodändring eller verifiering som berör H-0013/Fas 2: läs och uppdatera
+[checklistan](docs/fas2-checklista.md) via `docs/fas2-status.json` i samma leverans.
+Markera bara granskat, verifierat arbete som klart och ange kod-/testunderlag.
+Regenerera med `python3 scripts/render-fas2-checklist.py` och kontrollera med `--check`.
+Att koden finns, är pushad eller har ett grönt deltest räcker inte för att godkänna hela funktionen.
+Ändra inte frysta protokoll eller resultat. Håll lokal kod, driftsättning och publicering åtskilda.
