@@ -394,7 +394,7 @@ def test_holdout_data_passed_with_an_allowed_period_is_still_rejected(short_dev,
 
 def fake_window(local_return, cost, fund):
     """Ett fönster med känt utfall på lokalt startkapital 1,0: en affär vars nettoresultat är hela avkastningen."""
-    def evaluate(bars, funding, book, start, end, costs=fas2.COSTS):
+    def evaluate(bars, funding, book, start, end, costs=fas2.COSTS, labels=None):
         a = fas2._ts(start)
         idx = pd.DatetimeIndex([a, a + pd.Timedelta(hours=4)])
         eq = pd.Series([1.0, 1.0 + local_return], index=idx)
