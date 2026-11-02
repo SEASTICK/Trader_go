@@ -47,3 +47,18 @@ Oberoende syntetiskt reproducerat på 400 dygn, 4H, `make_bars(..., seed=7, vol=
 Rätta `current()` så att den använder exakt föregående kalenderdag för den **nästa stapeln**, utifrån uttrycklig tidsram, och returnerar `okänt` när den dagen inte är komplett. Återställ en tydlig beskrivning av detta kontrakt. Regressionstesta saknad och ofullständig föregående dag nära seriens slut, liksom en vanlig påbörjad sista dag och en komplett sista dag. Ett bra kontrakt är att `current(bars)` alltid matchar `per_bar(next_bar, daily(bars), interval)` på samma indataserie.
 
 **Bedömning:** de två ursprungliga fynden är åtgärdade. F2-204 och F2-205 lämnas öppna tills kantfallet ovan har rättats och verifierats. PR:en är inte mergad, ingen riktig data har körts och inget är driftsatt eller publicerat i denna granskning. Strategiväljaren bör vänta på denna sista rättning.
+
+## Slutgranskning av 866d393 – godkänd för merge
+
+Granskad PR-head: `866d3935b2895437df82e8ce7987fe602b21bac3`, kodrättning `ebc5d38`. `current()` validerar nu angiven tidsram, beräknar nästa stapel och slår upp exakt föregående kalenderdag. Tom data ger `okänt`. Det äldre läget förs inte över en lucka.
+
+Verifiering utförd oberoende på en isolerad kopia av exakt PR-head:
+
+- Hela Python-sviten: **253 passerade testfall**, inklusive **66 regimtestfall**.
+- Det tidigare syntetiska felprovet med saknad näst sista dag och bara 00:00 på sista dagen ger nu `okänt`.
+- Kontraktet `current(bars, interval) == per_bar(next_bar, daily(bars, interval), interval)` passerar också oberoende kontroller för 1h, 4h och 1d, med dagsgränser och lucka.
+- Kodändringen sedan föregående granskning är begränsad till `current()` och dess tester; kalenderhysteres, tidsvalidering och strikt uppvärmning är bevarade.
+
+**Beslut:** samtliga tre granskningsfynd är åtgärdade. Regimmodulen godkänns för merge på den granskade kodversionen. F2-201–F2-205 är verifierade. Detta är kodgodkännande, inte driftsättning, ett resultat från riktig data eller ett godkännande för paper/live. PR:en är fortfarande öppen vid granskningen och inga sådana steg har utförts här.
+
+Nästa avgränsade leverans är strategiväljaren (F2-301–F2-305), med syntetiska tester för trendriktning, platt läge, kandidat-/lägesbyte och nästa öppning. Inga nya optimeringar eller läsningar av slutprovet behövs för den leveransen.
