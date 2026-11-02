@@ -3,7 +3,7 @@
   "title": "Fas 2 – Adaptive Strategy Engine",
   "hypothesis": "H-0013",
   "updated": "2026-11-02",
-  "reviewed_revision": "c5068e1",
+  "reviewed_revision": "efb43fc",
   "note": "Klar betyder verifierad. Kod som bara finns lokalt eller tester utan granskning är inte slutgodkända.",
   "groups": [
     {
@@ -215,14 +215,14 @@
         {
           "id": "F2-401",
           "title": "Välj kandidat per läge enbart på respektive träningsfönster",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
-              "file": "docs/fas2-walkforward-granskning-71.md",
-              "detail": "c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade."
+              "file": "docs/fas2-utvardering-granskning-72.md",
+              "detail": "efb43fc: omstrukturerad walk-forward återverifierad med 442 tester och separat 35-affärers jämförelse mot c5068e1. Identiska avkastningar, affärer, kostnader, funding och spelboksval."
             }
           ],
-          "note": "Kod omstrukturerad i bbc7181 (run_window, stitch, tillförda dagslägen för permutationstestet). Beteendet är oförändrat enligt de befintliga fas2-testerna, men den granskade koden c5068e1 täcker inte längre exakt denna version. Behöver omgranskas."
+          "note": "PR #71 mergad som 793e9f0. Refaktorn i PR #72 är återverifierad, men PR #72 har separata öppna fynd och är inte godkänd för merge."
         },
         {
           "id": "F2-402",
@@ -230,47 +230,47 @@
           "status": "done",
           "evidence": [
             {
-              "file": "docs/fas2-walkforward-granskning-71.md",
-              "detail": "c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade."
+              "file": "docs/fas2-utvardering-granskning-72.md",
+              "detail": "efb43fc: omstrukturerad walk-forward återverifierad med 442 tester och separat 35-affärers jämförelse mot c5068e1. Identiska avkastningar, affärer, kostnader, funding och spelboksval."
             }
           ],
-          "note": "Kodmässigt godkänd för merge i PR #71. Bara syntetisk data; ej mergad, driftsatt eller publicerad i granskningen."
+          "note": "PR #71 mergad som 793e9f0. Refaktorn i PR #72 är återverifierad, men PR #72 har separata öppna fynd och är inte godkänd för merge."
         },
         {
           "id": "F2-403",
           "title": "Kör sex halvårsfönster med korrekt uppvärmning och platt start",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
-              "file": "docs/fas2-walkforward-granskning-71.md",
-              "detail": "c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade."
+              "file": "docs/fas2-utvardering-granskning-72.md",
+              "detail": "efb43fc: omstrukturerad walk-forward återverifierad med 442 tester och separat 35-affärers jämförelse mot c5068e1. Identiska avkastningar, affärer, kostnader, funding och spelboksval."
             }
           ],
-          "note": "Kod omstrukturerad i bbc7181 (run_window, stitch, tillförda dagslägen för permutationstestet). Beteendet är oförändrat enligt de befintliga fas2-testerna, men den granskade koden c5068e1 täcker inte längre exakt denna version. Behöver omgranskas."
+          "note": "PR #71 mergad som 793e9f0. Refaktorn i PR #72 är återverifierad, men PR #72 har separata öppna fynd och är inte godkänd för merge."
         },
         {
           "id": "F2-404",
           "title": "Sätt ihop testkurvan och spara varje fönsters val, dagar och affärer",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
-              "file": "docs/fas2-walkforward-granskning-71.md",
-              "detail": "c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade."
+              "file": "docs/fas2-utvardering-granskning-72.md",
+              "detail": "efb43fc: omstrukturerad walk-forward återverifierad med 442 tester och separat 35-affärers jämförelse mot c5068e1. Identiska avkastningar, affärer, kostnader, funding och spelboksval."
             }
           ],
-          "note": "Kod omstrukturerad i bbc7181 (run_window, stitch, tillförda dagslägen för permutationstestet). Beteendet är oförändrat enligt de befintliga fas2-testerna, men den granskade koden c5068e1 täcker inte längre exakt denna version. Behöver omgranskas."
+          "note": "PR #71 mergad som 793e9f0. Refaktorn i PR #72 är återverifierad, men PR #72 har separata öppna fynd och är inte godkänd för merge."
         },
         {
           "id": "F2-405",
           "title": "Versionsmärk slutlig spelbok och verifiera reproducerbarhet utan slutprov",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
-              "file": "docs/fas2-walkforward-granskning-71.md",
-              "detail": "c5068e1 (kod 7ff0799): oberoende omgranskning godkänd. 408 Python-testfall inklusive 81 fas2 passerar; direkt slutprovsskydd före beräkning och kapital-/affärsavstämning verifierade. Urval och reproducerbarhet fortsatt verifierade."
+              "file": "docs/fas2-utvardering-granskning-72.md",
+              "detail": "efb43fc: omstrukturerad walk-forward återverifierad med 442 tester och separat 35-affärers jämförelse mot c5068e1. Identiska avkastningar, affärer, kostnader, funding och spelboksval."
             }
           ],
-          "note": "Kod omstrukturerad i bbc7181 (run_window, stitch, tillförda dagslägen för permutationstestet). Beteendet är oförändrat enligt de befintliga fas2-testerna, men den granskade koden c5068e1 täcker inte längre exakt denna version. Behöver omgranskas."
+          "note": "PR #71 mergad som 793e9f0. Refaktorn i PR #72 är återverifierad, men PR #72 har separata öppna fynd och är inte godkänd för merge."
         }
       ]
     },
@@ -284,23 +284,23 @@
           "status": "in_progress",
           "evidence": [
             {
-              "file": "engine/tests/test_fas2_eval.py",
-              "detail": "bbc7181 (gren fas2-utvardering): köp-och-behåll, varje kandidat ensam, likaviktad blandning och riskfilter körs genom samma sex fönster och konventioner som H-0013; alla har exakt samma staplar. Blandningen är medelvärdet av två kurvor utan ombalansering. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; nio avsiktliga fel fångas. Endast syntetisk data."
+              "file": "docs/fas2-utvardering-granskning-72.md",
+              "detail": "efb43fc (kod bbc7181): Avkastningsjämförelser verifierade, men blandningens position och riskmått behöver korrekt kapitalviktning och tydliga exponerings-/omsättningsmått."
             }
           ],
-          "note": "Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
+          "note": "Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat."
         },
         {
           "id": "F2-502",
           "title": "Verifiera kostnadsstress, funding och riskmodell för H-0013",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
-              "file": "engine/tests/test_fas2_eval.py",
-              "detail": "bbc7181: kostnadsstress 2,5 gånger med fönstrens egna spelböcker; riskmodell 1× med finansieringsränta, ATR-stop och backtestmotorns likvidation; stop-utgångar, likvidationer, exponering och omsättning redovisas. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; nio avsiktliga fel fångas. Endast syntetisk data."
+              "file": "docs/fas2-utvardering-granskning-72.md",
+              "detail": "efb43fc (kod bbc7181): Normalt valda spelböcker återanvänds vid 2,5× kostnadsstress; funding, 1× och ATR-stop verifierade via befintlig motor och syntetiska tester."
             }
           ],
-          "note": "Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
+          "note": "Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat."
         },
         {
           "id": "F2-503",
@@ -308,23 +308,23 @@
           "status": "in_progress",
           "evidence": [
             {
-              "file": "engine/tests/test_fas2_eval.py",
-              "detail": "bbc7181: permutationstest per dygn av kända dagslägen (okänt kvar), frö 0, 200 som standard, hela walk-forward med urval körs om; varje permutations Sharpe och spelböcker sparas, p-värde k/n och (k+1)/(n+1). Slumpkontroll på 2022–2024. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; nio avsiktliga fel fångas. Endast syntetisk data."
+              "file": "docs/fas2-utvardering-granskning-72.md",
+              "detail": "efb43fc (kod bbc7181): Permutation med omkört urval och slumpkontroll finns; direkt permutationstest måste avvisa slutprov före regimberäkning."
             }
           ],
-          "note": "Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
+          "note": "Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat."
         },
         {
           "id": "F2-504",
           "title": "Redovisa osäkerhet, 81 spelböcker, regimresultat och resultat utan bästa året",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
-              "file": "engine/tests/test_fas2_eval.py",
-              "detail": "bbc7181: block-bootstrap av Sharpe, alla 81 fasta spelböcker genom samma fönster, Deflated Sharpe med 81 försök (standard- och spelboksvarians), resultat per läge, per år och utan bästa året. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; nio avsiktliga fel fångas. Endast syntetisk data."
+              "file": "docs/fas2-utvardering-granskning-72.md",
+              "detail": "efb43fc (kod bbc7181): Bootstrap, DSR med 81 försök, uppräkning av spelböcker, regimresultat, år och utan bästa året kodgranskade och syntetiskt testade. Full riktig kontrollkörning ej gjord."
             }
           ],
-          "note": "Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
+          "note": "Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat."
         },
         {
           "id": "F2-505",
@@ -332,11 +332,11 @@
           "status": "in_progress",
           "evidence": [
             {
-              "file": "engine/tests/test_fas2_eval.py",
-              "detail": "bbc7181: alla fem kriterier med det registrerade t-kravet 2,67 (dagens krav redovisas), MORE_RESEARCH bara om alla gäller; varje körning sparas som ny fil (completed/aborted/invalid) utan överskrivning, avbruten körning sparas och felet visas, och körningen kräver registrerad H-0013. Tolkningar U1–U20 i docs/fas2-utvardering-tolkningar.md (976c22a, före koden). 34 nya tester, hela Python-sviten 442 tester passerar lokalt; nio avsiktliga fel fångas. Endast syntetisk data."
+              "file": "docs/fas2-utvardering-granskning-72.md",
+              "detail": "efb43fc (kod bbc7181): Kriterier och exklusiv försöksfil fungerar; aborted-filen saknar färdigräknade delresultat. Sju färdiga sammanfattningar förlorades i oberoende avbrottsprov."
             }
           ],
-          "note": "Väntar på Codex granskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
+          "note": "Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat."
         }
       ]
     },
@@ -464,5 +464,5 @@
       ]
     }
   ],
-  "reviewed_scope": "PR #69 och #70 mergade. PR #71 omgranskad och kodmässigt godkänd för merge på c5068e1: periodskydd och gemensam kapitalbas verifierade med 408 syntetiska Python-testfall samt oberoende reproduktionsprov. Ej mergad, driftsatt eller publicerad i denna granskning."
+  "reviewed_scope": "PR #71 mergad som 793e9f0. PR #72 granskad på efb43fc: walk-forward återverifierad, stress och osäkerhetsredovisning verifierade syntetiskt. Tre fynd före merge: direkt slutprovsskydd, blandningens riskmått och bevarade delresultat vid avbrott. Ingen riktig körning, driftsättning eller publicering."
 }
