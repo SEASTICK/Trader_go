@@ -76,12 +76,31 @@ const second = await claim(); assert.equal(second.id, id); assert.equal(second.a
 assert.notEqual(second.lease_token, first.lease_token);
 assert.equal(await finish(id, first.lease_token, good), false, 'stale token cannot publish');
 assert.equal((await db.query('select count(*)::int n from run_results')).rows[0].n, 0);
-for (const [field, value] of [['hypothesis_id', 'H-0012'], ['evaluation_version', 'h0013-evaluation/2.0.0'],
-                              ['status', 'aborted'], ['decision', 'READY_FOR_PAPER'], ['decision', null],
-                              ['dataset_sha256', 'f'.repeat(64)], ['holdout_loaded', true], ['mode', 'exploration'],
-                              ['criteria', { t_at_least_required: true }], ['stats', 'x']]) {
-  await assert.rejects(finish(id, second.lease_token, { ...good, [field]: value }), /Ogiltigt resultat/, field);
+const slotBefore = (await db.query('select * from research_worker_slot')).rows[0];
+const allTrue = Object.fromEntries(Object.keys(crit).map(k => [k, true]));
+const { t_at_least_required, ...four } = crit;
+const invalid = [
+  ['hypothesis_id', { ...good, hypothesis_id: 'H-0012' }], ['evaluation_version', { ...good, evaluation_version: 'h0013-evaluation/2.0.0' }],
+  ['status', { ...good, status: 'aborted' }], ['decision READY_FOR_PAPER', { ...good, decision: 'READY_FOR_PAPER' }],
+  ['decision null', { ...good, decision: null }], ['decision missing', (({ decision, ...x }) => x)(good)],
+  ['dataset', { ...good, dataset_sha256: 'f'.repeat(64) }], ['mode', { ...good, mode: 'exploration' }], ['stats', { ...good, stats: 'x' }],
+  // Granskningens prov: godtyckliga kriterier, motsägande beslut och holdout som sträng
+  ['arbitrary criteria', { ...good, decision: 'MORE_RESEARCH', criteria: { a: 'x', b: null, c: 123, d: {}, e: [] } }],
+  ['MORE_RESEARCH with false criteria', { ...good, decision: 'MORE_RESEARCH' }],
+  ['REJECT with all true', { ...good, decision: 'REJECT', criteria: allTrue }],
+  ['holdout string', { ...good, holdout_loaded: 'false' }], ['holdout true', { ...good, holdout_loaded: true }],
+  ['holdout null', { ...good, holdout_loaded: null }], ['holdout missing', (({ holdout_loaded, ...x }) => x)(good)],
+  ['missing criterion', { ...good, criteria: four }], ['extra criterion', { ...good, criteria: { ...crit, stability: true } }],
+  ['renamed criterion', { ...good, criteria: { ...four, t_required: false } }], ['criteria array', { ...good, criteria: [false, false, true, false, false] }],
+];
+for (const v of [null, 'false', 0, 1, {}, [], 'true']) invalid.push([`criterion value ${JSON.stringify(v)}`, { ...good, criteria: { ...crit, t_at_least_required: v } }]);
+for (const [name, result] of invalid) {
+  await assert.rejects(finish(id, second.lease_token, result), /Ogiltigt resultat/, name);
 }
+const slotAfter = (await db.query('select * from research_worker_slot')).rows[0];
+assert.deepEqual(slotAfter, slotBefore, 'a rejected result leaves the slot and lease unchanged');
+assert.equal((await status(id)).status, 'running');
+assert.equal((await db.query('select count(*)::int n from run_results')).rows[0].n, 0);
 const { reproduction_match, ...noRepro } = { ...good };
 assert.equal(await finish(id, second.lease_token, noRepro), true);
 assert.equal((await status(id)).status, 'done');
@@ -123,6 +142,19 @@ const timed = await claim();
 assert.equal(await finish(timeoutId, timed.lease_token, null, 'Worker stoppad eller tidsgräns nådd'), true);
 assert.equal((await status(timeoutId)).status, 'failed');
 
+// MORE_RESEARCH accepteras bara när alla fem är sanna
+await db.exec('reset role'); await db.exec("delete from run_trades; delete from run_results; delete from runs where hypothesis_id='H-0013'");
+await role('authenticated', member);
+const moreId = await enqueue(key(9));
+await role('service_role');
+const more = await claim(); assert.equal(more.id, moreId);
+assert.equal(await finish(moreId, more.lease_token, { ...good, decision: 'MORE_RESEARCH', criteria: allTrue }), true);
+assert.equal((await status(moreId)).status, 'done');
+for (const r of ['anon', 'authenticated']) {
+  await role(r, r === 'authenticated' ? member : '');
+  await assert.rejects(db.query("select research_h0013_result_ok('{}'::jsonb)"), /permission denied/);
+}
+
 // Befintliga flöden oförändrade efter 0005
 await role('service_role');
 await db.query("insert into hypotheses(id,registered_at,registry_commit,statement,decision) values ('H-0009','2026-11-01','8730a1a','Fas 1','REJECT')");
@@ -143,7 +175,8 @@ await role('anon');
 await assert.rejects(db.query("select research_finish(gen_random_uuid(),gen_random_uuid(),'{}'::jsonb,null)"), /permission denied/);
 
 console.log('PASS: H-0013 enqueue auth/RLS, fixed contract, registry precondition, one active run, no second result.');
-console.log('PASS: shared slot, lease expiry retry (3 attempts), stale fencing, strict result contract, duplicate publish refused.');
+console.log('PASS: shared slot, lease expiry retry (3 attempts), stale fencing, duplicate publish refused.');
+console.log(`PASS: strict result contract rejects ${invalid.length} invalid results (names, booleans, decision consistency, boolean holdout) and leaves the lease unchanged.`);
 console.log('PASS: cancellation, timeout failure, registry decision untouched, Fas 1 registered and exploration flows unchanged.');
 console.log('PGlite uses one connection: real multi-connection contention still requires a PostgreSQL/Supabase test.');
 await db.close();
