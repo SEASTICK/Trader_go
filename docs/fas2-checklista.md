@@ -1,6 +1,6 @@
 # Fas 2 – Utvecklingsplan
 
-**7 av 40 uppgifter verifierade · 8 arbetsområden.**
+**5 av 40 uppgifter verifierade · 8 arbetsområden.**
 
 H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `c27a9e0`.
 
@@ -34,20 +34,23 @@ PR #69 granskad; regimkoden är ännu inte mergad eller driftsatt
 
 ## 2. Bygg och verifiera regimmodulen
 
-2/5 verifierade.
+0/5 verifierade.
 
-- [x] **F2-201** Beräkna trend och volatilitet enligt det registrerade protokollet
-  - Underlag: [docs/fas2-regim-granskning-69.md](fas2-regim-granskning-69.md) — c27a9e0: verifierat på kompletta, UTC-justerade 4H-serier. Samtliga 206 Python-tester passerar, inklusive 19 regimtestfall. PR ännu inte mergad.
-  - Verifierat i PR #69; ej mergat, driftsatt eller publicerat.
+- [ ] **F2-201** Beräkna trend och volatilitet enligt det registrerade protokollet **Pågår.**
+  - Underlag: [engine/tests/test_regime.py](../engine/tests/test_regime.py) — 496d8aa (PR #69, gren fas2-regim): Trend och volatilitet räknas nu över kalenderdagar; en lucka ger okänt tills 200/30-dagarsfönstren är hela igen. Samma etiketter som metrics.regimes på kompletta serier. 36 regimtester och hela Python-sviten, 223 tester, passerar lokalt. Sex mutationsprov fångas. Endast syntetisk data.
+  - Rättat efter granskning av c27a9e0 i 496d8aa. Väntar på Codex granskning; ej mergat, driftsatt eller publicerat.
 - [ ] **F2-202** Implementera tre dagars hysteres och omedelbara skyddslägen **Pågår.**
-  - Granskad PR #69 c27a9e0. Kalenderluckor och tidsvalidering behöver rättas före slutgodkännande.
-- [x] **F2-203** Använd bara föregående stängda dags läge på varje 4H-stapel
-  - Underlag: [docs/fas2-regim-granskning-69.md](fas2-regim-granskning-69.md) — c27a9e0: verifierat på kompletta, UTC-justerade 4H-serier. Samtliga 206 Python-tester passerar, inklusive 19 regimtestfall. PR ännu inte mergad.
-  - Verifierat i PR #69; ej mergat, driftsatt eller publicerat.
+  - Underlag: [engine/tests/test_regime.py](../engine/tests/test_regime.py) — 496d8aa (PR #69, gren fas2-regim): Tre dagars bekräftelse räknas över sammanhängande kalenderdagar; saknad eller ofullständig dag blir okänt och nollställer räknaren. ned/hög vol och okänt gäller direkt. 36 regimtester och hela Python-sviten, 223 tester, passerar lokalt. Sex mutationsprov fångas. Endast syntetisk data.
+  - Rättat efter granskning av c27a9e0 i 496d8aa. Väntar på Codex granskning; ej mergat, driftsatt eller publicerat.
+- [ ] **F2-203** Använd bara föregående stängda dags läge på varje 4H-stapel **Pågår.**
+  - Underlag: [engine/tests/test_regime.py](../engine/tests/test_regime.py) — 496d8aa (PR #69, gren fas2-regim): per_bar slår upp exakt kalenderdagen före stapelns dag och för aldrig ett äldre läge över en lucka. 36 regimtester och hela Python-sviten, 223 tester, passerar lokalt. Sex mutationsprov fångas. Endast syntetisk data.
+  - Rättat efter granskning av c27a9e0 i 496d8aa. Väntar på Codex granskning; ej mergat, driftsatt eller publicerat.
 - [ ] **F2-204** Hantera uppvärmning, ofullständiga dagar, dataluckor och ogiltiga tidsstämplar **Pågår.**
-  - Granskad PR #69 c27a9e0. Kalenderluckor och tidsvalidering behöver rättas före slutgodkännande.
+  - Underlag: [engine/tests/test_regime.py](../engine/tests/test_regime.py) — 496d8aa (PR #69, gren fas2-regim): Validering av UTC, sortering, dubbletter, tillåten tidsram och rutnät från 00:00 UTC; 30 minuters förskjutning och oregelbunden stapel avvisas. En dag är stängd bara när alla dess staplar finns. 36 regimtester och hela Python-sviten, 223 tester, passerar lokalt. Sex mutationsprov fångas. Endast syntetisk data.
+  - Rättat efter granskning av c27a9e0 i 496d8aa. Väntar på Codex granskning; ej mergat, driftsatt eller publicerat.
 - [ ] **F2-205** Granska regimkoden och verifiera tester för framtidsläckage och dagsgränser **Pågår.**
-  - Granskad PR #69 c27a9e0. Kalenderluckor och tidsvalidering behöver rättas före slutgodkännande.
+  - Underlag: [engine/tests/test_regime.py](../engine/tests/test_regime.py) — 496d8aa (PR #69, gren fas2-regim): Regressionstester för saknad dag, ofullständig dag (första och sista stapeln), feljustering, prefix över lucka och att senare tidsstämplar inte avgör tidigare dagar. 36 regimtester och hela Python-sviten, 223 tester, passerar lokalt. Sex mutationsprov fångas. Endast syntetisk data.
+  - Rättat efter granskning av c27a9e0 i 496d8aa. Väntar på Codex granskning; ej mergat, driftsatt eller publicerat.
 
 ## 3. Bygg den adaptiva strategiväljaren
 

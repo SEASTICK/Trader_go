@@ -79,47 +79,62 @@
         {
           "id": "F2-201",
           "title": "Beräkna trend och volatilitet enligt det registrerade protokollet",
-          "status": "done",
+          "status": "in_progress",
           "evidence": [
             {
-              "file": "docs/fas2-regim-granskning-69.md",
-              "detail": "c27a9e0: verifierat på kompletta, UTC-justerade 4H-serier. Samtliga 206 Python-tester passerar, inklusive 19 regimtestfall. PR ännu inte mergad."
+              "file": "engine/tests/test_regime.py",
+              "detail": "496d8aa (PR #69, gren fas2-regim): Trend och volatilitet räknas nu över kalenderdagar; en lucka ger okänt tills 200/30-dagarsfönstren är hela igen. Samma etiketter som metrics.regimes på kompletta serier. 36 regimtester och hela Python-sviten, 223 tester, passerar lokalt. Sex mutationsprov fångas. Endast syntetisk data."
             }
           ],
-          "note": "Verifierat i PR #69; ej mergat, driftsatt eller publicerat."
+          "note": "Rättat efter granskning av c27a9e0 i 496d8aa. Väntar på Codex granskning; ej mergat, driftsatt eller publicerat."
         },
         {
           "id": "F2-202",
           "title": "Implementera tre dagars hysteres och omedelbara skyddslägen",
           "status": "in_progress",
-          "evidence": [],
-          "note": "Granskad PR #69 c27a9e0. Kalenderluckor och tidsvalidering behöver rättas före slutgodkännande."
+          "evidence": [
+            {
+              "file": "engine/tests/test_regime.py",
+              "detail": "496d8aa (PR #69, gren fas2-regim): Tre dagars bekräftelse räknas över sammanhängande kalenderdagar; saknad eller ofullständig dag blir okänt och nollställer räknaren. ned/hög vol och okänt gäller direkt. 36 regimtester och hela Python-sviten, 223 tester, passerar lokalt. Sex mutationsprov fångas. Endast syntetisk data."
+            }
+          ],
+          "note": "Rättat efter granskning av c27a9e0 i 496d8aa. Väntar på Codex granskning; ej mergat, driftsatt eller publicerat."
         },
         {
           "id": "F2-203",
           "title": "Använd bara föregående stängda dags läge på varje 4H-stapel",
-          "status": "done",
+          "status": "in_progress",
           "evidence": [
             {
-              "file": "docs/fas2-regim-granskning-69.md",
-              "detail": "c27a9e0: verifierat på kompletta, UTC-justerade 4H-serier. Samtliga 206 Python-tester passerar, inklusive 19 regimtestfall. PR ännu inte mergad."
+              "file": "engine/tests/test_regime.py",
+              "detail": "496d8aa (PR #69, gren fas2-regim): per_bar slår upp exakt kalenderdagen före stapelns dag och för aldrig ett äldre läge över en lucka. 36 regimtester och hela Python-sviten, 223 tester, passerar lokalt. Sex mutationsprov fångas. Endast syntetisk data."
             }
           ],
-          "note": "Verifierat i PR #69; ej mergat, driftsatt eller publicerat."
+          "note": "Rättat efter granskning av c27a9e0 i 496d8aa. Väntar på Codex granskning; ej mergat, driftsatt eller publicerat."
         },
         {
           "id": "F2-204",
           "title": "Hantera uppvärmning, ofullständiga dagar, dataluckor och ogiltiga tidsstämplar",
           "status": "in_progress",
-          "evidence": [],
-          "note": "Granskad PR #69 c27a9e0. Kalenderluckor och tidsvalidering behöver rättas före slutgodkännande."
+          "evidence": [
+            {
+              "file": "engine/tests/test_regime.py",
+              "detail": "496d8aa (PR #69, gren fas2-regim): Validering av UTC, sortering, dubbletter, tillåten tidsram och rutnät från 00:00 UTC; 30 minuters förskjutning och oregelbunden stapel avvisas. En dag är stängd bara när alla dess staplar finns. 36 regimtester och hela Python-sviten, 223 tester, passerar lokalt. Sex mutationsprov fångas. Endast syntetisk data."
+            }
+          ],
+          "note": "Rättat efter granskning av c27a9e0 i 496d8aa. Väntar på Codex granskning; ej mergat, driftsatt eller publicerat."
         },
         {
           "id": "F2-205",
           "title": "Granska regimkoden och verifiera tester för framtidsläckage och dagsgränser",
           "status": "in_progress",
-          "evidence": [],
-          "note": "Granskad PR #69 c27a9e0. Kalenderluckor och tidsvalidering behöver rättas före slutgodkännande."
+          "evidence": [
+            {
+              "file": "engine/tests/test_regime.py",
+              "detail": "496d8aa (PR #69, gren fas2-regim): Regressionstester för saknad dag, ofullständig dag (första och sista stapeln), feljustering, prefix över lucka och att senare tidsstämplar inte avgör tidigare dagar. 36 regimtester och hela Python-sviten, 223 tester, passerar lokalt. Sex mutationsprov fångas. Endast syntetisk data."
+            }
+          ],
+          "note": "Rättat efter granskning av c27a9e0 i 496d8aa. Väntar på Codex granskning; ej mergat, driftsatt eller publicerat."
         }
       ]
     },
