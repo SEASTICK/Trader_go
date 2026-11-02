@@ -3,7 +3,7 @@
 Granskad PR-head: `74d46e31b434e5d2d9f57b71f6762c93eb9d7073`, kod `80d8847`, gren `fas2-walkforward`, bas `bcb14c9`.
 PR: https://github.com/SEASTICK/Trader_go/pull/71. Bara syntetiska data har använts. Ingen merge, driftsättning, publicering eller läsning av verkligt slutprov har gjorts i granskningen.
 
-## Fynd före merge
+## Ursprungliga fynd före rättning
 
 ### P1 – direkta beräkningsanrop kan kringgå slutprovsskyddet
 
@@ -52,3 +52,18 @@ Den syntetiska fullkörningen med verklig urvalsregel blir oftast platt. Det är
 F2-402 (urvalsgränser och platt/tie-break) och F2-405 (versionsmärkning och reproducerbarhet) är verifierade på denna PR-head. F2-401 och F2-403 lämnas öppna för period-/slutprovsskyddet, F2-404 för kapitalredovisningen. Gemensam status: **17/40 verifierade**.
 
 PR #71 är ännu inte godkänd för merge. Nästa kontroll är rättade direkta dataingångar och en avstämd kapital-/affärsredovisning, med syntetiska regressioner och uppdaterad checklista.
+
+
+## Omgranskning av rättningarna – 2026-11-02
+
+Granskad PR-head: `c5068e181b1af2d33b06248d6edbdfbdc3677b68`, kod `7ff0799`. PR:ens merge av granskningsunderlaget från main är `b984068`. Tidigare fynd ovan behålls som historik och är nu rättade.
+
+- **P1 rättad:** `check_development` ligger först i `regime_stats`, `train` och `evaluate_window`, utöver huvudflödet. Gemensam kontroll av staplar, funding, eventuella dagslägen, UTC-index samt utvecklingsperiodens gränser och ordning sker före beräkning. Slutgränsen 2025-01-01 är endast tillåten som exklusivt periodslut. Arkivbegränsningen före inläsning är oförändrad.
+- **P2 rättad:** varje fönsters belopp och kopior av affärerna skalas med ingående kapital. Priser och positionsandelar behålls. `capital_start`, `capital_end`, lokala normaliserade värden och `config.capital_base` gör enheterna uttryckliga. Frysta backtestmotorn är oförändrad.
+- **Oberoende verifiering:** exakt PR-head kördes i isolerad arkivkopia: **408 Python-testfall passerar**, inklusive **81 fas2-testfall**. CI Engine check är också grön på samma head. En ofarlig lokal joblib-varning om identifiering av fysiska CPU-kärnor förekommer.
+- De tidigare direkta syntetiska slutprovsanropen till `train` och `evaluate_window`, samt ett direkt `regime_stats`, avvisas nu före regimberäkning. Regressionerna täcker även förbjuden funding, periodgränser, ordning och tillförda dagslägen.
+- Ett separat kontrollerat ihopsättningsprov med sex fördubblingar ger **64 / 0,63 / 1,26 / 63** för slutkapital, kostnad, funding och summerad netto-PnL. Dessutom verifierades att ursprungliga affärsobjekt inte muteras och att prisnivåer samt positionsandelar behålls. Regressioner med varierande fönsteravkastning och en icke-platt syntetisk körning passerar.
+
+F2-401 till F2-405 är nu verifierade: **20/40 klara**. Urvalsregel, protokoll, frysta resultat och REJECT-beslut är oförändrade. Bara syntetisk data har använts; inget riktigt slutprov, ingen merge, driftsättning eller publicering har gjorts i denna granskning.
+
+**Bedömning:** PR #71 är kodmässigt godkänd för merge på `c5068e1`. Detta verifierar implementationen, inte strategins lönsamhet eller behörighet för papper/live. Nästa kontroll är arbetsområde 5: förregistrerade jämförelser, kostnadsstress, permutationstest, osäkerhet och beslutskriterier, först med syntetiska regressioner och fortsatt skyddat slutprov.
