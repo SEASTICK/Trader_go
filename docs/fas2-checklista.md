@@ -1,0 +1,110 @@
+# Fas 2 – Utvecklingsplan
+
+**7 av 40 uppgifter verifierade · 8 arbetsområden.**
+
+H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `c27a9e0`.
+
+PR #69 granskad; regimkoden är ännu inte mergad eller driftsatt
+
+## Uppdateringsregler
+
+- `docs/fas2-status.json` är gemensam källa för status. Ändra status där; denna Markdown genereras.
+- Efter varje relevant kodändring: kontrollera berörda uppgifter, kör relevanta tester och uppdatera status/underlag i samma leverans.
+- Bocka bara av verifierat och granskat arbete. Att en fil finns eller att en commit är pushad räcker inte.
+- Spara kod-/testunderlag i `evidence`. Sätt `in_progress` när arbetet pågår och `todo` om en tidigare verifiering inte längre gäller.
+- Skilj på lokal kod, mergad kod, driftsättning, publicering och installerat app-test. De har egna kontrollpunkter.
+- Håll H-0013 separat från H-0014/H-0015. Ändra inte frysta resultat eller forskningsprotokollet för att få fler bockar.
+- Kör `python3 scripts/render-fas2-checklist.py` efter uppdatering och `python3 scripts/render-fas2-checklist.py --check` före commit.
+- Chatvyn är en ögonblicksbild. En filändring i en annan session startar inte en verifiering här. Begär en ny kontroll eller uppdatera vyn i nästa leverans.
+
+## 1. Förberedelser och låst forskningsplan
+
+5/5 verifierade.
+
+- [x] **F2-101** Registrera H-0013 före nya forskningskörningar
+  - Underlag: [research/registry.md](../research/registry.md) — d88eaac: H-0013 registrerad före implementation.
+- [x] **F2-102** Lås marknadslägen, parametrar, kostnader och beslutskriterier
+  - Underlag: [research/fas2-protokoll.md](../research/fas2-protokoll.md) — d88eaac: 200 dagar, volatilitet, hysteres, fasta kandidater och fem beslutskriterier dokumenterade.
+- [x] **F2-103** Dokumentera fryst dataset och skyddad slutprovsperiod
+  - Underlag: [research/fas2-protokoll.md](../research/fas2-protokoll.md) — Fryst dataset 6a84c4f4…; 2020–2024 för utveckling, slutprovet 2025–2026 ska inte läsas.
+- [x] **F2-104** Kartlägg återanvändbar motor, kö, worker och Research Lab
+  - Underlag: [docs/fas2-inledande-granskning-20261102.md](fas2-inledande-granskning-20261102.md) — 3c2465b: befintlig integration granskad; H-0013 saknar ännu egen motor och köingång.
+- [x] **F2-105** Avgränsa H-0013 från tvärsnitt, papper och livehandel
+  - Underlag: [docs/fas2-inledande-granskning-20261102.md](fas2-inledande-granskning-20261102.md) — 3c2465b: H-0014/H-0015 är separata; REJECT gäller fortsatt och H-0013 kan inte gå direkt till papper.
+
+## 2. Bygg och verifiera regimmodulen
+
+2/5 verifierade.
+
+- [x] **F2-201** Beräkna trend och volatilitet enligt det registrerade protokollet
+  - Underlag: [docs/fas2-regim-granskning-69.md](fas2-regim-granskning-69.md) — c27a9e0: verifierat på kompletta, UTC-justerade 4H-serier. Samtliga 206 Python-tester passerar, inklusive 19 regimtestfall. PR ännu inte mergad.
+  - Verifierat i PR #69; ej mergat, driftsatt eller publicerat.
+- [ ] **F2-202** Implementera tre dagars hysteres och omedelbara skyddslägen **Pågår.**
+  - Granskad PR #69 c27a9e0. Kalenderluckor och tidsvalidering behöver rättas före slutgodkännande.
+- [x] **F2-203** Använd bara föregående stängda dags läge på varje 4H-stapel
+  - Underlag: [docs/fas2-regim-granskning-69.md](fas2-regim-granskning-69.md) — c27a9e0: verifierat på kompletta, UTC-justerade 4H-serier. Samtliga 206 Python-tester passerar, inklusive 19 regimtestfall. PR ännu inte mergad.
+  - Verifierat i PR #69; ej mergat, driftsatt eller publicerat.
+- [ ] **F2-204** Hantera uppvärmning, ofullständiga dagar, dataluckor och ogiltiga tidsstämplar **Pågår.**
+  - Granskad PR #69 c27a9e0. Kalenderluckor och tidsvalidering behöver rättas före slutgodkännande.
+- [ ] **F2-205** Granska regimkoden och verifiera tester för framtidsläckage och dagsgränser **Pågår.**
+  - Granskad PR #69 c27a9e0. Kalenderluckor och tidsvalidering behöver rättas före slutgodkännande.
+
+## 3. Bygg den adaptiva strategiväljaren
+
+0/5 verifierade.
+
+- [ ] **F2-301** Inför ett versionshanterat kontrakt för spelbok, läge och målposition
+- [ ] **F2-302** Koppla fasta EMA/ADX- och Bollinger/RSI-kandidater samt platt läge
+- [ ] **F2-303** Begränsa long till upp-lägen och short till ned-lägen
+- [ ] **F2-304** Stäng vid läges- och kandidatbyte utan att återuppta en gammal affär
+- [ ] **F2-305** Verifiera nästa öppning, ATR-stop och alla bytesfall med syntetiska tester
+
+## 4. Träning och walk-forward
+
+0/5 verifierade.
+
+- [ ] **F2-401** Välj kandidat per läge enbart på respektive träningsfönster
+- [ ] **F2-402** Kräv minst 20 inledda affärer och positivt t-värde, annars platt
+- [ ] **F2-403** Kör sex halvårsfönster med korrekt uppvärmning och platt start
+- [ ] **F2-404** Sätt ihop testkurvan och spara varje fönsters val, dagar och affärer
+- [ ] **F2-405** Versionsmärk slutlig spelbok och verifiera reproducerbarhet utan slutprov
+
+## 5. Utvärdering och robusthet
+
+0/5 verifierade.
+
+- [ ] **F2-501** Jämför med köp-och-behåll, varje kandidat ensam och en likaviktad blandning
+- [ ] **F2-502** Verifiera kostnadsstress, funding och riskmodell för H-0013
+- [ ] **F2-503** Kör förregistrerad permutation och slumpkontroll med fullständig försöksredovisning
+- [ ] **F2-504** Redovisa osäkerhet, 81 spelböcker, regimresultat och resultat utan bästa året
+- [ ] **F2-505** Bedöm alla fem förregistrerade kriterier och spara även negativa eller avbrutna försök
+
+## 6. Supabase och DigitalOcean
+
+0/5 verifierade.
+
+- [ ] **F2-601** Skapa ett separat strikt kökontrakt för H-0013 med autentisering och RLS
+- [ ] **F2-602** Anslut H-0013 till samma enda worker med lease och skydd mot dubbla resultat
+- [ ] **F2-603** Begränsa dataläsningen till verifierade frysta arkiv innan några filer öppnas
+- [ ] **F2-604** Testa avbrott, timeout, återförsök och återhämtning efter workeromstart
+- [ ] **F2-605** Driftsätt verifierad kod med loggar, resursgränser och dokumenterad återgång
+
+## 7. Visa Fas 2 i Research Lab
+
+0/5 verifierade.
+
+- [ ] **F2-701** Visa H-0013 separat från Fas 1 och tvärsnittshypoteserna
+- [ ] **F2-702** Visa registrerade parametrar och förbered en fast forskningskörning
+- [ ] **F2-703** Visa köstatus, förlopp, fel och möjlighet att avbryta
+- [ ] **F2-704** Visa marknadslägen, kandidatval och jämförelsekurvor med spårbara källor
+- [ ] **F2-705** Visa kriterier, osäkerhet, historik och REJECT/MORE_RESEARCH utan SIM som verkliga resultat
+
+## 8. Sluttest och godkännande
+
+0/5 verifierade.
+
+- [ ] **F2-801** Kör relevanta Python-, frontend-, Rust- och databaskontroller
+- [ ] **F2-802** Verifiera hela flödet från app till worker och sparat H-0013-resultat
+- [ ] **F2-803** Kontrollera Mac, anslutningsfel och att befintliga Fas 1-funktioner fungerar
+- [ ] **F2-804** Publicera granskad Stable och verifiera installerad kodversion samt uppdaterad checklista
+- [ ] **F2-805** Dokumentera Fas 2-godkännande och fatta separat beslut om eventuellt slutprov; ingen automatisk paper- eller liveaktivering

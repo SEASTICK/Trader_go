@@ -1,0 +1,374 @@
+{
+  "schema_version": 1,
+  "title": "Fas 2 – Adaptive Strategy Engine",
+  "hypothesis": "H-0013",
+  "updated": "2026-11-02",
+  "reviewed_revision": "c27a9e0",
+  "note": "Klar betyder verifierad. Kod som bara finns lokalt eller tester utan granskning är inte slutgodkända.",
+  "groups": [
+    {
+      "id": "plan",
+      "title": "1. Förberedelser och låst forskningsplan",
+      "tasks": [
+        {
+          "id": "F2-101",
+          "title": "Registrera H-0013 före nya forskningskörningar",
+          "status": "done",
+          "evidence": [
+            {
+              "file": "research/registry.md",
+              "detail": "d88eaac: H-0013 registrerad före implementation."
+            }
+          ],
+          "note": ""
+        },
+        {
+          "id": "F2-102",
+          "title": "Lås marknadslägen, parametrar, kostnader och beslutskriterier",
+          "status": "done",
+          "evidence": [
+            {
+              "file": "research/fas2-protokoll.md",
+              "detail": "d88eaac: 200 dagar, volatilitet, hysteres, fasta kandidater och fem beslutskriterier dokumenterade."
+            }
+          ],
+          "note": ""
+        },
+        {
+          "id": "F2-103",
+          "title": "Dokumentera fryst dataset och skyddad slutprovsperiod",
+          "status": "done",
+          "evidence": [
+            {
+              "file": "research/fas2-protokoll.md",
+              "detail": "Fryst dataset 6a84c4f4…; 2020–2024 för utveckling, slutprovet 2025–2026 ska inte läsas."
+            }
+          ],
+          "note": ""
+        },
+        {
+          "id": "F2-104",
+          "title": "Kartlägg återanvändbar motor, kö, worker och Research Lab",
+          "status": "done",
+          "evidence": [
+            {
+              "file": "docs/fas2-inledande-granskning-20261102.md",
+              "detail": "3c2465b: befintlig integration granskad; H-0013 saknar ännu egen motor och köingång."
+            }
+          ],
+          "note": ""
+        },
+        {
+          "id": "F2-105",
+          "title": "Avgränsa H-0013 från tvärsnitt, papper och livehandel",
+          "status": "done",
+          "evidence": [
+            {
+              "file": "docs/fas2-inledande-granskning-20261102.md",
+              "detail": "3c2465b: H-0014/H-0015 är separata; REJECT gäller fortsatt och H-0013 kan inte gå direkt till papper."
+            }
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "regime",
+      "title": "2. Bygg och verifiera regimmodulen",
+      "tasks": [
+        {
+          "id": "F2-201",
+          "title": "Beräkna trend och volatilitet enligt det registrerade protokollet",
+          "status": "done",
+          "evidence": [
+            {
+              "file": "docs/fas2-regim-granskning-69.md",
+              "detail": "c27a9e0: verifierat på kompletta, UTC-justerade 4H-serier. Samtliga 206 Python-tester passerar, inklusive 19 regimtestfall. PR ännu inte mergad."
+            }
+          ],
+          "note": "Verifierat i PR #69; ej mergat, driftsatt eller publicerat."
+        },
+        {
+          "id": "F2-202",
+          "title": "Implementera tre dagars hysteres och omedelbara skyddslägen",
+          "status": "in_progress",
+          "evidence": [],
+          "note": "Granskad PR #69 c27a9e0. Kalenderluckor och tidsvalidering behöver rättas före slutgodkännande."
+        },
+        {
+          "id": "F2-203",
+          "title": "Använd bara föregående stängda dags läge på varje 4H-stapel",
+          "status": "done",
+          "evidence": [
+            {
+              "file": "docs/fas2-regim-granskning-69.md",
+              "detail": "c27a9e0: verifierat på kompletta, UTC-justerade 4H-serier. Samtliga 206 Python-tester passerar, inklusive 19 regimtestfall. PR ännu inte mergad."
+            }
+          ],
+          "note": "Verifierat i PR #69; ej mergat, driftsatt eller publicerat."
+        },
+        {
+          "id": "F2-204",
+          "title": "Hantera uppvärmning, ofullständiga dagar, dataluckor och ogiltiga tidsstämplar",
+          "status": "in_progress",
+          "evidence": [],
+          "note": "Granskad PR #69 c27a9e0. Kalenderluckor och tidsvalidering behöver rättas före slutgodkännande."
+        },
+        {
+          "id": "F2-205",
+          "title": "Granska regimkoden och verifiera tester för framtidsläckage och dagsgränser",
+          "status": "in_progress",
+          "evidence": [],
+          "note": "Granskad PR #69 c27a9e0. Kalenderluckor och tidsvalidering behöver rättas före slutgodkännande."
+        }
+      ]
+    },
+    {
+      "id": "adaptive",
+      "title": "3. Bygg den adaptiva strategiväljaren",
+      "tasks": [
+        {
+          "id": "F2-301",
+          "title": "Inför ett versionshanterat kontrakt för spelbok, läge och målposition",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-302",
+          "title": "Koppla fasta EMA/ADX- och Bollinger/RSI-kandidater samt platt läge",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-303",
+          "title": "Begränsa long till upp-lägen och short till ned-lägen",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-304",
+          "title": "Stäng vid läges- och kandidatbyte utan att återuppta en gammal affär",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-305",
+          "title": "Verifiera nästa öppning, ATR-stop och alla bytesfall med syntetiska tester",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "walkforward",
+      "title": "4. Träning och walk-forward",
+      "tasks": [
+        {
+          "id": "F2-401",
+          "title": "Välj kandidat per läge enbart på respektive träningsfönster",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-402",
+          "title": "Kräv minst 20 inledda affärer och positivt t-värde, annars platt",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-403",
+          "title": "Kör sex halvårsfönster med korrekt uppvärmning och platt start",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-404",
+          "title": "Sätt ihop testkurvan och spara varje fönsters val, dagar och affärer",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-405",
+          "title": "Versionsmärk slutlig spelbok och verifiera reproducerbarhet utan slutprov",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "validation",
+      "title": "5. Utvärdering och robusthet",
+      "tasks": [
+        {
+          "id": "F2-501",
+          "title": "Jämför med köp-och-behåll, varje kandidat ensam och en likaviktad blandning",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-502",
+          "title": "Verifiera kostnadsstress, funding och riskmodell för H-0013",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-503",
+          "title": "Kör förregistrerad permutation och slumpkontroll med fullständig försöksredovisning",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-504",
+          "title": "Redovisa osäkerhet, 81 spelböcker, regimresultat och resultat utan bästa året",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-505",
+          "title": "Bedöm alla fem förregistrerade kriterier och spara även negativa eller avbrutna försök",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "backend",
+      "title": "6. Supabase och DigitalOcean",
+      "tasks": [
+        {
+          "id": "F2-601",
+          "title": "Skapa ett separat strikt kökontrakt för H-0013 med autentisering och RLS",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-602",
+          "title": "Anslut H-0013 till samma enda worker med lease och skydd mot dubbla resultat",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-603",
+          "title": "Begränsa dataläsningen till verifierade frysta arkiv innan några filer öppnas",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-604",
+          "title": "Testa avbrott, timeout, återförsök och återhämtning efter workeromstart",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-605",
+          "title": "Driftsätt verifierad kod med loggar, resursgränser och dokumenterad återgång",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "lab",
+      "title": "7. Visa Fas 2 i Research Lab",
+      "tasks": [
+        {
+          "id": "F2-701",
+          "title": "Visa H-0013 separat från Fas 1 och tvärsnittshypoteserna",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-702",
+          "title": "Visa registrerade parametrar och förbered en fast forskningskörning",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-703",
+          "title": "Visa köstatus, förlopp, fel och möjlighet att avbryta",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-704",
+          "title": "Visa marknadslägen, kandidatval och jämförelsekurvor med spårbara källor",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-705",
+          "title": "Visa kriterier, osäkerhet, historik och REJECT/MORE_RESEARCH utan SIM som verkliga resultat",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "acceptance",
+      "title": "8. Sluttest och godkännande",
+      "tasks": [
+        {
+          "id": "F2-801",
+          "title": "Kör relevanta Python-, frontend-, Rust- och databaskontroller",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-802",
+          "title": "Verifiera hela flödet från app till worker och sparat H-0013-resultat",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-803",
+          "title": "Kontrollera Mac, anslutningsfel och att befintliga Fas 1-funktioner fungerar",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-804",
+          "title": "Publicera granskad Stable och verifiera installerad kodversion samt uppdaterad checklista",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F2-805",
+          "title": "Dokumentera Fas 2-godkännande och fatta separat beslut om eventuellt slutprov; ingen automatisk paper- eller liveaktivering",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    }
+  ],
+  "reviewed_scope": "PR #69 granskad; regimkoden är ännu inte mergad eller driftsatt"
+}
