@@ -3,7 +3,7 @@
   "title": "Fas 2 – Adaptive Strategy Engine",
   "hypothesis": "H-0013",
   "updated": "2026-11-02",
-  "reviewed_revision": "949c44a",
+  "reviewed_revision": "866d393",
   "note": "Klar betyder verifierad. Kod som bara finns lokalt eller tester utan granskning är inte slutgodkända.",
   "groups": [
     {
@@ -83,10 +83,10 @@
           "evidence": [
             {
               "file": "docs/fas2-regim-granskning-69.md",
-              "detail": "949c44a (kod 496d8aa): oberoende omgranskning, 223 Python-tester inklusive 36 regimtestfall passerar. Kalenderhysteres, rutnät och föregående dags uppslag verifierade."
+              "detail": "866d393 (kod ebc5d38): oberoende slutgranskning godkänd. 253 Python-tester, inklusive 66 regimtestfall, passerar. Tidigare felprov samt nästa-stapel-kontrakt på 1h/4h/1d verifierade."
             }
           ],
-          "note": "Verifierat i PR #69, ännu inte mergat, driftsatt eller publicerat."
+          "note": "Kod godkänd för merge i PR #69; inget är driftsatt, publicerat eller kört på riktig data."
         },
         {
           "id": "F2-202",
@@ -95,10 +95,10 @@
           "evidence": [
             {
               "file": "docs/fas2-regim-granskning-69.md",
-              "detail": "949c44a (kod 496d8aa): oberoende omgranskning, 223 Python-tester inklusive 36 regimtestfall passerar. Kalenderhysteres, rutnät och föregående dags uppslag verifierade."
+              "detail": "866d393 (kod ebc5d38): oberoende slutgranskning godkänd. 253 Python-tester, inklusive 66 regimtestfall, passerar. Tidigare felprov samt nästa-stapel-kontrakt på 1h/4h/1d verifierade."
             }
           ],
-          "note": "Verifierat i PR #69, ännu inte mergat, driftsatt eller publicerat."
+          "note": "Kod godkänd för merge i PR #69; inget är driftsatt, publicerat eller kört på riktig data."
         },
         {
           "id": "F2-203",
@@ -107,42 +107,34 @@
           "evidence": [
             {
               "file": "docs/fas2-regim-granskning-69.md",
-              "detail": "949c44a (kod 496d8aa): oberoende omgranskning, 223 Python-tester inklusive 36 regimtestfall passerar. Kalenderhysteres, rutnät och föregående dags uppslag verifierade."
+              "detail": "866d393 (kod ebc5d38): oberoende slutgranskning godkänd. 253 Python-tester, inklusive 66 regimtestfall, passerar. Tidigare felprov samt nästa-stapel-kontrakt på 1h/4h/1d verifierade."
             }
           ],
-          "note": "Verifierat i PR #69, ännu inte mergat, driftsatt eller publicerat."
+          "note": "Kod godkänd för merge i PR #69; inget är driftsatt, publicerat eller kört på riktig data."
         },
         {
           "id": "F2-204",
           "title": "Hantera uppvärmning, ofullständiga dagar, dataluckor och ogiltiga tidsstämplar",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-regim-granskning-69.md",
-              "detail": "949c44a: current() kan returnera äldre läge efter saknad/ofullständig dag i seriens svans. Syntetiskt reproducerat; regression och rättning återstår."
-            },
-            {
-              "file": "engine/tests/test_regime.py",
-              "detail": "ebc5d38 (PR #69, gren fas2-regim): current() slår upp exakt kalenderdagen före nästa stapel och ger okänt när den dagen saknas eller är ofullständig. Kontrakt: current(bars) == per_bar(nästa stapel, daily(bars)). Regressionstester för saknad och ofullständig näst sista dag, lucka före komplett sista dag, komplett och påbörjad sista dag samt kontraktet runt en lucka. 66 regimtester och hela Python-sviten, 253 tester, passerar lokalt; den gamla current() fäller 8 av dem. Strikt uppvärmning efter luckor oförändrad. Endast syntetisk data."
+              "detail": "866d393 (kod ebc5d38): oberoende slutgranskning godkänd. 253 Python-tester, inklusive 66 regimtestfall, passerar. Tidigare felprov samt nästa-stapel-kontrakt på 1h/4h/1d verifierade."
             }
           ],
-          "note": "Rättat i ebc5d38 efter granskning av 949c44a. Väntar på Codex granskning; ej mergat, driftsatt eller publicerat."
+          "note": "Kod godkänd för merge i PR #69; inget är driftsatt, publicerat eller kört på riktig data."
         },
         {
           "id": "F2-205",
           "title": "Granska regimkoden och verifiera tester för framtidsläckage och dagsgränser",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-regim-granskning-69.md",
-              "detail": "949c44a: current() kan returnera äldre läge efter saknad/ofullständig dag i seriens svans. Syntetiskt reproducerat; regression och rättning återstår."
-            },
-            {
-              "file": "engine/tests/test_regime.py",
-              "detail": "ebc5d38 (PR #69, gren fas2-regim): current() slår upp exakt kalenderdagen före nästa stapel och ger okänt när den dagen saknas eller är ofullständig. Kontrakt: current(bars) == per_bar(nästa stapel, daily(bars)). Regressionstester för saknad och ofullständig näst sista dag, lucka före komplett sista dag, komplett och påbörjad sista dag samt kontraktet runt en lucka. 66 regimtester och hela Python-sviten, 253 tester, passerar lokalt; den gamla current() fäller 8 av dem. Strikt uppvärmning efter luckor oförändrad. Endast syntetisk data."
+              "detail": "866d393 (kod ebc5d38): oberoende slutgranskning godkänd. 253 Python-tester, inklusive 66 regimtestfall, passerar. Tidigare felprov samt nästa-stapel-kontrakt på 1h/4h/1d verifierade."
             }
           ],
-          "note": "Rättat i ebc5d38 efter granskning av 949c44a. Väntar på Codex granskning; ej mergat, driftsatt eller publicerat."
+          "note": "Kod godkänd för merge i PR #69; inget är driftsatt, publicerat eller kört på riktig data."
         }
       ]
     },
@@ -393,5 +385,5 @@
       ]
     }
   ],
-  "reviewed_scope": "PR #69 omgranskad; två tidigare fynd rättade, current() efter lucka i svansen återstår. Ej mergat eller driftsatt."
+  "reviewed_scope": "PR #69 regimmodul godkänd för merge efter oberoende granskning. Ej mergad, driftsatt eller publicerad."
 }
