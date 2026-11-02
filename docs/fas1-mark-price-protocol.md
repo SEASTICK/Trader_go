@@ -27,3 +27,19 @@ motorns tröskel är en förenkling. Detta test får inte märka den som en exak
 Binance-modell: historiska risktrappor, exakt mark price vid avräkning och
 likvidationsavgifter saknas. Fas 1-worker tillåter enbart 1x. Högre hävstång och
 exakt börsreplikering är inte godkända av detta test.
+
+## Tillägg efter arkivkontroll, före kompletteringshämtning
+
+De 60 verifierade månadsarkiven har 48 saknade staplar på åtta hela UTC-dagar:
+2021-07-01, 2021-07-24–27, 2022-07-31, 2022-10-02 och 2023-02-24.
+Det misslyckade täckningsresultatet bevaras. Ingen strategispecifik kontroll
+eller borttagning av dessa tider tillåts.
+
+Komplettera deterministiskt samtliga saknade tider, endast med verkliga
+markPriceKlines från Binance: först publicerade dagsarkiv med CHECKSUM, och
+om ett sådant saknas, det publika markPriceKlines-API:t med sparat råsvar och
+SHA256. Månadsarkiven ändras aldrig. Endast exakt saknade öppningstider får
+läggas till; tidsram, OHLC, dubbletter och full täckning kontrolleras igen.
+Om API används hämtas även en angränsande publicerad stapel på vardera sidan;
+överlappande OHLC ska stämma inom 1e-8 i absolut pris. Avvikelse eller kvarstående
+lucka stoppar godkännande. Ingen interpolering eller kontrakts-/spotersättning.
