@@ -44,33 +44,65 @@ def _direction(label: str) -> int:
 
 @dataclass(frozen=True)
 class Playbook:
-    """Ett val per marknadsläge. `okänt` ingår inte; det är alltid platt."""
+    """Ett val per marknadsläge. `okänt` ingår inte; det är alltid platt.
+
+    Varje instans är giltig oavsett hur den skapas: exakt de fyra lägena, var och ett en gång, och bara tillåtna
+    kandidater. Valen lagras i lägenas fasta ordning, så samma spelbok får alltid samma innehåll och id.
+    """
     choices: tuple[tuple[str, str], ...]
+
+    def __post_init__(self):
+        pairs = self.choices
+        if not isinstance(pairs, tuple) or not all(isinstance(p, tuple) and len(p) == 2 for p in pairs):
+            raise ValueError("Spelbokens val ska vara par (läge, kandidat)")
+        labels = [label for label, _ in pairs]
+        if not all(isinstance(label, str) for label in labels) or len(labels) != len(set(labels)) \
+                or set(labels) != set(regime.LABELS):
+            raise ValueError(f"En spelbok behöver exakt ett val för var och ett av {', '.join(regime.LABELS)}")
+        bad = {label: name for label, name in pairs if not isinstance(name, str) or name not in CANDIDATES}
+        if bad:
+            raise ValueError(f"Okända kandidater {bad}. Tillåtna: {', '.join(CANDIDATES)}")
+        given = dict(pairs)
+        object.__setattr__(self, "choices", tuple((label, given[label]) for label in regime.LABELS))
 
     @classmethod
     def of(cls, choices: Mapping[str, str]) -> Playbook:
-        if set(choices) != set(regime.LABELS):
-            raise ValueError(f"En spelbok behöver exakt ett val för var och ett av {', '.join(regime.LABELS)}")
-        bad = {k: v for k, v in choices.items() if v not in CANDIDATES}
-        if bad:
-            raise ValueError(f"Okända kandidater {bad}. Tillåtna: {', '.join(CANDIDATES)}")
-        return cls(tuple((label, choices[label]) for label in regime.LABELS))
+        if not isinstance(choices, Mapping):
+            raise ValueError("Spelbokens val ska vara en tabell från läge till kandidat")
+        return cls(tuple(choices.items()))
 
     def candidate(self, label: str) -> str:
         return dict(self.choices).get(label, FLAT)
 
+    def manifest(self) -> dict[str, str | None]:
+        """Kandidaterna spelboken använder, med sina låsta versioner (platt har ingen version)."""
+        return {name: CANDIDATES[name] for name in sorted({name for _, name in self.choices})}
+
     def to_dict(self) -> dict:
-        return {"contract": CONTRACT_VERSION, "choices": dict(self.choices),
-                "candidates": {k: CANDIDATES[k] for k in sorted(set(dict(self.choices).values()))}}
+        return {"contract": CONTRACT_VERSION, "choices": dict(self.choices), "candidates": self.manifest()}
 
     @classmethod
     def from_dict(cls, data: Mapping) -> Playbook:
-        if data.get("contract") != CONTRACT_VERSION:
-            raise ValueError(f"Fel kontraktsversion {data.get('contract')!r}, väntade {CONTRACT_VERSION}")
-        for name, version in data.get("candidates", {}).items():
-            if CANDIDATES.get(name, "saknas") != version:
-                raise ValueError(f"Kandidaten {name} har version {version}, låst version är {CANDIDATES.get(name)}")
-        return cls.of(data["choices"])
+        """Läser en sparad spelbok. Kandidatmanifestet måste exakt motsvara valen och de låsta versionerna; inget
+        fylls i från den nuvarande koden."""
+        if not isinstance(data, Mapping) or data.get("contract") != CONTRACT_VERSION:
+            got = data.get("contract") if isinstance(data, Mapping) else data
+            raise ValueError(f"Fel kontraktsversion {got!r}, väntade {CONTRACT_VERSION}")
+        if set(data) != {"contract", "choices", "candidates"}:
+            raise ValueError(f"Spelboken ska ha exakt fälten contract, choices och candidates, fick {sorted(data)}")
+        playbook = cls.of(data["choices"])
+        listed = data["candidates"]
+        if not isinstance(listed, Mapping) or not listed:
+            raise ValueError("Kandidatmanifestet saknas eller är tomt")
+        expected = playbook.manifest()
+        missing = sorted(set(expected) - set(listed))
+        extra = sorted(set(listed) - set(expected))
+        if missing or extra:
+            raise ValueError(f"Kandidatmanifestet stämmer inte med valen: saknas {missing}, extra {extra}")
+        for name, version in listed.items():
+            if version != expected[name]:
+                raise ValueError(f"Kandidaten {name} har version {version!r}, låst version är {expected[name]!r}")
+        return playbook
 
     @property
     def id(self) -> str:

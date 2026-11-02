@@ -70,6 +70,75 @@ def test_contract_rejects_other_versions(change, match):
         adaptive.Playbook.from_dict({**book().to_dict(), **change})
 
 
+ALL_EMA = {"contract": adaptive.CONTRACT_VERSION, "choices": {l: EMA for l in regime.LABELS}}
+
+
+@pytest.mark.parametrize("candidates, match", [
+    (None, "exakt fälten"),                                  # manifestet saknas helt
+    ({}, "saknas eller är tomt"),
+    ({BB: "1.0.0"}, "saknas \\['ema_adx_trend'\\], extra \\['bb_rsi_reversion'\\]"),  # granskningens prov
+    ({EMA: "1.0.0", BB: "1.0.0"}, "extra \\['bb_rsi_reversion'\\]"),
+    ({EMA: "1.0.0", FLAT: None}, "extra \\['platt'\\]"),
+    ({EMA: "1.1.0"}, "låst version"),
+    ({EMA: None}, "låst version"),
+    ("ema_adx_trend@1.0.0", "saknas eller är tomt"),
+])
+def test_manifest_must_match_the_choices_exactly(candidates, match):
+    data = dict(ALL_EMA) if candidates is None else {**ALL_EMA, "candidates": candidates}
+    with pytest.raises(ValueError, match=match):
+        adaptive.Playbook.from_dict(data)
+
+
+@pytest.mark.parametrize("candidates, match", [
+    ({EMA: "1.0.0", BB: "1.0.0"}, "saknas \\['platt'\\]"),   # platt används men saknas
+    ({EMA: "1.0.0", BB: "1.0.0", FLAT: "1.0.0"}, "låst version"),  # platt har ingen version
+])
+def test_manifest_lists_flat_without_a_version(candidates, match):
+    data = book(ul=BB, dh=FLAT).to_dict()
+    assert data["candidates"] == {BB: "1.0.0", EMA: "1.0.0", FLAT: None}
+    with pytest.raises(ValueError, match=match):
+        adaptive.Playbook.from_dict({**data, "candidates": candidates})
+
+
+def test_extra_or_missing_top_level_fields_are_rejected():
+    good = book().to_dict()
+    with pytest.raises(ValueError, match="exakt fälten"):
+        adaptive.Playbook.from_dict({**good, "note": "x"})
+    with pytest.raises(ValueError, match="kontraktsversion"):
+        adaptive.Playbook.from_dict({k: v for k, v in good.items() if k != "contract"})
+    with pytest.raises(ValueError, match="kontraktsversion"):
+        adaptive.Playbook.from_dict(["not", "a", "mapping"])
+
+
+@pytest.mark.parametrize("choices", [
+    (("upp/hög vol", "not_a_strategy"),),                                     # granskningens prov
+    tuple((l, EMA) for l in regime.LABELS[:3]),                               # tre lägen
+    tuple((l, EMA) for l in regime.LABELS) + (("upp/hög vol", BB),),          # dubbelt läge
+    tuple((l, EMA) for l in regime.LABELS[:3]) + ((regime.UNKNOWN, EMA),),    # okänt i stället för ett läge
+    tuple((l, EMA) for l in regime.LABELS[:3]) + ((regime.LABELS[3], "donchian_breakout"),),
+    tuple((l, EMA) for l in regime.LABELS[:3]) + ((regime.LABELS[3], None),),
+    tuple([l, EMA] for l in regime.LABELS),                                    # listor i stället för par
+    [(l, EMA) for l in regime.LABELS],                                         # lista i stället för tuple
+])
+def test_direct_construction_is_validated(choices):
+    with pytest.raises(ValueError):
+        adaptive.Playbook(choices)
+
+
+def test_direct_construction_is_normalized_to_the_same_playbook():
+    reordered = adaptive.Playbook(tuple((l, BB if l == UP_LO else EMA) for l in reversed(regime.LABELS)))
+    assert reordered == book(ul=BB) and reordered.id == book(ul=BB).id
+    assert [l for l, _ in reordered.choices] == list(regime.LABELS)
+
+
+def test_round_trip_keeps_every_playbook_and_its_id():
+    books = adaptive.all_playbooks()
+    assert len(books) == 81 and len({b.id for b in books}) == 81
+    for pb in books:
+        back = adaptive.Playbook.from_dict(pb.to_dict())
+        assert back == pb and back.id == pb.id
+
+
 def test_playbook_needs_exactly_the_four_regimes_and_known_candidates():
     with pytest.raises(ValueError, match="exakt ett val"):
         adaptive.Playbook.of({UP_HI: EMA})
