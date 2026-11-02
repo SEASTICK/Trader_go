@@ -4,7 +4,7 @@ Granskad PR-head: `eb156502f0664f6bc3882cebdbd49b107dcce0aa`, kod `f2db904` och 
 
 Bara isolerad lokal kopia, tillfällig PostgreSQL/PGlite, syntetiska jobb och lokala paket har använts. Ingen uppladdning, molnmigration, workerdrift, riktig H-0013-körning eller slutprovsläsning har gjorts.
 
-## Fynd före merge
+## Ursprungliga fynd före rättning
 
 ### P1 – databasåtergången kan passera kontrollen samtidigt som ett jobb köas
 
@@ -48,3 +48,20 @@ Den gemensamma arbetskopian är ren och `main` och `origin/main` stod båda på 
 F2-602 är återverifierad; F2-605 är `in_progress` och inte godkänd för drift. Gemensam status: **29/40 verifierade**. Färdigt underlag ska inte räknas som utförd driftsättning.
 
 **PR #74 är inte godkänd för merge ännu.** Nästa kontroll är en återgång som är säker vid samtidig köning och en revisionskontroll som fungerar med stor journal. Ingen molnåtgärd eller riktig forskningskörning ska göras för att rätta fynden. Inget strategiresultat är godkänt för papper/live.
+
+
+## Omgranskning av rättningarna – 2026-11-02
+
+Granskad PR-head: `e0c41ca80787b9e3308db7f33eb5910eb2370a31`, kod `d01dccd`, merge av granskningsunderlaget `7c138ad`. De tidigare fynden ovan är historik och är nu rättade.
+
+- **P1 rättad:** återgången tar köningens advisory lock före kontrollen. Köfunktionen gör efter låset en ny kontroll av om köingången fortfarande finns. Detta täcker även en redan påbörjad funktionskörning som väntar på återgångens lås. Inga försöksrader raderas.
+- Båda ordningarna verifierades mot riktig lokal PostgreSQL 17: köning först gör att återgången väntar och sedan vägrar med schema/data kvar; återgång först gör att väntande köning avvisas och inga H-0013-jobb lämnas kvar. Kontrollfallet utan återgångslås återger det gamla felet: 1 jobb och 0 funktioner. Den vanliga åttaanslutningssviten för köning/reservation/publicering passerar också.
+- Återgångsplanen stoppar nu workern och stänger H-0013-ingången i databasen innan gammal kod får startas. Om historiska H-0013-rader gör att återgången vägrar behålls den nya koden och problemet rättas framåt. Det är en uttrycklig begränsning, ingen instruktion att radera historik.
+- **P2 rättad:** kontrollen läser hela journalutmatningen innan matchning och skiljer på misslyckad hämtning och saknad revision. Ett eget prov med korrekt revision först och över 1 MiB efterföljande text passerar nu. Regressioner täcker tidig/sen träff, saknad revision, journalfel och att source inte kör kontroller; kontrollprovet med den gamla pipen ger fortsatt 141.
+- Exakt PR-head kördes i isolerad kopia med samma Git-commit: **538 Python-testfall passerar**. De tre PGlite-sviterna (båda kötester och återgång) samt båda lokala PostgreSQL-samtidighetstesterna passerar. Samma ofarliga joblib-varning om fysiska CPU-kärnor förekommer. CI Engine check var fortfarande `IN_PROGRESS` vid senaste kontrollen; den ska vara grön före merge.
+- Eget paketbygge av denna head ger **11dd7a0faabd24f8939ec2c64ea3d59b0d2a33787f0c710e3833d702e7b7378b** för `tradergo-research-e0c41ca80787.tar.gz`. Uppackat paket verifierar med 186 manifestfiler och rätt revision. Detta är granskningspaketet; ett paket från en senare mergecommit får ett nytt namn och SHA256 och ska byggas/verifieras separat.
+- Worker-, H-0013- och utvärderingskoden är oförändrade i rättningen. F2-601 återverifieras för den nya kökontrollen; tidigare verifieringar av signalstopp, lås, arkiv och forskning gäller fortsatt.
+
+Gemensam status: **29/40 verifierade**. F2-605 står kvar som `in_progress` eftersom paketet ännu inte är uppladdat, migrationen inte är applicerad och driftsmiljön inte är verifierad. Lokalt PostgreSQL-test är inte ett Supabase/PostgREST-test med riktiga JWT.
+
+**Bedömning:** PR #74 och driftsättningsunderlaget är kodmässigt godkända för merge på `e0c41ca`, förutsatt grön CI och bevarad granskad kod. Inga öppna fynd kvar från denna granskning. Efter merge ska exakt slutlig commit och paket-SHA identifieras inför det separata driftbeslutet. Ingen uppladdning, molnmigration, driftsättning, riktig H-0013-körning, slutprovsläsning eller publicering har gjorts i omgranskningen. Inget är godkänt för papper/live.
