@@ -352,21 +352,29 @@
             {
               "file": "docs/fas2-ko-granskning-73.md",
               "detail": "a852aa3 (kod cd9701d): Medlemsåtkomst och fast jobb verifierade; SQL:s resultatkontrakt behöver exakta booleska kriterier, konsekvent beslut och booleskt holdout_loaded."
+            },
+            {
+              "file": "scripts/test-h0013-queue.mjs",
+              "detail": "2160c6e (PR #73): research_h0013_result_ok kräver exakt de fem namngivna kriterierna som JSON-booleans, MORE_RESEARCH exakt när alla är sanna annars REJECT, och booleskt holdout_loaded = false; avvisning lämnar körning, resultat och slot oförändrade, och ett korrekt resultat kan sedan publiceras med samma lease. PGlite: test-h0013-queue.mjs passerar med 27 ogiltiga resultat; fem avsiktliga SQL-fel fångas; befintliga test-research-queue.mjs passerar. Python: hela sviten 521 passerar, varav 8 tester med riktiga spawn-processer och signaler. Migrationen är inte applicerad och inget är driftsatt."
             }
           ],
-          "note": "Lokal syntetisk verifiering och PGlite. PR #73 ej godkänd för merge; 0005 inte applicerad och ingen worker driftsatt."
+          "note": "Rättat i 2160c6e efter granskning av a852aa3. Väntar på Codex omgranskning; 0005 inte applicerad, inget driftsatt."
         },
         {
           "id": "F2-602",
           "title": "Anslut H-0013 till samma enda worker med lease och skydd mot dubbla resultat",
-          "status": "done",
+          "status": "in_progress",
           "evidence": [
             {
               "file": "docs/fas2-ko-granskning-73.md",
               "detail": "a852aa3 (kod cd9701d): Samma worker och globala slot, två timmars H-0013-timeout, lease/fencing och skydd mot andra publiceringar verifierade lokalt. Verklig konkurrens/drift återstår."
+            },
+            {
+              "file": "engine/tests/test_research_worker_spawn.py",
+              "detail": "2160c6e (PR #73): workerns stopp ändrat; slotten släpps fortfarande först när processen är borta, inget publiceras efter avbrott, förlorad lease eller tidsgräns, och fencing är oförändrad. PGlite: test-h0013-queue.mjs passerar med 27 ogiltiga resultat; fem avsiktliga SQL-fel fångas; befintliga test-research-queue.mjs passerar. Python: hela sviten 521 passerar, varav 8 tester med riktiga spawn-processer och signaler. Migrationen är inte applicerad och inget är driftsatt."
             }
           ],
-          "note": "Lokal syntetisk verifiering och PGlite. PR #73 ej godkänd för merge; 0005 inte applicerad och ingen worker driftsatt."
+          "note": "Workerns stoppväg ändrad i 2160c6e; tidigare verifiering täcker inte längre exakt koden. Behöver omgranskas."
         },
         {
           "id": "F2-603",
@@ -388,9 +396,13 @@
             {
               "file": "docs/fas2-ko-granskning-73.md",
               "detail": "a852aa3 (kod cd9701d): SQL-leaseåterförsök och FakeProcess-stopp passerar, men riktig spawn-process slutar med SIGTERM -15 och sparar 0 försöksfiler vid normalt worker.stop."
+            },
+            {
+              "file": "engine/tests/test_research_worker_spawn.py",
+              "detail": "2160c6e (PR #73): SIGTERM blir WorkerStop i beräkningsprocessen så att H-0013 sparar aborted-post med delresultat vid normalt stopp, användaravbrott, förlorad lease och tidsgräns, provat med riktiga spawn-processer; en process som inte svarar dödas efter högst 20 s och rapporteras som att delresultat kan saknas; Fas 1 och utforskning stoppas också kontrollerat innan slotten släpps. PGlite: test-h0013-queue.mjs passerar med 27 ogiltiga resultat; fem avsiktliga SQL-fel fångas; befintliga test-research-queue.mjs passerar. Python: hela sviten 521 passerar, varav 8 tester med riktiga spawn-processer och signaler. Migrationen är inte applicerad och inget är driftsatt."
             }
           ],
-          "note": "Lokal syntetisk verifiering och PGlite. PR #73 ej godkänd för merge; 0005 inte applicerad och ingen worker driftsatt."
+          "note": "Rättat i 2160c6e efter granskning av a852aa3. Väntar på Codex omgranskning; 0005 inte applicerad, inget driftsatt."
         },
         {
           "id": "F2-605",
