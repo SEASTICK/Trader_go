@@ -15,7 +15,7 @@ Omfattning: historisk BTC/USDT-forskning vid 1×. Inga riktiga order, ingen godk
 - [x] Belastningsprov med blandad kö: 49,177 sekunder totalt inklusive aktivt avbrott, cirka 104 MiB uppmätt toppminne i workertjänsten. CPU-kvot 150 %, minnestak 2 GiB. Detta är ett litet faktiskt köprov, inte ett kapacitetslöfte.
 - [x] Manuella driftkontroller och återställningsrutin dokumenterade. Leverantörsbackuper enligt användarens bekräftelse; inga nya betaltjänster eller driftlarm.
 - [x] Python: 176 tester. Frontend: 58 tester (inklusive de tre nya animationstesterna) och produktionsbygge. Rust: 48 passerade, ett avsiktligt nätverkstest överhoppat. Isolerade kö-/RLS-/leasekontroller passerade.
-- [ ] Stable-publicering och kontroll av installerad version efter publicering.
+- [x] Stable 0.1.18 publicerad från 008f612. En annan session publicerade därefter 0.1.19 från 37a3baf, som behåller dessa rättningar och lägger till mindre gränssnitts-/anslutningsfixar. Båda plattformarnas publika 0.1.19-filer verifierade mot uppdateringsnyckeln; den installerade Mac-appen uppdaterad och omstartad till 0.1.19. Ny tvärsnittskod från 785fd8f ingår inte.
 - [ ] Windows manuellt app-test: uppskjutet enligt beslut.
 - [ ] Driftlarm: uppskjutna enligt beslut.
 

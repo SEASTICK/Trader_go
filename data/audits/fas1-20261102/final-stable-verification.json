@@ -1,0 +1,38 @@
+{
+  "version": "0.1.19",
+  "source_commit": "37a3bafcab80baf247b676819e833fb6ba9d3106",
+  "run_id": 41464566398,
+  "platforms": {
+    "windows-x86_64": {
+      "artifact": "Trader_go_0.1.19_x64-setup.exe",
+      "sha256": "62a9933bbdb0a6e8c7cf93e6c0b3ac10763bfb914028d9cb9f9345dfa1b0a4bc"
+    },
+    "windows-x86_64-nsis": {
+      "artifact": "Trader_go_0.1.19_x64-setup.exe",
+      "sha256": "62a9933bbdb0a6e8c7cf93e6c0b3ac10763bfb914028d9cb9f9345dfa1b0a4bc"
+    },
+    "darwin-aarch64": {
+      "artifact": "Trader_go_0.1.19_universal.app.tar.gz",
+      "sha256": "495364bd75a221dcf8c0d58299c480692d00eed762b866c184110f631168217c"
+    },
+    "darwin-aarch64-app": {
+      "artifact": "Trader_go_0.1.19_universal.app.tar.gz",
+      "sha256": "495364bd75a221dcf8c0d58299c480692d00eed762b866c184110f631168217c"
+    },
+    "darwin-x86_64": {
+      "artifact": "Trader_go_0.1.19_universal.app.tar.gz",
+      "sha256": "495364bd75a221dcf8c0d58299c480692d00eed762b866c184110f631168217c"
+    },
+    "darwin-x86_64-app": {
+      "artifact": "Trader_go_0.1.19_universal.app.tar.gz",
+      "sha256": "495364bd75a221dcf8c0d58299c480692d00eed762b866c184110f631168217c"
+    }
+  },
+  "signatures_verified_for_both_downloads": true,
+  "mac_app_installed_version": "0.1.19",
+  "mac_restart_after_update": "PASS",
+  "windows_manual_test": "DEFERRED_BY_USER",
+  "alerts": "DEFERRED_BY_USER",
+  "phase2_and_xs_implementation_included": false,
+  "worker_source_commit": "008f612ff37224c287735b35cfc67a6edea6a636"
+}
