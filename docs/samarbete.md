@@ -26,8 +26,9 @@ git push                                  # 6. Push. Nekas den: gör om 5 och 6.
 
 ## Kontroller före push
 
-En push till `main` kör **ingen** CI: kontrollerna i `.github/workflows/` körs bara på pull requests.
-Kör därför det som berörs lokalt:
+En push till `main` kör Linux-kontrollerna för den del som ändrats (motor, app, Rust, Universe), så ett
+rött `main` syns direkt i Actions. Windows-byggena körs bara på pull requests eller för hand. Kontrollerna
+körs **efter** pushen, så kör ändå det som berörs lokalt innan du pushar:
 
 | Ändrat | Kör |
 |---|---|

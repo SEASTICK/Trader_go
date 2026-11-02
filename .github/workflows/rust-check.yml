@@ -7,6 +7,12 @@ on:
     paths:
       - "app/src-tauri/**"
       - ".github/workflows/rust-check.yml"
+  # Även direkt-push till main (docs/samarbete.md): fångar ett rött main direkt, inte först vid nästa PR.
+  push:
+    branches: [main]
+    paths:
+      - "app/src-tauri/**"
+      - ".github/workflows/rust-check.yml"
   workflow_dispatch:
 
 permissions:
