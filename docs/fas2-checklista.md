@@ -1,6 +1,6 @@
 # Fas 2 – Utvecklingsplan
 
-**22 av 40 uppgifter verifierade · 8 arbetsområden.**
+**21 av 40 uppgifter verifierade · 8 arbetsområden.**
 
 H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `efb43fc`.
 
@@ -95,23 +95,27 @@ PR #71 mergad som 793e9f0. PR #72 granskad på efb43fc: walk-forward återverifi
 
 ## 5. Utvärdering och robusthet
 
-2/5 verifierade.
+1/5 verifierade.
 
 - [ ] **F2-501** Jämför med köp-och-behåll, varje kandidat ensam och en likaviktad blandning **Pågår.**
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — efb43fc (kod bbc7181): Avkastningsjämförelser verifierade, men blandningens position och riskmått behöver korrekt kapitalviktning och tydliga exponerings-/omsättningsmått.
-  - Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat.
-- [x] **F2-502** Verifiera kostnadsstress, funding och riskmodell för H-0013
+  - Underlag: [engine/tests/test_fas2_eval.py](../engine/tests/test_fas2_eval.py) — ab97a0a (PR #72): blandningens nettoposition och bruttoexponering viktas med halvornas aktuella kapital (long kapital 2 + platt kapital 1 ger 2/3; long + short ger netto 0, brutto 1); kurva, Sharpe, affärsbelopp och kriterier oförändrade. 70 utvärderingstester och hela Python-sviten, 478 tester, passerar lokalt; nio av tio avsiktliga fel fångas (skyddet i all_playbooks är dubblerat av curve). Endast syntetisk data.
+  - Rättat i ab97a0a efter granskning av efb43fc. Väntar på Codex omgranskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat.
+- [ ] **F2-502** Verifiera kostnadsstress, funding och riskmodell för H-0013 **Pågår.**
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — efb43fc (kod bbc7181): Normalt valda spelböcker återanvänds vid 2,5× kostnadsstress; funding, 1× och ATR-stop verifierade via befintlig motor och syntetiska tester.
-  - Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat.
+  - Underlag: [engine/tests/test_fas2_eval.py](../engine/tests/test_fas2_eval.py) — ab97a0a: omsättning räknas nu som handlat belopp från affärerna på gemensam kapitalbas, och exponering redovisas som netto, brutto och tid i marknaden med definitioner (gäller alla kurvor). 70 utvärderingstester och hela Python-sviten, 478 tester, passerar lokalt; nio av tio avsiktliga fel fångas (skyddet i all_playbooks är dubblerat av curve). Endast syntetisk data.
+  - Riskrapporteringens definitioner ändrade i ab97a0a; den tidigare verifieringen av efb43fc täcker inte längre exakt dessa fält. Behöver omgranskas.
 - [ ] **F2-503** Kör förregistrerad permutation och slumpkontroll med fullständig försöksredovisning **Pågår.**
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — efb43fc (kod bbc7181): Permutation med omkört urval och slumpkontroll finns; direkt permutationstest måste avvisa slutprov före regimberäkning.
-  - Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat.
+  - Underlag: [engine/tests/test_fas2_eval.py](../engine/tests/test_fas2_eval.py) — ab97a0a (PR #72): permutation_test och regime_results kontrollerar staplar, finansieringsränta, tillförda lägen och avkastning före all beräkning, även med n=0; färdiga permutationer sparas direkt i körningsposten. 70 utvärderingstester och hela Python-sviten, 478 tester, passerar lokalt; nio av tio avsiktliga fel fångas (skyddet i all_playbooks är dubblerat av curve). Endast syntetisk data.
+  - Rättat i ab97a0a efter granskning av efb43fc. Väntar på Codex omgranskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat.
 - [x] **F2-504** Redovisa osäkerhet, 81 spelböcker, regimresultat och resultat utan bästa året
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — efb43fc (kod bbc7181): Bootstrap, DSR med 81 försök, uppräkning av spelböcker, regimresultat, år och utan bästa året kodgranskade och syntetiskt testade. Full riktig kontrollkörning ej gjord.
   - Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat.
 - [ ] **F2-505** Bedöm alla fem förregistrerade kriterier och spara även negativa eller avbrutna försök **Pågår.**
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — efb43fc (kod bbc7181): Kriterier och exklusiv försöksfil fungerar; aborted-filen saknar färdigräknade delresultat. Sju färdiga sammanfattningar förlorades i oberoende avbrottsprov.
-  - Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat.
+  - Underlag: [engine/tests/test_fas2_eval.py](../engine/tests/test_fas2_eval.py) — ab97a0a (PR #72): avbrutet försök sparas med konfiguration, stegstatus och alla färdiga delresultat (också enskilda permutationer och spelböcker), utan beslut och utan överskrivning; körningen sparar kodrevision och SHA-256 för inlästa data. 70 utvärderingstester och hela Python-sviten, 478 tester, passerar lokalt; nio av tio avsiktliga fel fångas (skyddet i all_playbooks är dubblerat av curve). Endast syntetisk data.
+  - Rättat i ab97a0a efter granskning av efb43fc. Väntar på Codex omgranskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat.
 
 ## 6. Supabase och DigitalOcean
 

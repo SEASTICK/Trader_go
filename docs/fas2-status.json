@@ -286,21 +286,29 @@
             {
               "file": "docs/fas2-utvardering-granskning-72.md",
               "detail": "efb43fc (kod bbc7181): Avkastningsjämförelser verifierade, men blandningens position och riskmått behöver korrekt kapitalviktning och tydliga exponerings-/omsättningsmått."
+            },
+            {
+              "file": "engine/tests/test_fas2_eval.py",
+              "detail": "ab97a0a (PR #72): blandningens nettoposition och bruttoexponering viktas med halvornas aktuella kapital (long kapital 2 + platt kapital 1 ger 2/3; long + short ger netto 0, brutto 1); kurva, Sharpe, affärsbelopp och kriterier oförändrade. 70 utvärderingstester och hela Python-sviten, 478 tester, passerar lokalt; nio av tio avsiktliga fel fångas (skyddet i all_playbooks är dubblerat av curve). Endast syntetisk data."
             }
           ],
-          "note": "Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat."
+          "note": "Rättat i ab97a0a efter granskning av efb43fc. Väntar på Codex omgranskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
         },
         {
           "id": "F2-502",
           "title": "Verifiera kostnadsstress, funding och riskmodell för H-0013",
-          "status": "done",
+          "status": "in_progress",
           "evidence": [
             {
               "file": "docs/fas2-utvardering-granskning-72.md",
               "detail": "efb43fc (kod bbc7181): Normalt valda spelböcker återanvänds vid 2,5× kostnadsstress; funding, 1× och ATR-stop verifierade via befintlig motor och syntetiska tester."
+            },
+            {
+              "file": "engine/tests/test_fas2_eval.py",
+              "detail": "ab97a0a: omsättning räknas nu som handlat belopp från affärerna på gemensam kapitalbas, och exponering redovisas som netto, brutto och tid i marknaden med definitioner (gäller alla kurvor). 70 utvärderingstester och hela Python-sviten, 478 tester, passerar lokalt; nio av tio avsiktliga fel fångas (skyddet i all_playbooks är dubblerat av curve). Endast syntetisk data."
             }
           ],
-          "note": "Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat."
+          "note": "Riskrapporteringens definitioner ändrade i ab97a0a; den tidigare verifieringen av efb43fc täcker inte längre exakt dessa fält. Behöver omgranskas."
         },
         {
           "id": "F2-503",
@@ -310,9 +318,13 @@
             {
               "file": "docs/fas2-utvardering-granskning-72.md",
               "detail": "efb43fc (kod bbc7181): Permutation med omkört urval och slumpkontroll finns; direkt permutationstest måste avvisa slutprov före regimberäkning."
+            },
+            {
+              "file": "engine/tests/test_fas2_eval.py",
+              "detail": "ab97a0a (PR #72): permutation_test och regime_results kontrollerar staplar, finansieringsränta, tillförda lägen och avkastning före all beräkning, även med n=0; färdiga permutationer sparas direkt i körningsposten. 70 utvärderingstester och hela Python-sviten, 478 tester, passerar lokalt; nio av tio avsiktliga fel fångas (skyddet i all_playbooks är dubblerat av curve). Endast syntetisk data."
             }
           ],
-          "note": "Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat."
+          "note": "Rättat i ab97a0a efter granskning av efb43fc. Väntar på Codex omgranskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
         },
         {
           "id": "F2-504",
@@ -334,9 +346,13 @@
             {
               "file": "docs/fas2-utvardering-granskning-72.md",
               "detail": "efb43fc (kod bbc7181): Kriterier och exklusiv försöksfil fungerar; aborted-filen saknar färdigräknade delresultat. Sju färdiga sammanfattningar förlorades i oberoende avbrottsprov."
+            },
+            {
+              "file": "engine/tests/test_fas2_eval.py",
+              "detail": "ab97a0a (PR #72): avbrutet försök sparas med konfiguration, stegstatus och alla färdiga delresultat (också enskilda permutationer och spelböcker), utan beslut och utan överskrivning; körningen sparar kodrevision och SHA-256 för inlästa data. 70 utvärderingstester och hela Python-sviten, 478 tester, passerar lokalt; nio av tio avsiktliga fel fångas (skyddet i all_playbooks är dubblerat av curve). Endast syntetisk data."
             }
           ],
-          "note": "Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat."
+          "note": "Rättat i ab97a0a efter granskning av efb43fc. Väntar på Codex omgranskning; ingen riktig data, inget slutprov, ej mergat, driftsatt eller publicerat."
         }
       ]
     },
