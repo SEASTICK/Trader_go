@@ -36,3 +36,19 @@ Detta är ett fel i datakontraktets validering, inte ett konstaterat framtidslä
 F2-302–F2-305 är verifierade på denna PR-head. F2-301 förblir `in_progress` tills kontraktsvalideringen är rättad och omgranskad. Checklistan visar därmed **14/40**, med tydlig åtskillnad mellan granskad PR-kod, mergad kod och drift.
 
 Behåll den konservativa regeln om ny signal efter byte. Ingen träning, optimering, kö, worker, appintegration eller riktig datakörning behövs för att rätta kontraktet. Fullständig väljare kan godkännas för merge efter omgranskning av rättningen; därefter kommer den förregistrerade tränings-/urvalsregeln och walk-forward.
+
+## Omgranskning av db54bbe – godkänd för merge
+
+Granskad PR-head: `db54bbe8c2414aec64e334d02d4e893e074d84ec`, kodrättning `9128008`. Det tidigare kontraktsfyndet är åtgärdat:
+
+- `from_dict()` kräver exakt toppnivåschema och exakt kandidatmanifest för spelbokens använda kandidater och låsta versioner.
+- Saknade, tomma och motsägande kandidatmanifest avvisas i stället för att normaliseras tyst.
+- `__post_init__` validerar även direkt konstruktion: fyra unika giltiga regimer och tillåtna kandidater, med normaliserad ordning.
+- Oberoende återkörning av granskningens fyra felprov avvisar nu samtliga med `ValueError`.
+- Alla 81 giltiga spelböcker verifierade med round-trip och stabila id även vid omvänd konstruktorordning.
+
+En isolerad körning på exakt PR-head gav **327 passerade Python-testfall**, inklusive **74 adaptiva testfall**. GitHub Actions Engine check är grön för samma PR-head. En strukturell AST-jämförelse mot granskade 8e6617d visar att `signals`, `candidate_signals`, `_schedule` och `_direction` är oförändrade.
+
+**Beslut:** strategiväljaren och kontraktet är godkända för merge på denna kodversion. F2-301–F2-305 är nu verifierade och den gemensamma checklistan visar **15/40**. PR #70 är fortfarande öppen vid granskningen; inget har mergats, driftsatts, publicerats eller körts mot riktig data här. Detta är kodgodkännande, inte ett godkännande av strategiernas avkastning, papper eller livehandel.
+
+Nästa leverans efter merge är F2-401–F2-405: förregistrerad kandidatselektion på träningsdata och sex walk-forward-fönster, först verifierat med syntetiska data och utan att öppna slutprovet. Befintliga kostnads-, risk- och dataprov gäller fortsatt i de separata kontrollpunkterna.
