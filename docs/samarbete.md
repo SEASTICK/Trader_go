@@ -69,4 +69,4 @@ du börjar. Ta bort raden när det är pushat.
 
 | Vem | Vad | Filer/delar | Sedan |
 |---|---|---|---|
-| – | – | – | – |
+| Edwin (Claude) | Fas 2, Adaptive Strategy Engine (H-0013): motor + kö + worker + app | `research/fas2-protokoll.md`, `research/registry.md` (ny rad sist), `engine/traderlab/{regime,adaptive,fas2}.py`, ny Supabase-migration, worker, Research Lab | 2026-11-02 |
