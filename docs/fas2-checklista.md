@@ -1,10 +1,10 @@
 # Fas 2 – Utvecklingsplan
 
-**26 av 40 uppgifter verifierade · 8 arbetsområden.**
+**29 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `a852aa3`.
+H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `445178d`.
 
-PR #72 mergad som d25f444. PR #73 granskad på a852aa3: 513 syntetiska Python-tester och båda lokala PGlite-kötester passerar. Två oberoende fynd före merge: normalstopp tappar försöksfil och SQL accepterar felaktiga kriterier/beslut. Ingen migration, driftsättning eller riktig körning.
+PR #73 omgranskad på 445178d (kod 2160c6e): båda fynd rättade. 521 Python-tester inklusive 8 riktiga processtester och båda PGlite-sviterna passerar; egna signal- och SQL-felprov verifierade. Kodmässigt godkänd för merge när CI är grönt. Ingen migration, driftsättning eller riktig körning.
 
 ## Uppdateringsregler
 
@@ -115,23 +115,20 @@ PR #72 mergad som d25f444. PR #73 granskad på a852aa3: 513 syntetiska Python-te
 
 ## 6. Supabase och DigitalOcean
 
-1/5 verifierade.
+4/5 verifierade.
 
-- [ ] **F2-601** Skapa ett separat strikt kökontrakt för H-0013 med autentisering och RLS **Pågår.**
-  - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — a852aa3 (kod cd9701d): Medlemsåtkomst och fast jobb verifierade; SQL:s resultatkontrakt behöver exakta booleska kriterier, konsekvent beslut och booleskt holdout_loaded.
-  - Underlag: [scripts/test-h0013-queue.mjs](../scripts/test-h0013-queue.mjs) — 2160c6e (PR #73): research_h0013_result_ok kräver exakt de fem namngivna kriterierna som JSON-booleans, MORE_RESEARCH exakt när alla är sanna annars REJECT, och booleskt holdout_loaded = false; avvisning lämnar körning, resultat och slot oförändrade, och ett korrekt resultat kan sedan publiceras med samma lease. PGlite: test-h0013-queue.mjs passerar med 27 ogiltiga resultat; fem avsiktliga SQL-fel fångas; befintliga test-research-queue.mjs passerar. Python: hela sviten 521 passerar, varav 8 tester med riktiga spawn-processer och signaler. Migrationen är inte applicerad och inget är driftsatt.
-  - Rättat i 2160c6e efter granskning av a852aa3. Väntar på Codex omgranskning; 0005 inte applicerad, inget driftsatt.
-- [ ] **F2-602** Anslut H-0013 till samma enda worker med lease och skydd mot dubbla resultat **Pågår.**
-  - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — a852aa3 (kod cd9701d): Samma worker och globala slot, två timmars H-0013-timeout, lease/fencing och skydd mot andra publiceringar verifierade lokalt. Verklig konkurrens/drift återstår.
-  - Underlag: [engine/tests/test_research_worker_spawn.py](../engine/tests/test_research_worker_spawn.py) — 2160c6e (PR #73): workerns stopp ändrat; slotten släpps fortfarande först när processen är borta, inget publiceras efter avbrott, förlorad lease eller tidsgräns, och fencing är oförändrad. PGlite: test-h0013-queue.mjs passerar med 27 ogiltiga resultat; fem avsiktliga SQL-fel fångas; befintliga test-research-queue.mjs passerar. Python: hela sviten 521 passerar, varav 8 tester med riktiga spawn-processer och signaler. Migrationen är inte applicerad och inget är driftsatt.
-  - Workerns stoppväg ändrad i 2160c6e; tidigare verifiering täcker inte längre exakt koden. Behöver omgranskas.
+- [x] **F2-601** Skapa ett separat strikt kökontrakt för H-0013 med autentisering och RLS
+  - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — 445178d (kod 2160c6e): oberoende omgranskning godkänd. 521 Python-tester, 8 riktiga signal-/processtester och båda PGlite-kösviterna passerar. Tidigare SIGTERM-felprov sparar nu försöket; felaktiga SQL-kriterier och beslut avvisas utan ändrad lease.
+  - Kodmässigt verifierad lokalt. PR #73 godkänd för merge när CI är grönt; faktisk Supabase-samtidighet och driftverifiering återstår i F2-605.
+- [x] **F2-602** Anslut H-0013 till samma enda worker med lease och skydd mot dubbla resultat
+  - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — 445178d (kod 2160c6e): oberoende omgranskning godkänd. 521 Python-tester, 8 riktiga signal-/processtester och båda PGlite-kösviterna passerar. Tidigare SIGTERM-felprov sparar nu försöket; felaktiga SQL-kriterier och beslut avvisas utan ändrad lease.
+  - Kodmässigt verifierad lokalt. PR #73 godkänd för merge när CI är grönt; faktisk Supabase-samtidighet och driftverifiering återstår i F2-605.
 - [x] **F2-603** Begränsa dataläsningen till verifierade frysta arkiv innan några filer öppnas
   - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — a852aa3 (kod cd9701d): Exakta manifestnamn före arkivläsning, SHA256 och CHECKSUM samt stapel-/fundinghash verifierade på syntetiska 120 arkiv; 2019/2025 öppnas inte.
-  - Lokal syntetisk verifiering och PGlite. PR #73 ej godkänd för merge; 0005 inte applicerad och ingen worker driftsatt.
-- [ ] **F2-604** Testa avbrott, timeout, återförsök och återhämtning efter workeromstart **Pågår.**
-  - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — a852aa3 (kod cd9701d): SQL-leaseåterförsök och FakeProcess-stopp passerar, men riktig spawn-process slutar med SIGTERM -15 och sparar 0 försöksfiler vid normalt worker.stop.
-  - Underlag: [engine/tests/test_research_worker_spawn.py](../engine/tests/test_research_worker_spawn.py) — 2160c6e (PR #73): SIGTERM blir WorkerStop i beräkningsprocessen så att H-0013 sparar aborted-post med delresultat vid normalt stopp, användaravbrott, förlorad lease och tidsgräns, provat med riktiga spawn-processer; en process som inte svarar dödas efter högst 20 s och rapporteras som att delresultat kan saknas; Fas 1 och utforskning stoppas också kontrollerat innan slotten släpps. PGlite: test-h0013-queue.mjs passerar med 27 ogiltiga resultat; fem avsiktliga SQL-fel fångas; befintliga test-research-queue.mjs passerar. Python: hela sviten 521 passerar, varav 8 tester med riktiga spawn-processer och signaler. Migrationen är inte applicerad och inget är driftsatt.
-  - Rättat i 2160c6e efter granskning av a852aa3. Väntar på Codex omgranskning; 0005 inte applicerad, inget driftsatt.
+  - Arkivkontrollen är oförändrad i 2160c6e och fortsatt verifierad på syntetiska arkiv. PR #73 kodmässigt godkänd på 445178d; ingen riktig datakörning eller driftsättning.
+- [x] **F2-604** Testa avbrott, timeout, återförsök och återhämtning efter workeromstart
+  - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — 445178d (kod 2160c6e): oberoende omgranskning godkänd. 521 Python-tester, 8 riktiga signal-/processtester och båda PGlite-kösviterna passerar. Tidigare SIGTERM-felprov sparar nu försöket; felaktiga SQL-kriterier och beslut avvisas utan ändrad lease.
+  - Kodmässigt verifierad lokalt. PR #73 godkänd för merge när CI är grönt; faktisk Supabase-samtidighet och driftverifiering återstår i F2-605.
 - [ ] **F2-605** Driftsätt verifierad kod med loggar, resursgränser och dokumenterad återgång
 
 ## 7. Visa Fas 2 i Research Lab

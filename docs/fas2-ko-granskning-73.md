@@ -4,7 +4,7 @@ Granskad PR-head: `a852aa34fb6139ffa2cd9867af017e48a112d8cb`, kod `cd9701d`, met
 
 Granskningen använder isolerad PR-kopia, syntetiska arkiv, lokala processer och PGlite. Ingen molnanslutning, migration i Supabase, driftsättning, riktig forskningskörning eller slutprovsläsning har gjorts.
 
-## Fynd före merge
+## Ursprungliga fynd före rättning
 
 ### P1 – vanligt workeravbrott dödar processen innan försöket sparas
 
@@ -49,3 +49,20 @@ PGlite använder en anslutning. Verklig konkurrens från flera anslutningar mås
 F2-602 och F2-603 är kodmässigt verifierade lokalt. F2-601 lämnas `in_progress` för resultatkontraktet, F2-604 för det verkliga avbrottsbeteendet. F2-605 är inte gjord. Gemensam status: **27/40 verifierade**. Lokal kodverifiering betyder inte att molnintegrationen är i drift.
 
 **PR #73 är inte godkänd för merge ännu.** Nästa kontroll är strikt resultatvalidering och ett normalt workeravbrott som faktiskt sparar försöket. Migration 0005 och workerdrift ska fortsatt vänta. Inget strategiresultat har bedömts och inget är godkänt för papper/live.
+
+
+## Omgranskning av rättningarna – 2026-11-02
+
+Granskad PR-head: `445178d4d0738ac030f13bc720661164aaa394cb`, kod `2160c6e`, merge av granskningsunderlaget `34adec6`. Tidigare fynd ovan bevaras som historik och är nu rättade.
+
+- **P1 rättad:** beräkningsprocessen installerar en SIGTERM-hanterare som kastar `WorkerStop`. H-0013:s befintliga felhantering sparar då aborted-post och delresultat före avslut. Parent väntar upp till 20 sekunder före hård fallback och rapporterar uttryckligen när delresultat kan saknas. Slot/publiceringsvägar behåller ordningen: stoppa och vänta före finish, ingen publicering vid förlorad lease.
+- Det tidigare oberoende provet med riktig `spawn`-process och den riktiga `worker.stop` upprepades på rättad kod: **exitcode 3 och 1 sparad aborted-fil**, jämfört med tidigare -15 och 0 filer. Provet använder syntetiskt stubbat datalager/utvärdering och den riktiga H-0013-ingången.
+- Samtliga **8 nya tester med riktiga spawn-processer och signaler passerar** i hela testsviten. De täcker normalt stopp, användaravbrott, timeout, förlorad lease, Fas 1/utforskning samt hård fallback. Avbrutet försök finns innan finish släpper slotten; tvingat stopp påstås inte ha sparat delresultat.
+- **P2 rättad:** SQL kräver exakt de fem namngivna JSON-booleska kriterierna, beslutet MORE_RESEARCH exakt vid fem true och annars REJECT, samt booleskt `holdout_loaded=false`. Hjälpfunktionen är begränsad till service_role. 0001–0004 är oförändrade.
+- Båda lokala PGlite-kötesterna passerar. Nya sviten avvisar **27 ogiltiga resultat**, kontrollerar oförändrad lease efter avvisning och accepterar korrekta REJECT/MORE_RESEARCH. Mina tre tidigare egna felprov avvisas nu också; körningen förblir running, slotten är oförändrad och resultatantalet är 0. Därefter kan rätt resultat publiceras med samma token.
+- Exakt PR-head kördes i isolerad arkivkopia: **521 Python-testfall passerar**, inklusive de 8 riktiga processtesterna. Samma lokala joblib-varning om identifiering av fysiska CPU-kärnor förekommer. CI Engine check var fortfarande `IN_PROGRESS` vid senaste kontrollen och ska vara grön före merge.
+- Arkivkontrollen, H-0013-runnern, backtest-/utvärderingskoden och tidigare frysta migrationer är oförändrade i rättningen. Tidigare verifieringar gäller fortsatt.
+
+F2-601, F2-602 och F2-604 är nu kodmässigt verifierade och F2-603 gäller fortsatt. Gemensam status: **29/40 verifierade**. F2-605 är ännu inte gjord: migrationen är inte applicerad i Supabase, koden är inte driftsatt och verklig konkurrens mellan databasanslutningar är inte verifierad. Hård serverkrasch och driftsmiljöns faktiska systemd-/katalogrättigheter måste fortsatt hållas åtskilda från de lokala signaltesterna.
+
+**Bedömning:** PR #73 är kodmässigt godkänd för merge på `445178d`, förutsatt grön CI och bevarad granskad kod. Inga öppna fynd kvar från denna granskning. Nästa steg är ett konkret, granskningsbart F2-605-underlag med versionsmärkt paket, TRADERGO_REVISION, migrationsordning, kontroll av samma enda worker, isolerat samtidighetstest och återgång. Ingen molnmigration, driftsättning, riktig forskningskörning, slutprovsläsning eller publicering har gjorts i omgranskningen. Inget är godkänt för papper/live.
