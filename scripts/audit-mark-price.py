@@ -32,6 +32,25 @@ def main():
         raw=path.read_bytes();binance.verify_checksum(raw,check.read_bytes())
         frames.append(binance.parse_klines_csv(binance._unzip_single(raw)))
         entries.append(dict(name=name,source=url,sha256=digest(raw)))
+    recovery=folder/'recovery-manifest.json'
+    if recovery.exists():
+        recovered=[]
+        recovery_data=json.loads(recovery.read_text())
+        if recovery_data.get('protocol_amendment')!='7839e8a' or recovery_data.get('recovered_bars')!=48:
+            raise ValueError('Recovery does not match preregistered amendment')
+        for item in recovery_data['files']:
+            raw=(folder/item['name']).read_bytes()
+            if digest(raw)!=item['sha256']:raise ValueError('Published recovery changed')
+            if item['format']=='zip':
+                binance.verify_checksum(raw,(folder/(item['name']+'.CHECKSUM')).read_bytes())
+                frame=binance.parse_klines_csv(binance._unzip_single(raw))
+            else:
+                frame=binance.parse_klines_csv(('\n'.join(','.join(str(x) for x in r) for r in json.loads(raw))).encode())
+            frame=frame[frame.index.isin(pd.to_datetime(item['recovered_times'],utc=True))]
+            recovered.append(frame);entries.append(item)
+        extra=pd.concat(recovered)
+        extra=extra[~extra.index.duplicated()]
+        frames.append(extra)
     marks=pd.concat(frames)
     expected=pd.date_range('2020-01-01','2025-01-01',freq='4h',inclusive='left',tz='UTC')
     report=quality.check(marks,'4h')
@@ -66,7 +85,7 @@ def main():
                     if ratio<=.01:
                         possible.append(dict(entry_time=trade.entry_time.isoformat(),bar=t.isoformat(),side=trade.side,margin_ratio=float(ratio),threshold_05=liquidation_threshold(trade.entry_price,q,collateral,cost,paid,.005),threshold_1=liquidation_threshold(trade.entry_price,q,collateral,cost,paid,.01)))
         results.append(dict(hypothesis=proof['hypothesis_id'],trades=trades,checked_trade_bars=checked,minimum_margin_to_mark_notional=minratio,possible_hits=possible,original_reproduction_exact=True,decision='REJECT'))
-    out=dict(protocol='docs/fas1-mark-price-protocol.md',protocol_commit='9261e05',script_sha256=digest(Path(__file__).read_bytes()),period=['2020-01-01','2025-01-01'],holdout_loaded=False,leverage=1,maintenance_rates=[.005,.01],quality=asdict(report),mark_bars=len(marks),mark_dataset_sha256=digest(marks.to_csv(float_format='%.17g').encode()),files=entries,results=results,passed=all(not r['possible_hits'] for r in results),limitations=['Fixed maintenance-rate verification; no historical risk tiers or liquidation fee model','Entire exit bar and adverse funding-price bounds are conservative; intrabar order unknown','Legacy results are preserved, not relabelled exchange-exact'])
+    out=dict(protocol='docs/fas1-mark-price-protocol.md',protocol_commit='9261e05',recovery_protocol_commit='7839e8a' if recovery.exists() else None,script_sha256=digest(Path(__file__).read_bytes()),period=['2020-01-01','2025-01-01'],holdout_loaded=False,leverage=1,maintenance_rates=[.005,.01],quality=asdict(report),mark_bars=len(marks),mark_dataset_sha256=digest(marks.to_csv(float_format='%.17g').encode()),files=entries,results=results,passed=all(not r['possible_hits'] for r in results),limitations=['Fixed maintenance-rate verification; no historical risk tiers or liquidation fee model','Entire exit bar and adverse funding-price bounds are conservative; intrabar order unknown','Legacy results are preserved, not relabelled exchange-exact'])
     (folder/'verification.json').write_text(json.dumps(clean(out),indent=2,allow_nan=False))
     print(json.dumps({k:out[k] for k in ['mark_bars','holdout_loaded','passed','results']},indent=2))
     if not out['passed']:raise SystemExit('Potential liquidation hit; acceptance blocked')
