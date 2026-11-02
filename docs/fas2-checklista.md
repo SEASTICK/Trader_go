@@ -57,11 +57,21 @@ PR #69 regimmodul godkänd för merge efter oberoende granskning. Ej mergad, dri
 
 0/5 verifierade.
 
-- [ ] **F2-301** Inför ett versionshanterat kontrakt för spelbok, läge och målposition
-- [ ] **F2-302** Koppla fasta EMA/ADX- och Bollinger/RSI-kandidater samt platt läge
-- [ ] **F2-303** Begränsa long till upp-lägen och short till ned-lägen
-- [ ] **F2-304** Stäng vid läges- och kandidatbyte utan att återuppta en gammal affär
-- [ ] **F2-305** Verifiera nästa öppning, ATR-stop och alla bytesfall med syntetiska tester
+- [ ] **F2-301** Inför ett versionshanterat kontrakt för spelbok, läge och målposition **Pågår.**
+  - Underlag: [engine/tests/test_adaptive.py](../engine/tests/test_adaptive.py) — a483162 (gren fas2-valjare): Playbook-kontrakt h0013-adaptive/1.0.0 med låsta kandidatversioner, stabila id, alla 81 spelböcker, from_dict avvisar annan kontrakts- eller kandidatversion. AdaptiveSignals ger målposition, stop, läge, vald kandidat, spelbok och byten per stapel. 53 nya väljartester, 119 regim- och väljartester och hela Python-sviten, 306 tester, passerar lokalt. Sex avsiktliga regelfel fångas. Endast syntetisk data.
+  - Väntar på Codex granskning; ej mergat, ingen träning/walk-forward, kö, worker eller app, ej driftsatt eller publicerat.
+- [ ] **F2-302** Koppla fasta EMA/ADX- och Bollinger/RSI-kandidater samt platt läge **Pågår.**
+  - Underlag: [engine/tests/test_adaptive.py](../engine/tests/test_adaptive.py) — a483162 (gren fas2-valjare): ema_adx_trend 1.0.0 och bb_rsi_reversion 1.0.0 med SPECS standardparametrar, oförändrade och jämförda mot strategiernas egna signaler, samt platt. Okänt är alltid platt. 53 nya väljartester, 119 regim- och väljartester och hela Python-sviten, 306 tester, passerar lokalt. Sex avsiktliga regelfel fångas. Endast syntetisk data.
+  - Väntar på Codex granskning; ej mergat, ingen träning/walk-forward, kö, worker eller app, ej driftsatt eller publicerat.
+- [ ] **F2-303** Begränsa long till upp-lägen och short till ned-lägen **Pågår.**
+  - Underlag: [engine/tests/test_adaptive.py](../engine/tests/test_adaptive.py) — a483162 (gren fas2-valjare): Long bara i upp-lägen och short bara i ned-lägen, prövat för alla fyra lägen, okänt, tre kandidater och båda riktningarna; signal mot trenden blir platt. 53 nya väljartester, 119 regim- och väljartester och hela Python-sviten, 306 tester, passerar lokalt. Sex avsiktliga regelfel fångas. Endast syntetisk data.
+  - Väntar på Codex granskning; ej mergat, ingen träning/walk-forward, kö, worker eller app, ej driftsatt eller publicerat.
+- [ ] **F2-304** Stäng vid läges- och kandidatbyte utan att återuppta en gammal affär **Pågår.**
+  - Underlag: [engine/tests/test_adaptive.py](../engine/tests/test_adaptive.py) — a483162 (gren fas2-valjare): Läges- och kandidatbyte, även ny spelbok vid fönstergräns, stänger vid nästa öppning; gammal affär tas inte upp igen, inträde kräver ny signal tidigast stapeln efter bytet. Samma kandidat vid fönstergräns behåller positionen. 53 nya väljartester, 119 regim- och väljartester och hela Python-sviten, 306 tester, passerar lokalt. Sex avsiktliga regelfel fångas. Endast syntetisk data.
+  - Väntar på Codex granskning; ej mergat, ingen träning/walk-forward, kö, worker eller app, ej driftsatt eller publicerat.
+- [ ] **F2-305** Verifiera nästa öppning, ATR-stop och alla bytesfall med syntetiska tester **Pågår.**
+  - Underlag: [engine/tests/test_adaptive.py](../engine/tests/test_adaptive.py) — a483162 (gren fas2-valjare): Med backtest.run: fyllning vid nästa öppning, ATR-stop satt vid inträdet, stängning vid öppningen för nytt läge, inget återinträde efter stop utan ny signal. Prefix ger samma beslut; läget för beslutet är regimmodulens läge för nästa stapel. 53 nya väljartester, 119 regim- och väljartester och hela Python-sviten, 306 tester, passerar lokalt. Sex avsiktliga regelfel fångas. Endast syntetisk data.
+  - Väntar på Codex granskning; ej mergat, ingen träning/walk-forward, kö, worker eller app, ej driftsatt eller publicerat.
 
 ## 4. Träning och walk-forward
 
