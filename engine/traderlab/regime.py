@@ -128,6 +128,15 @@ def per_bar(bars: pd.DataFrame, effective: pd.Series | None = None, interval: st
 
 
 def current(bars: pd.DataFrame, interval: str = "4h") -> str:
-    """Läget som gäller för staplarna dagen efter den senaste stängda dagen."""
+    """Läget för nästa stapel efter datan, alltså stapeln en tidsram efter den sista.
+
+    Samma regel som per_bar: det gällande läget för exakt kalenderdagen före nästa stapels dag. Saknas den dagen
+    eller är den ofullständig blir svaret `okänt`, aldrig ett äldre läge. Alltid lika med
+    `per_bar(nästa_stapel, daily(bars, interval), interval)`.
+    """
+    step = validate(bars, interval)
+    if bars.empty:
+        return UNKNOWN
     effective = daily(bars, interval)
-    return str(effective.iloc[-1]) if len(effective) else UNKNOWN
+    prev = (bars.index[-1] + step).floor("D") - DAY
+    return str(effective.get(prev, UNKNOWN))

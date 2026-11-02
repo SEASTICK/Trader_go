@@ -8,6 +8,7 @@ from traderlab.synthetic import from_closes, make_bars
 
 DAYS = 400
 BARS_PER_DAY = 6
+GAP_DAY = 250
 
 
 @pytest.fixture(scope="module")
@@ -77,9 +78,68 @@ def test_a_started_day_is_not_closed(bars):
     assert regime.current(partial) == regime.daily(bars.iloc[: 300 * BARS_PER_DAY]).iloc[-1]
 
 
-def test_current_is_the_label_for_the_next_bar(bars):
+def _next_bar_label(bars):
     nxt = pd.DataFrame(index=[bars.index[-1] + pd.Timedelta(hours=4)])
-    assert regime.current(bars) == regime.per_bar(nxt, regime.daily(bars)).iloc[0]
+    return regime.per_bar(nxt, regime.daily(bars)).iloc[0]
+
+
+def test_current_is_the_label_for_the_next_bar(bars):
+    assert regime.current(bars) == _next_bar_label(bars)
+
+
+def test_current_after_a_complete_last_day(bars):
+    complete = bars.iloc[: 300 * BARS_PER_DAY]  # sista stapeln 20:00, nästa stapel på dag 301
+    assert regime.current(complete) == regime.daily(complete).iloc[-1] == _next_bar_label(complete)
+
+
+@pytest.mark.parametrize("extra", [1, 3, 5])
+def test_current_on_a_started_last_day_uses_the_previous_closed_day(bars, extra):
+    started = bars.iloc[: 300 * BARS_PER_DAY + extra]
+    closed = regime.daily(bars.iloc[: 300 * BARS_PER_DAY])
+    assert regime.current(started) == closed.iloc[-1] == _next_bar_label(started)
+
+
+@pytest.mark.parametrize("kind", ["missing", "incomplete"])
+def test_current_is_unknown_after_a_gap_just_before_the_end(bars, kind):
+    """Granskningens prov: näst sista dagen saknas eller är ofullständig, bara 00:00 finns på sista dagen."""
+    day = bars.index.floor("D")
+    second_last, last = day[-1] - regime.DAY, day[-1]
+    if kind == "missing":
+        holed = bars[day != second_last]
+    else:
+        holed = bars[bars.index != second_last + pd.Timedelta(hours=8)]
+    tail = holed[(holed.index.floor("D") < last) | (holed.index == last)]
+    assert tail.index[-1] == last
+    assert regime.per_bar(tail).iloc[-1] == regime.UNKNOWN
+    assert regime.current(tail) == regime.UNKNOWN == _next_bar_label(tail)
+
+
+def test_current_is_unknown_when_only_a_later_bar_follows_a_missing_day(bars):
+    day = bars.index.floor("D")
+    # Näst sista dagen saknas helt; på sista dagen finns bara 04:00-stapeln. Nästa stapel är 08:00.
+    gap_then_bar = bars[(day < day[-1] - regime.DAY) | (bars.index == day[-1] + pd.Timedelta(hours=4))]
+    assert regime.current(gap_then_bar) == regime.UNKNOWN == _next_bar_label(gap_then_bar)
+
+
+def test_current_after_a_missing_day_and_a_complete_last_day_keeps_strict_warmup(bars):
+    day = bars.index.floor("D")
+    holed = bars[day != day[-1] - regime.DAY]  # luckan dagen före en komplett sista dag
+    assert regime.daily(holed).index[-1] == day[-1]
+    # Sista dagen är stängd, men 200-dagarsfönstret når över luckan: okänt, inget äldre läge.
+    assert regime.current(holed) == regime.UNKNOWN == _next_bar_label(holed)
+
+
+@pytest.mark.parametrize("cut", range(GAP_DAY * BARS_PER_DAY - 7, GAP_DAY * BARS_PER_DAY + 2 * BARS_PER_DAY + 2))
+def test_current_matches_per_bar_for_the_next_bar_around_a_gap(long_bars, cut):
+    holed = long_bars[long_bars.index.floor("D") != _day(long_bars, GAP_DAY)]
+    for end in (cut, cut + 205 * BARS_PER_DAY):
+        prefix = holed.iloc[:end]
+        assert regime.current(prefix) == _next_bar_label(prefix)
+
+
+def test_current_is_unknown_for_no_data():
+    empty = pd.DataFrame(index=pd.DatetimeIndex([], tz="UTC"), columns=["close"])
+    assert regime.current(empty) == regime.UNKNOWN
 
 
 def test_requires_utc_index(bars):
@@ -130,8 +190,6 @@ def test_supplied_daily_labels_must_be_utc_midnights():
 
 
 # Luckor mitt i serien
-
-GAP_DAY = 250
 
 
 @pytest.fixture(scope="module")
