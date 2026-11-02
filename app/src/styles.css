@@ -217,8 +217,11 @@ h2 { font-size:17px; font-weight:650; letter-spacing:-.01em; }
 
 /* ---------- Animationer ----------
    Introt vid start och efter uppdatering, sidbyten och rutor. Allt stängs av med systemets "minska rörelse". */
+/* Täcker allt från första bilden (ingen intoning av själva lagret), annars syns appen igenom en kort stund. */
 .intro { position:fixed; inset:0; z-index:200; display:grid; place-items:center; background:var(--bg); cursor:pointer;
-  animation:intro-in .25s ease-out both; transition:opacity .38s ease, transform .38s ease; }
+  transition:opacity .38s ease, transform .38s ease; }
+.shell.behind-intro { visibility:hidden; }
+.shell.behind-intro .intro { visibility:visible; }
 .intro.leaving { opacity:0; transform:scale(1.015); pointer-events:none; }
 .intro-card { display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px; width:min(420px,86vw); }
 .intro-logo { width:76px; height:76px; border-radius:20px; box-shadow:0 12px 30px color-mix(in srgb,var(--accent) 30%,transparent);
@@ -237,7 +240,6 @@ h2 { font-size:17px; font-weight:650; letter-spacing:-.01em; }
   stroke-dasharray:1; stroke-dashoffset:1; animation:intro-draw .7s .1s ease-out forwards; }
 .intro-check path { fill:none; stroke:var(--accent); stroke-width:4.5; stroke-linecap:round; stroke-linejoin:round;
   stroke-dasharray:1; stroke-dashoffset:1; animation:intro-draw .45s .7s ease-out forwards; }
-@keyframes intro-in { from { opacity:0; } }
 @keyframes intro-pop { from { opacity:0; transform:scale(.6) translateY(6px); } }
 @keyframes intro-draw { to { stroke-dashoffset:0; } }
 @keyframes intro-fade { to { opacity:1; } }
