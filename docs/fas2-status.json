@@ -3,7 +3,7 @@
   "title": "Fas 2 – Adaptive Strategy Engine",
   "hypothesis": "H-0013",
   "updated": "2026-11-02",
-  "reviewed_revision": "db54bbe",
+  "reviewed_revision": "74d46e3",
   "note": "Klar betyder verifierad. Kod som bara finns lokalt eller tester utan granskning är inte slutgodkända.",
   "groups": [
     {
@@ -156,7 +156,7 @@
               "detail": "db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade."
             }
           ],
-          "note": "Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts."
+          "note": "Strategiväljaren är mergad via PR #70 i bcb14c9, kod oförändrad mot godkänd db54bbe. Ej driftsatt eller publicerad."
         },
         {
           "id": "F2-302",
@@ -168,7 +168,7 @@
               "detail": "db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade."
             }
           ],
-          "note": "Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts."
+          "note": "Strategiväljaren är mergad via PR #70 i bcb14c9, kod oförändrad mot godkänd db54bbe. Ej driftsatt eller publicerad."
         },
         {
           "id": "F2-303",
@@ -180,7 +180,7 @@
               "detail": "db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade."
             }
           ],
-          "note": "Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts."
+          "note": "Strategiväljaren är mergad via PR #70 i bcb14c9, kod oförändrad mot godkänd db54bbe. Ej driftsatt eller publicerad."
         },
         {
           "id": "F2-304",
@@ -192,7 +192,7 @@
               "detail": "db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade."
             }
           ],
-          "note": "Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts."
+          "note": "Strategiväljaren är mergad via PR #70 i bcb14c9, kod oförändrad mot godkänd db54bbe. Ej driftsatt eller publicerad."
         },
         {
           "id": "F2-305",
@@ -204,7 +204,7 @@
               "detail": "db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade."
             }
           ],
-          "note": "Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts."
+          "note": "Strategiväljaren är mergad via PR #70 i bcb14c9, kod oförändrad mot godkänd db54bbe. Ej driftsatt eller publicerad."
         }
       ]
     },
@@ -215,37 +215,62 @@
         {
           "id": "F2-401",
           "title": "Välj kandidat per läge enbart på respektive träningsfönster",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "docs/fas2-walkforward-granskning-71.md",
+              "detail": "74d46e3: direktanrop till train/evaluate_window kan använda förbjudna perioder. Gemensamt slutprovsskydd och periodvalidering behöver kompletteras."
+            }
+          ],
+          "note": "Ej godkänd före rättning och syntetisk regression av granskningsfynden."
         },
         {
           "id": "F2-402",
           "title": "Kräv minst 20 inledda affärer och positivt t-värde, annars platt",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "done",
+          "evidence": [
+            {
+              "file": "docs/fas2-walkforward-granskning-71.md",
+              "detail": "74d46e3 (kod 80d8847): oberoende granskning, 369 passerade testfall inklusive 42 fas2-tester. Urvalsgränser, tie-break, platt, versionsmärkning och deterministisk återkörning verifierade."
+            }
+          ],
+          "note": "Verifierad PR-kod; ännu inte mergad, driftsatt eller körd på riktig data."
         },
         {
           "id": "F2-403",
           "title": "Kör sex halvårsfönster med korrekt uppvärmning och platt start",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "docs/fas2-walkforward-granskning-71.md",
+              "detail": "74d46e3: direktanrop till train/evaluate_window kan använda förbjudna perioder. Gemensamt slutprovsskydd och periodvalidering behöver kompletteras."
+            }
+          ],
+          "note": "Ej godkänd före rättning och syntetisk regression av granskningsfynden."
         },
         {
           "id": "F2-404",
           "title": "Sätt ihop testkurvan och spara varje fönsters val, dagar och affärer",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "docs/fas2-walkforward-granskning-71.md",
+              "detail": "74d46e3: kostnader, funding och affärsbelopp behöver skalas till samma kapitalbas som den ihopsatta kurvan."
+            }
+          ],
+          "note": "Ej godkänd före rättning och syntetisk regression av granskningsfynden."
         },
         {
           "id": "F2-405",
           "title": "Versionsmärk slutlig spelbok och verifiera reproducerbarhet utan slutprov",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "done",
+          "evidence": [
+            {
+              "file": "docs/fas2-walkforward-granskning-71.md",
+              "detail": "74d46e3 (kod 80d8847): oberoende granskning, 369 passerade testfall inklusive 42 fas2-tester. Urvalsgränser, tie-break, platt, versionsmärkning och deterministisk återkörning verifierade."
+            }
+          ],
+          "note": "Verifierad PR-kod; ännu inte mergad, driftsatt eller körd på riktig data."
         }
       ]
     },
@@ -414,5 +439,5 @@
       ]
     }
   ],
-  "reviewed_scope": "PR #69 mergad i 29e44ec. PR #70 strategiväljare och kontrakt godkända för merge efter oberoende omgranskning. Ej driftsatt eller publicerat."
+  "reviewed_scope": "PR #69 och #70 mergade. PR #71 granskad: urvalsgränser och reproducerbarhet verifierade; direkt slutprovsskydd och gemensam kapitalbas behöver rättas före merge. Ej driftsatt eller publicerat."
 }
