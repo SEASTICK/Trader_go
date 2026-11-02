@@ -1,10 +1,10 @@
 # Fas 2 – Utvecklingsplan
 
-**22 av 40 uppgifter verifierade · 8 arbetsområden.**
+**25 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `efb43fc`.
+H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `a5e8fc3`.
 
-PR #71 mergad som 793e9f0. PR #72 granskad på efb43fc: walk-forward återverifierad, stress och osäkerhetsredovisning verifierade syntetiskt. Tre fynd före merge: direkt slutprovsskydd, blandningens riskmått och bevarade delresultat vid avbrott. Ingen riktig körning, driftsättning eller publicering.
+PR #71 mergad som 793e9f0. PR #72 omgranskad på a5e8fc3 (kod ab97a0a): alla tre fynd rättade, 478 syntetiska Python-testfall och separata reproduktionsprov passerar. Kodmässigt godkänd för merge när CI är grönt. Ingen riktig körning, merge, driftsättning eller publicering i omgranskningen.
 
 ## Uppdateringsregler
 
@@ -79,39 +79,39 @@ PR #71 mergad som 793e9f0. PR #72 granskad på efb43fc: walk-forward återverifi
 
 - [x] **F2-401** Välj kandidat per läge enbart på respektive träningsfönster
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — efb43fc: omstrukturerad walk-forward återverifierad med 442 tester och separat 35-affärers jämförelse mot c5068e1. Identiska avkastningar, affärer, kostnader, funding och spelboksval.
-  - PR #71 mergad som 793e9f0. Refaktorn i PR #72 är återverifierad, men PR #72 har separata öppna fynd och är inte godkänd för merge.
+  - PR #71 mergad som 793e9f0. Refaktorn i PR #72 återverifierad; fas2.py är oförändrad i rättningen ab97a0a. PR #72 kodmässigt godkänd på a5e8fc3, merge kräver grön CI.
 - [x] **F2-402** Kräv minst 20 inledda affärer och positivt t-värde, annars platt
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — efb43fc: omstrukturerad walk-forward återverifierad med 442 tester och separat 35-affärers jämförelse mot c5068e1. Identiska avkastningar, affärer, kostnader, funding och spelboksval.
-  - PR #71 mergad som 793e9f0. Refaktorn i PR #72 är återverifierad, men PR #72 har separata öppna fynd och är inte godkänd för merge.
+  - PR #71 mergad som 793e9f0. Refaktorn i PR #72 återverifierad; fas2.py är oförändrad i rättningen ab97a0a. PR #72 kodmässigt godkänd på a5e8fc3, merge kräver grön CI.
 - [x] **F2-403** Kör sex halvårsfönster med korrekt uppvärmning och platt start
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — efb43fc: omstrukturerad walk-forward återverifierad med 442 tester och separat 35-affärers jämförelse mot c5068e1. Identiska avkastningar, affärer, kostnader, funding och spelboksval.
-  - PR #71 mergad som 793e9f0. Refaktorn i PR #72 är återverifierad, men PR #72 har separata öppna fynd och är inte godkänd för merge.
+  - PR #71 mergad som 793e9f0. Refaktorn i PR #72 återverifierad; fas2.py är oförändrad i rättningen ab97a0a. PR #72 kodmässigt godkänd på a5e8fc3, merge kräver grön CI.
 - [x] **F2-404** Sätt ihop testkurvan och spara varje fönsters val, dagar och affärer
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — efb43fc: omstrukturerad walk-forward återverifierad med 442 tester och separat 35-affärers jämförelse mot c5068e1. Identiska avkastningar, affärer, kostnader, funding och spelboksval.
-  - PR #71 mergad som 793e9f0. Refaktorn i PR #72 är återverifierad, men PR #72 har separata öppna fynd och är inte godkänd för merge.
+  - PR #71 mergad som 793e9f0. Refaktorn i PR #72 återverifierad; fas2.py är oförändrad i rättningen ab97a0a. PR #72 kodmässigt godkänd på a5e8fc3, merge kräver grön CI.
 - [x] **F2-405** Versionsmärk slutlig spelbok och verifiera reproducerbarhet utan slutprov
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — efb43fc: omstrukturerad walk-forward återverifierad med 442 tester och separat 35-affärers jämförelse mot c5068e1. Identiska avkastningar, affärer, kostnader, funding och spelboksval.
-  - PR #71 mergad som 793e9f0. Refaktorn i PR #72 är återverifierad, men PR #72 har separata öppna fynd och är inte godkänd för merge.
+  - PR #71 mergad som 793e9f0. Refaktorn i PR #72 återverifierad; fas2.py är oförändrad i rättningen ab97a0a. PR #72 kodmässigt godkänd på a5e8fc3, merge kräver grön CI.
 
 ## 5. Utvärdering och robusthet
 
-2/5 verifierade.
+5/5 verifierade.
 
-- [ ] **F2-501** Jämför med köp-och-behåll, varje kandidat ensam och en likaviktad blandning **Pågår.**
-  - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — efb43fc (kod bbc7181): Avkastningsjämförelser verifierade, men blandningens position och riskmått behöver korrekt kapitalviktning och tydliga exponerings-/omsättningsmått.
-  - Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat.
+- [x] **F2-501** Jämför med köp-och-behåll, varje kandidat ensam och en likaviktad blandning
+  - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov.
+  - Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår.
 - [x] **F2-502** Verifiera kostnadsstress, funding och riskmodell för H-0013
-  - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — efb43fc (kod bbc7181): Normalt valda spelböcker återanvänds vid 2,5× kostnadsstress; funding, 1× och ATR-stop verifierade via befintlig motor och syntetiska tester.
-  - Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat.
-- [ ] **F2-503** Kör förregistrerad permutation och slumpkontroll med fullständig försöksredovisning **Pågår.**
-  - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — efb43fc (kod bbc7181): Permutation med omkört urval och slumpkontroll finns; direkt permutationstest måste avvisa slutprov före regimberäkning.
-  - Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat.
+  - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov.
+  - Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår.
+- [x] **F2-503** Kör förregistrerad permutation och slumpkontroll med fullständig försöksredovisning
+  - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov.
+  - Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår.
 - [x] **F2-504** Redovisa osäkerhet, 81 spelböcker, regimresultat och resultat utan bästa året
-  - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — efb43fc (kod bbc7181): Bootstrap, DSR med 81 försök, uppräkning av spelböcker, regimresultat, år och utan bästa året kodgranskade och syntetiskt testade. Full riktig kontrollkörning ej gjord.
-  - Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat.
-- [ ] **F2-505** Bedöm alla fem förregistrerade kriterier och spara även negativa eller avbrutna försök **Pågår.**
-  - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — efb43fc (kod bbc7181): Kriterier och exklusiv försöksfil fungerar; aborted-filen saknar färdigräknade delresultat. Sju färdiga sammanfattningar förlorades i oberoende avbrottsprov.
-  - Bara syntetisk verifiering. PR #72 ej godkänd för merge; inget driftsatt eller publicerat.
+  - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov.
+  - Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår.
+- [x] **F2-505** Bedöm alla fem förregistrerade kriterier och spara även negativa eller avbrutna försök
+  - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov.
+  - Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår.
 
 ## 6. Supabase och DigitalOcean
 
