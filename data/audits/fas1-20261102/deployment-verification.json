@@ -1,0 +1,11 @@
+{
+  "release": "5f5acb554fd8eedb9c8ecaf7c91ac05477f2b383",
+  "previous_release": "/opt/tradergo/releases/20261102-research-v1",
+  "active_release": "/opt/tradergo/releases/20261102-research-5f5acb5",
+  "server_python_tests": 136,
+  "github_ci_run": 41428155133,
+  "dataset_sha256": "6a84c4f44026b6be270ed2f9395edace5edbd598dfdf683428b9f025a64c042c",
+  "queue_empty_before_activation": true,
+  "service_active": true,
+  "desktop_unchanged": true
+}

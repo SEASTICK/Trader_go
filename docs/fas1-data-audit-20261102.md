@@ -96,7 +96,11 @@ får denna procedur inte användas för att anpassa parametrar mot slutprovet.
 
 ## Verifiering och kvarvarande arbete
 
-136 Python-tester passerade lokalt, inklusive oläsbara slutprovsarkiv som
+136 Python-tester passerade lokalt och på Ubuntu-servern. Linux/Python 3.13-CI
+passerade också (GitHub Actions 41428155133). Backendversion `5f5acb5` är
+aktiverad på DigitalOcean; kön var tom vid bytet och tjänsten är active/running
+med 0 automatiska omstarter. Se `deployment-verification.json`. Desktop-
+gränssnittet är oförändrat i detta steg. Tester omfattar oläsbara slutprovsarkiv som
 bevisar att periodavgränsningen görs före filöppning. Binances hämtare sparar
 nu kontrollsummefilen för nyhämtade arkiv.
 
