@@ -66,8 +66,8 @@ def run_all(repo: Path, data_dir: Path | None = None, loader=binance.load, only:
     for tile, spec in load_plan(repo).items():
         if only and tile not in only:
             continue
-        if spec.get("phase") == "fas1":
-            continue  # körs av traderlab.fas1 (walk-forward), inte här
+        if spec.get("phase") in ("fas1", "xs"):
+            continue  # körs av traderlab.fas1 (walk-forward) och traderlab.xsrun (tvärsnitt), inte här
         try:
             bars = loader(spec.get("market", "spot"), spec["symbol"], spec["interval"], data_dir)
         except FileNotFoundError as exc:
@@ -178,6 +178,26 @@ def _export_fas1(repo: Path, tile: str, r: dict, path: Path) -> dict:
     }
 
 
+def _export_xs(repo: Path, r: dict, path: Path) -> dict:
+    """Tvärsnittsportfölj (traderlab.xsrun). Inga enskilda affärer: antalet är ombalanseringar."""
+    s, cv = r["summary"], r["curve"]
+    monthly = list(s.get("monthly_returns", {}).values())
+    return {
+        "source": "HISTORIK", "phase": "xs", "hypothesis": r["hypothesis_id"], "registry_commit": r["registry_commit"],
+        "run_at": r["run_at"], "period": r["period"], "total_return": s["total_return"], "max_drawdown": s["max_drawdown"],
+        "trades": r["rebalances"], "win_rate": (sum(1 for m in monthly if m > 0) / len(monthly)) if monthly else 0.0,
+        "t": r["t_daily_nw"], "t_required": r["t_required"], "passes": bool(r["criteria"]["t_at_least_required"]),
+        "deflated_sharpe": r.get("deflated_sharpe"), "stressed_total_return": r["summary_stressed_costs"]["total_return"],
+        "sharpe": s["sharpe"], "track": r.get("track", "C"), "beta": (r.get("benchmark") or {}).get("beta"),
+        "correlation": (r.get("benchmark") or {}).get("correlation"),
+        "baseline": {"total_return": r["baseline_btc_buy_and_hold"]["total_return"], "max_drawdown": None, "sharpe": None, "t_daily_nw": None},
+        "costs_bps_per_side": r["costs_bps_per_side"],
+        "curve": {"t": cv["t"], "strategy": cv["strategy"], "buy_and_hold": cv["btc"]},
+        "recent_trades": [], "position_now": 0.0, "universe": r["universe"], "criteria": r.get("criteria"),
+        "result_file": path.relative_to(repo).as_posix(),
+    }
+
+
 def export_to_app(repo: Path) -> dict:
     """Skriver app/data/results.json med det senaste resultatet per ruta. Bara riktiga körningar."""
     plan = load_plan(repo)
@@ -190,6 +210,9 @@ def export_to_app(repo: Path) -> dict:
         r = json.loads(files[-1].read_text(encoding="utf-8"))
         if r.get("phase") == "fas1":
             out[tile] = _export_fas1(repo, tile, r, files[-1])
+            continue
+        if r.get("phase") == "xs":
+            out[tile] = _export_xs(repo, r, files[-1])
             continue
         s = r["summary"]
         out[tile] = {
