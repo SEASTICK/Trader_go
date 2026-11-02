@@ -40,8 +40,8 @@ ett komplett femårsdataset. API-svaren sparas i revisionsmappen.
 på nytt och kontrollsummerades. 3 277 rader, 0 feljusterade tider. Den gamla
 uppgiften om 43 feljusterade staplar kunde inte reproduceras. Originalfilerna
 bakom det tidigare påståendet finns inte i denna checkout; orsaken kan därför
-inte fastställas. Detta godkänner inte alla gamla 1H-data: augusti och september
-har saknade timmar, och augusti är en partiell introduktionsmånad.
+inte fastställas. Detta godkänner inte alla gamla 1H-data: september har
+713 av 720 möjliga timrader, och augusti är en partiell introduktionsmånad.
 
 **Terminsuppvärmning:** den generella molnworkern begär 600 staplar före
 periodstart och kan då efterfråga saknade månadsarkiv från 2019. Detta är en
