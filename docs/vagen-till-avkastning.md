@@ -3,6 +3,8 @@
 Ingen kan lova positiv avkastning. Det vi kan styra är att leta på rätt ställen, mäta ärligt och bara
 släppa igenom det som klarar varje grind. Hittills: alla avgjorda hypoteser `REJECT` (H-0001–H-0012, H-0014, H-0015; H-0013 pågår), läget 2026-11-02.
 
+Produktens faser och den bekräftade målbilden beskrivs i [färdplanen](fardplan.md). Grindarna nedan gäller validering av strategier och ger ingen aktivering av livehandel.
+
 ## Grindarna
 
 | # | Grind | Krav för att gå vidare | Status |

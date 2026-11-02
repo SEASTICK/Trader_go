@@ -1,7 +1,8 @@
 # TraderGO
 
-Två personers tradingforskning: bara historik och papper, aldrig riktiga pengar. Regler för
-arbetet finns i [CLAUDE.md](CLAUDE.md).
+Två personers tradingforskning. Nuvarande implementation är för historik och papper; riktiga order kan inte aktiveras. Regler för arbetet finns i [CLAUDE.md](CLAUDE.md).
+
+Det långsiktiga målet är en automatiskt förvaltad portfölj inom fastställda riskgränser. Se [målbild och färdplan](docs/fardplan.md). En framtida liveintegration kräver ett separat uttryckligt beslut; målbilden ändrar inte dagens begränsningar.
 
 ## Mappar
 

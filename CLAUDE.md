@@ -3,6 +3,9 @@
 En tradingbot som byggs av två personer för eget bruk. Målet är att hitta, verifiera
 och kombinera små kanter utan att lura oss själva.
 
+Projektets långsiktiga mål och fasindelning finns i [målbild och färdplan](docs/fardplan.md).
+Målbilden är inte ett livebeslut; samtliga nuvarande säkerhets- och paper-regler gäller fortsatt.
+
 ## Regler som alltid gäller
 
 1. **Inga riktiga pengar utan uttryckligt beslut.** Allt körs på historik eller papper.

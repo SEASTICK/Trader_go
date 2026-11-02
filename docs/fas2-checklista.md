@@ -31,6 +31,7 @@ PR #69 regimmodul godkänd för merge efter oberoende granskning. Ej mergad, dri
   - Underlag: [docs/fas2-inledande-granskning-20261102.md](fas2-inledande-granskning-20261102.md) — 3c2465b: befintlig integration granskad; H-0013 saknar ännu egen motor och köingång.
 - [x] **F2-105** Avgränsa H-0013 från tvärsnitt, papper och livehandel
   - Underlag: [docs/fas2-inledande-granskning-20261102.md](fas2-inledande-granskning-20261102.md) — 3c2465b: H-0014/H-0015 är separata; REJECT gäller fortsatt och H-0013 kan inte gå direkt till papper.
+  - Underlag: [docs/fardplan.md](fardplan.md) — Edwin bekräftade målbilden automatisk portföljförvaltning 2026-11-02. H-0013 förblir historisk forskning; framtida liveintegration kräver separat uttryckligt beslut.
 
 ## 2. Bygg och verifiera regimmodulen
 
