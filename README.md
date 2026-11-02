@@ -9,10 +9,12 @@ arbetet finns i [CLAUDE.md](CLAUDE.md).
 |---|---|
 | `app/` | **Trader_go**, skrivbordsappen för forskning och papperstrading (Tauri + React). Inga mäklarkopplingar, ingen orderkod. Se [app/README.md](app/README.md). |
 | `apps/trader-go-universe/` | **TraderGO Universe**, en karta över hela projektet som bara läser (Tauri + React Flow). Se [docs/universe.md](docs/universe.md). |
-| `engine/` | Forskningsmotorn: data, backtest, statistik, registret. |
+| `engine/` | Forskningsmotorn: data, backtest, statistik, registret, Fas 1-strategierna och forskningsworkern som körs på servern. |
 | `research/` | Registret, experimenten och resultaten. Också Obsidian-valvet (`research/TraderGO/` för anteckningar). |
 | `data/` | Beskrivning av datakällor och kvalitet. Rådata stannar på varje dator. |
-| `docs/` | [release.md](docs/release.md) (släpp och uppdateringar), [universe.md](docs/universe.md), [status-punkt-1.md](docs/status-punkt-1.md) (läget för den gemensamma grunden), [marknadsdata.md](docs/marknadsdata.md) och [status-punkt-2.md](docs/status-punkt-2.md) (insamling av marknadsdata), [status-punkt-3.md](docs/status-punkt-3.md) (prisdiagram), [status-rek-3.md](docs/status-rek-3.md) (verklig marknadsdata i appen). |
+| `supabase/` | Databasschemat för Research Lab (Supabase). Inga nycklar. |
+| `services/research-worker/` | Servertjänsterna som körs på DigitalOcean (forskningsworker och marknadssynk), se [server.md](docs/server.md). `deploy/` är den äldre, avstängda varianten. |
+| `docs/` | Släpp: [release.md](docs/release.md). Samarbete: [samarbete.md](docs/samarbete.md). Forskning: [fas-1.md](docs/fas-1.md) (Fas 1-motorn och resultaten), [research-engine-arkitektur.md](docs/research-engine-arkitektur.md). Moln: [server.md](docs/server.md), [research-cloud-setup.md](docs/research-cloud-setup.md) (DigitalOcean och Supabase), [research-backup-restore.md](docs/research-backup-restore.md). Marknadsdata: [marknadsdata.md](docs/marknadsdata.md). Universe: [universe.md](docs/universe.md). Äldre statusrapporter: `status-*.md`. |
 | `.claude/skills/` | Våra arbetsregler som skills, se [.claude/skills/README.md](.claude/skills/README.md). |
 
 ## Kommandon

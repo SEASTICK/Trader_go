@@ -60,3 +60,15 @@ def test_missing_database_says_how_to_get_one(tmp_path):
 def test_default_path_is_the_apps_data_folder():
     p = live.default_db_path()
     assert p.name == "market-data.sqlite" and "com.seastick.tradergo" in str(p)
+
+
+def test_load_closes_the_database_connection(tmp_path):
+    """`with sqlite3.connect()` stänger inte anslutningen. En kvarlämnad anslutning låser filen på Windows."""
+    import gc
+    import warnings
+    db = _db(tmp_path, make_bars(50, interval="4h", seed=1))
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always", ResourceWarning)
+        live.load(db, "BTCUSDT", "4h")
+        gc.collect()
+    assert not [w for w in caught if issubclass(w.category, ResourceWarning)]

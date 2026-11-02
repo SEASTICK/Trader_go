@@ -15,6 +15,7 @@ import json
 import os
 import sqlite3
 import sys
+from contextlib import closing
 from pathlib import Path
 
 import pandas as pd
@@ -42,8 +43,9 @@ def load(db: Path | None = None, symbol: str = "BTCUSDT", interval: str = "4h", 
     path = Path(db) if db else default_db_path()
     if not path.exists():
         raise FileNotFoundError(f"Ingen insamlad data i {path}. Starta TraderGO-appen först.")
-    # Skrivskyddat: motorn ändrar aldrig appens databas.
-    with sqlite3.connect(f"file:{path}?mode=ro", uri=True) as con:
+    # Skrivskyddat: motorn ändrar aldrig appens databas. closing() stänger anslutningen; ett vanligt
+    # `with sqlite3.connect(...)` gör bara commit/rollback och lämnar filen öppen (låser den på Windows).
+    with closing(sqlite3.connect(f"file:{path}?mode=ro", uri=True)) as con:
         df = pd.read_sql_query(
             "SELECT open_time, open, high, low, close, volume FROM bars "
             "WHERE provider=? AND market=? AND symbol=? AND interval=? ORDER BY open_time",
