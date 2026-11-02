@@ -3,7 +3,7 @@
   "title": "Fas 2 – Adaptive Strategy Engine",
   "hypothesis": "H-0013",
   "updated": "2026-11-02",
-  "reviewed_revision": "8e6617d",
+  "reviewed_revision": "db54bbe",
   "note": "Klar betyder verifierad. Kod som bara finns lokalt eller tester utan granskning är inte slutgodkända.",
   "groups": [
     {
@@ -149,14 +149,14 @@
         {
           "id": "F2-301",
           "title": "Inför ett versionshanterat kontrakt för spelbok, läge och målposition",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-valjare-granskning-70.md",
-              "detail": "8e6617d: saknat/tomt/motsägande kandidatmanifest accepteras och direkt konstruktor kan kringgå valideringen. Kontraktsrättning och regressionstester återstår."
+              "detail": "db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade."
             }
           ],
-          "note": "F2-301 lämnas öppen tills alla konstruktorvägar och inlästa kandidatversioner är strikt verifierade."
+          "note": "Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts."
         },
         {
           "id": "F2-302",
@@ -165,10 +165,10 @@
           "evidence": [
             {
               "file": "docs/fas2-valjare-granskning-70.md",
-              "detail": "8e6617d (kod a483162): oberoende granskning och 306 passerade Python-testfall, varav 53 adaptiva. Kandidater, riktning, byte, nästa öppning och stop verifierade."
+              "detail": "db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade."
             }
           ],
-          "note": "Verifierad PR-kod; ännu inte mergad, driftsatt eller publicerad."
+          "note": "Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts."
         },
         {
           "id": "F2-303",
@@ -177,10 +177,10 @@
           "evidence": [
             {
               "file": "docs/fas2-valjare-granskning-70.md",
-              "detail": "8e6617d (kod a483162): oberoende granskning och 306 passerade Python-testfall, varav 53 adaptiva. Kandidater, riktning, byte, nästa öppning och stop verifierade."
+              "detail": "db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade."
             }
           ],
-          "note": "Verifierad PR-kod; ännu inte mergad, driftsatt eller publicerad."
+          "note": "Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts."
         },
         {
           "id": "F2-304",
@@ -189,10 +189,10 @@
           "evidence": [
             {
               "file": "docs/fas2-valjare-granskning-70.md",
-              "detail": "8e6617d (kod a483162): oberoende granskning och 306 passerade Python-testfall, varav 53 adaptiva. Kandidater, riktning, byte, nästa öppning och stop verifierade."
+              "detail": "db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade."
             }
           ],
-          "note": "Verifierad PR-kod; ännu inte mergad, driftsatt eller publicerad."
+          "note": "Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts."
         },
         {
           "id": "F2-305",
@@ -201,10 +201,10 @@
           "evidence": [
             {
               "file": "docs/fas2-valjare-granskning-70.md",
-              "detail": "8e6617d (kod a483162): oberoende granskning och 306 passerade Python-testfall, varav 53 adaptiva. Kandidater, riktning, byte, nästa öppning och stop verifierade."
+              "detail": "db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade."
             }
           ],
-          "note": "Verifierad PR-kod; ännu inte mergad, driftsatt eller publicerad."
+          "note": "Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts."
         }
       ]
     },
@@ -414,5 +414,5 @@
       ]
     }
   ],
-  "reviewed_scope": "PR #69 mergad i 29e44ec. PR #70 granskad: handelsregler verifierade; spelbokskontraktet behöver rättas före merge. Ej driftsatt eller publicerat."
+  "reviewed_scope": "PR #69 mergad i 29e44ec. PR #70 strategiväljare och kontrakt godkända för merge efter oberoende omgranskning. Ej driftsatt eller publicerat."
 }

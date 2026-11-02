@@ -1,10 +1,10 @@
 # Fas 2 – Utvecklingsplan
 
-**14 av 40 uppgifter verifierade · 8 arbetsområden.**
+**15 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `8e6617d`.
+H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `db54bbe`.
 
-PR #69 mergad i 29e44ec. PR #70 granskad: handelsregler verifierade; spelbokskontraktet behöver rättas före merge. Ej driftsatt eller publicerat.
+PR #69 mergad i 29e44ec. PR #70 strategiväljare och kontrakt godkända för merge efter oberoende omgranskning. Ej driftsatt eller publicerat.
 
 ## Uppdateringsregler
 
@@ -55,23 +55,23 @@ PR #69 mergad i 29e44ec. PR #70 granskad: handelsregler verifierade; spelbokskon
 
 ## 3. Bygg den adaptiva strategiväljaren
 
-4/5 verifierade.
+5/5 verifierade.
 
-- [ ] **F2-301** Inför ett versionshanterat kontrakt för spelbok, läge och målposition **Pågår.**
-  - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — 8e6617d: saknat/tomt/motsägande kandidatmanifest accepteras och direkt konstruktor kan kringgå valideringen. Kontraktsrättning och regressionstester återstår.
-  - F2-301 lämnas öppen tills alla konstruktorvägar och inlästa kandidatversioner är strikt verifierade.
+- [x] **F2-301** Inför ett versionshanterat kontrakt för spelbok, läge och målposition
+  - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade.
+  - Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts.
 - [x] **F2-302** Koppla fasta EMA/ADX- och Bollinger/RSI-kandidater samt platt läge
-  - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — 8e6617d (kod a483162): oberoende granskning och 306 passerade Python-testfall, varav 53 adaptiva. Kandidater, riktning, byte, nästa öppning och stop verifierade.
-  - Verifierad PR-kod; ännu inte mergad, driftsatt eller publicerad.
+  - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade.
+  - Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts.
 - [x] **F2-303** Begränsa long till upp-lägen och short till ned-lägen
-  - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — 8e6617d (kod a483162): oberoende granskning och 306 passerade Python-testfall, varav 53 adaptiva. Kandidater, riktning, byte, nästa öppning och stop verifierade.
-  - Verifierad PR-kod; ännu inte mergad, driftsatt eller publicerad.
+  - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade.
+  - Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts.
 - [x] **F2-304** Stäng vid läges- och kandidatbyte utan att återuppta en gammal affär
-  - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — 8e6617d (kod a483162): oberoende granskning och 306 passerade Python-testfall, varav 53 adaptiva. Kandidater, riktning, byte, nästa öppning och stop verifierade.
-  - Verifierad PR-kod; ännu inte mergad, driftsatt eller publicerad.
+  - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade.
+  - Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts.
 - [x] **F2-305** Verifiera nästa öppning, ATR-stop och alla bytesfall med syntetiska tester
-  - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — 8e6617d (kod a483162): oberoende granskning och 306 passerade Python-testfall, varav 53 adaptiva. Kandidater, riktning, byte, nästa öppning och stop verifierade.
-  - Verifierad PR-kod; ännu inte mergad, driftsatt eller publicerad.
+  - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade.
+  - Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts.
 
 ## 4. Träning och walk-forward
 
