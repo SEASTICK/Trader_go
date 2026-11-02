@@ -84,7 +84,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
     const v = (n: string) => css.getPropertyValue(n).trim();
     colors.current = { up: v("--good"), down: v("--bad"), ind: [v("--ind1"), v("--ind2"), v("--ind3")], entry: v("--mark-entry"), exit: v("--mark-exit") };
     const c = createChart(box.current, {
-      autoSize: false,
+      autoSize: !historical,
       layout: { background: { type: ColorType.Solid, color: v("--card") }, textColor: v("--muted"), fontFamily: "Inter Variable, system-ui, sans-serif", panes: { separatorColor: v("--line"), enableResize: false } },
       grid: { vertLines: { color: v("--line") }, horzLines: { color: v("--line") } },
       crosshair: { mode: CrosshairMode.Normal },
@@ -97,7 +97,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
     c.panes()[1]?.setHeight(90);
     chart.current = c; candleS.current = cs; volS.current = vs;
     markersApi.current = createSeriesMarkers(cs, []);
-    viewport.current = observeChartViewport(box.current, c);
+    if (historical) viewport.current = observeChartViewport(box.current, c);
     c.subscribeCrosshairMove(p => {
       if (!p.time) { setHover(null); return; }
       const t = (p.time as number) * 1000;
@@ -110,7 +110,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
       chart.current = null; candleS.current = null; volS.current = null; markersApi.current = null; lines.current.clear();
       data.current = []; setCandles([]); setHover(null);
     };
-  }, [current?.symbol, current?.interval]);
+  }, [current?.symbol, current?.interval, !!historical]);
 
   const toCandle = (x: Candle) => {
     const fade = (col: string) => alpha(col, 0.45);

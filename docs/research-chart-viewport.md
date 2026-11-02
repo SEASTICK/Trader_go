@@ -1,7 +1,8 @@
 # Diagrammets synlighet och uppvärmning, 2026-11-02
 
-Diagramkomponenten äger nu storleksändringen med ResizeObserver i stället för
-bibliotekets autoSize. IntersectionObserver schemalägger en omritning på nästa
+Endast historikdiagrammet äger nu storleksändringen med ResizeObserver i stället för
+bibliotekets autoSize. Marknadsdiagram behåller bibliotekets tidigare autoSize.
+IntersectionObserver schemalägger en omritning på nästa
 animationsruta när diagrammet blir synligt. Historikens minsta stapelbredd är 0,01 pixlar så att alla 6 576 staplar ryms;
 livediagram behåller standardgränsen 0,5 pixlar. Historikens första fitContent väntar
 på synlig yta med positiv storlek. Återkomst och storleksändring återställer inte
@@ -29,3 +30,8 @@ leverantörsåterställning eller larmleverans verifieras av denna kontroll.
 Mac-paket 0.1.15 (4d2ba56): första ritning verifierad utan Hela perioden.
 Körningen stoppades före publicering när stapelbreddens gräns upptäcktes.
 Den ytterligare rättningen levereras med ett nytt versionsnummer.
+
+Mac-regressionskontrollen visade tom marknadscanvas med den generella
+storlekshanteringen. Den nya observatören begränsades därför till historik;
+0.1.16 stoppades också före publicering. Ursprunglig autoSize används för
+marknadsdata. Rotorsaken till den tomma canvassen är inte fastställd.
