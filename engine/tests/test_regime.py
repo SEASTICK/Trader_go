@@ -62,6 +62,13 @@ def test_midnight_bar_switches_to_yesterday_and_evening_bar_does_not():
     assert list(got) == ["upp/låg vol", "upp/låg vol", "ned/hög vol", "upp/hög vol"]
 
 
+def test_supplied_labels_are_not_carried_over_a_missing_day():
+    effective = pd.Series(["upp/låg vol", "ned/låg vol"], index=pd.DatetimeIndex(["2021-01-01", "2021-01-03"], tz="UTC"))
+    idx = pd.DatetimeIndex(["2021-01-02 04:00", "2021-01-03 04:00", "2021-01-04 04:00"], tz="UTC")
+    got = regime.per_bar(pd.DataFrame(index=idx), effective)
+    assert list(got) == ["upp/låg vol", regime.UNKNOWN, "ned/låg vol"]
+
+
 def test_a_started_day_is_not_closed(bars):
     partial = bars.iloc[: 300 * BARS_PER_DAY + 2]  # två staplar in på dag 301
     closes = regime.daily_closes(partial)
@@ -81,6 +88,132 @@ def test_requires_utc_index(bars):
         regime.raw_daily(naive)
     with pytest.raises(ValueError, match="UTC"):
         regime.raw_daily(bars.tz_convert("Europe/Stockholm"))
+
+
+# Validering av tidsserien
+
+def test_series_shifted_30_minutes_is_rejected(bars):
+    shifted = bars.set_axis(bars.index + pd.Timedelta(minutes=30))
+    with pytest.raises(ValueError, match="rutnätet"):
+        regime.raw_daily(shifted)
+    with pytest.raises(ValueError, match="rutnätet"):
+        regime.per_bar(shifted)
+
+
+def test_irregular_timestamp_is_rejected(bars):
+    extra = bars.iloc[[10]].set_axis([bars.index[10] + pd.Timedelta(hours=2)])
+    irregular = pd.concat([bars, extra]).sort_index()
+    with pytest.raises(ValueError, match="rutnätet"):
+        regime.raw_daily(irregular)
+
+
+def test_wrong_or_unknown_interval_is_rejected(bars):
+    with pytest.raises(ValueError, match="rutnätet"):
+        regime.raw_daily(bars, interval="1d")
+    with pytest.raises(ValueError, match="stöds inte"):
+        regime.raw_daily(bars, interval="3h")
+
+
+def test_duplicates_and_unsorted_are_rejected(bars):
+    with pytest.raises(ValueError, match="dubbletter"):
+        regime.raw_daily(pd.concat([bars.iloc[:10], bars.iloc[9:20]]))
+    with pytest.raises(ValueError, match="sorterade"):
+        regime.raw_daily(bars.iloc[::-1])
+
+
+def test_supplied_daily_labels_must_be_utc_midnights():
+    idx = pd.DatetimeIndex(["2021-01-02 00:00"], tz="UTC")
+    with pytest.raises(ValueError, match="00:00"):
+        regime.per_bar(pd.DataFrame(index=idx), _raw(["upp/låg vol"], start="2021-01-01 04:00"))
+    with pytest.raises(ValueError, match="dubbletter"):
+        regime.with_hysteresis(pd.Series(["upp/låg vol"] * 2, index=pd.DatetimeIndex(["2021-01-01"] * 2, tz="UTC")))
+
+
+# Luckor mitt i serien
+
+GAP_DAY = 250
+
+
+@pytest.fixture(scope="module")
+def long_bars():
+    return make_bars(700 * BARS_PER_DAY, interval="4h", seed=11, vol=0.02)
+
+
+def _day(bars, n):
+    return bars.index[0].floor("D") + n * regime.DAY
+
+
+def _drop(bars, mask):
+    return bars[~mask]
+
+
+@pytest.mark.parametrize("kind", ["missing", "incomplete_last_bar", "incomplete_first_bar"])
+def test_gap_day_is_unknown_and_windows_restart(long_bars, kind):
+    day = long_bars.index.floor("D")
+    gap = _day(long_bars, GAP_DAY)
+    if kind == "missing":
+        holed = _drop(long_bars, day == gap)
+    elif kind == "incomplete_last_bar":
+        holed = _drop(long_bars, long_bars.index == gap + pd.Timedelta(hours=20))
+    else:  # utan 00:00-stapeln: dagens sista stapel finns, men dagen är ändå inte stängd
+        holed = _drop(long_bars, long_bars.index == gap)
+    assert gap not in regime.daily_closes(holed).index
+    raw = regime.raw_daily(holed)
+    assert len(raw) == 700, "every calendar day is present, also the gap"
+    assert raw[gap] == regime.UNKNOWN
+    # 200-dagarsmedlet räknas först när 200 hela dagar efter luckan finns.
+    assert (raw[gap: gap + 199 * regime.DAY] == regime.UNKNOWN).all()
+    assert raw[gap + 200 * regime.DAY] != regime.UNKNOWN
+    full = regime.raw_daily(long_bars)
+    pd.testing.assert_series_equal(raw[:gap - regime.DAY], full[:gap - regime.DAY])
+    labels = regime.per_bar(holed)
+    assert (labels[labels.index.floor("D") == gap + regime.DAY] == regime.UNKNOWN).all()
+
+
+def test_confirmation_restarts_after_a_gap(long_bars):
+    holed = _drop(long_bars, long_bars.index.floor("D") == _day(long_bars, GAP_DAY))
+    raw, eff = regime.raw_daily(holed), regime.daily(holed)
+    back = _day(long_bars, GAP_DAY + 200)  # första kända dagen efter luckan
+    assert eff[back - regime.DAY] == regime.UNKNOWN
+    # Utan ett omedelbart läge måste även dagarna efter luckan bekräftas på nytt i tre dagar.
+    assert eff[back] == (raw[back] if raw[back] in regime.IMMEDIATE else regime.UNKNOWN)
+    pd.testing.assert_series_equal(eff[back:], regime.with_hysteresis(raw[back - regime.DAY:]).iloc[1:])
+
+
+@pytest.mark.parametrize("cut_day", [GAP_DAY, GAP_DAY + 1, GAP_DAY + 201, 650])
+def test_future_bars_never_change_earlier_labels_across_a_gap(long_bars, cut_day):
+    holed = _drop(long_bars, long_bars.index.floor("D") == _day(long_bars, GAP_DAY))
+    cut = holed.index.searchsorted(_day(long_bars, cut_day))
+    pd.testing.assert_series_equal(regime.per_bar(holed.iloc[:cut]), regime.per_bar(holed).iloc[:cut])
+
+
+def test_missing_calendar_day_breaks_the_three_day_count():
+    """Granskningens exempel: samma läge 1, 3 och 4 januari är bara två dagar i rad."""
+    idx = pd.DatetimeIndex(["2021-01-01", "2021-01-03", "2021-01-04"], tz="UTC")
+    got = regime.with_hysteresis(pd.Series(["upp/låg vol"] * 3, index=idx))
+    assert list(got.index.day) == [1, 2, 3, 4]
+    assert list(got) == [regime.UNKNOWN] * 4
+    idx5 = idx.append(pd.DatetimeIndex(["2021-01-05"], tz="UTC"))
+    got5 = regime.with_hysteresis(pd.Series(["upp/låg vol"] * 4, index=idx5))
+    assert got5.iloc[-1] == "upp/låg vol"
+
+
+def test_missing_day_switches_away_from_down_high_vol_at_once():
+    idx = pd.DatetimeIndex(["2021-01-01", "2021-01-03"], tz="UTC")
+    got = regime.with_hysteresis(pd.Series(["ned/hög vol", "ned/hög vol"], index=idx))
+    assert list(got) == ["ned/hög vol", regime.UNKNOWN, "ned/hög vol"]
+
+
+def test_day_closure_ignores_later_timestamps(bars):
+    """Om en dag är stängd avgörs av dagens egna staplar, inte av om datan fortsätter."""
+    end = 300 * BARS_PER_DAY
+    exact = regime.daily_closes(bars.iloc[:end])
+    with_next = regime.daily_closes(bars.iloc[: end + 1])
+    with_much_more = regime.daily_closes(bars)
+    pd.testing.assert_series_equal(exact, with_next)
+    pd.testing.assert_series_equal(exact, with_much_more.iloc[:300])
+    five_bars = bars.iloc[: end - 1]  # dag 300 saknar sin sista stapel
+    assert len(regime.daily_closes(five_bars)) == 299
 
 
 # Hysteres
