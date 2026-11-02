@@ -1,10 +1,10 @@
 # Fas 2 – Utvecklingsplan
 
-**15 av 40 uppgifter verifierade · 8 arbetsområden.**
+**17 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `db54bbe`.
+H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `74d46e3`.
 
-PR #69 mergad i 29e44ec. PR #70 strategiväljare och kontrakt godkända för merge efter oberoende omgranskning. Ej driftsatt eller publicerat.
+PR #69 och #70 mergade. PR #71 granskad: urvalsgränser och reproducerbarhet verifierade; direkt slutprovsskydd och gemensam kapitalbas behöver rättas före merge. Ej driftsatt eller publicerat.
 
 ## Uppdateringsregler
 
@@ -59,39 +59,39 @@ PR #69 mergad i 29e44ec. PR #70 strategiväljare och kontrakt godkända för mer
 
 - [x] **F2-301** Inför ett versionshanterat kontrakt för spelbok, läge och målposition
   - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade.
-  - Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts.
+  - Strategiväljaren är mergad via PR #70 i bcb14c9, kod oförändrad mot godkänd db54bbe. Ej driftsatt eller publicerad.
 - [x] **F2-302** Koppla fasta EMA/ADX- och Bollinger/RSI-kandidater samt platt läge
   - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade.
-  - Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts.
+  - Strategiväljaren är mergad via PR #70 i bcb14c9, kod oförändrad mot godkänd db54bbe. Ej driftsatt eller publicerad.
 - [x] **F2-303** Begränsa long till upp-lägen och short till ned-lägen
   - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade.
-  - Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts.
+  - Strategiväljaren är mergad via PR #70 i bcb14c9, kod oförändrad mot godkänd db54bbe. Ej driftsatt eller publicerad.
 - [x] **F2-304** Stäng vid läges- och kandidatbyte utan att återuppta en gammal affär
   - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade.
-  - Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts.
+  - Strategiväljaren är mergad via PR #70 i bcb14c9, kod oförändrad mot godkänd db54bbe. Ej driftsatt eller publicerad.
 - [x] **F2-305** Verifiera nästa öppning, ATR-stop och alla bytesfall med syntetiska tester
   - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — db54bbe (kod 9128008): oberoende omgranskning godkänd. 327 Python-testfall, inklusive 74 adaptiva, passerar. Tidigare felaktiga kontrakt avvisas; 81 giltiga round-trips och stabila id verifierade. Handelsfunktionerna är oförändrade.
-  - Kod godkänd för merge i PR #70. Ännu inte mergad, driftsatt eller publicerad; ingen riktig data har körts.
+  - Strategiväljaren är mergad via PR #70 i bcb14c9, kod oförändrad mot godkänd db54bbe. Ej driftsatt eller publicerad.
 
 ## 4. Träning och walk-forward
 
-0/5 verifierade.
+2/5 verifierade.
 
 - [ ] **F2-401** Välj kandidat per läge enbart på respektive träningsfönster **Pågår.**
-  - Underlag: [engine/tests/test_fas2.py](../engine/tests/test_fas2.py) — 80d8847 (gren fas2-walkforward): train() läser bara staplar och finansieringsränta från 2020-01-01 till fönstrets början; ändrade test- och framtidsdata ändrar inte valet i något av de sex fönstren, och träningen ser inget vid eller efter gränsen. 42 nya tester, hela Python-sviten 369 tester passerar lokalt. Åtta avsiktliga fel fångas. Tolkningar i docs/fas2-walkforward-tolkningar.md (b55427b, skrivna före koden). Endast syntetisk data.
-  - Väntar på Codex granskning; ej mergat, ingen riktig data, kö, worker eller app, ej driftsatt eller publicerat.
-- [ ] **F2-402** Kräv minst 20 inledda affärer och positivt t-värde, annars platt **Pågår.**
-  - Underlag: [engine/tests/test_fas2.py](../engine/tests/test_fas2.py) — 80d8847 (gren fas2-walkforward): select(): bäst Sharpe bland kandidater med minst 20 affärer inledda i läget och t > 0; gränsfall 19/20/21 affärer, t 0/negativt/saknat/1e-9, exakt lika Sharpe ger ema_adx_trend, inga valbara ger platt per läge. 42 nya tester, hela Python-sviten 369 tester passerar lokalt. Åtta avsiktliga fel fångas. Tolkningar i docs/fas2-walkforward-tolkningar.md (b55427b, skrivna före koden). Endast syntetisk data.
-  - Väntar på Codex granskning; ej mergat, ingen riktig data, kö, worker eller app, ej driftsatt eller publicerat.
+  - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — 74d46e3: direktanrop till train/evaluate_window kan använda förbjudna perioder. Gemensamt slutprovsskydd och periodvalidering behöver kompletteras.
+  - Ej godkänd före rättning och syntetisk regression av granskningsfynden.
+- [x] **F2-402** Kräv minst 20 inledda affärer och positivt t-värde, annars platt
+  - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — 74d46e3 (kod 80d8847): oberoende granskning, 369 passerade testfall inklusive 42 fas2-tester. Urvalsgränser, tie-break, platt, versionsmärkning och deterministisk återkörning verifierade.
+  - Verifierad PR-kod; ännu inte mergad, driftsatt eller körd på riktig data.
 - [ ] **F2-403** Kör sex halvårsfönster med korrekt uppvärmning och platt start **Pågår.**
-  - Underlag: [engine/tests/test_fas2.py](../engine/tests/test_fas2.py) — 80d8847 (gren fas2-walkforward): Sex fönster 2022-01 till 2024-07 med exakta gränser; uppvärmning från 2020-01-01 utan data efter fönstret; platt start, spelboken gäller från fönstrets första stapel och varje affär kräver ny inträdessignal efter starten. 42 nya tester, hela Python-sviten 369 tester passerar lokalt. Åtta avsiktliga fel fångas. Tolkningar i docs/fas2-walkforward-tolkningar.md (b55427b, skrivna före koden). Endast syntetisk data.
-  - Väntar på Codex granskning; ej mergat, ingen riktig data, kö, worker eller app, ej driftsatt eller publicerat.
+  - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — 74d46e3: direktanrop till train/evaluate_window kan använda förbjudna perioder. Gemensamt slutprovsskydd och periodvalidering behöver kompletteras.
+  - Ej godkänd före rättning och syntetisk regression av granskningsfynden.
 - [ ] **F2-404** Sätt ihop testkurvan och spara varje fönsters val, dagar och affärer **Pågår.**
-  - Underlag: [engine/tests/test_fas2.py](../engine/tests/test_fas2.py) — 80d8847 (gren fas2-walkforward): Ihopsatt kurva utan överlapp, lika med fönstrens egna kurvor; kostnad och finansieringsränta räknas en gång och stämmer mot affärerna; positionen stängs senast vid näst sista öppningen. Varje fönster sparar spelbok, tränings- och testperiod, kandidatstatistik per läge samt dagar och affärer per läge. 42 nya tester, hela Python-sviten 369 tester passerar lokalt. Åtta avsiktliga fel fångas. Tolkningar i docs/fas2-walkforward-tolkningar.md (b55427b, skrivna före koden). Endast syntetisk data.
-  - Väntar på Codex granskning; ej mergat, ingen riktig data, kö, worker eller app, ej driftsatt eller publicerat.
-- [ ] **F2-405** Versionsmärk slutlig spelbok och verifiera reproducerbarhet utan slutprov **Pågår.**
-  - Underlag: [engine/tests/test_fas2.py](../engine/tests/test_fas2.py) — 80d8847 (gren fas2-walkforward): Slutlig spelbok vald på 2020-01-01 till 2025-01-01, märkt med kontraktet h0013-adaptive/1.0.0, spelbokens id och h0013-walk-forward/1.0.0; samma data ger identiskt resultat; staplar eller finansieringsränta från 2025 eller före 2020 avvisas innan något räknas; arkivläsningen slutar före 2025-01-01. 42 nya tester, hela Python-sviten 369 tester passerar lokalt. Åtta avsiktliga fel fångas. Tolkningar i docs/fas2-walkforward-tolkningar.md (b55427b, skrivna före koden). Endast syntetisk data.
-  - Väntar på Codex granskning; ej mergat, ingen riktig data, kö, worker eller app, ej driftsatt eller publicerat.
+  - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — 74d46e3: kostnader, funding och affärsbelopp behöver skalas till samma kapitalbas som den ihopsatta kurvan.
+  - Ej godkänd före rättning och syntetisk regression av granskningsfynden.
+- [x] **F2-405** Versionsmärk slutlig spelbok och verifiera reproducerbarhet utan slutprov
+  - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — 74d46e3 (kod 80d8847): oberoende granskning, 369 passerade testfall inklusive 42 fas2-tester. Urvalsgränser, tie-break, platt, versionsmärkning och deterministisk återkörning verifierade.
+  - Verifierad PR-kod; ännu inte mergad, driftsatt eller körd på riktig data.
 
 ## 5. Utvärdering och robusthet
 
