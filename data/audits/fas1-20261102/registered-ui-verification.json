@@ -1,0 +1,12 @@
+{
+  "source": "976dc7c",
+  "surface": "Chrome React Research Lab, real Supabase session and DigitalOcean worker",
+  "hypothesis": "H-0009",
+  "run_id": "3b36d296-13e7-4f1d-9a9e-f50ecebfb28d",
+  "result_saved": true,
+  "original_stats_and_curves_exact": true,
+  "decision": "REJECT",
+  "fingerprint": "99f7375373e1092dd4f8d3ebed3998c6444ded793de5464698fed4275f64a57e",
+  "temporary_test_access_removed": true,
+  "native_market_runtime_tested_separately": true
+}

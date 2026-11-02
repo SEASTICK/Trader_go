@@ -1997,11 +1997,17 @@
    "without_best_year_sharpe": -0.2288200537890522,
    "excluded_best_year": 2023
   },
+  "mark_price_audit": {
+   "report_file": "data/audits/fas1-20261102/mark-price/verification.json",
+   "report_sha256": "a65349b4e67e64c88a4a8ecf4fe41a246d8083d79369b5c989e8621b204b25bf",
+   "dataset_sha256": "54a5ca8f7895639586252889dbcdf993bd3c5a6a2443d9407bc10e277cf1818c",
+   "leverage": 1
+  },
   "warnings": [
    "Historiskt använd utvecklingsperiod; inget nytt oberoende slutprov.",
    "Slutprovet från 2025 körs inte i denna vy.",
    "Historiska testresultat är ingen prognos eller ett tillstånd till livehandel.",
-   "Separat mark-price- och likvidationsvalidering återstår."
+   "Mark-price-kontroll vid 1× passerad; historiska risktrappor och exakt börslikvidation ingår inte."
   ]
  },
  {
@@ -4285,11 +4291,17 @@
    "without_best_year_sharpe": -0.38158889932066625,
    "excluded_best_year": 2023
   },
+  "mark_price_audit": {
+   "report_file": "data/audits/fas1-20261102/mark-price/verification.json",
+   "report_sha256": "a65349b4e67e64c88a4a8ecf4fe41a246d8083d79369b5c989e8621b204b25bf",
+   "dataset_sha256": "54a5ca8f7895639586252889dbcdf993bd3c5a6a2443d9407bc10e277cf1818c",
+   "leverage": 1
+  },
   "warnings": [
    "Historiskt använd utvecklingsperiod; inget nytt oberoende slutprov.",
    "Slutprovet från 2025 körs inte i denna vy.",
    "Historiska testresultat är ingen prognos eller ett tillstånd till livehandel.",
-   "Separat mark-price- och likvidationsvalidering återstår."
+   "Mark-price-kontroll vid 1× passerad; historiska risktrappor och exakt börslikvidation ingår inte."
   ]
  },
  {
@@ -6767,11 +6779,17 @@
    "without_best_year_sharpe": -0.9076788807487641,
    "excluded_best_year": 2022
   },
+  "mark_price_audit": {
+   "report_file": "data/audits/fas1-20261102/mark-price/verification.json",
+   "report_sha256": "a65349b4e67e64c88a4a8ecf4fe41a246d8083d79369b5c989e8621b204b25bf",
+   "dataset_sha256": "54a5ca8f7895639586252889dbcdf993bd3c5a6a2443d9407bc10e277cf1818c",
+   "leverage": 1
+  },
   "warnings": [
    "Historiskt använd utvecklingsperiod; inget nytt oberoende slutprov.",
    "Slutprovet från 2025 körs inte i denna vy.",
    "Historiska testresultat är ingen prognos eller ett tillstånd till livehandel.",
-   "Separat mark-price- och likvidationsvalidering återstår."
+   "Mark-price-kontroll vid 1× passerad; historiska risktrappor och exakt börslikvidation ingår inte."
   ]
  },
  {
@@ -9134,11 +9152,17 @@
    "without_best_year_sharpe": 0.5916796218510418,
    "excluded_best_year": 2023
   },
+  "mark_price_audit": {
+   "report_file": "data/audits/fas1-20261102/mark-price/verification.json",
+   "report_sha256": "a65349b4e67e64c88a4a8ecf4fe41a246d8083d79369b5c989e8621b204b25bf",
+   "dataset_sha256": "54a5ca8f7895639586252889dbcdf993bd3c5a6a2443d9407bc10e277cf1818c",
+   "leverage": 1
+  },
   "warnings": [
    "Historiskt använd utvecklingsperiod; inget nytt oberoende slutprov.",
    "Slutprovet från 2025 körs inte i denna vy.",
    "Historiska testresultat är ingen prognos eller ett tillstånd till livehandel.",
-   "Separat mark-price- och likvidationsvalidering återstår."
+   "Mark-price-kontroll vid 1× passerad; historiska risktrappor och exakt börslikvidation ingår inte."
   ]
  }
 ]

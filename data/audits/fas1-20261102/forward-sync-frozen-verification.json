@@ -1,0 +1,52 @@
+{
+  "frozen_bars": 10962,
+  "frozen_funding": 5481,
+  "bars_sha256": "783e11a47e8b12039d857c2f695fd7c79213e8d1df313c8b66eda649570828f7",
+  "funding_sha256": "1e76d8cad11b42afb00c813414b3137d2138438ff74ab7c8bb06cd4c44a01200",
+  "bars_unchanged": true,
+  "funding_unchanged": true,
+  "forward_series": [
+    {
+      "market": "spot",
+      "interval": "1h",
+      "rows": 14,
+      "open": 1,
+      "unique": true
+    },
+    {
+      "market": "spot",
+      "interval": "4h",
+      "rows": 4,
+      "open": 1,
+      "unique": true
+    },
+    {
+      "market": "spot",
+      "interval": "1d",
+      "rows": 1,
+      "open": 1,
+      "unique": true
+    },
+    {
+      "market": "um",
+      "interval": "1h",
+      "rows": 14,
+      "open": 1,
+      "unique": true
+    },
+    {
+      "market": "um",
+      "interval": "4h",
+      "rows": 4,
+      "open": 1,
+      "unique": true
+    },
+    {
+      "market": "um",
+      "interval": "1d",
+      "rows": 1,
+      "open": 1,
+      "unique": true
+    }
+  ]
+}

@@ -34,7 +34,7 @@ inte Supabases backup. Auth-konton/lösenord, Storage-objekt, hemligheter och
 workerns flyktiga reservationsplats ingår inte. Testdatabasen använde bara
 UUID-platshållare för att kontrollera främmande nycklar. Inga riktiga konton
 eller lösenord återställdes och ingen full droplet-/Supabase-katastrofåterställning
-utfördes. Därför är denna del av slutgodkännandet fortfarande öppen.
+utfördes. Denna avgränsning kvarstår; det isolerade forskningsdatabasprovet är genomfört.
 
 ## Upprepa provet
 
@@ -76,3 +76,7 @@ jobb och användar-id:n ska inte läggas i repot eller skickas i chatten.
 Vid endast en trasig kodrelease kan `/opt/tradergo/current` återställas till
 föregående release och workern startas om efter att kön tömts. Det är en
 kodåtergång och ersätter inte databasåterställning.
+
+## Upprepat prov efter registrerade jobb
+
+2026-11-02 passerade även migration 0004 och den nya exporten med 12 jobb, 7 resultat, 274 affärsrader, 4 strategier och 12 hypoteser. Alla typade värden och RLS kontrollerades på nytt. Se `data/audits/fas1-20261102/final-restore-verification.json`. Testkontots åtkomst togs bort medan misslyckade och avbrutna forskningsförsök behölls. Driftlarm har skjutits upp på Edwins uttryckliga begäran.

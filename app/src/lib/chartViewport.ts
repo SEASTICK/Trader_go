@@ -6,7 +6,6 @@ export function observeChartViewport(
   element: HTMLElement,
   chart: { resize(width: number, height: number, forceRepaint?: boolean): void; timeScale(): { fitContent(): void; setVisibleLogicalRange(range: {from:number;to:number}): void } },
 ) {
-  let visible = false;
   let pendingView: (() => void) | undefined;
   let frame: number | undefined;
   let closed = false;
@@ -14,18 +13,19 @@ export function observeChartViewport(
     if (closed || frame !== undefined) return;
     frame = requestAnimationFrame(() => {
       frame = undefined;
-      if (closed || !visible) return;
-      const { width, height } = element.getBoundingClientRect();
-      if (width < 1 || height < 1) return;
+      if (closed) return;
+      const { width, height, top, bottom, left, right } = element.getBoundingClientRect();
+      if (width < 1 || height < 1 || bottom <= 0 || top >= window.innerHeight
+          || right <= 0 || left >= window.innerWidth) return;
       chart.resize(Math.floor(width), Math.floor(height), true);
       if (pendingView) { pendingView(); pendingView = undefined; }
     });
   };
   const size = new ResizeObserver(schedule);
   const intersection = new IntersectionObserver(entries => {
-    visible = entries.some(entry => entry.isIntersecting);
-    if (visible) schedule();
+    if (entries.some(entry => entry.isIntersecting)) schedule();
   });
+  schedule();
   size.observe(element);
   intersection.observe(element);
   return {

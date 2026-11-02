@@ -118,13 +118,13 @@ export default function ResearchLab() {
         </tbody></table></div>}
       </div>
       {current && <div className="card pad"><h2>{NAMES[current.strategy]} · {STATUS[current.status]}</h2>
-        <p className="muted">{current.kind === "registered" ? "REGISTRERAD REPRODUKTION" : "UTFORSKNING"} · {current.period_start.slice(0, 10)} till {current.period_end.slice(0, 10)} (exklusivt)</p>
+        <p className="muted">{current?.kind === "registered" ? "REGISTRERAD REPRODUKTION" : "UTFORSKNING"} · {current.period_start.slice(0, 10)} till {current.period_end.slice(0, 10)} (exklusivt)</p>
         <p><small>Körnings-id: {current.id}</small></p>{current.error && <p role="alert">{current.error}</p>}
         {current.status === "done" && !result && <p>Hämtar resultat…</p>}
       </div>}
       {result && <>
         {result.mode === "registered" && <div className="card pad"><h2>{result.hypothesis_id} · {result.decision}</h2><p>{result.reproduction_match ? "Frysta nyckeltal och kurvor matchar originalet exakt." : "Reproduktion kunde inte verifieras."} Inget nytt godkännande för papperstest.</p></div>}
-        <div className="card pad"><h2>HISTORIK · UTFORSKNING</h2>
+        <div className="card pad"><h2>HISTORIK · {current?.kind === "registered" ? "REGISTRERAD REPRODUKTION" : "UTFORSKNING"}</h2>
           <div className="research-grid">{[["Nettoavkastning", "net_return", true], ["CAGR", "cagr", true], ["Sharpe", "sharpe", false],
             ["Sortino", "sortino", false], ["Calmar", "calmar", false], ["Max drawdown", "max_drawdown", true],
             ["Affärer", "trades", false], ["Profit factor", "profit_factor", false], ["Vinstandel", "win_rate", true],
@@ -134,7 +134,7 @@ export default function ResearchLab() {
         <div className="card pad"><h2>Kapitalutveckling och köp och behåll</h2><Chart curve={result.curves} baseline={result.baseline} /></div>
         <div className="card pad"><h2>Drawdown</h2><Chart curve={result.curves} drawdown /></div>
         <div className="card pad"><h2>Affärer</h2><p className="muted">Senaste 100 av {result.trades.length}; samtliga sparas med körningen.</p><div className="research-table"><table><thead><tr><th>Sida</th><th>Inträde UTC</th><th>Utträde UTC</th><th>Netto</th><th>Orsak</th></tr></thead><tbody>
-          {result.trades.slice(-100).map((t, i) => <tr key={i}><td>{t.side}</td><td>{t.entry_time.slice(0, 16)}</td><td>{t.exit_time?.slice(0, 16) ?? "Öppen"}</td><td>{number(t.net_return, true)}</td><td>{t.exit_reason ?? "—"}</td></tr>)}
+          {result.trades.slice(-100).map((t, i) => <tr key={i}><td>{t.side}</td><td>{t.entry_time.slice(0, 16)}</td><td>{t.exit_time?.slice(0, 16) ?? (current?.kind === "registered" ? "Öppen vid fönsterslut" : "Öppen vid periodslut")}</td><td>{number(t.net_return, true)}</td><td>{t.exit_reason ?? "—"}</td></tr>)}
         </tbody></table></div></div>
         <div className="card pad"><h2>Spårbarhet och begränsningar</h2><ul>{result.warnings.map(w => <li key={w}>{w}</li>)}</ul>
           <p>Fingerprint: <code className="research-hash">{result.metadata.fingerprint}</code></p>

@@ -62,3 +62,14 @@ def test_mismatching_audit_is_not_presented_as_verified(repo):
     r = json.loads(p.read_text()); r['stats']['sharpe'] += 1
     p.write_text(json.dumps(r))
     assert export_registered(repo)[-1]['audit'] is None
+
+
+def test_mark_price_report_is_required_before_showing_validation(repo):
+    source = ROOT / 'data/audits/fas1-20261102/mark-price/verification.json'
+    target = repo / source.relative_to(ROOT)
+    target.parent.mkdir(parents=True)
+    shutil.copy2(source, target)
+    assert all(r['mark_price_audit']['leverage'] == 1 for r in export_registered(repo))
+    report = json.loads(target.read_text()); report['results'][0]['possible_hits'] = ['test']
+    target.write_text(json.dumps(report))
+    assert all(r['mark_price_audit'] is None for r in export_registered(repo))

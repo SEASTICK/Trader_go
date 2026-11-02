@@ -1,0 +1,61 @@
+{
+  "source": "976dc7c",
+  "temporary_test_principal": true,
+  "jobs": {
+    "active_cancel": {
+      "id": "d9627d7f-5c86-460f-b7e7-d9746306bf07",
+      "status": "cancelled",
+      "result_absent": true,
+      "latency_seconds": 9.408,
+      "attempts": 1,
+      "error": null
+    },
+    "queued_cancel": {
+      "id": "a7367af0-19d2-4248-9208-bfb30182066d",
+      "status": "cancelled",
+      "attempts": 0,
+      "error": null
+    },
+    "H-0010": {
+      "id": "7b05890f-a6c2-4315-8642-c9b40020e048",
+      "status": "done",
+      "attempts": 1,
+      "error": null,
+      "reproduction_exact": true,
+      "decision": "REJECT",
+      "fingerprint": "3243a495822075d80482b7d3934d30740c09469687ad514eae90dd98f8cb51f5"
+    },
+    "H-0011": {
+      "id": "a8050a82-954b-4cfd-91ce-46837385b79a",
+      "status": "done",
+      "attempts": 1,
+      "error": null,
+      "reproduction_exact": true,
+      "decision": "REJECT",
+      "fingerprint": "0c4677d42b2c079300dad133661836e377385896b8c3335ca7511d1bb3506787"
+    },
+    "H-0012": {
+      "id": "0d4ee2c0-1e08-4cad-8f92-027084629d56",
+      "status": "done",
+      "attempts": 1,
+      "error": null,
+      "reproduction_exact": true,
+      "decision": "REJECT",
+      "fingerprint": "5fa33aae5fc235841da56d6b5c7c9ab8fa2c10b3bdf1a70da922024d1153e6c2"
+    },
+    "invalid_params": {
+      "id": "4f49129d-aa18-49c4-b1e4-30b806376b06",
+      "status": "failed",
+      "attempts": 1,
+      "error": "Indikatorperioder m\u00e5ste vara heltal mellan 2 och 500"
+    }
+  },
+  "warnings": [],
+  "holdout_request_rejected": true,
+  "simultaneous_claim_successes": 1,
+  "max_running_observed": 1,
+  "peak_service_memory_bytes": 109240320,
+  "total_wall_seconds": 49.177,
+  "queue_idempotency_verified": true,
+  "failed_and_cancelled_jobs_retained": true
+}

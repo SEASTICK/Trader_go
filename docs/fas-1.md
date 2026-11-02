@@ -1,3 +1,7 @@
+# Aktuell verifierad status
+
+Se [slutkontrollen 2026-11-02](fas1-slutkontroll-20261102.md) för faktisk implementation, tester och återstående publiceringskontroll. Texten nedan är den ursprungliga implementationsöversikten, inte ett nytt slutgodkännande.
+
 # Fas 1: Strategy Research Engine, kartläggning och status
 
 ## Aktuell verifierad status 2026-11-02

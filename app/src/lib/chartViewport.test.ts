@@ -18,12 +18,13 @@ function setup() {
   });
   vi.stubGlobal("requestAnimationFrame", (cb: () => void) => { frames.set(++id, cb); return id; });
   vi.stubGlobal("cancelAnimationFrame", (key: number) => frames.delete(key));
-  const bounds = { width: 800, height: 420 };
+  vi.stubGlobal("window", { innerWidth: 1200, innerHeight: 900 });
+  const bounds = { width: 800, height: 420, top: 1000, bottom: 1420, left: 0, right: 800 };
   const element = { getBoundingClientRect: () => bounds } as HTMLElement;
   const fitContent = vi.fn(), resize = vi.fn(), setVisibleLogicalRange = vi.fn();
   const controller = observeChartViewport(element, { resize, timeScale: () => ({ fitContent, setVisibleLogicalRange }) });
   return { controller, bounds, resize, fitContent, setVisibleLogicalRange, disconnectSize, disconnectIntersection,
-    size: () => resized(), visible: (isIntersecting: boolean) => intersected([{ isIntersecting }]),
+    size: () => resized(), visible: (isIntersecting: boolean) => { bounds.top = isIntersecting ? 0 : 1000; bounds.bottom = bounds.top + bounds.height; intersected([{ isIntersecting }]); },
     flush: () => { const work = [...frames.values()]; frames.clear(); work.forEach(cb => cb()); } };
 }
 
@@ -64,4 +65,11 @@ it("initializes the live range only after data and a visible layout, without res
   t.visible(false);t.visible(true);t.flush();
   expect(t.setVisibleLogicalRange).toHaveBeenCalledTimes(1);
   expect(t.fitContent).not.toHaveBeenCalled();
+});
+
+it("sizes an on-screen chart even when WebKit omits the initial intersection notification", () => {
+  const t = setup(); t.bounds.top = 0; t.bounds.bottom = 420;
+  t.controller.latestWhenVisible(1000); t.size(); t.flush();
+  expect(t.resize).toHaveBeenCalledWith(800, 420, true);
+  expect(t.setVisibleLogicalRange).toHaveBeenCalledWith({from:880,to:1004});
 });

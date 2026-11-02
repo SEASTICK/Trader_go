@@ -16,6 +16,16 @@ OUTPUT = Path('app/data/registered-results.json')
 
 def export_registered(repo: Path) -> list[dict]:
     decisions = latest_decisions((repo / 'research/registry.md').read_text())
+    mark_path = repo / 'data/audits/fas1-20261102/mark-price/verification.json'
+    mark = json.loads(mark_path.read_text()) if mark_path.exists() else None
+    mark_verified = bool(mark and mark.get('passed') is True and mark.get('leverage') == 1
+                         and mark.get('holdout_loaded') is False
+                         and mark.get('mark_bars') == 10962
+                         and {r['hypothesis'] for r in mark.get('results', [])} == set(HYPOTHESES)
+                         and all(r.get('original_reproduction_exact') is True
+                                 and not r.get('possible_hits')
+                                 and r.get('minimum_margin_to_mark_notional', 0) > .01
+                                 for r in mark['results']))
     exported = []
     for hypothesis, strategy in HYPOTHESES.items():
         files = sorted((repo / 'research/results').glob(hypothesis + '-*.json'))
@@ -64,10 +74,15 @@ def export_registered(repo: Path) -> list[dict]:
                          'registry_commit': r['registry_commit'],
                          'result_file': path.relative_to(repo).as_posix(),
                          'result_sha256': hashlib.sha256(raw).hexdigest(), 'audit': audit,
+                         'mark_price_audit': ({'report_file': mark_path.relative_to(repo).as_posix(),
+                           'report_sha256': hashlib.sha256(mark_path.read_bytes()).hexdigest(),
+                           'dataset_sha256': mark['mark_dataset_sha256'], 'leverage': 1}
+                           if mark_verified else None),
                          'warnings': ['Historiskt använd utvecklingsperiod; inget nytt oberoende slutprov.',
                                       'Slutprovet från 2025 körs inte i denna vy.',
                                       'Historiska testresultat är ingen prognos eller ett tillstånd till livehandel.',
-                                      'Separat mark-price- och likvidationsvalidering återstår.']})
+                                      ('Mark-price-kontroll vid 1× passerad; historiska risktrappor och exakt börslikvidation ingår inte.'
+                                       if mark_verified else 'Separat mark-price- och likvidationsvalidering återstår.')]})
     # Validate completely before replacing the previous export.
     encoded = json.dumps(exported, ensure_ascii=False, indent=1, allow_nan=False) + '\n'
     target = repo / OUTPUT
