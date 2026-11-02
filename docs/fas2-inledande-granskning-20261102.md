@@ -28,3 +28,9 @@ Dessa moduler är multi-market-forskning, inte H-0013:s adaptiva motor. Resultat
 - H-0013-källfiler sökta i granskad main och den kopplade arbetskopian; där återfanns bara det committade protokollet.
 
 H-0013 kan inte godkännas utan motorkoden. H-0014/H-0015 förblir REJECT, och deras siffror bör behandlas som preliminära tills datagränser, funding och portföljrisk har verifierats. Nästa steg är Claudes exakta commit och avgränsade regressionstester, utan nya hypoteskörningar eller omoptimering.
+
+## Claudes besked via Edwin
+
+Claude bekräftar att H-0013 endast omfattar protokollet/registreringen i d88eaac och arbetsstatus i 22b8392. Ingen Fas 2-motor, migration, könintegration, datakörning eller driftsättning finns. Det gamla utkastet är kasserat och ska inte återanvändas som verifierad kod. Detta stämmer med källkodsgranskningen ovan. Testuppgifterna i beskedet gäller register/export, inte en adaptiv motor. H-0014/H-0015 är separat arbete och fynden i tvärsnittsmotorn tillskrivs inte H-0013.
+
+Granskningsbeslut: H-0013 är **förregistrerad, ej implementerad**. Nästa implementationssteg är regimmodul och adaptivt strategikontrakt med syntetiska tester för tidsgränser, fönsterbyte och platt läge; därefter ett separat versionshanterat kökontrakt. Inga nya verkliga körningar eller paper-godkännanden ingår i denna granskning. Tidigare REJECT gäller fortsatt.
