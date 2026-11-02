@@ -89,7 +89,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
       grid: { vertLines: { color: v("--line") }, horzLines: { color: v("--line") } },
       crosshair: { mode: CrosshairMode.Normal },
       rightPriceScale: { borderColor: v("--line") },
-      timeScale: { borderColor: v("--line"), timeVisible: true, secondsVisible: false, rightOffset: 4 },
+      timeScale: { borderColor: v("--line"), timeVisible: true, secondsVisible: false, rightOffset: 4, minBarSpacing: historical ? 0.01 : 0.5 },
       localization: { locale: "sv-SE", timeFormatter: (t: Time) => utc((t as number) * 1000) },
     });
     const cs = c.addSeries(CandlestickSeries, { upColor: colors.current.up, downColor: colors.current.down, borderUpColor: colors.current.up, borderDownColor: colors.current.down, wickUpColor: colors.current.up, wickDownColor: colors.current.down });

@@ -2,7 +2,8 @@
 
 Diagramkomponenten äger nu storleksändringen med ResizeObserver i stället för
 bibliotekets autoSize. IntersectionObserver schemalägger en omritning på nästa
-animationsruta när diagrammet blir synligt. Historikens första fitContent väntar
+animationsruta när diagrammet blir synligt. Historikens minsta stapelbredd är 0,01 pixlar så att alla 6 576 staplar ryms;
+livediagram behåller standardgränsen 0,5 pixlar. Historikens första fitContent väntar
 på synlig yta med positiv storlek. Återkomst och storleksändring återställer inte
 användarens zoom. Observatörer och väntande animationsruta avregistreras innan
 diagrammet tas bort.
@@ -24,3 +25,7 @@ originalresultat och strategiversioner är oförändrade.
 Driftkontroll: worker och do-agent active, worker NRestarts=0, MemoryMax=2 GiB,
 113 GiB ledigt. research.env 600, backupkatalog 700. Ingen serveromstart,
 leverantörsåterställning eller larmleverans verifieras av denna kontroll.
+
+Mac-paket 0.1.15 (4d2ba56): första ritning verifierad utan Hela perioden.
+Körningen stoppades före publicering när stapelbreddens gräns upptäcktes.
+Den ytterligare rättningen levereras med ett nytt versionsnummer.
