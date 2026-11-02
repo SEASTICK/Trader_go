@@ -3,7 +3,7 @@
   "title": "Fas 2 – Adaptive Strategy Engine",
   "hypothesis": "H-0013",
   "updated": "2026-11-02",
-  "reviewed_revision": "a5e8fc3",
+  "reviewed_revision": "a852aa3",
   "note": "Klar betyder verifierad. Kod som bara finns lokalt eller tester utan granskning är inte slutgodkända.",
   "groups": [
     {
@@ -288,7 +288,7 @@
               "detail": "a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov."
             }
           ],
-          "note": "Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår."
+          "note": "PR #72 mergad som d25f444, utvärderingskod oförändrad mot godkänd a5e8fc3. Bara syntetisk verifiering; full riktig forskningskörning och driftsättning återstår."
         },
         {
           "id": "F2-502",
@@ -300,7 +300,7 @@
               "detail": "a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov."
             }
           ],
-          "note": "Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår."
+          "note": "PR #72 mergad som d25f444, utvärderingskod oförändrad mot godkänd a5e8fc3. Bara syntetisk verifiering; full riktig forskningskörning och driftsättning återstår."
         },
         {
           "id": "F2-503",
@@ -312,7 +312,7 @@
               "detail": "a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov."
             }
           ],
-          "note": "Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår."
+          "note": "PR #72 mergad som d25f444, utvärderingskod oförändrad mot godkänd a5e8fc3. Bara syntetisk verifiering; full riktig forskningskörning och driftsättning återstår."
         },
         {
           "id": "F2-504",
@@ -324,7 +324,7 @@
               "detail": "a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov."
             }
           ],
-          "note": "Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår."
+          "note": "PR #72 mergad som d25f444, utvärderingskod oförändrad mot godkänd a5e8fc3. Bara syntetisk verifiering; full riktig forskningskörning och driftsättning återstår."
         },
         {
           "id": "F2-505",
@@ -336,7 +336,7 @@
               "detail": "a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov."
             }
           ],
-          "note": "Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår."
+          "note": "PR #72 mergad som d25f444, utvärderingskod oförändrad mot godkänd a5e8fc3. Bara syntetisk verifiering; full riktig forskningskörning och driftsättning återstår."
         }
       ]
     },
@@ -350,35 +350,35 @@
           "status": "in_progress",
           "evidence": [
             {
-              "file": "engine/tests/test_research_h0013.py",
-              "detail": "cd9701d (gren fas2-ko): research_enqueue_h0013 för bara medlemmar (anon och icke-medlem nekas, ingen direkt skrivning), alla fält fasta, H-0013 måste finnas i synkat register, högst en aktiv körning och inget andra resultat; research_finish kräver H-0013:s strikta resultatkontrakt och rör inte registrets beslut. Tolkningar K1–K12 i docs/fas2-ko-tolkningar.md (8fa1135, före koden). PGlite: scripts/test-h0013-queue.mjs passerar och sex avsiktliga SQL-fel fångas; befintliga scripts/test-research-queue.mjs passerar. Python: 35 nya tester, hela sviten 513 passerar; avsiktliga fel i h0013.py fångas. Migrationen är inte applicerad i Supabase och inget är driftsatt. Endast syntetisk data."
+              "file": "docs/fas2-ko-granskning-73.md",
+              "detail": "a852aa3 (kod cd9701d): Medlemsåtkomst och fast jobb verifierade; SQL:s resultatkontrakt behöver exakta booleska kriterier, konsekvent beslut och booleskt holdout_loaded."
             }
           ],
-          "note": "Väntar på Codex granskning; migrationen är inte applicerad, inget driftsatt, ingen riktig data."
+          "note": "Lokal syntetisk verifiering och PGlite. PR #73 ej godkänd för merge; 0005 inte applicerad och ingen worker driftsatt."
         },
         {
           "id": "F2-602",
           "title": "Anslut H-0013 till samma enda worker med lease och skydd mot dubbla resultat",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
-              "file": "engine/tests/test_research_h0013.py",
-              "detail": "cd9701d: H-0013 går genom samma slot, research_claim, heartbeat och finish med 90 s lease och fencing-token; gammal token och andra publicering avvisas, ett resultat per körning; workern skickar H-0013 till h0013.run_job. Tolkningar K1–K12 i docs/fas2-ko-tolkningar.md (8fa1135, före koden). PGlite: scripts/test-h0013-queue.mjs passerar och sex avsiktliga SQL-fel fångas; befintliga scripts/test-research-queue.mjs passerar. Python: 35 nya tester, hela sviten 513 passerar; avsiktliga fel i h0013.py fångas. Migrationen är inte applicerad i Supabase och inget är driftsatt. Endast syntetisk data."
+              "file": "docs/fas2-ko-granskning-73.md",
+              "detail": "a852aa3 (kod cd9701d): Samma worker och globala slot, två timmars H-0013-timeout, lease/fencing och skydd mot andra publiceringar verifierade lokalt. Verklig konkurrens/drift återstår."
             }
           ],
-          "note": "Väntar på Codex granskning; migrationen är inte applicerad, inget driftsatt, ingen riktig data."
+          "note": "Lokal syntetisk verifiering och PGlite. PR #73 ej godkänd för merge; 0005 inte applicerad och ingen worker driftsatt."
         },
         {
           "id": "F2-603",
           "title": "Begränsa dataläsningen till verifierade frysta arkiv innan några filer öppnas",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
-              "file": "engine/tests/test_research_h0013.py",
-              "detail": "cd9701d: innan någon datafil läses jämförs de arkiv som skulle väljas för 2020–2024 med det frysta manifestets 120 namn, och varje fils SHA-256 och CHECKSUM verifieras; arkiv före 2020 och från 2025 öppnas aldrig; inlästa staplar och finansieringsränta jämförs med manifestets hash. Tolkningar K1–K12 i docs/fas2-ko-tolkningar.md (8fa1135, före koden). PGlite: scripts/test-h0013-queue.mjs passerar och sex avsiktliga SQL-fel fångas; befintliga scripts/test-research-queue.mjs passerar. Python: 35 nya tester, hela sviten 513 passerar; avsiktliga fel i h0013.py fångas. Migrationen är inte applicerad i Supabase och inget är driftsatt. Endast syntetisk data."
+              "file": "docs/fas2-ko-granskning-73.md",
+              "detail": "a852aa3 (kod cd9701d): Exakta manifestnamn före arkivläsning, SHA256 och CHECKSUM samt stapel-/fundinghash verifierade på syntetiska 120 arkiv; 2019/2025 öppnas inte."
             }
           ],
-          "note": "Väntar på Codex granskning; migrationen är inte applicerad, inget driftsatt, ingen riktig data."
+          "note": "Lokal syntetisk verifiering och PGlite. PR #73 ej godkänd för merge; 0005 inte applicerad och ingen worker driftsatt."
         },
         {
           "id": "F2-604",
@@ -386,11 +386,11 @@
           "status": "in_progress",
           "evidence": [
             {
-              "file": "engine/tests/test_research_h0013.py",
-              "detail": "cd9701d: avbrott (cancelled stoppar barnprocessen), förlorad lease (ingen publicering), tidsgräns 2 h för H-0013, tre försök vid utgången lease och därefter failed, omstart med ny token där bara aktuell token publicerar; varje försök sparas i data_dir/h0013-attempts även när det avbryts. Tolkningar K1–K12 i docs/fas2-ko-tolkningar.md (8fa1135, före koden). PGlite: scripts/test-h0013-queue.mjs passerar och sex avsiktliga SQL-fel fångas; befintliga scripts/test-research-queue.mjs passerar. Python: 35 nya tester, hela sviten 513 passerar; avsiktliga fel i h0013.py fångas. Migrationen är inte applicerad i Supabase och inget är driftsatt. Endast syntetisk data."
+              "file": "docs/fas2-ko-granskning-73.md",
+              "detail": "a852aa3 (kod cd9701d): SQL-leaseåterförsök och FakeProcess-stopp passerar, men riktig spawn-process slutar med SIGTERM -15 och sparar 0 försöksfiler vid normalt worker.stop."
             }
           ],
-          "note": "Väntar på Codex granskning; migrationen är inte applicerad, inget driftsatt, ingen riktig data."
+          "note": "Lokal syntetisk verifiering och PGlite. PR #73 ej godkänd för merge; 0005 inte applicerad och ingen worker driftsatt."
         },
         {
           "id": "F2-605",
@@ -484,5 +484,5 @@
       ]
     }
   ],
-  "reviewed_scope": "PR #71 mergad som 793e9f0. PR #72 omgranskad på a5e8fc3 (kod ab97a0a): alla tre fynd rättade, 478 syntetiska Python-testfall och separata reproduktionsprov passerar. Kodmässigt godkänd för merge när CI är grönt. Ingen riktig körning, merge, driftsättning eller publicering i omgranskningen."
+  "reviewed_scope": "PR #72 mergad som d25f444. PR #73 granskad på a852aa3: 513 syntetiska Python-tester och båda lokala PGlite-kötester passerar. Två oberoende fynd före merge: normalstopp tappar försöksfil och SQL accepterar felaktiga kriterier/beslut. Ingen migration, driftsättning eller riktig körning."
 }

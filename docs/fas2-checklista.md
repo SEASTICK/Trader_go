@@ -1,10 +1,10 @@
 # Fas 2 – Utvecklingsplan
 
-**25 av 40 uppgifter verifierade · 8 arbetsområden.**
+**27 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `a5e8fc3`.
+H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `a852aa3`.
 
-PR #71 mergad som 793e9f0. PR #72 omgranskad på a5e8fc3 (kod ab97a0a): alla tre fynd rättade, 478 syntetiska Python-testfall och separata reproduktionsprov passerar. Kodmässigt godkänd för merge när CI är grönt. Ingen riktig körning, merge, driftsättning eller publicering i omgranskningen.
+PR #72 mergad som d25f444. PR #73 granskad på a852aa3: 513 syntetiska Python-tester och båda lokala PGlite-kötester passerar. Två oberoende fynd före merge: normalstopp tappar försöksfil och SQL accepterar felaktiga kriterier/beslut. Ingen migration, driftsättning eller riktig körning.
 
 ## Uppdateringsregler
 
@@ -99,36 +99,36 @@ PR #71 mergad som 793e9f0. PR #72 omgranskad på a5e8fc3 (kod ab97a0a): alla tre
 
 - [x] **F2-501** Jämför med köp-och-behåll, varje kandidat ensam och en likaviktad blandning
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov.
-  - Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår.
+  - PR #72 mergad som d25f444, utvärderingskod oförändrad mot godkänd a5e8fc3. Bara syntetisk verifiering; full riktig forskningskörning och driftsättning återstår.
 - [x] **F2-502** Verifiera kostnadsstress, funding och riskmodell för H-0013
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov.
-  - Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår.
+  - PR #72 mergad som d25f444, utvärderingskod oförändrad mot godkänd a5e8fc3. Bara syntetisk verifiering; full riktig forskningskörning och driftsättning återstår.
 - [x] **F2-503** Kör förregistrerad permutation och slumpkontroll med fullständig försöksredovisning
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov.
-  - Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår.
+  - PR #72 mergad som d25f444, utvärderingskod oförändrad mot godkänd a5e8fc3. Bara syntetisk verifiering; full riktig forskningskörning och driftsättning återstår.
 - [x] **F2-504** Redovisa osäkerhet, 81 spelböcker, regimresultat och resultat utan bästa året
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov.
-  - Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår.
+  - PR #72 mergad som d25f444, utvärderingskod oförändrad mot godkänd a5e8fc3. Bara syntetisk verifiering; full riktig forskningskörning och driftsättning återstår.
 - [x] **F2-505** Bedöm alla fem förregistrerade kriterier och spara även negativa eller avbrutna försök
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov.
-  - Kodmässigt verifierad på syntetisk data; PR #72 godkänd för merge när CI är grönt. Full riktig forskningskörning och driftsättning återstår.
+  - PR #72 mergad som d25f444, utvärderingskod oförändrad mot godkänd a5e8fc3. Bara syntetisk verifiering; full riktig forskningskörning och driftsättning återstår.
 
 ## 6. Supabase och DigitalOcean
 
-0/5 verifierade.
+2/5 verifierade.
 
 - [ ] **F2-601** Skapa ett separat strikt kökontrakt för H-0013 med autentisering och RLS **Pågår.**
-  - Underlag: [engine/tests/test_research_h0013.py](../engine/tests/test_research_h0013.py) — cd9701d (gren fas2-ko): research_enqueue_h0013 för bara medlemmar (anon och icke-medlem nekas, ingen direkt skrivning), alla fält fasta, H-0013 måste finnas i synkat register, högst en aktiv körning och inget andra resultat; research_finish kräver H-0013:s strikta resultatkontrakt och rör inte registrets beslut. Tolkningar K1–K12 i docs/fas2-ko-tolkningar.md (8fa1135, före koden). PGlite: scripts/test-h0013-queue.mjs passerar och sex avsiktliga SQL-fel fångas; befintliga scripts/test-research-queue.mjs passerar. Python: 35 nya tester, hela sviten 513 passerar; avsiktliga fel i h0013.py fångas. Migrationen är inte applicerad i Supabase och inget är driftsatt. Endast syntetisk data.
-  - Väntar på Codex granskning; migrationen är inte applicerad, inget driftsatt, ingen riktig data.
-- [ ] **F2-602** Anslut H-0013 till samma enda worker med lease och skydd mot dubbla resultat **Pågår.**
-  - Underlag: [engine/tests/test_research_h0013.py](../engine/tests/test_research_h0013.py) — cd9701d: H-0013 går genom samma slot, research_claim, heartbeat och finish med 90 s lease och fencing-token; gammal token och andra publicering avvisas, ett resultat per körning; workern skickar H-0013 till h0013.run_job. Tolkningar K1–K12 i docs/fas2-ko-tolkningar.md (8fa1135, före koden). PGlite: scripts/test-h0013-queue.mjs passerar och sex avsiktliga SQL-fel fångas; befintliga scripts/test-research-queue.mjs passerar. Python: 35 nya tester, hela sviten 513 passerar; avsiktliga fel i h0013.py fångas. Migrationen är inte applicerad i Supabase och inget är driftsatt. Endast syntetisk data.
-  - Väntar på Codex granskning; migrationen är inte applicerad, inget driftsatt, ingen riktig data.
-- [ ] **F2-603** Begränsa dataläsningen till verifierade frysta arkiv innan några filer öppnas **Pågår.**
-  - Underlag: [engine/tests/test_research_h0013.py](../engine/tests/test_research_h0013.py) — cd9701d: innan någon datafil läses jämförs de arkiv som skulle väljas för 2020–2024 med det frysta manifestets 120 namn, och varje fils SHA-256 och CHECKSUM verifieras; arkiv före 2020 och från 2025 öppnas aldrig; inlästa staplar och finansieringsränta jämförs med manifestets hash. Tolkningar K1–K12 i docs/fas2-ko-tolkningar.md (8fa1135, före koden). PGlite: scripts/test-h0013-queue.mjs passerar och sex avsiktliga SQL-fel fångas; befintliga scripts/test-research-queue.mjs passerar. Python: 35 nya tester, hela sviten 513 passerar; avsiktliga fel i h0013.py fångas. Migrationen är inte applicerad i Supabase och inget är driftsatt. Endast syntetisk data.
-  - Väntar på Codex granskning; migrationen är inte applicerad, inget driftsatt, ingen riktig data.
+  - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — a852aa3 (kod cd9701d): Medlemsåtkomst och fast jobb verifierade; SQL:s resultatkontrakt behöver exakta booleska kriterier, konsekvent beslut och booleskt holdout_loaded.
+  - Lokal syntetisk verifiering och PGlite. PR #73 ej godkänd för merge; 0005 inte applicerad och ingen worker driftsatt.
+- [x] **F2-602** Anslut H-0013 till samma enda worker med lease och skydd mot dubbla resultat
+  - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — a852aa3 (kod cd9701d): Samma worker och globala slot, två timmars H-0013-timeout, lease/fencing och skydd mot andra publiceringar verifierade lokalt. Verklig konkurrens/drift återstår.
+  - Lokal syntetisk verifiering och PGlite. PR #73 ej godkänd för merge; 0005 inte applicerad och ingen worker driftsatt.
+- [x] **F2-603** Begränsa dataläsningen till verifierade frysta arkiv innan några filer öppnas
+  - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — a852aa3 (kod cd9701d): Exakta manifestnamn före arkivläsning, SHA256 och CHECKSUM samt stapel-/fundinghash verifierade på syntetiska 120 arkiv; 2019/2025 öppnas inte.
+  - Lokal syntetisk verifiering och PGlite. PR #73 ej godkänd för merge; 0005 inte applicerad och ingen worker driftsatt.
 - [ ] **F2-604** Testa avbrott, timeout, återförsök och återhämtning efter workeromstart **Pågår.**
-  - Underlag: [engine/tests/test_research_h0013.py](../engine/tests/test_research_h0013.py) — cd9701d: avbrott (cancelled stoppar barnprocessen), förlorad lease (ingen publicering), tidsgräns 2 h för H-0013, tre försök vid utgången lease och därefter failed, omstart med ny token där bara aktuell token publicerar; varje försök sparas i data_dir/h0013-attempts även när det avbryts. Tolkningar K1–K12 i docs/fas2-ko-tolkningar.md (8fa1135, före koden). PGlite: scripts/test-h0013-queue.mjs passerar och sex avsiktliga SQL-fel fångas; befintliga scripts/test-research-queue.mjs passerar. Python: 35 nya tester, hela sviten 513 passerar; avsiktliga fel i h0013.py fångas. Migrationen är inte applicerad i Supabase och inget är driftsatt. Endast syntetisk data.
-  - Väntar på Codex granskning; migrationen är inte applicerad, inget driftsatt, ingen riktig data.
+  - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — a852aa3 (kod cd9701d): SQL-leaseåterförsök och FakeProcess-stopp passerar, men riktig spawn-process slutar med SIGTERM -15 och sparar 0 försöksfiler vid normalt worker.stop.
+  - Lokal syntetisk verifiering och PGlite. PR #73 ej godkänd för merge; 0005 inte applicerad och ingen worker driftsatt.
 - [ ] **F2-605** Driftsätt verifierad kod med loggar, resursgränser och dokumenterad återgång
 
 ## 7. Visa Fas 2 i Research Lab
