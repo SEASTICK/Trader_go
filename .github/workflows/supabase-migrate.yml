@@ -1,0 +1,37 @@
+# Kör databasmigreringarna i supabase/migrations mot Supabase, i namnordning, en gång var.
+# Hemlighet: SUPABASE_DB_URL (Session pooler). Saknas den hoppas allt över.
+name: Supabase migrate
+
+on:
+  push:
+    branches: [main]
+    paths: ["supabase/migrations/**", ".github/workflows/supabase-migrate.yml"]
+  workflow_dispatch:
+
+concurrency:
+  group: supabase-migrate
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      DB: ${{ secrets.SUPABASE_DB_URL }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Kör nya migreringar
+        run: |
+          if [ -z "$DB" ]; then echo "SUPABASE_DB_URL saknas, hoppar över."; exit 0; fi
+          sudo apt-get install -y -q postgresql-client >/dev/null
+          psql "$DB" -v ON_ERROR_STOP=1 -q -c "create table if not exists public.schema_migrations (name text primary key, applied_at timestamptz not null default now()); alter table public.schema_migrations enable row level security;"
+          for f in $(ls supabase/migrations/*.sql | sort); do
+            name=$(basename "$f")
+            done=$(psql "$DB" -tAq -c "select 1 from public.schema_migrations where name = '$name'")
+            if [ "$done" = "1" ]; then echo "redan körd: $name"; continue; fi
+            echo "kör: $name"
+            psql "$DB" -v ON_ERROR_STOP=1 -q -1 -f "$f" -c "insert into public.schema_migrations(name) values ('$name')"
+          done
