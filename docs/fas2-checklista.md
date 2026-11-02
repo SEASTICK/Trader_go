@@ -1,10 +1,10 @@
 # Fas 2 – Utvecklingsplan
 
-**10 av 40 uppgifter verifierade · 8 arbetsområden.**
+**14 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `866d393`.
+H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `8e6617d`.
 
-PR #69 regimmodul godkänd för merge efter oberoende granskning. Ej mergad, driftsatt eller publicerad.
+PR #69 mergad i 29e44ec. PR #70 granskad: handelsregler verifierade; spelbokskontraktet behöver rättas före merge. Ej driftsatt eller publicerat.
 
 ## Uppdateringsregler
 
@@ -39,29 +39,39 @@ PR #69 regimmodul godkänd för merge efter oberoende granskning. Ej mergad, dri
 
 - [x] **F2-201** Beräkna trend och volatilitet enligt det registrerade protokollet
   - Underlag: [docs/fas2-regim-granskning-69.md](fas2-regim-granskning-69.md) — 866d393 (kod ebc5d38): oberoende slutgranskning godkänd. 253 Python-tester, inklusive 66 regimtestfall, passerar. Tidigare felprov samt nästa-stapel-kontrakt på 1h/4h/1d verifierade.
-  - Kod godkänd för merge i PR #69; inget är driftsatt, publicerat eller kört på riktig data.
+  - Regimmodulen är mergad via PR #69 i 29e44ec, kod oförändrad mot granskad 866d393. Ej driftsatt eller publicerad.
 - [x] **F2-202** Implementera tre dagars hysteres och omedelbara skyddslägen
   - Underlag: [docs/fas2-regim-granskning-69.md](fas2-regim-granskning-69.md) — 866d393 (kod ebc5d38): oberoende slutgranskning godkänd. 253 Python-tester, inklusive 66 regimtestfall, passerar. Tidigare felprov samt nästa-stapel-kontrakt på 1h/4h/1d verifierade.
-  - Kod godkänd för merge i PR #69; inget är driftsatt, publicerat eller kört på riktig data.
+  - Regimmodulen är mergad via PR #69 i 29e44ec, kod oförändrad mot granskad 866d393. Ej driftsatt eller publicerad.
 - [x] **F2-203** Använd bara föregående stängda dags läge på varje 4H-stapel
   - Underlag: [docs/fas2-regim-granskning-69.md](fas2-regim-granskning-69.md) — 866d393 (kod ebc5d38): oberoende slutgranskning godkänd. 253 Python-tester, inklusive 66 regimtestfall, passerar. Tidigare felprov samt nästa-stapel-kontrakt på 1h/4h/1d verifierade.
-  - Kod godkänd för merge i PR #69; inget är driftsatt, publicerat eller kört på riktig data.
+  - Regimmodulen är mergad via PR #69 i 29e44ec, kod oförändrad mot granskad 866d393. Ej driftsatt eller publicerad.
 - [x] **F2-204** Hantera uppvärmning, ofullständiga dagar, dataluckor och ogiltiga tidsstämplar
   - Underlag: [docs/fas2-regim-granskning-69.md](fas2-regim-granskning-69.md) — 866d393 (kod ebc5d38): oberoende slutgranskning godkänd. 253 Python-tester, inklusive 66 regimtestfall, passerar. Tidigare felprov samt nästa-stapel-kontrakt på 1h/4h/1d verifierade.
-  - Kod godkänd för merge i PR #69; inget är driftsatt, publicerat eller kört på riktig data.
+  - Regimmodulen är mergad via PR #69 i 29e44ec, kod oförändrad mot granskad 866d393. Ej driftsatt eller publicerad.
 - [x] **F2-205** Granska regimkoden och verifiera tester för framtidsläckage och dagsgränser
   - Underlag: [docs/fas2-regim-granskning-69.md](fas2-regim-granskning-69.md) — 866d393 (kod ebc5d38): oberoende slutgranskning godkänd. 253 Python-tester, inklusive 66 regimtestfall, passerar. Tidigare felprov samt nästa-stapel-kontrakt på 1h/4h/1d verifierade.
-  - Kod godkänd för merge i PR #69; inget är driftsatt, publicerat eller kört på riktig data.
+  - Regimmodulen är mergad via PR #69 i 29e44ec, kod oförändrad mot granskad 866d393. Ej driftsatt eller publicerad.
 
 ## 3. Bygg den adaptiva strategiväljaren
 
-0/5 verifierade.
+4/5 verifierade.
 
-- [ ] **F2-301** Inför ett versionshanterat kontrakt för spelbok, läge och målposition
-- [ ] **F2-302** Koppla fasta EMA/ADX- och Bollinger/RSI-kandidater samt platt läge
-- [ ] **F2-303** Begränsa long till upp-lägen och short till ned-lägen
-- [ ] **F2-304** Stäng vid läges- och kandidatbyte utan att återuppta en gammal affär
-- [ ] **F2-305** Verifiera nästa öppning, ATR-stop och alla bytesfall med syntetiska tester
+- [ ] **F2-301** Inför ett versionshanterat kontrakt för spelbok, läge och målposition **Pågår.**
+  - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — 8e6617d: saknat/tomt/motsägande kandidatmanifest accepteras och direkt konstruktor kan kringgå valideringen. Kontraktsrättning och regressionstester återstår.
+  - F2-301 lämnas öppen tills alla konstruktorvägar och inlästa kandidatversioner är strikt verifierade.
+- [x] **F2-302** Koppla fasta EMA/ADX- och Bollinger/RSI-kandidater samt platt läge
+  - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — 8e6617d (kod a483162): oberoende granskning och 306 passerade Python-testfall, varav 53 adaptiva. Kandidater, riktning, byte, nästa öppning och stop verifierade.
+  - Verifierad PR-kod; ännu inte mergad, driftsatt eller publicerad.
+- [x] **F2-303** Begränsa long till upp-lägen och short till ned-lägen
+  - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — 8e6617d (kod a483162): oberoende granskning och 306 passerade Python-testfall, varav 53 adaptiva. Kandidater, riktning, byte, nästa öppning och stop verifierade.
+  - Verifierad PR-kod; ännu inte mergad, driftsatt eller publicerad.
+- [x] **F2-304** Stäng vid läges- och kandidatbyte utan att återuppta en gammal affär
+  - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — 8e6617d (kod a483162): oberoende granskning och 306 passerade Python-testfall, varav 53 adaptiva. Kandidater, riktning, byte, nästa öppning och stop verifierade.
+  - Verifierad PR-kod; ännu inte mergad, driftsatt eller publicerad.
+- [x] **F2-305** Verifiera nästa öppning, ATR-stop och alla bytesfall med syntetiska tester
+  - Underlag: [docs/fas2-valjare-granskning-70.md](fas2-valjare-granskning-70.md) — 8e6617d (kod a483162): oberoende granskning och 306 passerade Python-testfall, varav 53 adaptiva. Kandidater, riktning, byte, nästa öppning och stop verifierade.
+  - Verifierad PR-kod; ännu inte mergad, driftsatt eller publicerad.
 
 ## 4. Träning och walk-forward
 
