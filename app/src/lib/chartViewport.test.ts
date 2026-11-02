@@ -20,9 +20,9 @@ function setup() {
   vi.stubGlobal("cancelAnimationFrame", (key: number) => frames.delete(key));
   const bounds = { width: 800, height: 420 };
   const element = { getBoundingClientRect: () => bounds } as HTMLElement;
-  const fitContent = vi.fn(), resize = vi.fn();
-  const controller = observeChartViewport(element, { resize, timeScale: () => ({ fitContent }) });
-  return { controller, bounds, resize, fitContent, disconnectSize, disconnectIntersection,
+  const fitContent = vi.fn(), resize = vi.fn(), setVisibleLogicalRange = vi.fn();
+  const controller = observeChartViewport(element, { resize, timeScale: () => ({ fitContent, setVisibleLogicalRange }) });
+  return { controller, bounds, resize, fitContent, setVisibleLogicalRange, disconnectSize, disconnectIntersection,
     size: () => resized(), visible: (isIntersecting: boolean) => intersected([{ isIntersecting }]),
     flush: () => { const work = [...frames.values()]; frames.clear(); work.forEach(cb => cb()); } };
 }
@@ -53,4 +53,15 @@ it("disconnects observers and cancels pending work before chart removal", () => 
   expect(t.disconnectSize).toHaveBeenCalledOnce();
   expect(t.disconnectIntersection).toHaveBeenCalledOnce();
   expect(t.resize).not.toHaveBeenCalled();
+});
+
+it("initializes the live range only after data and a visible layout, without resetting on re-entry", () => {
+  const t=setup();
+  t.controller.latestWhenVisible(1000); t.flush();
+  expect(t.setVisibleLogicalRange).not.toHaveBeenCalled();
+  t.visible(true); t.flush();
+  expect(t.setVisibleLogicalRange).toHaveBeenCalledWith({from:880,to:1004});
+  t.visible(false);t.visible(true);t.flush();
+  expect(t.setVisibleLogicalRange).toHaveBeenCalledTimes(1);
+  expect(t.fitContent).not.toHaveBeenCalled();
 });

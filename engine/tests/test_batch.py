@@ -1,3 +1,4 @@
+from pathlib import Path
 import json
 import subprocess
 
@@ -79,3 +80,16 @@ def test_export_writes_real_results_for_the_app(repo):
     assert e["result_file"].startswith("research/results/H-0001-")
     on_disk = json.loads((repo / "app/data/results.json").read_text())
     assert on_disk["E-01"]["trades"] == e["trades"]
+
+
+def test_fas1_export_uses_frozen_baseline_without_opening_raw_or_holdout(monkeypatch):
+    root = Path(__file__).resolve().parents[2]
+    def forbidden(*a, **kw): raise AssertionError('Export opened raw data')
+    monkeypatch.setattr(batch.binance, 'load', forbidden)
+    path = sorted((root/'research/results').glob('H-0009-*.json'))[-1]
+    raw = json.loads(path.read_text())
+    out = batch._export_fas1(root, 'E-01', raw, path)
+    market = json.loads((root/'app/data/fas1-market.json').read_text())
+    expected = dict(zip(market['baseline_curves']['t'], market['baseline_curves']['equity']))
+    assert out['curve']['buy_and_hold'] == [expected[t]*100 for t in out['curve']['t']]
+    assert out['period'] == ['2022-01-01', '2025-01-01']

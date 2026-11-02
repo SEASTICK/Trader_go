@@ -11,6 +11,8 @@ const STATUS = { queued: "I kö", running: "Körs", done: "Klar", failed: "Missl
 const message = (e: unknown) => e instanceof Error ? e.message : "Ett oväntat fel inträffade.";
 
 export default function ResearchLab() {
+  const [registeredHypothesis, setRegisteredHypothesis] = useState<string | null>(null);
+  const registeredKey = useRef<string | null>(null);
   const [view, setView] = useState<"Registrerade resultat" | "Utforskning">("Registrerade resultat");
   const api = useRef(new ResearchApi()).current;
   const [connected, setConnected] = useState(false);
@@ -72,10 +74,20 @@ export default function ResearchLab() {
     catch (e) { setError(message(e)); }
     finally { setBusy(false); }
   }
+  async function reproduce() {
+    if (!registeredHypothesis) return;
+    setBusy(true);setError("");
+    try {
+      registeredKey.current ??= crypto.randomUUID();
+      const id=await api.enqueueRegistered(registeredHypothesis,registeredKey.current);
+      setSelected(id);setRuns(await api.runs());setRegisteredHypothesis(null);
+    } catch(e) {setError(message(e));}
+    finally {setBusy(false);}
+  }
   return <Page title="Research Lab" sub="Registrerad forskning och historisk utforskning. Inga riktiga order."
     actions={connected && <button className="btn" onClick={() => { api.signOut(); setConnected(false); setRuns([]); setSelected(""); setResult(null); setError(""); }}>Logga ut</button>}>
     <Segmented value={view} options={["Registrerade resultat", "Utforskning"]} onChange={setView} />
-    {view === "Registrerade resultat" ? <Suspense fallback={<p>Läser registrerade resultat…</p>}><RegisteredResults /></Suspense> : <>
+    {view === "Registrerade resultat" ? <Suspense fallback={<p>Läser registrerade resultat…</p>}><RegisteredResults onReproduce={id => {setRegisteredHypothesis(id);registeredKey.current=null;setView("Utforskning");}} /></Suspense> : <>
     {error && <div className="card pad" role="alert">{error}</div>}
     {connected && connectionError && <div className="card pad" role="alert">{connectionError}</div>}
     {!connected ? <form className="card pad research-form" onSubmit={login}>
@@ -84,6 +96,7 @@ export default function ResearchLab() {
       <label>Lösenord<input type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} required /></label>
       <button className="btn accent" disabled={busy}>{busy ? "Loggar in…" : "Logga in"}</button>
     </form> : <>
+      {registeredHypothesis && <div className="card pad"><h2>Registrerad reproduktion · {registeredHypothesis}</h2><p>Frysta testfönster 2022–2024, samma femårsdataset och parametrar. Beslutet förblir REJECT. Ingen ny optimering eller åtkomst till slutprovet.</p><button className="btn accent" disabled={busy} onClick={() => void reproduce()}>Köa registrerad reproduktion</button> <button className="btn" disabled={busy} onClick={() => setRegisteredHypothesis(null)}>Stäng förberedelsen</button></div>}
       <form className="card pad research-form" onSubmit={enqueue}>
         <h2>Ny utforskning</h2><p className="muted">UTFORSKNING · BTC/USDT · avgift 10, spread 2 och slippage 5 bps (spread räknas som halva per sida) · startkapital 100 000.
           Slutprovet från 2025 är låst. Utforskning ger inget godkännande för papperstest.</p>
@@ -99,17 +112,18 @@ export default function ResearchLab() {
       </form>
       <div className="card pad"><h2>Körningar</h2><p className="muted">En aktiv körning åt gången. Visar de senaste 100 körningarna.</p>
         {runs.length === 0 ? <p>Inga körningar ännu.</p> : <div className="research-table"><table><thead><tr><th>Strategi</th><th>Marknad</th><th>Status</th><th>Förlopp</th><th>Åtgärd</th></tr></thead><tbody>
-          {runs.map(run => <tr key={run.id}><td><button className="btn" aria-pressed={selected === run.id} onClick={() => setSelected(run.id)}>{NAMES[run.strategy] ?? run.strategy}</button><small>{run.created_at.slice(0, 16).replace("T", " ")} UTC</small></td>
+          {runs.map(run => <tr key={run.id}><td><button className="btn" aria-pressed={selected === run.id} onClick={() => setSelected(run.id)}>{NAMES[run.strategy] ?? run.strategy}</button><small>{run.kind === "registered" ? "REGISTRERAD REPRODUKTION" : "UTFORSKNING"}</small><small>{run.created_at.slice(0, 16).replace("T", " ")} UTC</small></td>
             <td>{run.market} · {run.interval}</td><td>{STATUS[run.status]}</td><td><progress value={run.progress} max={1} aria-label="Förlopp" /> {Math.round(run.progress * 100)} %</td>
             <td>{["queued", "running"].includes(run.status) && <button className="btn" disabled={busy} onClick={() => void cancel(run.id)}>Avbryt</button>}</td></tr>)}
         </tbody></table></div>}
       </div>
       {current && <div className="card pad"><h2>{NAMES[current.strategy]} · {STATUS[current.status]}</h2>
-        <p className="muted">UTFORSKNING · {current.period_start.slice(0, 10)} till {current.period_end.slice(0, 10)} (exklusivt)</p>
+        <p className="muted">{current.kind === "registered" ? "REGISTRERAD REPRODUKTION" : "UTFORSKNING"} · {current.period_start.slice(0, 10)} till {current.period_end.slice(0, 10)} (exklusivt)</p>
         <p><small>Körnings-id: {current.id}</small></p>{current.error && <p role="alert">{current.error}</p>}
         {current.status === "done" && !result && <p>Hämtar resultat…</p>}
       </div>}
       {result && <>
+        {result.mode === "registered" && <div className="card pad"><h2>{result.hypothesis_id} · {result.decision}</h2><p>{result.reproduction_match ? "Frysta nyckeltal och kurvor matchar originalet exakt." : "Reproduktion kunde inte verifieras."} Inget nytt godkännande för papperstest.</p></div>}
         <div className="card pad"><h2>HISTORIK · UTFORSKNING</h2>
           <div className="research-grid">{[["Nettoavkastning", "net_return", true], ["CAGR", "cagr", true], ["Sharpe", "sharpe", false],
             ["Sortino", "sortino", false], ["Calmar", "calmar", false], ["Max drawdown", "max_drawdown", true],

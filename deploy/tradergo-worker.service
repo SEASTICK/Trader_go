@@ -1,5 +1,6 @@
 [Unit]
 Description=Trader_go forskningsworker (bara papper och publik marknadsdata)
+ConditionPathExists=/etc/tradergo/legacy-worker-explicitly-disabled
 After=network-online.target
 Wants=network-online.target
 
@@ -11,7 +12,7 @@ WorkingDirectory=/opt/tradergo/engine
 EnvironmentFile=/etc/tradergo/worker.env
 Environment=TRADERGO_REPO=/opt/tradergo
 Environment=PYTHONUNBUFFERED=1
-ExecStart=/opt/tradergo/venv/bin/python -m traderlab.server.main
+ExecStart=/bin/false
 Restart=always
 RestartSec=10
 MemoryMax=3G

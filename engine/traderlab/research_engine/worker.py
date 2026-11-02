@@ -19,7 +19,10 @@ LOG = logging.getLogger("research-worker")
 
 def child(job, data_dir, output):
     try:
-        from .runner import run_job
+        if job.get("kind") == "registered":
+            from .registered import run_job
+        else:
+            from .runner import run_job
         run_job(job, Path(data_dir), Path(output))
     except ValueError as exc:
         # ValueError i denna beräkningsprocess kan inte innehålla servernyckeln.
@@ -111,6 +114,11 @@ def main():
     signal.signal(signal.SIGTERM, halt)
     signal.signal(signal.SIGINT, halt)
     store = SupabaseStore.from_env_file(args.env_file)
+    from .catalog import sync_catalog
+    try:
+        LOG.info("catalog=%s", sync_catalog(store,Path(__file__).resolve().parents[3]))
+    except ConnectionFailure as exc:
+        LOG.warning("Catalog sync unavailable: %s",exc)
     while not halted:
         try:
             job = store.rpc("research_claim", {"p_worker": socket.gethostname()})

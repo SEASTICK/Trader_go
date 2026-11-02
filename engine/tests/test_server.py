@@ -135,28 +135,13 @@ def _db_with_bars():
     return db, bars
 
 
-def test_queued_exploration_runs_and_writes_results():
-    db, bars = _db_with_bars()
-    db.t["runs"] = [{"id": "r1", "kind": "exploration", "status": "queued", "created_at": "1", "strategy": "donchian_breakout",
-                     "version": "1.0.0", "params": {"entry_n": 30}, "market": "spot", "symbol": "BTCUSDT", "interval": "4h",
-                     "period_start": bars.index[400].isoformat(), "period_end": bars.index[1100].isoformat(),
-                     "capital": 100000, "costs": {"fee_bps": 10, "spread_bps": 2, "slippage_bps": 5}}]
-    assert jobs.process_one(db) is True
-    run = db.t["runs"][0]
-    assert run["status"] == "done" and run["run_key"].startswith("donchian_breakout@1.0.0#")
-    res = db.t["run_results"][0]
-    assert res["stats"]["start_capital"] == 100000 and res["criteria"] is None
-    assert all(t["entry_time"] >= bars.index[400].isoformat() for t in db.t.get("run_trades", []))
-    assert jobs.process_one(db) is False   # kön är tom
-
-
-def test_failed_run_is_marked_with_error():
-    db, bars = _db_with_bars()
-    db.t["runs"] = [{"id": "r2", "kind": "exploration", "status": "queued", "created_at": "1", "strategy": "finns_inte",
-                     "version": "1.0.0", "params": {}, "market": "spot", "symbol": "BTCUSDT", "interval": "4h",
-                     "period_start": bars.index[10].isoformat(), "period_end": bars.index[100].isoformat()}]
-    jobs.process_one(db)
-    assert db.t["runs"][0]["status"] == "failed" and "Okänd strategi" in db.t["runs"][0]["error"]
+def test_retired_queue_never_claims_or_writes():
+    db = FakeDB()
+    db.t["runs"] = [{"id": "queued", "status": "queued"}]
+    for fn in (jobs.claim, jobs.execute, jobs.process_one):
+        with pytest.raises(RuntimeError, match="research_engine.worker"):
+            fn(db)
+    assert db.t["runs"][0]["status"] == "queued"
 
 
 def test_worker_has_no_order_or_key_code():

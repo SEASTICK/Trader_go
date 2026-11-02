@@ -135,6 +135,7 @@ export type RealResult = {
   baseline?: { total_return: number; max_drawdown: number; sharpe: number | null; t_daily_nw: number | null } | null;
   track?: Mål;
   phase?: "fas1";
+  criteria?: Record<string, boolean>;
   strategy_run_id?: string;
   stability?: number | null;
   windows?: { test: [string, string]; sharpe_in_sample: number | null; sharpe_out_of_sample: number | null }[];
@@ -144,6 +145,7 @@ export type RealResult = {
 
 /** Klarar resultatet alla kriterier i sitt spår? Samma regler som research/tracks.md. */
 export function klararMål(mål: Mål, r: RealResult): boolean {
+  if (r.phase === "fas1") return !!r.criteria && Object.keys(r.criteria).length === 4 && Object.values(r.criteria).every(v => v === true);
   const grund = r.passes && r.stressed_total_return > 0;
   if (!grund) return false;
   if (mål === "A") return r.sharpe != null && r.baseline?.sharpe != null && r.sharpe > r.baseline.sharpe;
@@ -155,7 +157,8 @@ export function klararMål(mål: Mål, r: RealResult): boolean {
 export function fromResult(exp: Experiment, r: RealResult): Computed {
   const curve = r.curve ?? { t: [], strategy: [], buy_and_hold: [] };
   const labels = curve.t.map((t) => fmtDate(new Date(t)));
-  const baseline = curve.buy_and_hold.map((v, i) => v ?? curve.strategy[i] ?? 100);
+  const baseline = curve.buy_and_hold.every(v => v != null && Number.isFinite(v))
+    ? curve.buy_and_hold as number[] : [];
   const trades: Trade[] = r.recent_trades.map((t, i) => ({
     nr: r.trades - r.recent_trades.length + i + 1,
     datum: fmtDate(new Date(t.exit_time ?? t.entry_time)),

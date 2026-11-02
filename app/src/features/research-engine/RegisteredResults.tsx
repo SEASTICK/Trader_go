@@ -16,7 +16,7 @@ const CRITERIA: Record<string, string> = { t_at_least_required: "Statistisk styr
   stability_at_least_half: "Minst hälften av närliggande parametrar håller" };
 export type RegisteredResult = typeof data[number];
 
-export default function RegisteredResults() {
+export default function RegisteredResults({onReproduce}: {onReproduce?: (hypothesis:string) => void}) {
   const [selected, setSelected] = useState(data[0]?.hypothesis_id ?? "");
   const [filter, setFilter] = useState("");
   const [sort, setSort] = useState("hypothesis");
@@ -39,6 +39,7 @@ export default function RegisteredResults() {
           <td>{number(r.stats.net_return,true)}</td><td>{number(r.stats.sharpe)}</td><td>{number(r.stats.max_drawdown,true)}</td><td>{r.stats.trades}</td><td><StatusDot status={r.decision} /></td></tr>)}
       </tbody></table>{results.length === 0 && <p>Inga resultat matchar sökningen.</p>}</div>
     </div>
+    {current && onReproduce && <div className="card pad"><h2>Teknisk reproduktion</h2><p>Kör om de frysta testfönstren för {current.hypothesis_id} med samma data och parametrar. Inget nytt strategiurval görs och beslutet ändras inte.</p><button className="btn" onClick={() => onReproduce(current.hypothesis_id)}>Förbered reproduktion av {current.hypothesis_id}</button></div>}
     {current && <RegisteredDetail result={current} />}
   </>;
 }

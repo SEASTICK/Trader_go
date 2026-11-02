@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { LineChart } from "../components/Charts";
 import { CandleChart } from "../components/CandleChart";
+import frozenMarket from "../../data/fas1-market.json";
+import type { Candle } from "../lib/candles";
 import { seriesFor } from "../lib/candles";
 import { Icon } from "../components/icons";
 import { Page, Segmented, StatusDot } from "../components/ui";
@@ -8,6 +10,7 @@ import { num, pct, type Computed } from "../lib/experiments";
 import registryMd from "../../../research/registry.md?raw";
 import { parseRegistry } from "../lib/registry";
 
+const frozenCandles: Candle[] = frozenMarket.rows.map(([open_time,open,high,low,close,volume]) => ({open_time,open,high,low,close,volume,close_time:open_time+14400000-1,closed:true}));
 const decisions = parseRegistry(registryMd).decisions;
 
 export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: { c: Computed; krav: number; total: number; onBack: () => void }) {
@@ -19,7 +22,7 @@ export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: {
   const pos = c.position;
   const recent = [...c.trades].reverse().slice(0, 20);
   const [tab, setTab] = useState<"Marknad" | "Resultat">("Marknad");
-  const series = seriesFor(exp.marknad, exp.tidsram);
+  const series = c.fas1 ? {provider:"binance" as const,market:"um" as const,symbol:"BTCUSDT",interval:"4h"} : seriesFor(exp.marknad, exp.tidsram);
   if (!real) {
     return (
       <Page title={`${exp.id} · ${exp.namn}`} sub={`${exp.strategi} · ${exp.marknad} · ${exp.tidsram} · ${exp.riktning}`}
@@ -58,6 +61,7 @@ export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: {
       {tab === "Marknad" ? (
         <CandleChart
           series={series}
+          historical={fas1 ? frozenCandles : undefined}
           noSourceReason={`${exp.marknad} har ingen publik datakälla i appen än. Bara Bitcoin och Ethereum (Binance spot) samlas in.`}
           trades={real ? c.affärer : []}
           tradesLabel={real ? `Markörer: affärer från det registrerade backtestet ${c.hypotes ?? ""} (HISTORIK)` : undefined}
@@ -65,7 +69,8 @@ export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: {
       ) : (
         <section className="card chart-card">
           <div className="card-head"><div><h2>Utveckling</h2><p className="muted">Strategin efter kostnader mot baslinjen köp-och-behåll. Start = 100.</p></div></div>
-          <LineChart watermark={null} labels={c.labels} series={[{ name: exp.namn, data: c.equity, cls: "s1" }, { name: "Baslinje", data: c.baseline, cls: "s2" }]} />
+          {!c.baseline.length && <p className="muted">Jämförelsekurva saknas i källresultatet. Ingen ersättningskurva visas.</p>}
+          <LineChart watermark={null} labels={c.labels} series={[{ name: exp.namn, data: c.equity, cls: "s1" }, ...(c.baseline.length ? [{ name: "Baslinje", data: c.baseline, cls: "s2" }] : [])]} />
           <div className="legend"><span><i className="swatch s1" />{exp.namn}</span><span><i className="swatch s2" />Baslinje (köp-och-behåll{fas1 ? ", bara pris utan finansieringsränta" : ""})</span></div>
           {fas1 && <p className="footnote" style={{ padding: "8px 0 0" }}>Kurvan är ihopsatt av sex halvår utanför urvalet (walk-forward): parametrarna för varje halvår valdes bara på data före det.</p>}
         </section>

@@ -23,7 +23,7 @@ describe("fromResult", () => {
     expect(c.passes).toBe(false);
     expect(c.stressad).toBeCloseTo(5);
     expect(c.kostnadPerAffär).toBeCloseTo(0.16);
-    expect(c.baseline).toEqual([100, 112.3]); // saknat värde fylls, ingen lucka i kurvan
+    expect(c.baseline).toEqual([]); // saknad baslinje får aldrig ersättas med strategin
     expect(c.trades[0]).toMatchObject({ nr: 40, riktning: "Short", netto: expect.closeTo(4.68, 2) });
     expect(c.position).toEqual({ läge: "Short", storlek: 50 });
   });
@@ -51,4 +51,10 @@ describe("klararMål", () => {
     expect(klararMål("C", { ...base, stressed_total_return: -0.01 })).toBe(false);
     expect(klararMål("A", { ...base, passes: false })).toBe(false);
   });
+});
+
+it("Fas 1 requires all four registered criteria, including stability", () => {
+  const r = {...real, phase:"fas1" as const,passes:true,stressed_total_return:1,sharpe:2,baseline:{total_return:1,max_drawdown:-.5,sharpe:1,t_daily_nw:1},criteria:{t_at_least_required:true,stressed_costs_positive:true,sharpe_above_buy_and_hold:true,stability_at_least_half:false}};
+  expect(klararMål("A",r)).toBe(false);
+  expect(klararMål("A",{...r,criteria:{...r.criteria,stability_at_least_half:true}})).toBe(true);
 });

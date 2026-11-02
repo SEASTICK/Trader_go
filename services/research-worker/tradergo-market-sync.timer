@@ -1,0 +1,11 @@
+[Unit]
+Description=Sync TraderGO forward public data every five minutes
+
+[Timer]
+OnBootSec=60
+OnUnitInactiveSec=300
+Persistent=true
+Unit=tradergo-market-sync.service
+
+[Install]
+WantedBy=timers.target

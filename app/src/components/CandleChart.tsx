@@ -84,7 +84,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
     const v = (n: string) => css.getPropertyValue(n).trim();
     colors.current = { up: v("--good"), down: v("--bad"), ind: [v("--ind1"), v("--ind2"), v("--ind3")], entry: v("--mark-entry"), exit: v("--mark-exit") };
     const c = createChart(box.current, {
-      autoSize: !historical,
+      autoSize: false,
       layout: { background: { type: ColorType.Solid, color: v("--card") }, textColor: v("--muted"), fontFamily: "Inter Variable, system-ui, sans-serif", panes: { separatorColor: v("--line"), enableResize: false } },
       grid: { vertLines: { color: v("--line") }, horzLines: { color: v("--line") } },
       crosshair: { mode: CrosshairMode.Normal },
@@ -97,7 +97,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
     c.panes()[1]?.setHeight(90);
     chart.current = c; candleS.current = cs; volS.current = vs;
     markersApi.current = createSeriesMarkers(cs, []);
-    if (historical) viewport.current = observeChartViewport(box.current, c);
+    viewport.current = observeChartViewport(box.current, c);
     c.subscribeCrosshairMove(p => {
       if (!p.time) { setHover(null); return; }
       const t = (p.time as number) * 1000;
@@ -140,14 +140,17 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
     if (historical) { redraw(historical); viewport.current?.fitWhenVisible(); return; }
     let alive = true;
     let loadingOlder = false;
+    let initialized = false;
     const load = () => invoke<BarsPage>("market_bars", { symbol: current.symbol, interval: current.interval, limit: PAGE })
       .then(p => { if (!alive) return; hasMore.current = p.has_more; setError(null);
         const fresh = fromPage(p);
         const keep = data.current.filter(x => x.open_time < (fresh[0]?.open_time ?? Infinity));
-        redraw([...keep, ...fresh]);
+        const next = [...keep, ...fresh];
+        redraw(next);
+        if (!initialized && next.length) { viewport.current?.latestWhenVisible(next.length); initialized = true; }
       })
       .catch(e => alive && setError(String(e)));
-    void load().then(() => chart.current?.timeScale().scrollToRealTime());
+    void load();
     const ts = chart.current?.timeScale();
     const onRange = (r: { from: number; to: number } | null) => {
       if (!r || r.from > 10 || !hasMore.current || loadingOlder || !data.current.length) return;

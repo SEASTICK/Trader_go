@@ -12,7 +12,7 @@ await db.exec(`create role anon; create role authenticated; create role service_
  $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;
  grant usage on schema public,auth to anon,authenticated,service_role;
  grant execute on function auth.uid() to public;`);
-for(const file of ['0001_research.sql','0002_research_members.sql','0003_research_queue.sql'])
+for(const file of ['0001_research.sql','0002_research_members.sql','0003_research_queue.sql','0004_registered_reproduction.sql'])
  await db.exec(readFileSync(new URL('../supabase/migrations/'+file,import.meta.url),'utf8'));
 const keys={candles:['provider','market','symbol','interval','open_time'],funding_rates:['symbol','funding_time'],
  strategies:['name','version'],hypotheses:['id'],research_members:['user_id'],runs:['id'],run_results:['run_id'],run_trades:['run_id','n']};

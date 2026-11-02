@@ -28,6 +28,7 @@ Rutor utan rad här, eller vars hypotes inte är registrerad, hoppas över och f
 from __future__ import annotations
 
 import json
+import hashlib
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -137,18 +138,24 @@ def run_all(repo: Path, data_dir: Path | None = None, loader=binance.load, only:
 def _export_fas1(repo: Path, tile: str, r: dict, path: Path) -> dict:
     """Fas 1-resultat (walk-forward) i samma form som övriga rutor. Köp-och-behåll räknas från terminsdatan."""
     st, cv = r["stats"], r["curves"]
-    bh = None
-    try:
-        bars = binance.load("um", "BTCUSDT", "4h", repo / "data")
-        t = pd.DatetimeIndex(pd.to_datetime(cv["t"], utc=True))
-        o = bars["open"].shift(-1).reindex(t)
-        bh = [round(float(v) / float(o.iloc[0]) * 100, 4) if pd.notna(v) else None for v in o]
-    except (FileNotFoundError, KeyError, IndexError):
-        pass
+    # Use the already frozen, audited baseline. Export must never open raw
+    # archives (including holdout) or reconstruct a price-only benchmark.
+    registered = json.loads((repo / "app/data/registered-results.json").read_text())
+    proof = next((x for x in registered if x["hypothesis_id"] == r["hypothesis_id"]), None)
+    if proof is None or proof["result_sha256"] != hashlib.sha256(path.read_bytes()).hexdigest():
+        raise ValueError("Fas 1-resultatet saknar matchande verifierad export")
+    frozen = json.loads((repo / "app/data/fas1-market.json").read_text())
+    bc = frozen["baseline_curves"]
+    if frozen["market"] != "um" or frozen["interval"] != "4h":
+        raise ValueError("Fel baslinjedataset")
+    values = dict(zip(bc["t"], bc["equity"]))
+    if any(t not in values for t in cv["t"]):
+        raise ValueError("Baslinjens tidsstämplar matchar inte resultatet")
+    bh = [values[t] * 100 for t in cv["t"]]
     trades = r.get("trades", [])
     return {
         "source": "HISTORIK", "phase": "fas1", "hypothesis": r["hypothesis_id"], "registry_commit": r["registry_commit"],
-        "run_at": r["run_at"], "period": [r["out_of_sample"][0], cv["t"][-1]],
+        "run_at": r["run_at"], "period": r["out_of_sample"],
         "total_return": st["net_return"], "max_drawdown": st["max_drawdown"], "trades": st["trades"],
         "win_rate": st["win_rate"] or 0.0, "t": r["t_daily_nw"], "t_required": r["t_required"],
         "passes": bool(r["criteria"]["t_at_least_required"]), "deflated_sharpe": r.get("deflated_sharpe"),
@@ -157,7 +164,7 @@ def _export_fas1(repo: Path, tile: str, r: dict, path: Path) -> dict:
         "correlation": (r.get("benchmark") or {}).get("correlation"),
         "baseline": {**r["baseline_buy_and_hold"], "t_daily_nw": None},
         "costs_bps_per_side": r["costs_bps_per_side"],
-        "curve": {"t": cv["t"], "strategy": [round(v * 100, 4) for v in cv["equity"]], "buy_and_hold": bh or [None] * len(cv["t"])},
+        "curve": {"t": cv["t"], "strategy": [round(v * 100, 4) for v in cv["equity"]], "buy_and_hold": bh},
         "recent_trades": [{"entry_time": t["entry_time"], "exit_time": t["exit_time"], "side": t["side"],
                            "entry_price": t["entry_price"], "exit_price": t["exit_price"], "gross": None, "costs": None,
                            "funding": None, "net": t["net"], "liquidated": t["exit_reason"] == "liquidation",

@@ -106,3 +106,13 @@ def test_first_futures_month_uses_only_available_archives_and_reports_warmup(job
     first = output.read_bytes()
     runner.run_job(job, tmp_path, output)
     assert output.read_bytes() == first
+
+
+@pytest.mark.parametrize('change',[{'params':{}},{'strategy':'bb_rsi_reversion'},{'period_end':'2026-01-01T00:00:00Z'},{'capital':200000},{'version':'9.0.0'}])
+def test_registered_reproduction_cannot_change_protocol(change,tmp_path):
+    from traderlab.research_engine.registered import run_job
+    request=dict(kind='registered',hypothesis_id='H-0009',strategy='ema_adx_trend',version='1.0.0',
+        params={'reproduction':'frozen_windows_v1'},market='um',symbol='BTCUSDT',interval='4h',
+        period_start='2020-01-01T00:00:00Z',period_end='2025-01-01T00:00:00Z',capital=100000,
+        costs={'fee_bps':10,'spread_bps':2,'slippage_bps':5})
+    with pytest.raises(ValueError,match='protokollet'):run_job({**request,**change},tmp_path,tmp_path/'out.json')

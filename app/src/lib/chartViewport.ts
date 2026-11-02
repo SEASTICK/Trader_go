@@ -4,10 +4,10 @@
  */
 export function observeChartViewport(
   element: HTMLElement,
-  chart: { resize(width: number, height: number, forceRepaint?: boolean): void; timeScale(): { fitContent(): void } },
+  chart: { resize(width: number, height: number, forceRepaint?: boolean): void; timeScale(): { fitContent(): void; setVisibleLogicalRange(range: {from:number;to:number}): void } },
 ) {
   let visible = false;
-  let pendingFit = false;
+  let pendingView: (() => void) | undefined;
   let frame: number | undefined;
   let closed = false;
   const schedule = () => {
@@ -18,7 +18,7 @@ export function observeChartViewport(
       const { width, height } = element.getBoundingClientRect();
       if (width < 1 || height < 1) return;
       chart.resize(Math.floor(width), Math.floor(height), true);
-      if (pendingFit) { chart.timeScale().fitContent(); pendingFit = false; }
+      if (pendingView) { pendingView(); pendingView = undefined; }
     });
   };
   const size = new ResizeObserver(schedule);
@@ -29,7 +29,11 @@ export function observeChartViewport(
   size.observe(element);
   intersection.observe(element);
   return {
-    fitWhenVisible() { pendingFit = true; schedule(); },
+    fitWhenVisible() { pendingView = () => chart.timeScale().fitContent(); schedule(); },
+    latestWhenVisible(count: number) {
+      pendingView = () => chart.timeScale().setVisibleLogicalRange({from:Math.max(0,count-120),to:count+4});
+      schedule();
+    },
     close() {
       closed = true;
       size.disconnect();

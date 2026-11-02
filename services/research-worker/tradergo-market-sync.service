@@ -1,0 +1,24 @@
+[Unit]
+Description=TraderGO forward public market collection (no research jobs)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=tradergo
+Group=tradergo
+WorkingDirectory=/opt/tradergo/current/engine
+Environment=PYTHONPATH=/opt/tradergo/current/engine
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PYTHONUNBUFFERED=1
+LoadCredential=research.env:/etc/tradergo/research.env
+ExecStart=/opt/tradergo/venv/bin/python -m traderlab.research_engine.sync --env-file %d/research.env --data-dir /var/lib/tradergo --scope-start 2026-11-02T00:00:00+00:00
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/tradergo
+MemoryMax=256M
+CPUQuota=50%
+TimeoutStartSec=180

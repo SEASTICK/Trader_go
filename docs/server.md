@@ -1,38 +1,23 @@
-# Servern: forskningsworker på DigitalOcean och data i Supabase
+# Servern: en gemensam forskningskö
 
-Workern hämtar publik marknadsdata, speglar registret och kör backtester som köas. Den har inga börsnycklar
-och ingen orderkod, och ett test i `engine/tests/test_server.py` stoppar sådan kod.
+Den driftsatta lösningen beskrivs i [research-cloud-setup.md](research-cloud-setup.md).
+Tjänsten heter `tradergo-research-worker.service`; koden ligger under
+`/opt/tradergo/current/engine/traderlab/research_engine/`.
 
-| Del | Var |
-|---|---|
-| Kod | `engine/traderlab/server/` (`sync.py`, `jobs.py`, `registry_sync.py`, `main.py`) |
-| Tjänst | `deploy/tradergo-worker.service`, körs som användaren `tradergo` med låst filsystem |
-| Installation | `deploy/setup.sh`: Python-venv, brandvägg (bara SSH), automatiska säkerhetsuppdateringar |
-| Deploy | `.github/workflows/server-deploy.yml` vid ändring i `engine/`, `deploy/` eller registret på main |
-| Databas | `supabase/migrations/*.sql`, körs av `.github/workflows/supabase-migrate.yml` |
+Använd inte den äldre `deploy/setup.sh`, `tradergo-worker.service` eller
+`server.jobs`. De är avstängda efter integrationsgranskningen eftersom de inte
+följde databasens globala reservation, lease, heartbeat och fencing. Starta inte
+en extra worker och ersätt inte den aktiva venv-mappen med rsync.
 
-## Hemligheter (bara i GitHub, aldrig i Git)
+- Serverhemlighet: `/etc/tradergo/research.env`, root, 0600. Workern läser en
+  systemd-credential; ingen nyckel ska skrivas i frontend eller Git.
+- Kö: validerade Supabase RPC:er, en global aktiv forskningskörning åt gången.
+- Registrerade körningar: teknisk reproduktion av frysta fönster, inte nya beslut.
+- Marknadsinsamling: separat `tradergo-market-sync.service`/`.timer`, inga köjobb.
+  Operativ framåtinsamling från 2026-11-02; tidigare forskning och slutprov hålls isär.
+- De äldre GitHub-flödena för automatisk serverdeploy och migration är avstängda.
+  Migreringar granskas och tillämpas en gång; ändra aldrig utgivna SQL-filer.
 
-| Namn | Används av |
-|---|---|
-| `SERVER_HOST`, `SERVER_SSH_KEY` | Deploy |
-| `SUPABASE_URL`, `SUPABASE_SERVICE_KEY` | Workern (skrivs till `/etc/tradergo/worker.env`, läsbar bara för root) |
-| `SUPABASE_DB_URL` | Migreringar |
-| `SUPABASE_ANON_KEY` (variabel, inte hemlig) | Appen, för inloggning och läsning |
-
-## Vad workern gör
-
-- **Var 5:e minut:** hämtar nya staplar för BTCUSDT spot 1h, 4h och 1d, terminer 4h, och finansieringsränta.
-  Första gången hämtas hela historiken (spot från 2017, terminer från 2020). Pågående stapel märks `closed = false`.
-- **Var 15:e sekund:** tar köade körningar i `runs`, kör dem och sparar statistik, kurvor och affärer.
-- **Vid start:** speglar `research/registry.md` och strategierna till tabellerna `hypotheses` och `strategies`.
-
-## Felsökning på servern
-
-```bash
-journalctl -u tradergo-worker -f
-```
-
-```bash
-systemctl restart tradergo-worker
-```
+Kontroller och motivering: [research-integration-review.md](research-integration-review.md).
+Backup/återställning: [research-backup-restore.md](research-backup-restore.md).
+Inga börsnycklar, riktiga ordrar eller driftlarm ingår.

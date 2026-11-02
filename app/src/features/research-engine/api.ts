@@ -9,6 +9,7 @@ type Curve = { t: string[]; equity: number[]; drawdown: number[] };
 export type Result = { mode: string; stats: Record<string, unknown>; curves: Curve; baseline: Curve;
   warnings: string[]; effective_params: Record<string, number | boolean>;
   metadata: { fingerprint: string; dataset_sha256: string; engine_sha256: string; configuration: unknown };
+  hypothesis_id?: string; reproduction_match?: boolean; decision?: string;
   trades: { side: string; entry_time: string; exit_time: string | null; entry_price: number;
     exit_price: number | null; net_return: number; exit_reason: string | null }[] };
 
@@ -73,10 +74,13 @@ export class ResearchApi {
   }
   signOut() { this.generation++; this.session = null; this.expiresAt = 0; }
   async runs(): Promise<Run[]> {
-    return await this.request("/rest/v1/runs?kind=eq.exploration&select=id,kind,strategy,market,interval,status,progress,error,created_at,period_start,period_end,params&order=created_at.desc&limit=100") as Run[];
+    return await this.request("/rest/v1/runs?kind=in.(exploration,registered)&select=id,kind,strategy,market,interval,status,progress,error,created_at,period_start,period_end,params&order=created_at.desc&limit=100") as Run[];
   }
   async enqueue(request: Record<string, unknown>): Promise<string> {
     return await this.request("/rest/v1/rpc/research_enqueue", "POST", { p_request: request }) as string;
+  }
+  async enqueueRegistered(hypothesis: string, requestKey: string): Promise<string> {
+    return await this.request("/rest/v1/rpc/research_enqueue_registered", "POST", {p_hypothesis:hypothesis,p_request_key:requestKey}) as string;
   }
   async cancel(id: string) {
     return this.request("/rest/v1/rpc/research_cancel", "POST", { p_id: id });
