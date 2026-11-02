@@ -117,10 +117,18 @@ PR #71 mergad som 793e9f0. PR #72 omgranskad på a5e8fc3 (kod ab97a0a): alla tre
 
 0/5 verifierade.
 
-- [ ] **F2-601** Skapa ett separat strikt kökontrakt för H-0013 med autentisering och RLS
-- [ ] **F2-602** Anslut H-0013 till samma enda worker med lease och skydd mot dubbla resultat
-- [ ] **F2-603** Begränsa dataläsningen till verifierade frysta arkiv innan några filer öppnas
-- [ ] **F2-604** Testa avbrott, timeout, återförsök och återhämtning efter workeromstart
+- [ ] **F2-601** Skapa ett separat strikt kökontrakt för H-0013 med autentisering och RLS **Pågår.**
+  - Underlag: [engine/tests/test_research_h0013.py](../engine/tests/test_research_h0013.py) — cd9701d (gren fas2-ko): research_enqueue_h0013 för bara medlemmar (anon och icke-medlem nekas, ingen direkt skrivning), alla fält fasta, H-0013 måste finnas i synkat register, högst en aktiv körning och inget andra resultat; research_finish kräver H-0013:s strikta resultatkontrakt och rör inte registrets beslut. Tolkningar K1–K12 i docs/fas2-ko-tolkningar.md (8fa1135, före koden). PGlite: scripts/test-h0013-queue.mjs passerar och sex avsiktliga SQL-fel fångas; befintliga scripts/test-research-queue.mjs passerar. Python: 35 nya tester, hela sviten 513 passerar; avsiktliga fel i h0013.py fångas. Migrationen är inte applicerad i Supabase och inget är driftsatt. Endast syntetisk data.
+  - Väntar på Codex granskning; migrationen är inte applicerad, inget driftsatt, ingen riktig data.
+- [ ] **F2-602** Anslut H-0013 till samma enda worker med lease och skydd mot dubbla resultat **Pågår.**
+  - Underlag: [engine/tests/test_research_h0013.py](../engine/tests/test_research_h0013.py) — cd9701d: H-0013 går genom samma slot, research_claim, heartbeat och finish med 90 s lease och fencing-token; gammal token och andra publicering avvisas, ett resultat per körning; workern skickar H-0013 till h0013.run_job. Tolkningar K1–K12 i docs/fas2-ko-tolkningar.md (8fa1135, före koden). PGlite: scripts/test-h0013-queue.mjs passerar och sex avsiktliga SQL-fel fångas; befintliga scripts/test-research-queue.mjs passerar. Python: 35 nya tester, hela sviten 513 passerar; avsiktliga fel i h0013.py fångas. Migrationen är inte applicerad i Supabase och inget är driftsatt. Endast syntetisk data.
+  - Väntar på Codex granskning; migrationen är inte applicerad, inget driftsatt, ingen riktig data.
+- [ ] **F2-603** Begränsa dataläsningen till verifierade frysta arkiv innan några filer öppnas **Pågår.**
+  - Underlag: [engine/tests/test_research_h0013.py](../engine/tests/test_research_h0013.py) — cd9701d: innan någon datafil läses jämförs de arkiv som skulle väljas för 2020–2024 med det frysta manifestets 120 namn, och varje fils SHA-256 och CHECKSUM verifieras; arkiv före 2020 och från 2025 öppnas aldrig; inlästa staplar och finansieringsränta jämförs med manifestets hash. Tolkningar K1–K12 i docs/fas2-ko-tolkningar.md (8fa1135, före koden). PGlite: scripts/test-h0013-queue.mjs passerar och sex avsiktliga SQL-fel fångas; befintliga scripts/test-research-queue.mjs passerar. Python: 35 nya tester, hela sviten 513 passerar; avsiktliga fel i h0013.py fångas. Migrationen är inte applicerad i Supabase och inget är driftsatt. Endast syntetisk data.
+  - Väntar på Codex granskning; migrationen är inte applicerad, inget driftsatt, ingen riktig data.
+- [ ] **F2-604** Testa avbrott, timeout, återförsök och återhämtning efter workeromstart **Pågår.**
+  - Underlag: [engine/tests/test_research_h0013.py](../engine/tests/test_research_h0013.py) — cd9701d: avbrott (cancelled stoppar barnprocessen), förlorad lease (ingen publicering), tidsgräns 2 h för H-0013, tre försök vid utgången lease och därefter failed, omstart med ny token där bara aktuell token publicerar; varje försök sparas i data_dir/h0013-attempts även när det avbryts. Tolkningar K1–K12 i docs/fas2-ko-tolkningar.md (8fa1135, före koden). PGlite: scripts/test-h0013-queue.mjs passerar och sex avsiktliga SQL-fel fångas; befintliga scripts/test-research-queue.mjs passerar. Python: 35 nya tester, hela sviten 513 passerar; avsiktliga fel i h0013.py fångas. Migrationen är inte applicerad i Supabase och inget är driftsatt. Endast syntetisk data.
+  - Väntar på Codex granskning; migrationen är inte applicerad, inget driftsatt, ingen riktig data.
 - [ ] **F2-605** Driftsätt verifierad kod med loggar, resursgränser och dokumenterad återgång
 
 ## 7. Visa Fas 2 i Research Lab
