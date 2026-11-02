@@ -116,13 +116,21 @@ def select(by_candidate: dict[str, dict[str, dict]]) -> adaptive.Playbook:
     return adaptive.Playbook.of(choices)
 
 
-def train(bars: pd.DataFrame, funding: pd.Series, end, costs: CostModel = COSTS) -> dict:
-    """Väljer spelboken på staplar från 2020-01-01 till `end`, exklusivt (punkt 6). Inget efter `end` läses."""
-    check_development(bars, funding, DEV_START, end)
+def _labels_until(hist: pd.DataFrame, labels: pd.Series | None, end: pd.Timestamp) -> pd.Series:
+    """Gällande dagsläge för `hist`: räknat från staplarna, eller de tillförda lägena före `end` (permutationstestet).
+    Med de riktiga lägena är de lika, eftersom ett dagsläge bara beror på dagen och dagarna före."""
+    return regime.daily(hist) if labels is None else labels[labels.index < end]
+
+
+def train(bars: pd.DataFrame, funding: pd.Series, end, costs: CostModel = COSTS,
+          labels: pd.Series | None = None) -> dict:
+    """Väljer spelboken på staplar från 2020-01-01 till `end`, exklusivt (punkt 6). Inget efter `end` läses.
+    `labels` är tillförda dagslägen för hela utvecklingsperioden (bara permutationstestet)."""
+    check_development(bars, funding, DEV_START, end, effective=labels)
     lo, hi = _ts(DEV_START), _ts(end)
     tb = bars[(bars.index >= lo) & (bars.index < hi)]
     tf = funding[(funding.index >= lo) & (funding.index < hi)]
-    effective = regime.daily(tb)
+    effective = _labels_until(tb, labels, hi)
     by_candidate = {name: regime_stats(tb, tf, name, costs, effective) for name in CHOOSABLE}
     book = select(by_candidate)
     return {"train": [str(lo.date()), str(hi.date())], "playbook": book.to_dict(), "playbook_id": book.id,
@@ -131,30 +139,32 @@ def train(bars: pd.DataFrame, funding: pd.Series, end, costs: CostModel = COSTS)
 
 # Testfönster och ihopsättning
 
-def evaluate_window(bars: pd.DataFrame, funding: pd.Series, book: adaptive.Playbook, start, end,
-                    costs: CostModel = COSTS) -> tuple[backtest.BacktestResult, dict]:
-    """Ett testfönster [start, end) med en fast spelbok (punkt 7–8).
+def run_window(bars: pd.DataFrame, funding: pd.Series, make_target, start, end, costs: CostModel = COSTS,
+               labels: pd.Series | None = None) -> tuple[backtest.BacktestResult, dict]:
+    """Ett testfönster [start, end) med samma konventioner för H-0013 och alla jämförelser (punkt 7–8, U1–U2).
 
-    Indikatorer och lägen räknas från 2020-01-01. Spelboken gäller från fönstrets första stapel och positionen är
-    platt före den; kandidaten måste ge en ny inträdessignal. Positionen stängs senast vid öppningen av fönstrets
+    `make_target(hist, effective, start)` ger målposition och stop-avstånd per stapel för staplarna från
+    2020-01-01 till fönstrets slut. Positionen är platt före fönstret och stängs senast vid öppningen av fönstrets
     näst sista stapel. Avkastning och affärer räknas bara inom fönstret.
     """
-    check_development(bars, funding, start, end)
+    check_development(bars, funding, start, end, effective=labels)
     a, b = _ts(start), _ts(end)
     hist = bars[(bars.index >= _ts(DEV_START)) & (bars.index < b)]
     if (hist.index >= a).sum() < 3:
         raise ValueError(f"Testfönstret {a.date()}–{b.date()} har för få staplar")
-    effective = regime.daily(hist)
-    sig = adaptive.signals(hist, [(a, book)], effective=effective)
-    target = sig.target.copy()
-    target.iloc[-3:] = 0.0  # stäng vid öppningen av näst sista stapeln, platt därefter
-    res = backtest.run(hist, target, costs, funding=funding[funding.index < b], stop_distance=sig.stop_distance)
+    effective = _labels_until(hist, labels, b)
+    target, stop = make_target(hist, effective, a)
+    target = target.copy()
+    target[target.index < a] = 0.0   # inget beslut före fönstret: första fyllning tidigast vid andra öppningen
+    target.iloc[-3:] = 0.0           # stäng vid öppningen av näst sista stapeln, platt därefter
+    res = backtest.run(hist, target, costs, funding=funding[funding.index < b], stop_distance=stop)
     if any(t.entry_time < a for t in res.trades) or res.position[res.position.index < a].any():
         raise AssertionError("Position före testfönstret")
     keep = res.bar_returns.index >= a
     trades = [t for t in res.trades if t.entry_time >= a]
     window = backtest.BacktestResult(equity=(1 + res.bar_returns[keep]).cumprod(), position=res.position[keep],
-                                     trades=trades, total_costs=res.total_costs, total_funding=res.total_funding)
+                                     trades=trades, total_costs=res.total_costs, total_funding=res.total_funding,
+                                     liquidations=res.liquidations)
     day_label = _day_labels(hist, effective)
     day_label = day_label[day_label.index >= a]
     bar_label = regime.per_bar(hist, effective)
@@ -164,7 +174,28 @@ def evaluate_window(bars: pd.DataFrame, funding: pd.Series, book: adaptive.Playb
     # Fönstrets egna belopp har fönstrets startkapital 1,0 som enhet (WalkForward räknar om dem).
     return window, {"test": [str(a.date()), str(b.date())], "per_regime": per_regime, "trades": len(trades),
                     "local_return": float(window.equity.iloc[-1] - 1) if len(window.equity) else 0.0,
-                    "local_costs": res.total_costs, "local_funding": res.total_funding}
+                    "local_costs": res.total_costs, "local_funding": res.total_funding,
+                    "liquidations": res.liquidations,
+                    "stop_exits": sum(t.exit_reason == "stop" for t in trades)}
+
+
+def selector_target(book: adaptive.Playbook):
+    """H-0013:s målposition: spelboken gäller från fönstrets första stapel; kandidaten måste ge en ny signal."""
+    def make(hist, effective, start):
+        sig = adaptive.signals(hist, [(start, book)], effective=effective)
+        return sig.target, sig.stop_distance
+    return make
+
+
+def evaluate_window(bars: pd.DataFrame, funding: pd.Series, book: adaptive.Playbook, start, end,
+                    costs: CostModel = COSTS, labels: pd.Series | None = None) -> tuple[backtest.BacktestResult, dict]:
+    """Ett testfönster [start, end) med en fast spelbok (punkt 7–8).
+
+    Indikatorer och lägen räknas från 2020-01-01. Spelboken gäller från fönstrets första stapel och positionen är
+    platt före den; kandidaten måste ge en ny inträdessignal. Positionen stängs senast vid öppningen av fönstrets
+    näst sista stapel. Avkastning och affärer räknas bara inom fönstret.
+    """
+    return run_window(bars, funding, selector_target(book), start, end, costs, labels)
 
 
 def _rescale(t: backtest.Trade, capital: float) -> backtest.Trade:
@@ -198,19 +229,15 @@ class WalkForward:
                 "trades": len(self.trades), "total_costs": self.total_costs, "total_funding": self.total_funding}
 
 
-def walk_forward(bars: pd.DataFrame, funding: pd.Series, costs: CostModel = COSTS) -> WalkForward:
-    """Sex halvårsfönster: spelboken väljs på data före varje fönster och prövas i fönstret."""
-    check_development(bars, funding)
-    edges = [_ts(t) for t in TEST_STARTS] + [_ts(HOLDOUT_START)]
-    windows, parts, trades, c, f = [], [], [], 0.0, 0.0
+def stitch(results: list[tuple[backtest.BacktestResult, dict]]) -> tuple[pd.Series, list, float, float, list[dict]]:
+    """Sätter ihop fönster på en gemensam kapitalbas (CAPITAL_BASE): avkastning, affärer, kostnad och
+    finansieringsränta, samt ingående och utgående kapital per fönster."""
+    parts, trades, c, f, capitals = [], [], 0.0, 0.0, []
     capital = 1.0
-    for a, b in zip(edges[:-1], edges[1:]):
-        trained = train(bars, funding, a, costs)
-        book = adaptive.Playbook.from_dict(trained["playbook"])
-        res, info = evaluate_window(bars, funding, book, a, b, costs)
+    for res, info in results:
         end_capital = capital * (1 + info["local_return"])
-        windows.append({**trained, **info, "capital_start": capital, "capital_end": end_capital,
-                        "costs": info["local_costs"] * capital, "funding": info["local_funding"] * capital})
+        capitals.append({"capital_start": capital, "capital_end": end_capital,
+                         "costs": info["local_costs"] * capital, "funding": info["local_funding"] * capital})
         parts.append(res.bar_returns)
         trades += [_rescale(t, capital) for t in res.trades]
         c += info["local_costs"] * capital
@@ -219,11 +246,33 @@ def walk_forward(bars: pd.DataFrame, funding: pd.Series, costs: CostModel = COST
     returns = pd.concat(parts)
     if returns.index.has_duplicates or not returns.index.is_monotonic_increasing:
         raise AssertionError("Testfönstren överlappar")
-    final = train(bars, funding, HOLDOUT_START, costs)
+    return returns, trades, c, f, capitals
+
+
+def windows() -> list[tuple[pd.Timestamp, pd.Timestamp]]:
+    edges = [_ts(t) for t in TEST_STARTS] + [_ts(HOLDOUT_START)]
+    return list(zip(edges[:-1], edges[1:]))
+
+
+def walk_forward(bars: pd.DataFrame, funding: pd.Series, costs: CostModel = COSTS,
+                 labels: pd.Series | None = None) -> WalkForward:
+    """Sex halvårsfönster: spelboken väljs på data före varje fönster och prövas i fönstret.
+    `labels` ersätter de räknade dagslägena i både träning och test (bara permutationstestet)."""
+    check_development(bars, funding, effective=labels)
+    found, results = [], []
+    for a, b in windows():
+        trained = train(bars, funding, a, costs, labels)
+        book = adaptive.Playbook.from_dict(trained["playbook"])
+        res, info = evaluate_window(bars, funding, book, a, b, costs, labels)
+        found.append({**trained, **info})
+        results.append((res, info))
+    returns, trades, c, f, capitals = stitch(results)
+    found = [{**w, **cap} for w, cap in zip(found, capitals)]
+    final = train(bars, funding, HOLDOUT_START, costs, labels)
     final = {"contract": adaptive.CONTRACT_VERSION, **final}
     config = {"version": WALK_FORWARD_VERSION, "contract": adaptive.CONTRACT_VERSION,
               "dev_start": DEV_START, "test_starts": TEST_STARTS, "holdout_start": HOLDOUT_START,
               "min_trades": MIN_TRADES, "costs_bps": {"fee": costs.fee_bps, "spread": costs.spread_bps,
                                                       "slippage": costs.slippage_bps},
               "candidates": {k: v for k, v in adaptive.CANDIDATES.items()}, "capital_base": CAPITAL_BASE}
-    return WalkForward(windows, returns, trades, c, f, final, config)
+    return WalkForward(found, returns, trades, c, f, final, config)
