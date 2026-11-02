@@ -17,13 +17,31 @@ from .supabase import ConnectionFailure, SupabaseStore
 LOG = logging.getLogger("research-worker")
 
 
+GRACE = 20   # sekunder för ett kontrollerat stopp; systemd ger tjänsten 45 s (TimeoutStopSec)
+
+
+class WorkerStop(BaseException):
+    """Föräldern har bett beräkningen sluta (avbrott, förlorad lease, tidsgräns eller workerstopp)."""
+
+
+def _stop_requested(signum, frame):
+    raise WorkerStop()
+
+
 def child(job, data_dir, output):
+    # SIGTERM blir ett undantag i beräkningen, så att H-0013 hinner spara sitt försök med delresultat.
+    signal.signal(signal.SIGTERM, _stop_requested)
     try:
-        if job.get("kind") == "registered":
+        if job.get("kind") == "registered" and job.get("hypothesis_id") == "H-0013":
+            from .h0013 import run_job
+        elif job.get("kind") == "registered":
             from .registered import run_job
         else:
             from .runner import run_job
         run_job(job, Path(data_dir), Path(output))
+    except WorkerStop:
+        Path(output).with_suffix(".stopped").write_text("Beräkningen stoppades kontrollerat")
+        raise SystemExit(3)
     except ValueError as exc:
         # ValueError i denna beräkningsprocess kan inte innehålla servernyckeln.
         Path(output).with_suffix(".error").write_text(str(exc)[:1000])
@@ -33,30 +51,50 @@ def child(job, data_dir, output):
         raise SystemExit(1)
 
 
-def stop(process):
+def stop(process, grace: float = GRACE) -> bool:
+    """Ber processen sluta (SIGTERM) och väntar högst `grace` sekunder. Svarar den inte dödas den (SIGKILL).
+    Returnerar True om processen fick dödas; då kan delresultat saknas. Returnerar först när processen är borta."""
+    forced = False
     if process.is_alive():
         process.terminate()
-        process.join(5)
+        process.join(grace)
     if process.is_alive():
+        forced = True
         process.kill()
         process.join(5)
+    return forced
 
 
-def execute(store, job, data_dir, stopping, timeout=1800):
+def _stop_message(base: str, forced: bool) -> str:
+    return base + ("; processen svarade inte och dödades, delresultat kan saknas" if forced else "")
+
+
+def timeout_for(job) -> int:
+    """H-0013 får två timmar (200 permutationer och 81 spelböcker); allt annat 30 minuter."""
+    if job.get("kind") == "registered" and job.get("hypothesis_id") == "H-0013":
+        from .h0013 import TIMEOUT
+        return TIMEOUT
+    return 1800
+
+
+def execute(store, job, data_dir, stopping, timeout=1800, grace: float = GRACE, beat: float = 10, target=child):
+    """Kör ett jobb i en egen process. Vid avbrott, förlorad lease, tidsgräns eller workerstopp stoppas processen
+    kontrollerat innan slotten släpps; inget resultat publiceras då. `target` och `beat` finns för tester."""
     identity = {"p_id": job["id"], "p_token": job["lease_token"]}
     with TemporaryDirectory(prefix="research-", dir=data_dir) as folder:
         output = Path(folder) / "result.json"
-        process = mp.get_context("spawn").Process(target=child, args=(job, str(data_dir), str(output)))
+        process = mp.get_context("spawn").Process(target=target, args=(job, str(data_dir), str(output)))
         process.start()
         deadline = time.monotonic() + timeout
         last_beat = 0.0
         try:
             while process.is_alive():
                 if stopping() or time.monotonic() >= deadline:
-                    stop(process)
-                    store.rpc("research_finish", {**identity, "p_error": "Worker stoppad eller tidsgräns nådd"})
+                    forced = stop(process, grace)
+                    store.rpc("research_finish", {**identity, "p_error": _stop_message(
+                        "Worker stoppad eller tidsgräns nådd", forced)})
                     return
-                if time.monotonic() - last_beat >= 10:
+                if time.monotonic() - last_beat >= beat:
                     progress_file = output.with_suffix(".progress")
                     try:
                         progress = float(progress_file.read_text()) if progress_file.exists() else 0.05
@@ -64,9 +102,11 @@ def execute(store, job, data_dir, stopping, timeout=1800):
                         progress = 0.05
                     state = store.rpc("research_heartbeat", {**identity, "p_progress": progress})
                     if state != "running":
-                        stop(process)
+                        forced = stop(process, grace)
                         if state != "lost":
-                            store.rpc("research_finish", {**identity, "p_error": "Avbruten"})
+                            store.rpc("research_finish", {**identity, "p_error": _stop_message("Avbruten", forced)})
+                        else:
+                            LOG.warning("run=%s lease lost; stopped without publishing (forced=%s)", job["id"], forced)
                         return
                     last_beat = time.monotonic()
                 process.join(0.5)
@@ -92,7 +132,7 @@ def execute(store, job, data_dir, stopping, timeout=1800):
             accepted = store.rpc("research_finish", {**identity, "p_result": json.loads(output.read_text())})
             LOG.info("run=%s result_accepted=%s", job["id"], accepted)
         finally:
-            stop(process)
+            stop(process, grace)
 
 
 def main():
@@ -124,7 +164,7 @@ def main():
             job = store.rpc("research_claim", {"p_worker": socket.gethostname()})
             if job:
                 LOG.info("run=%s started", job["id"])
-                execute(store, job, args.data_dir, lambda: halted)
+                execute(store, job, args.data_dir, lambda: halted, timeout=timeout_for(job))
         except ConnectionFailure as exc:
             # Ingen ny körning medan pågående process har förlorat anslutningen.
             LOG.warning("%s", exc)
