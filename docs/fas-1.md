@@ -2,7 +2,7 @@
 
 ## Aktuell verifierad status 2026-11-02
 
-**Hela Fas 1 är inte klar.** Stable 0.1.12 innehåller den första molnkopplingen.
+**Hela Fas 1 är inte klar.** Stable 0.1.14 innehåller molnkopplingen och de registrerade offline-resultaten.
 Senaste data-/strategiauditen beskrivs i `docs/fas1-data-audit-20261102.md`;
 molnverifieringen i `docs/research-cloud-setup.md`. Tabellen skiljer färdig
 kärnfunktion från sådant som fortfarande saknar slutverifiering.
@@ -15,9 +15,9 @@ kärnfunktion från sådant som fortfarande saknar slutverifiering.
 | 4. Backtest | Tester för nästa öppning, framtidsläckage, stop/TP/gap, kostnader/funding, affärslogg och reproducerbarhet; samma UM buy-and-hold | Oberoende mark-price-/likvidationsvalidering är inte gjord |
 | 5. Nyckeltal | Motorns statistik, kurvor, affärer, månads-/regimresultat och auditmetadata | Registrerade Fas 1-resultat visas nu i Research Lab via explicit adapter; vidare desktopverifiering återstår |
 | 6. Optimering | Registrerat protokoll, Optuna, walk-forward, kostnadsstress, stabilitet, osäkerhet och bevarade auditförsök | Slutprovet förblir låst; alla fyra är REJECT |
-| 7. Research Lab | Medlemsinloggning och utforskningskö; ny registrerad offlinevy med jämförelse, kriterier, UM-candles/markörer, equity/drawdown, affärer, filter/sortering och walk-forward | Start av nya registrerade jobb från UI; installerad Stable-verifiering |
+| 7. Research Lab | Medlemsinloggning och utforskningskö; ny registrerad offlinevy med jämförelse, kriterier, UM-candles/markörer, equity/drawdown, affärer, filter/sortering och walk-forward | Start av nya registrerade jobb från UI; Windows-GUI och första diagramomritning kräver fortsatt kontroll |
 | 8. Molndrift | Supabase/RLS, riktig samtidighetskontroll, kö/lease/fencing, separat systemd-worker och recovery-test | Användaren bekräftar DO-backup 7 dagar och daglig Supabase-backup; isolerad forskningsdataåterställning provad. Leverantörsåterställning, larm och bredare belastningstest kvar |
-| 9. Godkännande | 144 Python-tester och 49 frontendtester; webbvyn granskad i båda teman; isolerad återställning med identiska värden/RLS; tidigare Rust-/molnkontroller | Installerad Stable-desktop E2E, sista regression/driftmätning, dokumenterat Fas 1-godkännande |
+| 9. Godkännande | 144 Python-tester och 49 frontendtester; webbvyn granskad i båda teman; isolerad återställning med identiska värden/RLS; tidigare Rust-/molnkontroller | Mac-uppdatering 0.1.12 → 0.1.14 och registrerad vy verifierade. Windows-GUI, diagrammets första omritning, sista driftkontroller och dokumenterat Fas 1-godkännande kvar |
 
 Ingen livehandel. Ingen strategi får gå vidare till papper på grund av denna
 tekniska reproduktion. Äldre status nedan är historik och ersätts av tabellen ovan.

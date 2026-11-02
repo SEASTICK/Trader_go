@@ -1,0 +1,63 @@
+{
+  "version": "0.1.14",
+  "source_commit": "1ed0b31dcd8715876a29d103a500fffc13e59d97",
+  "run": 41432314601,
+  "mac_and_windows_signatures_verified": true,
+  "tampered_files_rejected": true,
+  "sha256": {
+    "Trader_go_0.1.14_universal.dmg": "9076766c5aea8c30fad76650fc617dac193b64f8e19517a40f3d6754388fab24",
+    "Trader_go_0.1.14_universal.app.tar.gz.sig": "ed18321c7ad771bd2e1e308589b7064c66442053c4bfe018180cbc75f2367323",
+    "Trader_go_0.1.14_universal.app.tar.gz": "fe878d304b98c497f06a16738146fed97816ccdd5ac6a0cc43456a9861692742",
+    "Trader_go_0.1.14_x64-setup.exe": "825b57bd39ca2fbbd496ed97fa926e286954abadbe13002c223832ee3b01270a",
+    "Trader_go_0.1.14_x64-setup.exe.sig": "f92e77ef4b4524362bf0c4d1b47b5f4f819ee04a3abe648c5dd6aa2d7d352ab1"
+  },
+  "public_files": {
+    "version": "0.1.14",
+    "feed": "https://seastick.github.io/trader-go-releases/latest.json",
+    "platforms": {
+      "windows-x86_64": {
+        "url": "https://seastick.github.io/trader-go-releases/Trader_go_0.1.14_x64-setup.exe",
+        "sha256": "825b57bd39ca2fbbd496ed97fa926e286954abadbe13002c223832ee3b01270a",
+        "bytes": 4259804,
+        "matches_verified_artifact": true
+      },
+      "darwin-aarch64": {
+        "url": "https://seastick.github.io/trader-go-releases/Trader_go_0.1.14_universal.app.tar.gz",
+        "sha256": "fe878d304b98c497f06a16738146fed97816ccdd5ac6a0cc43456a9861692742",
+        "bytes": 10086440,
+        "matches_verified_artifact": true
+      }
+    }
+  },
+  "backend": {
+    "active_release": "1ed0b31dcd8715876a29d103a500fffc13e59d97",
+    "previous_release": "/opt/tradergo/releases/20261102-research-5f5acb5",
+    "server_python_tests": 144,
+    "queue_empty_before_activation": true,
+    "worker_active": true,
+    "backup_tools_installed": true,
+    "existing_backup_policies_unchanged": true
+  },
+  "mac_update": {
+    "from": "0.1.12",
+    "to": "0.1.14",
+    "method": "installed app signed updater; download, verification, restart and version checked",
+    "registered_results_without_login": true,
+    "squeeze_reject_visible": true,
+    "historical_candles_and_markers_visible": true,
+    "whole_period_control_tested": true,
+    "note": "Initial programmatic scroll screenshot was blank; visible redraw confirmed after chart control interaction. First-paint reliability not separately certified."
+  },
+  "windows": {
+    "build_and_frontend_tests": "PASS",
+    "signature": "PASS",
+    "interactive_gui_tested": false
+  },
+  "tests": {
+    "engine_local_and_ubuntu": 144,
+    "frontend": 49,
+    "engine_ci_run": 41431554982,
+    "app_ci_run": 41431559253
+  },
+  "phase1_complete": false
+}

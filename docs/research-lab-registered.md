@@ -63,3 +63,19 @@ DigitalOceans do-agent och research-workern var aktiva; disken hade 113 GiB ledi
 Första Windowsbygget stoppade ett kontrollsummefel orsakat av CRLF-utcheckning.
 JSON låses nu till LF via .gitattributes; testet av originalhasharna behålls.
 Ingen felaktig version publicerades.
+
+## Publicerad och installerad Stable 0.1.14
+
+Release-körning 41432314601 från `1ed0b31` slutfördes med godkända Mac-/Windows-
+byggen. Båda faktiska artefaktsignaturerna verifierades och manipulerade filer
+avvisades. Publika filer matchar artefakternas SHA256.
+
+Den installerade Mac-appen uppdaterades 0.1.12 → 0.1.14 via sin egen uppdaterare.
+Omstart, versionsnummer, registrerade resultat utan inloggning, Squeeze som
+REJECT samt historiska terminspriser/markörer och kontrollen Hela perioden
+verifierades i den installerade appen. Första skärmbilden efter programmatisk
+rullning var tom; omritningen bekräftades efter interaktion med diagramkontrollen.
+Första omritningens tillförlitlighet är inte separat godkänd. Windowsgränssnittet
+är inte interaktivt provat. Se `data/audits/fas1-20261102/stable-lab-verification.json`.
+
+Detta är en godkänd delleverans av Research Lab, inte slutgodkännande av Fas 1.
