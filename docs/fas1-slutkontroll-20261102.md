@@ -14,7 +14,7 @@ Omfattning: historisk BTC/USDT-forskning vid 1×. Inga riktiga order, ingen godk
 - [x] Isolerad återställning från ny privat export: alla typade värden identiska, RLS passerad, migrationerna 0001–0004 använda. 11 954 candles, 5 483 fundingrader, fyra strategier, tolv hypoteser, tolv jobb, sju resultat och 274 affärsrader. Exporten ligger utanför Git; tillfällig teståtkomst borttagen.
 - [x] Belastningsprov med blandad kö: 49,177 sekunder totalt inklusive aktivt avbrott, cirka 104 MiB uppmätt toppminne i workertjänsten. CPU-kvot 150 %, minnestak 2 GiB. Detta är ett litet faktiskt köprov, inte ett kapacitetslöfte.
 - [x] Manuella driftkontroller och återställningsrutin dokumenterade. Leverantörsbackuper enligt användarens bekräftelse; inga nya betaltjänster eller driftlarm.
-- [x] Python: 176 tester. Frontend: 62 tester (inklusive de sju nya animationstesterna) och produktionsbygge. Rust: 48 passerade, ett avsiktligt nätverkstest överhoppat. Isolerade kö-/RLS-/leasekontroller passerade.
+- [x] Python: 176 tester. Frontend: 58 tester (inklusive de tre nya animationstesterna) och produktionsbygge. Rust: 48 passerade, ett avsiktligt nätverkstest överhoppat. Isolerade kö-/RLS-/leasekontroller passerade.
 - [ ] Stable-publicering och kontroll av installerad version efter publicering.
 - [ ] Windows manuellt app-test: uppskjutet enligt beslut.
 - [ ] Driftlarm: uppskjutna enligt beslut.
