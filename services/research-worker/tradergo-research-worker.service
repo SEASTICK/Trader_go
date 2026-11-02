@@ -10,6 +10,8 @@ User=tradergo
 Group=tradergo
 WorkingDirectory=/opt/tradergo/current/engine
 Environment=PYTHONPATH=/opt/tradergo/current/engine
+# Paketets commit (TRADERGO_REVISION); saknas filen startar tjänsten inte.
+EnvironmentFile=/opt/tradergo/current/REVISION.env
 Environment=PYTHONDONTWRITEBYTECODE=1
 Environment=PYTHONUNBUFFERED=1
 Environment=OMP_NUM_THREADS=1

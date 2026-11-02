@@ -6,6 +6,7 @@ import fcntl
 import json
 import logging
 import multiprocessing as mp
+import os
 import signal
 import socket
 import time
@@ -135,6 +136,15 @@ def execute(store, job, data_dir, stopping, timeout=1800, grace: float = GRACE, 
             stop(process, grace)
 
 
+def acquire_single_worker_lock(data_dir: Path):
+    """Exklusivt lås på datakatalogen. En andra worker mot samma katalog avbryts direkt (BlockingIOError).
+    Låset hålls så länge den returnerade filen är öppen, alltså hela processens livstid."""
+    data_dir.mkdir(parents=True, exist_ok=True)
+    lock = (data_dir / "worker.lock").open("w")
+    fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    return lock
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--env-file", type=Path, required=True)
@@ -142,9 +152,8 @@ def main():
     parser.add_argument("--once", action="store_true")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-    args.data_dir.mkdir(parents=True, exist_ok=True)
-    lock = (args.data_dir / "worker.lock").open("w")
-    fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    lock = acquire_single_worker_lock(args.data_dir)
+    LOG.info("revision=%s", os.environ.get("TRADERGO_REVISION", "okänd"))
     halted = False
 
     def halt(*_):
