@@ -11,6 +11,11 @@ begin
     raise exception 'Medlemsåtkomst krävs' using errcode = '42501';
   end if;
   perform pg_advisory_xact_lock(78219341);
+  -- Samma lås som återgången tar. Har en återgång tagit bort kön medan detta anrop väntade, avbryts det här,
+  -- innan något sparas (en ny ögonblicksbild efter låset ser den borttagna funktionen).
+  if to_regprocedure('public.research_enqueue_h0013(uuid)') is null then
+    raise exception 'H-0013-kön är stängd';
+  end if;
   if p_request_key is null then raise exception 'request_key krävs'; end if;
   select * into r from public.runs where request_key = p_request_key;
   if found then

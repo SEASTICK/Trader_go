@@ -5,6 +5,8 @@ set -euo pipefail
 release=${1:?Ange en absolut releasekatalog}
 test "${release#/opt/tradergo/releases/}" != "$release"
 test -f "$release/engine/traderlab/research_engine/worker.py"
+# Varje fil mot paketets release.json och REVISION.env mot dess commit, innan något installeras.
+python3 "$release/scripts/verify-research-release.py" "$release"
 test -f /etc/tradergo/research.env
 id tradergo >/dev/null 2>&1 || useradd --system --home-dir /var/lib/tradergo --shell /usr/sbin/nologin tradergo
 install -d -m 700 -o tradergo -g tradergo /var/lib/tradergo
@@ -16,4 +18,4 @@ ln -sfn "$release" /opt/tradergo/current
 install -m 644 "$release/services/research-worker/tradergo-research-worker.service" /etc/systemd/system/
 systemctl daemon-reload
 systemd-analyze verify /etc/systemd/system/tradergo-research-worker.service
-echo 'Installerat; tjänsten har inte startats. Applicera 0003 och verifiera RPC innan queue-ready skapas.'
+echo 'Installerat; tjänsten har inte startats. Följ docs/fas2-driftsattning.md för start och migration.'
