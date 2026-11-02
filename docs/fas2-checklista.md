@@ -47,10 +47,12 @@ PR #69 omgranskad; två tidigare fynd rättade, current() efter lucka i svansen 
   - Verifierat i PR #69, ännu inte mergat, driftsatt eller publicerat.
 - [ ] **F2-204** Hantera uppvärmning, ofullständiga dagar, dataluckor och ogiltiga tidsstämplar **Pågår.**
   - Underlag: [docs/fas2-regim-granskning-69.md](fas2-regim-granskning-69.md) — 949c44a: current() kan returnera äldre läge efter saknad/ofullständig dag i seriens svans. Syntetiskt reproducerat; regression och rättning återstår.
-  - Får inte bockas av förrän current() matchar läget för nästa stapel även efter luckor i svansen.
+  - Underlag: [engine/tests/test_regime.py](../engine/tests/test_regime.py) — ebc5d38 (PR #69, gren fas2-regim): current() slår upp exakt kalenderdagen före nästa stapel och ger okänt när den dagen saknas eller är ofullständig. Kontrakt: current(bars) == per_bar(nästa stapel, daily(bars)). Regressionstester för saknad och ofullständig näst sista dag, lucka före komplett sista dag, komplett och påbörjad sista dag samt kontraktet runt en lucka. 66 regimtester och hela Python-sviten, 253 tester, passerar lokalt; den gamla current() fäller 8 av dem. Strikt uppvärmning efter luckor oförändrad. Endast syntetisk data.
+  - Rättat i ebc5d38 efter granskning av 949c44a. Väntar på Codex granskning; ej mergat, driftsatt eller publicerat.
 - [ ] **F2-205** Granska regimkoden och verifiera tester för framtidsläckage och dagsgränser **Pågår.**
   - Underlag: [docs/fas2-regim-granskning-69.md](fas2-regim-granskning-69.md) — 949c44a: current() kan returnera äldre läge efter saknad/ofullständig dag i seriens svans. Syntetiskt reproducerat; regression och rättning återstår.
-  - Får inte bockas av förrän current() matchar läget för nästa stapel även efter luckor i svansen.
+  - Underlag: [engine/tests/test_regime.py](../engine/tests/test_regime.py) — ebc5d38 (PR #69, gren fas2-regim): current() slår upp exakt kalenderdagen före nästa stapel och ger okänt när den dagen saknas eller är ofullständig. Kontrakt: current(bars) == per_bar(nästa stapel, daily(bars)). Regressionstester för saknad och ofullständig näst sista dag, lucka före komplett sista dag, komplett och påbörjad sista dag samt kontraktet runt en lucka. 66 regimtester och hela Python-sviten, 253 tester, passerar lokalt; den gamla current() fäller 8 av dem. Strikt uppvärmning efter luckor oförändrad. Endast syntetisk data.
+  - Rättat i ebc5d38 efter granskning av 949c44a. Väntar på Codex granskning; ej mergat, driftsatt eller publicerat.
 
 ## 3. Bygg den adaptiva strategiväljaren
 
