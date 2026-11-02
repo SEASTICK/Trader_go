@@ -1,9 +1,7 @@
 import { useMemo, useState } from "react";
 import tracks from "../../data/tracks.json";
-import { Sparkline } from "../components/Charts";
 import { Icon } from "../components/icons";
-import { Segmented, SimChip, StatusDot } from "../components/ui";
-import { hashSeed, walk } from "../lib/sim";
+import { Segmented, StatusDot } from "../components/ui";
 
 const FILTERS = ["Alla", "Idé", "Pågår", "REJECT", "Klara för papper"] as const;
 type Filter = (typeof FILTERS)[number];
@@ -12,7 +10,7 @@ export function TrackList() {
   const [filter, setFilter] = useState<Filter>("Alla");
   const [open, setOpen] = useState<string | null>(null);
   const rows = useMemo(
-    () => tracks.map((t) => ({ ...t, spark: walk(hashSeed(t.id), 40, 0.001, 0.02) })),
+    () => tracks,
     []
   );
   const shown = rows.filter((t) =>
@@ -25,7 +23,7 @@ export function TrackList() {
       <div className="card table-card">
         <div className="thead">
           <span>Spår</span><span>Marknad</span><span>Tidsram</span><span>Status</span>
-          <span>Utfall <SimChip /></span><span />
+          <span>Utfall</span><span />
         </div>
         {shown.length === 0 && <div className="empty">Inga spår med den statusen.</div>}
         {shown.map((t) => (
@@ -35,7 +33,7 @@ export function TrackList() {
               <span>{t.marknad}</span>
               <span>{t.tidsram}</span>
               <StatusDot status={t.status} />
-              <div className="outcome"><Sparkline data={t.spark} /><span className="muted">Inga resultat än</span></div>
+              <div className="outcome"><span className="muted">Se rutorna i Research</span></div>
               <button className="link" onClick={() => setOpen(open === t.id ? null : t.id)} aria-expanded={open === t.id}>
                 Varför? <Icon name={open === t.id ? "down" : "chevron"} size={14} />
               </button>
@@ -49,7 +47,7 @@ export function TrackList() {
           </div>
         ))}
       </div>
-      <p className="footnote">Trendlinjerna är påhittade exempel och visar inga resultat. Ett spår får riktiga siffror först efter att hypotesen registrerats och granskats.</p>
+      <p className="footnote">Ett spår är en idéfamilj. Riktiga siffror finns per ruta i Research, efter att hypotesen registrerats och testats.</p>
     </>
   );
 }

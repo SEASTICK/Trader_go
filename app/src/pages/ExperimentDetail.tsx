@@ -3,7 +3,7 @@ import { LineChart } from "../components/Charts";
 import { CandleChart } from "../components/CandleChart";
 import { seriesFor } from "../lib/candles";
 import { Icon } from "../components/icons";
-import { Page, Segmented, SimChip, StatusDot } from "../components/ui";
+import { Page, Segmented, StatusDot } from "../components/ui";
 import { num, pct, type Computed } from "../lib/experiments";
 import registryMd from "../../../research/registry.md?raw";
 import { parseRegistry } from "../lib/registry";
@@ -20,6 +20,16 @@ export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: {
   const recent = [...c.trades].reverse().slice(0, 20);
   const [tab, setTab] = useState<"Marknad" | "Resultat">("Marknad");
   const series = seriesFor(exp.marknad, exp.tidsram);
+  if (!real) {
+    return (
+      <Page title={`${exp.id} · ${exp.namn}`} sub={`${exp.strategi} · ${exp.marknad} · ${exp.tidsram} · ${exp.riktning}`}
+        actions={<button className="btn" onClick={onBack}>← Tillbaka till rutorna</button>}>
+        <div className="banner-sim" role="note"><b>Inte testad.</b> Den här idén har ingen registrerad hypotes och inget resultat än, så inga siffror visas. Nedan syns marknadens verkliga priser.</div>
+        <CandleChart series={series} noSourceReason={`${exp.marknad} har ingen publik datakälla i appen än. Bara Bitcoin samlas in.`} />
+      </Page>
+    );
+  }
+  const fas1 = c.fas1;
   return (
     <Page
       title={`${exp.id} · ${exp.namn}`}
@@ -32,12 +42,10 @@ export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: {
           {c.period && <> ({c.period[0].slice(0, 10)} till {c.period[1].slice(0, 10)})</>}, registrerad i commit <code>{c.registerCommit?.slice(0, 7)}</code>.
           Det är inte en prognos.
         </div>
-      ) : (
-        <div className="banner-sim" role="note"><SimChip /> Allt på den här sidan är påhittat. Det visar hur ett resultat kommer att se ut, inte ett verkligt resultat.</div>
-      )}
+      ) : null}
 
       <div className="kpis">
-        <div className="card kpi"><span className="k">Avkastning efter kostnader</span><b className={c.avkastning >= 0 ? "up" : "down"}>{pct(c.avkastning)}</b><span className="muted">{real && c.stressad !== undefined ? `Med 2,5× kostnader: ${pct(c.stressad)}` : "Simulerat"}</span></div>
+        <div className="card kpi"><span className="k">Avkastning efter kostnader</span><b className={c.avkastning >= 0 ? "up" : "down"}>{pct(c.avkastning)}</b><span className="muted">{c.stressad !== undefined ? `Med 2,5× kostnader: ${pct(c.stressad)}` : ""}</span></div>
         <div className="card kpi"><span className="k">Största nedgång</span><b>{pct(c.maxDrawdown)}</b><span className="muted">Från topp till botten</span></div>
         <div className="card kpi"><span className="k">Affärer</span><b>{c.antal}</b><span className="muted">{num(c.vinstandel, 0)} % vinnande</span></div>
         <div className="card kpi"><span className="k">t-värde mot krav</span><b>{num(c.t, 1)} <small>/ {num(krav, 1)}</small></b><span className={passes ? "pass" : "fail"}>{passes ? "över kravet" : "under kravet"}</span></div>
@@ -45,7 +53,7 @@ export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: {
 
       <div className="detail-tabs">
         <Segmented value={tab} options={["Marknad", "Resultat"]} onChange={setTab} />
-        <span className="muted">{tab === "Marknad" ? "Instrumentets verkliga priser (OHLCV)" : `Strategins kapital, ${real ? "HISTORIK" : "SIM"}`}</span>
+        <span className="muted">{tab === "Marknad" ? "Instrumentets verkliga priser (OHLCV)" : "Strategins kapital, HISTORIK"}</span>
       </div>
       {tab === "Marknad" ? (
         <CandleChart
@@ -57,15 +65,32 @@ export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: {
       ) : (
         <section className="card chart-card">
           <div className="card-head"><div><h2>Utveckling</h2><p className="muted">Strategin efter kostnader mot baslinjen köp-och-behåll. Start = 100.</p></div></div>
-          <LineChart watermark={real ? null : "SIMULERAD DATA"} labels={c.labels} series={[{ name: exp.namn, data: c.equity, cls: "s1" }, { name: "Baslinje", data: c.baseline, cls: "s2" }]} />
-          <div className="legend"><span><i className="swatch s1" />{exp.namn}</span><span><i className="swatch s2" />Baslinje (köp-och-behåll)</span></div>
+          <LineChart watermark={null} labels={c.labels} series={[{ name: exp.namn, data: c.equity, cls: "s1" }, { name: "Baslinje", data: c.baseline, cls: "s2" }]} />
+          <div className="legend"><span><i className="swatch s1" />{exp.namn}</span><span><i className="swatch s2" />Baslinje (köp-och-behåll{fas1 ? ", bara pris utan finansieringsränta" : ""})</span></div>
+          {fas1 && <p className="footnote" style={{ padding: "8px 0 0" }}>Kurvan är ihopsatt av sex halvår utanför urvalet (walk-forward): parametrarna för varje halvår valdes bara på data före det.</p>}
+        </section>
+      )}
+
+      {fas1 && (
+        <section className="card table-card">
+          <div className="card-head"><div><h2>Walk-forward</h2><p className="muted">Sharpe i urvalet (där parametrarna valdes) mot utanför urvalet (nästa halvår). Stort glapp betyder överanpassning.</p></div></div>
+          <div className="ttable" role="table">
+            <div className="ttr head wf" role="row"><span>Testhalvår</span><span>I urvalet</span><span>Utanför urvalet</span></div>
+            {fas1.windows.map((w) => (
+              <div className="ttr wf" role="row" key={w.test[0]}>
+                <span>{w.test[0]} till {w.test[1]}</span><span>{w.sharpe_in_sample == null ? "–" : num(w.sharpe_in_sample)}</span>
+                <span className={(w.sharpe_out_of_sample ?? 0) >= 0 ? "up" : "down"}>{w.sharpe_out_of_sample == null ? "–" : num(w.sharpe_out_of_sample)}</span>
+              </div>
+            ))}
+          </div>
+          <p className="footnote">Parameterstabilitet {fas1.stability == null ? "–" : `${Math.round(fas1.stability * 100)} %`} · strategi <code>{fas1.runId}</code></p>
         </section>
       )}
 
       <div className="split">
         <section className="card pad">
           <h2>Innehav nu</h2>
-          {pos.läge === "Ingen" ? <p className="muted" style={{ marginTop: 10 }}>Ingen öppen position{real ? " i slutet av testet" : " (simulerat)"}.</p> : (
+          {pos.läge === "Ingen" ? <p className="muted" style={{ marginTop: 10 }}>Ingen öppen position i slutet av testet.</p> : (
             <dl className="dl" style={{ marginTop: 14 }}>
               <dt>Läge</dt><dd><b>{pos.läge}</b></dd>
               {pos.sedan && <><dt>Sedan</dt><dd>{pos.sedan}</dd></>}
@@ -96,7 +121,7 @@ export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: {
           {recent.map((t) => (
             <div className="ttr" role="row" key={t.nr}>
               <span>{t.nr}</span><span>{t.datum}</span><span>{t.riktning}</span><span>{num(t.in)}</span><span>{num(t.ut)}</span>
-              <span>{pct(t.brutto, 2)}</span><span>{num(t.kostnad)} %</span><span className={t.netto >= 0 ? "up" : "down"}>{pct(t.netto, 2)}</span>
+              <span>{Number.isNaN(t.brutto) ? "–" : pct(t.brutto, 2)}</span><span>{Number.isNaN(t.kostnad) ? "–" : `${num(t.kostnad)} %`}</span><span className={t.netto >= 0 ? "up" : "down"}>{pct(t.netto, 2)}</span>
             </div>
           ))}
         </div>

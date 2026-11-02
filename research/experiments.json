@@ -194,5 +194,49 @@
       "spread_bps": 2,
       "slippage_bps": 5
     }
+  },
+  "E-21": {
+    "hypothesis": "H-0009",
+    "phase": "fas1",
+    "track": "A",
+    "market": "um",
+    "symbol": "BTCUSDT",
+    "interval": "4h",
+    "strategy": {
+      "name": "ema_adx_trend"
+    }
+  },
+  "E-22": {
+    "hypothesis": "H-0010",
+    "phase": "fas1",
+    "track": "A",
+    "market": "um",
+    "symbol": "BTCUSDT",
+    "interval": "4h",
+    "strategy": {
+      "name": "donchian_breakout"
+    }
+  },
+  "E-23": {
+    "hypothesis": "H-0011",
+    "phase": "fas1",
+    "track": "A",
+    "market": "um",
+    "symbol": "BTCUSDT",
+    "interval": "4h",
+    "strategy": {
+      "name": "bb_rsi_reversion"
+    }
+  },
+  "E-24": {
+    "hypothesis": "H-0012",
+    "phase": "fas1",
+    "track": "A",
+    "market": "um",
+    "symbol": "BTCUSDT",
+    "interval": "4h",
+    "strategy": {
+      "name": "squeeze_breakout"
+    }
   }
 }
