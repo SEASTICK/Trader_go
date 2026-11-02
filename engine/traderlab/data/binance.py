@@ -121,10 +121,12 @@ def fetch(market: str, symbol: str, interval: str, start: str, end: str, data_di
                 res.missing.append(m)
                 continue
             raise
-        verify_checksum(raw, opener(url + ".CHECKSUM"))
+        checksum = opener(url + ".CHECKSUM")
+        verify_checksum(raw, checksum)
         tmp = target.with_suffix(".part")
         tmp.write_bytes(raw)
         tmp.rename(target)
+        target.with_suffix(".zip.CHECKSUM").write_bytes(checksum)
         res.downloaded.append(target)
     if res.downloaded:
         _append_manifest(data_dir, market, symbol, interval if kind == "klines" else "fundingRate",
@@ -132,22 +134,47 @@ def fetch(market: str, symbol: str, interval: str, start: str, end: str, data_di
     return res
 
 
-def load(market: str, symbol: str, interval: str, data_dir: Path) -> pd.DataFrame:
+def _bounded_files(files, start, end):
+    """Select archives before opening them; end is exclusive, in UTC."""
+    a = pd.Timestamp(start) if start is not None else None
+    b = pd.Timestamp(end) if end is not None else None
+    for value in (a, b):
+        if value is not None and (value.tz is None or value.utcoffset().total_seconds() != 0):
+            raise ValueError("UTC bounds required")
+    if a is not None and b is not None and a >= b:
+        raise ValueError("start must precede end")
+    selected = []
+    for path in files:
+        month = pd.Timestamp(path.stem[-7:] + "-01", tz="UTC")
+        if (a is None or month + pd.offsets.MonthBegin(1) > a) and (b is None or month < b):
+            selected.append(path)
+    return selected
+
+
+def _slice_period(frame, start, end):
+    if start is not None:
+        frame = frame[frame.index >= pd.Timestamp(start)]
+    if end is not None:
+        frame = frame[frame.index < pd.Timestamp(end)]
+    return frame
+
+
+def load(market: str, symbol: str, interval: str, data_dir: Path, *, start=None, end=None) -> pd.DataFrame:
     """Läser alla sparade månadsfiler i tidsordning. Lagar ingenting; kör quality.check efteråt."""
     folder = data_dir / "raw" / "binance" / market / symbol / interval
-    files = sorted(folder.glob(f"{symbol}-{interval}-*.zip"))
+    files = _bounded_files(sorted(folder.glob(f"{symbol}-{interval}-*.zip")), start, end)
     if not files:
         raise FileNotFoundError(f"Ingen data i {folder}. Kör fetch först.")
     parts = [parse_klines_csv(_unzip_single(f.read_bytes())) for f in files]
-    return pd.concat(parts)
+    return _slice_period(pd.concat(parts), start, end)
 
 
-def load_funding(symbol: str, data_dir: Path) -> pd.Series:
+def load_funding(symbol: str, data_dir: Path, *, start=None, end=None) -> pd.Series:
     folder = data_dir / "raw" / "binance" / "um" / symbol / "fundingRate"
-    files = sorted(folder.glob(f"{symbol}-fundingRate-*.zip"))
+    files = _bounded_files(sorted(folder.glob(f"{symbol}-fundingRate-*.zip")), start, end)
     if not files:
         raise FileNotFoundError(f"Ingen finansieringsränta i {folder}.")
-    return pd.concat([parse_funding_csv(_unzip_single(f.read_bytes())) for f in files])
+    return _slice_period(pd.concat([parse_funding_csv(_unzip_single(f.read_bytes())) for f in files]), start, end)
 
 
 def _append_manifest(data_dir: Path, market: str, symbol: str, interval: str, start: str, end: str,

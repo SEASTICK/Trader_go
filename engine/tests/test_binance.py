@@ -72,3 +72,19 @@ def test_fetch_verifies_checksum_never_overwrites_and_records_missing(tmp_path):
 
     df = binance.load("spot", "BTCUSDT", "4h", tmp_path)
     assert len(df) == 2  # samma rad i båda månaderna: quality.check ska hitta dubbletten
+
+
+def test_bounded_load_never_opens_holdout_archives(tmp_path):
+    folder = tmp_path / "raw/binance/um/BTCUSDT/4h"
+    folder.mkdir(parents=True)
+    (folder / "BTCUSDT-4h-2024-01.zip").write_bytes(_zip("x.csv", ROW_MS))
+    (folder / "BTCUSDT-4h-2025-01.zip").write_bytes(b"unreadable holdout")
+    bounds = dict(start="2024-01-01T00:00:00Z", end="2025-01-01T00:00:00Z")
+    assert len(binance.load("um", "BTCUSDT", "4h", tmp_path, **bounds)) == 1
+    funding = folder.parent / "fundingRate"
+    funding.mkdir()
+    (funding / "BTCUSDT-fundingRate-2024-01.zip").write_bytes(_zip("x.csv", "1704067200000,8,0.0001"))
+    (funding / "BTCUSDT-fundingRate-2025-01.zip").write_bytes(b"unreadable holdout")
+    assert len(binance.load_funding("BTCUSDT", tmp_path, **bounds)) == 1
+    with pytest.raises(ValueError, match="UTC"):
+        binance.load("um", "BTCUSDT", "4h", tmp_path, start="2024-01-01")

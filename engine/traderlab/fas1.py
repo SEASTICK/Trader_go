@@ -47,9 +47,9 @@ def run(hypothesis_id: str, strategy: str, repo: Path, data_dir: Path | None = N
     data_dir = data_dir or repo / "data"
     spec = SPECS[strategy]
     cut = pd.Timestamp(HOLDOUT_START, tz="UTC")
-    bars = binance.load("um", "BTCUSDT", "4h", data_dir)
+    bars = binance.load("um", "BTCUSDT", "4h", data_dir, start=pd.Timestamp(DEV_START, tz="UTC"), end=cut)
     bars = bars[(bars.index >= pd.Timestamp(DEV_START, tz="UTC")) & (bars.index < cut)]
-    funding = binance.load_funding("BTCUSDT", data_dir)
+    funding = binance.load_funding("BTCUSDT", data_dir, start=pd.Timestamp(DEV_START, tz="UTC"), end=cut)
     funding = funding[funding.index < cut]
     assert bars.index.max() < cut and funding.index.max() < cut, "Slutprovet får inte läsas in."
 
@@ -65,7 +65,7 @@ def run(hypothesis_id: str, strategy: str, repo: Path, data_dir: Path | None = N
     t_req = stats.t_krav(reg.attempts)
     t_nw = stats.newey_west_t(daily)
     bh_sharpe = stats.sharpe(stats.daily_returns(bh.bar_returns))
-    spot1d = binance.load("spot", "BTCUSDT", "1d", data_dir)
+    spot1d = binance.load("spot", "BTCUSDT", "1d", data_dir, start=oos_start, end=cut)
     spot1d = spot1d[(spot1d.index >= oos_start) & (spot1d.index < cut)]
     bench = benchmark_stats(normal, spot1d, "spot BTCUSDT 1d")
     full = metrics.full_stats(normal, oos_bars)

@@ -24,11 +24,13 @@ def repo(tmp_path, monkeypatch):
     spot = perp.resample("1D").agg({"open": "first", "high": "max", "low": "min", "close": "last", "volume": "sum"})
     seen = {}
 
-    def load(market, symbol, interval, data_dir):
+    def load(market, symbol, interval, data_dir, *, start, end):
+        assert end == pd.Timestamp("2025-01-01", tz="UTC")
         seen.setdefault("loads", []).append((market, interval))
         return perp if market == "um" else spot
 
-    def load_funding(symbol, data_dir):
+    def load_funding(symbol, data_dir, *, start, end):
+        assert end == pd.Timestamp("2025-01-01", tz="UTC")
         idx = pd.date_range(perp.index[0], perp.index[-1], freq="8h")
         return pd.Series(0.0001, index=idx)
 
