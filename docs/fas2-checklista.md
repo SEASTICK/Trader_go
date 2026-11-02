@@ -79,16 +79,19 @@ PR #69 och #70 mergade. PR #71 granskad: urvalsgränser och reproducerbarhet ver
 
 - [ ] **F2-401** Välj kandidat per läge enbart på respektive träningsfönster **Pågår.**
   - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — 74d46e3: direktanrop till train/evaluate_window kan använda förbjudna perioder. Gemensamt slutprovsskydd och periodvalidering behöver kompletteras.
-  - Ej godkänd före rättning och syntetisk regression av granskningsfynden.
+  - Underlag: [engine/tests/test_fas2.py](../engine/tests/test_fas2.py) — 7ff0799 (PR #71): train, regime_stats och evaluate_window kontrollerar staplar, finansieringsränta och dagslägen före all beräkning; direktanrop med data eller perioder från 2025 (granskningens prov) eller före 2020 avvisas och regim-, signal- och backtestberäkning anropas inte. 81 fas2-tester och hela Python-sviten, 408 tester, passerar lokalt; den tidigare koden 80d8847 fäller 37 av fas2-testerna. Endast syntetisk data.
+  - Rättat i 7ff0799 efter granskning av 74d46e3. Väntar på Codex omgranskning; ej mergat, driftsatt eller publicerat.
 - [x] **F2-402** Kräv minst 20 inledda affärer och positivt t-värde, annars platt
   - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — 74d46e3 (kod 80d8847): oberoende granskning, 369 passerade testfall inklusive 42 fas2-tester. Urvalsgränser, tie-break, platt, versionsmärkning och deterministisk återkörning verifierade.
   - Verifierad PR-kod; ännu inte mergad, driftsatt eller körd på riktig data.
 - [ ] **F2-403** Kör sex halvårsfönster med korrekt uppvärmning och platt start **Pågår.**
   - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — 74d46e3: direktanrop till train/evaluate_window kan använda förbjudna perioder. Gemensamt slutprovsskydd och periodvalidering behöver kompletteras.
-  - Ej godkänd före rättning och syntetisk regression av granskningsfynden.
+  - Underlag: [engine/tests/test_fas2.py](../engine/tests/test_fas2.py) — 7ff0799 (PR #71): periodgränser valideras i varje publik ingång (2020-01-01 <= start < slut <= 2025-01-01), även evaluate_window direkt; fönsterkonventionerna (platt start, stängning vid näst sista öppningen) oförändrade. 81 fas2-tester och hela Python-sviten, 408 tester, passerar lokalt; den tidigare koden 80d8847 fäller 37 av fas2-testerna. Endast syntetisk data.
+  - Rättat i 7ff0799 efter granskning av 74d46e3. Väntar på Codex omgranskning; ej mergat, driftsatt eller publicerat.
 - [ ] **F2-404** Sätt ihop testkurvan och spara varje fönsters val, dagar och affärer **Pågår.**
   - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — 74d46e3: kostnader, funding och affärsbelopp behöver skalas till samma kapitalbas som den ihopsatta kurvan.
-  - Ej godkänd före rättning och syntetisk regression av granskningsfynden.
+  - Underlag: [engine/tests/test_fas2.py](../engine/tests/test_fas2.py) — 7ff0799 (PR #71): affärer, kostnader och finansieringsränta redovisas på den ihopsatta kurvans kapitalbas (startkapital 1,0 vid 2022-01-01, fönstrets belopp gånger ingående kapital; priser och andelar oskalade; local_* är fönstrets egna värden). Granskningens prov ger 64 / 0,63 / 1,26 / 63; fönster med olika avkastning och en icke-platt syntetisk körning stämmer affärernas nettosumma mot slutkapital minus startkapital. 81 fas2-tester och hela Python-sviten, 408 tester, passerar lokalt; den tidigare koden 80d8847 fäller 37 av fas2-testerna. Endast syntetisk data.
+  - Rättat i 7ff0799 efter granskning av 74d46e3. Väntar på Codex omgranskning; ej mergat, driftsatt eller publicerat.
 - [x] **F2-405** Versionsmärk slutlig spelbok och verifiera reproducerbarhet utan slutprov
   - Underlag: [docs/fas2-walkforward-granskning-71.md](fas2-walkforward-granskning-71.md) — 74d46e3 (kod 80d8847): oberoende granskning, 369 passerade testfall inklusive 42 fas2-tester. Urvalsgränser, tie-break, platt, versionsmärkning och deterministisk återkörning verifierade.
   - Verifierad PR-kod; ännu inte mergad, driftsatt eller körd på riktig data.
