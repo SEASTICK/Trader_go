@@ -7,7 +7,10 @@ fas2.load_development stoppar det innan något räknas.
 """
 from __future__ import annotations
 
+import hashlib
 import json
+import subprocess
+from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -58,8 +61,15 @@ def risk_filter():
 
 # Kurvor och nyckeltal
 
+def _guard(bars, funding=None, labels=None) -> None:
+    """Slutprovsskyddet först i varje publik ingång, innan någon regim, signal eller statistik räknas."""
+    empty = pd.Series(dtype=float, index=pd.DatetimeIndex([], tz="UTC"))
+    fas2.check_development(bars, empty if funding is None else funding, effective=labels)
+
+
 def curve(bars, funding, make_target, costs: CostModel = fas2.COSTS, labels=None) -> dict:
     """En målposition genom de sex fönstren, ihopsatt på gemensam kapitalbas."""
+    _guard(bars, funding, labels)
     results = [fas2.run_window(bars, funding, make_target, a, b, costs, labels) for a, b in fas2.windows()]
     returns, trades, c, f, capitals = fas2.stitch(results)
     position = pd.concat([res.position for res, _ in results])
@@ -71,12 +81,36 @@ def _years(returns: pd.Series) -> float:
     return max((returns.index[-1] - returns.index[0]).days / 365.25, 1e-9) if len(returns) else 1e-9
 
 
+EXPOSURE_DEFINITIONS = {
+    "net_exposure_mean": "Medel över staplarna av nettopositionen som andel av totalkapitalet vid stapelns början "
+                         "(long +, short -). För blandningen viktas delarna med sitt aktuella kapital.",
+    "gross_exposure_mean": "Medel över staplarna av summan av delpositionernas absolutbelopp som andel av totalkapitalet.",
+    "time_in_market": "Andel staplar med någon öppen position (bruttoexponering > 0).",
+    "turnover_per_year": "Handlat belopp (in och ut) för alla affärer, i den ihopsatta kurvans kapitalenhet "
+                         "(startkapital 1,0), per år. Passiv viktförändring är ingen handel.",
+}
+
+
+def traded_notional(trades) -> float:
+    """Handlat belopp in och ut, i affärernas kapitalenhet. Positionen är en andel av kapitalet vid inträdet."""
+    total = 0.0
+    for t in trades:
+        entry = t.size * t.equity_at_entry
+        total += entry
+        if t.exit_price is not None and t.entry_price:
+            total += entry * t.exit_price / t.entry_price
+    return total
+
+
 def summary(c: dict) -> dict:
     """Samma nyckeltal för H-0013 och varje jämförelse (U8, U11, U15, U16)."""
     r = c["returns"]
     eq = (1 + r).cumprod()
     daily = stats.daily_returns(r)
-    res = backtest.BacktestResult(equity=eq, position=c["position"].reindex(r.index).fillna(0.0), trades=c["trades"],
+    position = c["position"].reindex(r.index).fillna(0.0)
+    net = c.get("net_position", position).reindex(r.index).fillna(0.0)
+    gross = c.get("gross_position", position.abs()).reindex(r.index).fillna(0.0)
+    res = backtest.BacktestResult(equity=eq, position=net, trades=c["trades"],
                                   total_costs=c["costs"], total_funding=c["funding"])
     full = metrics.full_stats(res)
     t = stats.newey_west_t(daily) if len(daily) > 1 else float("nan")
@@ -84,14 +118,16 @@ def summary(c: dict) -> dict:
     best = max(yearly, key=yearly.get) if yearly else None
     rest = daily[daily.index.year != int(best)] if best else daily
     lo, hi = stats.block_bootstrap_sharpe_ci(daily, block=20, n_boot=2000, seed=SEED)
-    turnover = float(res.position.diff().abs().fillna(res.position.abs()).sum() / _years(r))
     return {
         "total_return": float(eq.iloc[-1] - 1) if len(eq) else 0.0,
         "sharpe": float(stats.sharpe(daily)),
         "t_daily_nw": float(t) if np.isfinite(t) else None,
         "sharpe_ci95": [lo, hi],
         "max_drawdown": full["max_drawdown"], "sortino": full["sortino"], "calmar": full["calmar"],
-        "exposure": full["exposure"], "turnover_per_year": turnover,
+        "net_exposure_mean": float(net.mean()) if len(net) else 0.0,
+        "gross_exposure_mean": float(gross.mean()) if len(gross) else 0.0,
+        "time_in_market": float((gross > 0).mean()) if len(gross) else 0.0,
+        "turnover_per_year": traded_notional(c["trades"]) / _years(r),
         "trades": len(c["trades"]), "stop_exits": sum(t.exit_reason == "stop" for t in c["trades"]),
         "liquidations": sum(w.get("liquidations", 0) for w in c["windows"]),
         "costs": c["costs"], "funding": c["funding"], "days": int(len(daily)),
@@ -101,22 +137,35 @@ def summary(c: dict) -> dict:
 
 
 def mixed(a: dict, b: dict) -> dict:
-    """Hälften av kapitalet i varje kurva från start, utan ombalansering (U5)."""
+    """Hälften av kapitalet i varje kurva från start, utan ombalansering (U5).
+
+    Varje halva växer för sig. Positionerna viktas med halvornas kapital vid stapelns början, så nettoposition och
+    bruttoexponering avser totalkapitalet. Affärernas belopp halveras; inga affärer tar ut varandra.
+    """
     if not a["returns"].index.equals(b["returns"].index):
         raise AssertionError("Blandningens kurvor har olika staplar")
-    eq = 0.5 * (1 + a["returns"]).cumprod() + 0.5 * (1 + b["returns"]).cumprod()
+    eq_a, eq_b = (1 + a["returns"]).cumprod(), (1 + b["returns"]).cumprod()
+    eq = 0.5 * eq_a + 0.5 * eq_b
     returns = eq / eq.shift(1).fillna(1.0) - 1
-    half = lambda t: backtest.Trade(**{**t.__dict__, "equity_at_entry": t.equity_at_entry / 2, "gross_pnl": t.gross_pnl / 2,
-                                       "costs": t.costs / 2, "funding": t.funding / 2})
+    w_a = 0.5 * eq_a.shift(1).fillna(1.0)   # kapital vid stapelns början
+    w_b = 0.5 * eq_b.shift(1).fillna(1.0)
+    p_a = a["position"].reindex(returns.index).fillna(0.0)
+    p_b = b["position"].reindex(returns.index).fillna(0.0)
+    net = (w_a * p_a + w_b * p_b) / (w_a + w_b)
+    gross = (w_a * p_a.abs() + w_b * p_b.abs()) / (w_a + w_b)
+    half = lambda t: replace(t, equity_at_entry=t.equity_at_entry / 2, gross_pnl=t.gross_pnl / 2,
+                             costs=t.costs / 2, funding=t.funding / 2)
     windows = [{"liquidations": wa.get("liquidations", 0) + wb.get("liquidations", 0)}
                for wa, wb in zip(a["windows"], b["windows"])]
-    return {"returns": returns, "position": 0.5 * (a["position"] + b["position"]),
+    return {"returns": returns, "position": net, "net_position": net, "gross_position": gross,
             "trades": [half(t) for t in a["trades"] + b["trades"]],
             "costs": (a["costs"] + b["costs"]) / 2, "funding": (a["funding"] + b["funding"]) / 2, "windows": windows}
 
 
 def regime_results(bars, wf: fas2.WalkForward, labels=None) -> dict:
     """Dagar, affärer, avkastning och Sharpe per läge utanför urvalet (U17)."""
+    _guard(bars, labels=labels)
+    _guard(pd.DataFrame(index=wf.returns.index))
     effective = regime.daily(bars) if labels is None else labels
     day_label = fas2._day_labels(bars, effective)
     daily = stats.daily_returns(wf.returns)
@@ -134,12 +183,14 @@ def regime_results(bars, wf: fas2.WalkForward, labels=None) -> dict:
 # Kontroller (U12–U14, U18)
 
 def permutation_test(bars, funding, actual_sharpe: float, n: int = N_PERMUTATIONS, seed: int = SEED,
-                     costs: CostModel = fas2.COSTS) -> dict:
-    """Lägesetiketterna permuteras per dygn; hela walk-forward, med urval, körs om för varje permutation (U12–U13)."""
+                     costs: CostModel = fas2.COSTS, sink: list | None = None) -> dict:
+    """Lägesetiketterna permuteras per dygn; hela walk-forward, med urval, körs om för varje permutation (U12–U13).
+    Varje färdig permutation läggs i `sink` direkt, så att den sparas även om körningen avbryts."""
+    _guard(bars, funding)
     effective = regime.daily(bars)
     known = (effective != regime.UNKNOWN).to_numpy()
     rng = np.random.default_rng(seed)
-    runs = []
+    runs = [] if sink is None else sink
     for i in range(n):
         values = effective.to_numpy(dtype=object).copy()
         values[known] = rng.permutation(values[known])
@@ -152,10 +203,11 @@ def permutation_test(bars, funding, actual_sharpe: float, n: int = N_PERMUTATION
             "p_value_plus_one": (k + 1) / (n + 1), "runs": runs}
 
 
-def all_playbooks(bars, funding, books=None, costs: CostModel = fas2.COSTS) -> dict:
-    """Varje fast spelbok genom samma fönster, utan urval (U14)."""
+def all_playbooks(bars, funding, books=None, costs: CostModel = fas2.COSTS, sink: list | None = None) -> dict:
+    """Varje fast spelbok genom samma fönster, utan urval (U14). Färdiga spelböcker läggs i `sink` direkt."""
+    _guard(bars, funding)
     books = adaptive.all_playbooks() if books is None else books
-    out = []
+    out = [] if sink is None else sink
     for book in books:
         c = curve(bars, funding, fas2.selector_target(book), costs)
         out.append({"playbook_id": book.id, "choices": dict(book.choices),
@@ -193,50 +245,94 @@ def decision(crit: dict) -> str:
     return "MORE_RESEARCH" if len(crit) == 5 and all(crit.values()) else "REJECT"
 
 
+STEPS = ("walk_forward", "h0013", "stressed", "comparisons", "criteria", "regimes", "permutation", "playbooks",
+         "deflated_sharpe", "random_label_t")
+
+
 def evaluate(bars, funding, costs: CostModel = fas2.COSTS, n_permutations: int = N_PERMUTATIONS,
-             playbooks=None, attempts_now: int | None = None) -> dict:
-    """Hela utvärderingen av H-0013 på utvecklingsperioden. Påverkar inga strategier och läser inget slutprov."""
-    fas2.check_development(bars, funding)
+             playbooks=None, attempts_now: int | None = None, progress: dict | None = None) -> dict:
+    """Hela utvärderingen av H-0013 på utvecklingsperioden. Påverkar inga strategier och läser inget slutprov.
+
+    `progress` fylls i under körningen: konfiguration, varje stegs status (pending, incomplete, done) och alla
+    färdiga delresultat, också enskilda permutationer och spelböcker. Avbryts körningen finns allt som hunnit
+    räknas kvar där (U19).
+    """
+    _guard(bars, funding)
+    p = {} if progress is None else progress
+    p["config"] = {"evaluation_version": EVALUATION_VERSION, "walk_forward_version": fas2.WALK_FORWARD_VERSION,
+                   "contract": adaptive.CONTRACT_VERSION, "n_permutations": n_permutations, "seed": SEED,
+                   "playbooks": N_PLAYBOOKS if playbooks is None else len(playbooks),
+                   "costs_bps": {"fee": costs.fee_bps, "spread": costs.spread_bps, "slippage": costs.slippage_bps},
+                   "t_required": T_REQUIRED, "registered_n": REGISTERED_N, "exposure_definitions": EXPOSURE_DEFINITIONS}
+    p["steps"] = {step: "pending" for step in STEPS}
+
+    def begin(step):
+        p["steps"][step] = "incomplete"
+
+    def done(step, value):
+        p[step] = value
+        p["steps"][step] = "done"
+        return value
+
+    begin("walk_forward")
     wf = fas2.walk_forward(bars, funding, costs)
+    done("walk_forward", wf.to_dict())
     books = [adaptive.Playbook.from_dict(w["playbook"]) for w in wf.windows]
+    begin("h0013")
     # Samma fönster igen med de valda spelböckerna, för positionerna (exponering och omsättning).
     replay = [fas2.run_window(bars, funding, fas2.selector_target(book), a, b, costs)
               for book, (a, b) in zip(books, fas2.windows())]
     if not pd.concat([res.bar_returns for res, _ in replay]).equals(wf.returns):
         raise AssertionError("Omkörningen av fönstren skiljer sig från walk-forward")
-    main = summary({"returns": wf.returns, "position": pd.concat([res.position for res, _ in replay]),
-                    "trades": wf.trades, "costs": wf.total_costs, "funding": wf.total_funding, "windows": wf.windows})
+    main = done("h0013", summary({"returns": wf.returns, "position": pd.concat([res.position for res, _ in replay]),
+                                  "trades": wf.trades, "costs": wf.total_costs, "funding": wf.total_funding,
+                                  "windows": wf.windows}))
+    begin("stressed")
     stressed_results = [fas2.run_window(bars, funding, fas2.selector_target(book), a, b, costs.stressed())
                         for book, (a, b) in zip(books, fas2.windows())]
     returns, trades, c, f, caps = fas2.stitch(stressed_results)
-    stressed = summary({"returns": returns, "position": pd.concat([r.position for r, _ in stressed_results]),
-                        "trades": trades, "costs": c, "funding": f,
-                        "windows": [{**i, **cap} for (_, i), cap in zip(stressed_results, caps)]})
-    curves = {"buy_and_hold": curve(bars, funding, buy_and_hold(), costs),
-              EMA: curve(bars, funding, candidate_alone(EMA), costs),
-              BB: curve(bars, funding, candidate_alone(BB), costs),
-              "risk_filter": curve(bars, funding, risk_filter(), costs)}
-    curves["equal_weight_mix"] = mixed(curves[EMA], curves[BB])
-    comp = {k: summary(v) for k, v in curves.items()}
-    for k, v in curves.items():
-        if not v["returns"].index.equals(wf.returns.index):
-            raise AssertionError(f"{k} har inte samma observationsperiod som H-0013")
-    crit = criteria(main, stressed, comp["buy_and_hold"], {EMA: comp[EMA], BB: comp[BB]}, comp["equal_weight_mix"])
-    daily = stats.daily_returns(wf.returns)
-    books81 = all_playbooks(bars, funding, playbooks, costs)
+    stressed = done("stressed", summary({"returns": returns, "position": pd.concat([r.position for r, _ in stressed_results]),
+                                         "trades": trades, "costs": c, "funding": f,
+                                         "windows": [{**i, **cap} for (_, i), cap in zip(stressed_results, caps)]}))
+    begin("comparisons")
+    p["comparisons"] = comp = {}
+    makers = {"buy_and_hold": buy_and_hold(), EMA: candidate_alone(EMA), BB: candidate_alone(BB),
+              "risk_filter": risk_filter()}
+    curves = {}
+    for name, make in makers.items():
+        curves[name] = curve(bars, funding, make, costs)
+        if not curves[name]["returns"].index.equals(wf.returns.index):
+            raise AssertionError(f"{name} har inte samma observationsperiod som H-0013")
+        comp[name] = summary(curves[name])
+    comp["equal_weight_mix"] = summary(mixed(curves[EMA], curves[BB]))
+    p["steps"]["comparisons"] = "done"
+    crit = done("criteria", criteria(main, stressed, comp["buy_and_hold"], {EMA: comp[EMA], BB: comp[BB]},
+                                     comp["equal_weight_mix"]))
+    begin("regimes")
+    done("regimes", regime_results(bars, wf))
+    begin("permutation")
+    p["permutation"] = {"n": n_permutations, "seed": SEED, "runs": []}
+    done("permutation", permutation_test(bars, funding, main["sharpe"], n_permutations, SEED, costs,
+                                         sink=p["permutation"]["runs"]))
+    begin("playbooks")
+    p["playbooks"] = {"n": None, "playbooks": []}
+    books81 = done("playbooks", all_playbooks(bars, funding, playbooks, costs, sink=p["playbooks"]["playbooks"]))
+    begin("deflated_sharpe")
+    done("deflated_sharpe", deflated(stats.daily_returns(wf.returns), books81))
+    begin("random_label_t")
     oos = bars[bars.index >= fas2._ts(fas2.TEST_STARTS[0])]
+    done("random_label_t", random_label_control(oos, seed=SEED))
     return {
-        "hypothesis_id": HYPOTHESIS, "evaluation_version": EVALUATION_VERSION,
-        "walk_forward": wf.to_dict(), "out_of_sample": [fas2.TEST_STARTS[0], fas2.HOLDOUT_START],
+        "hypothesis_id": HYPOTHESIS, "evaluation_version": EVALUATION_VERSION, "config": p["config"],
+        "steps": p["steps"],
+        "walk_forward": p["walk_forward"], "out_of_sample": [fas2.TEST_STARTS[0], fas2.HOLDOUT_START],
         "holdout": "2025-01-01 och framåt, oläst",
         "h0013": main, "stressed": stressed, "comparisons": comp,
         "criteria": crit, "decision": decision(crit),
         "t_required": T_REQUIRED, "registered_n": REGISTERED_N,
         "attempts_now": attempts_now, "t_required_now": stats.t_krav(attempts_now) if attempts_now else None,
-        "regimes": regime_results(bars, wf),
-        "permutation": permutation_test(bars, funding, main["sharpe"], n_permutations, SEED, costs),
-        "deflated_sharpe": deflated(daily, books81), "playbooks": books81,
-        "random_label_t": random_label_control(oos, seed=SEED),
+        "regimes": p["regimes"], "permutation": p["permutation"],
+        "deflated_sharpe": p["deflated_sharpe"], "playbooks": books81, "random_label_t": p["random_label_t"],
         "curves": {"t": [x.isoformat() for x in wf.returns.index], "h0013": (1 + wf.returns).cumprod().tolist()},
         "simulated": False,
     }
@@ -273,16 +369,39 @@ def record(folder: Path, payload: dict, status: str) -> Path:
     return path
 
 
+def code_revision(repo: Path) -> dict:
+    """Den körda kodens commit, och om motorn hade ocommittade ändringar."""
+    head = subprocess.run(["git", "-C", str(repo), "rev-parse", "HEAD"], capture_output=True, text=True)
+    dirty = subprocess.run(["git", "-C", str(repo), "status", "--porcelain", "--", "engine"],
+                           capture_output=True, text=True)
+    return {"commit": head.stdout.strip() or None, "engine_dirty": bool(dirty.stdout.strip())}
+
+
+def data_fingerprint(bars: pd.DataFrame, funding: pd.Series) -> dict:
+    """SHA-256 av de inlästa staplarna och finansieringsräntan (tid och värden), med period och antal."""
+    h = hashlib.sha256()
+    h.update(bars.index.asi8.tobytes())
+    h.update(np.ascontiguousarray(bars[["open", "high", "low", "close", "volume"]].to_numpy(dtype=float)).tobytes())
+    h.update(funding.index.asi8.tobytes())
+    h.update(np.ascontiguousarray(funding.to_numpy(dtype=float)).tobytes())
+    return {"sha256": h.hexdigest(), "bars": int(len(bars)), "funding": int(len(funding)),
+            "first": bars.index.min().isoformat() if len(bars) else None,
+            "last": bars.index.max().isoformat() if len(bars) else None}
+
+
 def run(repo: Path, data_dir: Path | None = None, **kw) -> Path:
-    """Den riktiga körningen: kräver registrerad H-0013 och sparar resultatet även om körningen avbryts."""
+    """Den riktiga körningen: kräver registrerad H-0013 och sparar resultatet även om körningen avbryts.
+    Ett avbrutet försök sparas med alla färdiga delresultat och stegstatus, men utan beslut."""
     reg = require_registered(HYPOTHESIS, repo)
     meta = {"hypothesis_id": HYPOTHESIS, "registry_commit": reg.registry_commit, "evaluation_version": EVALUATION_VERSION,
-            "run_at": datetime.now(timezone.utc).isoformat(timespec="seconds")}
+            "code_revision": code_revision(repo), "run_at": datetime.now(timezone.utc).isoformat(timespec="seconds")}
     attempts = count_attempts((repo / "research" / "registry.md").read_text(encoding="utf-8"))
+    progress: dict = {}
     try:
         bars, funding = fas2.load_development(data_dir or repo / "data")
-        result = evaluate(bars, funding, attempts_now=attempts, **kw)
+        meta["data"] = data_fingerprint(bars, funding)
+        result = evaluate(bars, funding, attempts_now=attempts, progress=progress, **kw)
     except BaseException as exc:
-        record(repo / RESULTS, {**meta, "error": f"{type(exc).__name__}: {exc}"}, "aborted")
+        record(repo / RESULTS, {**meta, **progress, "error": f"{type(exc).__name__}: {exc}"}, "aborted")
         raise
     return record(repo / RESULTS, {**meta, **result}, "completed")

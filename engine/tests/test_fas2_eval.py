@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from traderlab import adaptive, fas2, fas2_eval, regime, stats
+from traderlab import adaptive, backtest, fas2, fas2_eval, regime, stats
 from traderlab.data import binance
 from traderlab.registry import NotRegisteredError
 from traderlab.strategies.rules import SPECS
@@ -125,8 +125,9 @@ def test_stress_reuses_the_playbooks_with_2_5_times_costs(forced):
 def test_risk_model_is_one_times_with_funding_and_liquidations_reported(forced):
     for name in ("h0013", "stressed"):
         s = forced[name]
-        assert s["liquidations"] == 0 and s["funding"] != 0 and s["exposure"] <= 1.0
-        assert set(s) >= {"stop_exits", "turnover_per_year", "max_drawdown", "sortino", "calmar"}
+        assert s["liquidations"] == 0 and s["funding"] != 0
+        assert 0 <= s["time_in_market"] <= 1 and s["gross_exposure_mean"] <= 1.0 + 1e-12
+        assert set(s) >= {"stop_exits", "turnover_per_year", "max_drawdown", "sortino", "calmar", "net_exposure_mean"}
 
 
 # Kriterier och beslut (U7–U10)
@@ -320,3 +321,217 @@ def test_record_refuses_to_replace_a_file_with_the_same_name(tmp_path, monkeypat
     with pytest.raises(FileExistsError):
         fas2_eval.record(tmp_path, {"x": 2}, "completed")
     assert json.loads(first.read_text())["x"] == 1
+
+
+
+# Granskning av PR #72, P1: slutprovsskydd i de nya ingångarna
+
+@pytest.fixture
+def no_compute(monkeypatch):
+    def fail(*a, **k):
+        raise AssertionError("beräkningen anropades före slutprovsskyddet")
+    for target, name in ((regime, "daily"), (regime, "per_bar"), (stats, "daily_returns"), (stats, "sharpe"),
+                         (fas2, "run_window"), (fas2, "walk_forward"), (fas2.backtest, "run"),
+                         (adaptive, "signals")):
+        monkeypatch.setattr(target, name, fail)
+    class FailingSpec:
+        version = "1.0.0"
+        signals = staticmethod(fail)
+    for name in list(SPECS):
+        monkeypatch.setitem(SPECS, name, FailingSpec())
+
+
+def holdout():
+    return make_bars(12, interval="4h", seed=9, start="2025-01-01")
+
+
+@pytest.fixture(scope="module")
+def small():
+    bars = make_bars(300 * 6, interval="4h", seed=4, vol=0.015)
+    return bars, funding_for(bars)
+
+
+def direct(bars, funding, labels=None):
+    wf_stub = fas2.WalkForward([], pd.Series(dtype=float, index=pd.DatetimeIndex([], tz="UTC")), [], 0.0, 0.0, {})
+    return {
+        "permutation_n1": lambda: fas2_eval.permutation_test(bars, funding, 0.0, n=1),
+        "permutation_n0": lambda: fas2_eval.permutation_test(bars, funding, 0.0, n=0),
+        "all_playbooks": lambda: fas2_eval.all_playbooks(bars, funding, FEW[:1]),
+        "curve": lambda: fas2_eval.curve(bars, funding, fas2_eval.buy_and_hold(), labels=labels),
+        "regime_results": lambda: fas2_eval.regime_results(bars, wf_stub, labels=labels),
+        "evaluate": lambda: fas2_eval.evaluate(bars, funding, n_permutations=0, playbooks=FEW[:1]),
+    }
+
+
+ENTRIES = ["permutation_n1", "permutation_n0", "all_playbooks", "curve", "regime_results", "evaluate"]
+
+
+@pytest.mark.parametrize("entry", ENTRIES)
+@pytest.mark.parametrize("case", ["holdout_bars", "early_bars", "naive"])
+def test_new_entries_reject_forbidden_bars_before_any_computation(small, no_compute, entry, case):
+    bars, funding = small
+    if case == "holdout_bars":
+        bars = pd.concat([bars, holdout()])
+    elif case == "early_bars":
+        bars = pd.concat([make_bars(6, interval="4h", seed=9, start="2019-12-31"), bars])
+    else:
+        bars = bars.tz_convert(None)
+    with pytest.raises(ValueError, match="slutprovet|före|UTC"):
+        direct(bars, funding)[entry]()
+
+
+@pytest.mark.parametrize("entry", ["permutation_n1", "permutation_n0", "all_playbooks", "curve", "evaluate"])
+def test_new_entries_reject_holdout_funding_before_any_computation(small, no_compute, entry):
+    bars, funding = small
+    with pytest.raises(ValueError, match="Finansieringsräntan når slutprovet"):
+        direct(bars, pd.concat([funding, funding_for(holdout())]))[entry]()
+
+
+@pytest.mark.parametrize("entry", ["curve", "regime_results"])
+def test_supplied_holdout_labels_are_rejected_before_any_computation(small, no_compute, entry):
+    bars, funding = small
+    labels = pd.Series("upp/låg vol", index=pd.date_range("2020-01-01", "2025-01-02", freq="D", tz="UTC"), dtype=object)
+    with pytest.raises(ValueError, match="Dagslägena når slutprovet"):
+        direct(bars, funding, labels)[entry]()
+
+
+def test_regime_results_rejects_returns_from_the_holdout(small, no_compute):
+    bars, _ = small
+    r = pd.Series(0.0, index=pd.date_range("2024-12-31 20:00", periods=2, freq="4h", tz="UTC"))
+    with pytest.raises(ValueError, match="slutprovet"):
+        fas2_eval.regime_results(bars, fas2.WalkForward([], r, [], 0.0, 0.0, {}))
+
+
+# P2: blandningens exponering och omsättning på kapitalbas
+
+IDX = pd.date_range("2022-01-01", periods=4, freq="D", tz="UTC")
+
+
+def leg(returns, position, trades=()):
+    return {"returns": pd.Series(returns, index=IDX), "position": pd.Series(position, index=IDX, dtype=float),
+            "trades": list(trades), "costs": 0.0, "funding": 0.0, "windows": []}
+
+
+def test_mix_long_with_capital_2_and_flat_with_capital_1_is_two_thirds_long():
+    a = leg([1.0, 0.0, 0.0, 0.0], [1.0, 1.0, 1.0, 1.0])   # kapital 2 efter första stapeln
+    b = leg([0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0])
+    m = fas2_eval.mixed(a, b)
+    assert m["net_position"].iloc[0] == pytest.approx(0.5)      # lika kapital vid start
+    assert m["net_position"].iloc[1] == pytest.approx(2 / 3)    # 0,5·2 / (0,5·2 + 0,5·1)
+    assert m["gross_position"].iloc[1] == pytest.approx(2 / 3)
+
+
+def test_mix_long_and_short_halves_have_zero_net_but_full_gross_exposure():
+    a = leg([0.0] * 4, [1.0] * 4)
+    b = leg([0.0] * 4, [-1.0] * 4)
+    s = fas2_eval.summary(fas2_eval.mixed(a, b))
+    assert s["net_exposure_mean"] == pytest.approx(0.0)
+    assert s["gross_exposure_mean"] == pytest.approx(1.0) and s["time_in_market"] == pytest.approx(1.0)
+
+
+def test_mix_turnover_counts_trades_only_and_opposite_trades_do_not_cancel():
+    t_long = backtest.Trade(entry_time=IDX[0], entry_price=100.0, side="Long", size=1.0, equity_at_entry=1.0,
+                            exit_time=IDX[3], exit_price=110.0, gross_pnl=0.1)
+    t_short = backtest.Trade(entry_time=IDX[0], entry_price=100.0, side="Short", size=1.0, equity_at_entry=1.0,
+                             exit_time=IDX[3], exit_price=110.0, gross_pnl=-0.1)
+    a = leg([0.05, 0.02, 0.03, 0.0], [1.0] * 4, [t_long])
+    b = leg([-0.05, -0.02, -0.03, 0.0], [-1.0] * 4, [t_short])
+    m = fas2_eval.mixed(a, b)
+    years = fas2_eval._years(m["returns"])
+    expected = 0.5 * (1 + 1.1) + 0.5 * (1 + 1.1)   # varje halva: in 0,5 och ut 0,5·1,1
+    assert fas2_eval.summary(m)["turnover_per_year"] == pytest.approx(expected / years)
+    unchanged = leg([0.1, 0.1, 0.1, 0.0], [1.0] * 4)   # signalen oförändrad: vikterna glider, ingen handel
+    assert fas2_eval.summary(fas2_eval.mixed(unchanged, leg([0.0] * 4, [0.0] * 4)))["turnover_per_year"] == 0.0
+
+
+def test_risk_reporting_fix_leaves_returns_sharpe_amounts_and_criteria_unchanged(dev):
+    a = fas2_eval.curve(*dev, fas2_eval.candidate_alone(EMA))
+    b = fas2_eval.curve(*dev, fas2_eval.candidate_alone(BB))
+    m = fas2_eval.mixed(a, b)
+    expected = 0.5 * (1 + a["returns"]).cumprod() + 0.5 * (1 + b["returns"]).cumprod()
+    np.testing.assert_allclose((1 + m["returns"]).cumprod().to_numpy(), expected.to_numpy(), rtol=1e-12)
+    assert sum(t.net_pnl for t in m["trades"]) == pytest.approx(expected.iloc[-1] - 1)
+    s = fas2_eval.summary(m)
+    assert s["sharpe"] == pytest.approx(stats.sharpe(stats.daily_returns(m["returns"])))
+    assert 0 <= s["time_in_market"] <= 1 and abs(s["net_exposure_mean"]) <= s["gross_exposure_mean"] + 1e-12
+
+
+# P3: avbrutna försök behåller färdiga delresultat
+
+@pytest.mark.parametrize("stop_at, done_steps, partial", [
+    ("comparisons", ["walk_forward", "h0013", "stressed"], None),
+    ("regimes", ["walk_forward", "h0013", "stressed", "comparisons", "criteria"], None),
+    ("permutation_mid", ["walk_forward", "h0013", "stressed", "comparisons", "criteria", "regimes"], "permutation"),
+    ("playbooks_mid", ["walk_forward", "h0013", "stressed", "comparisons", "criteria", "regimes", "permutation"],
+     "playbooks"),
+])
+def test_aborted_run_keeps_every_finished_step(repo, monkeypatch, stop_at, done_steps, partial):
+    calls = {"n": 0}
+    if stop_at == "comparisons":
+        monkeypatch.setattr(fas2_eval, "curve", lambda *a, **k: (_ for _ in ()).throw(KeyboardInterrupt()))
+    elif stop_at == "regimes":
+        monkeypatch.setattr(fas2_eval, "regime_results", lambda *a, **k: (_ for _ in ()).throw(KeyboardInterrupt()))
+    elif stop_at == "permutation_mid":
+        orig = fas2.walk_forward
+
+        def second_fails(*a, **k):
+            if k.get("labels") is not None:
+                calls["n"] += 1
+                if calls["n"] == 2:
+                    raise KeyboardInterrupt()
+            return orig(*a, **k)
+        monkeypatch.setattr(fas2, "walk_forward", second_fails)
+    else:
+        orig = fas2_eval.curve
+
+        def second_book_fails(bars, funding, make, *a, **k):
+            if getattr(make, "__qualname__", "").startswith("selector_target"):
+                calls["n"] += 1
+                if calls["n"] == 2:
+                    raise KeyboardInterrupt()
+            return orig(bars, funding, make, *a, **k)
+        monkeypatch.setattr(fas2_eval, "curve", second_book_fails)
+    with pytest.raises(KeyboardInterrupt):
+        fas2_eval.run(repo, n_permutations=3, playbooks=FEW)
+    files = list((repo / "research/results").glob("H-0013-*-aborted.json"))
+    assert len(files) == 1
+    body = json.loads(files[0].read_text())
+    assert body["status"] == "aborted" and "decision" not in body
+    assert body["config"]["n_permutations"] == 3 and body["config"]["playbooks"] == 3
+    for step in done_steps:
+        assert body["steps"][step] == "done" and step in body
+    assert all(body["steps"][s] in ("pending", "incomplete") for s in body["steps"] if s not in done_steps)
+    if stop_at == "comparisons":
+        assert body["steps"]["comparisons"] == "incomplete" and body["comparisons"] == {}
+    if partial == "permutation":
+        assert body["steps"]["permutation"] == "incomplete" and len(body["permutation"]["runs"]) == 1
+    if partial == "playbooks":
+        assert body["steps"]["playbooks"] == "incomplete" and len(body["playbooks"]["playbooks"]) == 1
+    assert body["code_revision"]["commit"] and len(body["data"]["sha256"]) == 64
+
+
+def test_completed_run_records_code_revision_and_data_fingerprint(repo, dev):
+    path = fas2_eval.run(repo, n_permutations=1, playbooks=FEW[:2])
+    body = json.loads(path.read_text())
+    assert body["code_revision"]["commit"] == subprocess.run(["git", "-C", str(repo), "rev-parse", "HEAD"],
+                                                            capture_output=True, text=True).stdout.strip()
+    assert body["data"] == fas2_eval.data_fingerprint(*dev)
+    assert all(v == "done" for v in body["steps"].values())
+
+
+def test_aborted_record_never_overwrites_an_existing_file(repo, monkeypatch):
+    from datetime import datetime as real
+
+    class Frozen(real):
+        @classmethod
+        def now(cls, tz=None):
+            return real(2026, 11, 2, 12, 0, 0, tzinfo=tz)
+    monkeypatch.setattr(fas2_eval, "datetime", Frozen)
+    monkeypatch.setattr(fas2_eval, "evaluate", lambda *a, **k: (_ for _ in ()).throw(RuntimeError("stopp")))
+    with pytest.raises(RuntimeError):
+        fas2_eval.run(repo)
+    first = next((repo / "research/results").glob("*-aborted.json"))
+    before = first.read_text()
+    with pytest.raises(FileExistsError):
+        fas2_eval.run(repo)
+    assert first.read_text() == before
