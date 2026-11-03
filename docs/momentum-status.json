@@ -70,9 +70,17 @@
             {
               "file": "docs/momentum-a1-granskning-979fb30.md",
               "detail": "Oberoende omgranskning av 979fb30: ursprungliga fyra fynd rättade; R2-01 och R2-02 behöver precisering och syntetiska orakel före A2."
+            },
+            {
+              "file": "docs/momentum-protokoll-A1.md",
+              "detail": "Revision 3 efter Codex omgranskning av 979fb30: L1/L2 avgränsad till verkligt okänd ordning, kända öppningsutgångar och likvidation först (R2-01, D18); absorberande nollkonvention efter likvidation (R2-02, D21); textjusteringar i D11, §2 och §10.2. Väntar på omgranskning."
+            },
+            {
+              "file": "docs/momentum-a1-orakel.json",
+              "detail": "Nya syntetiska fall O17 (gapstop +30 s och exakt vid öppning, inträde vid öppning med stop inom stapel) och O18 (likvidation mitt i perioden, på terminaldag, likviderat delkonto i blandning, oförklarad nolla, main-beslut). scripts/momentum-a1-oracles.py --check."
             }
           ],
-          "note": "A1 revision 2 omgranskad men inte slutgodkänd. Rätta R2-01/R2-02 före A2; ingen registrering eller leverans B."
+          "note": "Revision 3 lämnad för Codex omgranskning av R2-01/R2-02. Inte godkänd; ingen registrering eller leverans B."
         },
         {
           "id": "MOM-A04",
@@ -102,9 +110,13 @@
             {
               "file": "docs/momentum-a1-granskning-979fb30.md",
               "detail": "Oberoende omgranskning av 979fb30: ursprungliga fyra fynd rättade; R2-01 och R2-02 behöver precisering och syntetiska orakel före A2."
+            },
+            {
+              "file": "docs/momentum-protokoll-A1.md",
+              "detail": "Revision 3 efter Codex omgranskning av 979fb30: L1/L2 avgränsad till verkligt okänd ordning, kända öppningsutgångar och likvidation först (R2-01, D18); absorberande nollkonvention efter likvidation (R2-02, D21); textjusteringar i D11, §2 och §10.2. Väntar på omgranskning."
             }
           ],
-          "note": "A1 revision 2 omgranskad men inte slutgodkänd. Rätta R2-01/R2-02 före A2; ingen registrering eller leverans B."
+          "note": "Revision 3 lämnad för Codex omgranskning av R2-01/R2-02. Inte godkänd; ingen registrering eller leverans B."
         },
         {
           "id": "MOM-A05",
@@ -120,7 +132,7 @@
               "detail": "Oberoende omgranskning av 979fb30: ursprungliga fyra fynd rättade; R2-01 och R2-02 behöver precisering och syntetiska orakel före A2."
             }
           ],
-          "note": "A1 revision 2 omgranskad men inte slutgodkänd. Rätta R2-01/R2-02 före A2; ingen registrering eller leverans B."
+          "note": "Väntar på Codex omgranskning av revision 3. Ingen registerrad lagd."
         }
       ]
     },

@@ -34,7 +34,9 @@ Codex omgranskning av A1 revision 2 på 979fb30: de fyra ursprungliga fynden rä
   - Underlag: [docs/momentum-protokoll-A1.md](momentum-protokoll-A1.md) — Revision 2 efter Codex granskning av cb335ee: reduce-only för riskavsikter (D17), exakt fundingtid utan tolerans (D18), separata faser E_trade/E_post (D19), T-regeln ersatt av scenariogrid A/B × mmr 5 %/0,5 % × legacy L1/L2 med krav i varje scenario (D20); preciserad marginal och DSR. Väntar på omgranskning.
   - Underlag: [docs/momentum-a1-orakel.json](momentum-a1-orakel.json) — Nya syntetiska fall O5b, O13–O16 (kapitalfaser, Sharpe-motexempel, reduce-only vid gap båda riktningar, normalavsikt som byter riktning, exakta fundingtider ±30 s, dagsgräns, första/sista). scripts/momentum-a1-oracles.py --check.
   - Underlag: [docs/momentum-a1-granskning-979fb30.md](momentum-a1-granskning-979fb30.md) — Oberoende omgranskning av 979fb30: ursprungliga fyra fynd rättade; R2-01 och R2-02 behöver precisering och syntetiska orakel före A2.
-  - A1 revision 2 omgranskad men inte slutgodkänd. Rätta R2-01/R2-02 före A2; ingen registrering eller leverans B.
+  - Underlag: [docs/momentum-protokoll-A1.md](momentum-protokoll-A1.md) — Revision 3 efter Codex omgranskning av 979fb30: L1/L2 avgränsad till verkligt okänd ordning, kända öppningsutgångar och likvidation först (R2-01, D18); absorberande nollkonvention efter likvidation (R2-02, D21); textjusteringar i D11, §2 och §10.2. Väntar på omgranskning.
+  - Underlag: [docs/momentum-a1-orakel.json](momentum-a1-orakel.json) — Nya syntetiska fall O17 (gapstop +30 s och exakt vid öppning, inträde vid öppning med stop inom stapel) och O18 (likvidation mitt i perioden, på terminaldag, likviderat delkonto i blandning, oförklarad nolla, main-beslut). scripts/momentum-a1-oracles.py --check.
+  - Revision 3 lämnad för Codex omgranskning av R2-01/R2-02. Inte godkänd; ingen registrering eller leverans B.
 - [ ] **MOM-A04** Lås exakta jämförelser, försöksräkning, DSR och beslutskriterier **Pågår.**
   - Underlag: [docs/momentum-metodgranskning-20261103.md](momentum-metodgranskning-20261103.md) — Inledande granskning på f43c1e7. Git och diagnos verifierade; M01–M08 kräver exakt metodkontrakt och omgranskning före frysning.
   - Underlag: [docs/momentum-implementationskontrakt-utkast.md](momentum-implementationskontrakt-utkast.md) — Utkast 0.1 till Claude. Kvarstående A-blockerare framgår; inte godkänt som fryst protokoll.
@@ -42,11 +44,12 @@ Codex omgranskning av A1 revision 2 på 979fb30: de fyra ursprungliga fynden rä
   - Underlag: [docs/momentum-a1-granskning-cb335ee.md](momentum-a1-granskning-cb335ee.md) — Codex granskning av exakt cb335ee: fyra syntetiskt reproducerade kontraktsfynd. A1 inte godkänd; A2 väntar på rättning och omgranskning.
   - Underlag: [docs/momentum-protokoll-A1.md](momentum-protokoll-A1.md) — Revision 2 efter Codex granskning av cb335ee: reduce-only för riskavsikter (D17), exakt fundingtid utan tolerans (D18), separata faser E_trade/E_post (D19), T-regeln ersatt av scenariogrid A/B × mmr 5 %/0,5 % × legacy L1/L2 med krav i varje scenario (D20); preciserad marginal och DSR. Väntar på omgranskning.
   - Underlag: [docs/momentum-a1-granskning-979fb30.md](momentum-a1-granskning-979fb30.md) — Oberoende omgranskning av 979fb30: ursprungliga fyra fynd rättade; R2-01 och R2-02 behöver precisering och syntetiska orakel före A2.
-  - A1 revision 2 omgranskad men inte slutgodkänd. Rätta R2-01/R2-02 före A2; ingen registrering eller leverans B.
+  - Underlag: [docs/momentum-protokoll-A1.md](momentum-protokoll-A1.md) — Revision 3 efter Codex omgranskning av 979fb30: L1/L2 avgränsad till verkligt okänd ordning, kända öppningsutgångar och likvidation först (R2-01, D18); absorberande nollkonvention efter likvidation (R2-02, D21); textjusteringar i D11, §2 och §10.2. Väntar på omgranskning.
+  - Revision 3 lämnad för Codex omgranskning av R2-01/R2-02. Inte godkänd; ingen registrering eller leverans B.
 - [ ] **MOM-A05** Förregistrera ett nytt ledigt id och låt Codex granska leverans A före implementation
   - Underlag: [docs/momentum-a1-granskning-cb335ee.md](momentum-a1-granskning-cb335ee.md) — Codex granskning av exakt cb335ee: fyra syntetiskt reproducerade kontraktsfynd. A1 inte godkänd; A2 väntar på rättning och omgranskning.
   - Underlag: [docs/momentum-a1-granskning-979fb30.md](momentum-a1-granskning-979fb30.md) — Oberoende omgranskning av 979fb30: ursprungliga fyra fynd rättade; R2-01 och R2-02 behöver precisering och syntetiska orakel före A2.
-  - A1 revision 2 omgranskad men inte slutgodkänd. Rätta R2-01/R2-02 före A2; ingen registrering eller leverans B.
+  - Väntar på Codex omgranskning av revision 3. Ingen registerrad lagd.
 
 ## B. Ren signalmodul och tidskontrakt
 

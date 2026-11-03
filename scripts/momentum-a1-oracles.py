@@ -8,10 +8,12 @@ import argparse
 import json
 import math
 import statistics
+import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'engine'))  # endast traderlab.stats, för ändliga Sharpe/t-indata i O18
 TARGET = ROOT / 'docs/momentum-a1-orakel.json'
 C16 = 0.0016  # (10 + 2/2 + 5) / 10 000
 
@@ -175,7 +177,56 @@ def cases():
     rows['exakt_terminal_2024_12_31_20'] = {'typ': funding_kind(term, term), 'q_A': 'q_old', 'q_B': '0 efter terminal'}
     rows['efter_terminal_20_00_30'] = {'typ': funding_kind(term + timedelta(seconds=30), term), 'q': 0}
     out['O16_fundingtider'] = rows
+    # O17 legacy-ordning bara vid verkligt okänd ordning (R2-01). O8:s gapstop: S=95, kontraktsöppning 94, mark_ref 94.
+    gap_E, _ = trade(10_000, 900, 0, 94)
+    entry = fill(100_000, 100_000, 0, 100, 100, 1.0)
+    stop_C, stop_cost = trade(entry['C'], entry['q'], 0, 97)
+    l2_pay = entry['q'] * 100 * rate
+    out['O17_legacy_ordning'] = {
+        'gapstop_plus_30s': {'E_efter_gapstop': gap_E, 'q_vid_handelse': 0, 'L1': 0.0, 'L2': 0.0,
+                             'felaktig_generell_L2': 900 * 94 * rate},
+        'gapstop_exakt_vid_oppning': {'A': 900 * 94 * rate, 'B': 0.0, 'E_A': gap_E - 900 * 94 * rate, 'E_B': gap_E},
+        'inträde_vid_oppning_stop_inom_stapel': {
+            'q_open': entry['q'], 'S': 97, 'mark_ref': 100, 'L1_funding': 0.0, 'L2_funding': l2_pay,
+            'E_L1': stop_C, 'E_L2': stop_C - l2_pay, 'stopkostnad': stop_cost, 'aldre_position_anvands': False}}
+    # O18 absorberande nollkonvention efter likvidation (R2-02).
+    mid = [100_000, 101_000, 0, 0, 0]
+    term = [100_000, 99_000, 0]
+    sub_liq, sub_ok = [50_000, 51_000, 0, 0], [50_000, 50_500, 51_000, 52_000]
+    mix = [a + b for a, b in zip(sub_liq, sub_ok)]
+    out['O18_likvidation'] = {name: absorbing_check(e, liq) for name, e, liq in (
+        ('mitt_i_perioden', mid, 2), ('terminaldag', term, 2), ('blandning_ett_delkonto_likviderat', mix, None))}
+    out['O18_likvidation']['delkonto_likviderat'] = absorbing_check(sub_liq, 2)
+    try:
+        daily_from_equity([100_000, 0, 0], None)
+        unexplained = False
+    except ValueError:
+        unexplained = True
+    out['O18_likvidation']['oforklarad_nolla_ger_ogiltig'] = unexplained
+    out['O18_likvidation']['main_beslut'] = {'likvidationsflagga': True, 'C6': False, 'giltig': True, 'beslut': 'REJECT'}
     return out
+
+
+def daily_from_equity(e, liq_day):
+    """D21: kvot för E > 0; dagen till likvidation -1; därefter 0 i likvidationstillstånd. Annan nolla är fel."""
+    r = []
+    for d in range(1, len(e)):
+        if e[d - 1] > 0 and (e[d] > 0 or d == liq_day):
+            r.append(e[d] / e[d - 1] - 1)
+        elif e[d - 1] == 0 and e[d] == 0 and liq_day is not None and d > liq_day:
+            r.append(0.0)
+        else:
+            raise ValueError('Nolla eller negativt kapital utan likvidationstillstånd: OGILTIG')
+    return r
+
+
+def absorbing_check(e, liq_day):
+    from traderlab import stats
+    r = daily_from_equity(e, liq_day)
+    chained = math.prod(1 + x for x in r) - 1
+    return {'E_end': e, 'r': r, 'langd': len(r), 'kedjad': chained, 'slut_mot_start': e[-1] / e[0] - 1,
+            'kedjad_stammer': abs(chained - (e[-1] / e[0] - 1)) <= 1e-12, 'alla_andliga': all(map(math.isfinite, r)),
+            'sharpe': stats.sharpe(r), 'nw_t': stats.newey_west_t(r)}
 
 
 def funding_kind(t, T):

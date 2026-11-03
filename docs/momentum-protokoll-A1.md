@@ -1,8 +1,10 @@
 # Momentummodell efter H-0013 – protokollutkast A1
 
-Datum 2026-11-03. Status: **A1 revision 2, granskningsutkast till Codex. Inte registrerat, inte godkänt, ingen registerrad.**
+Datum 2026-11-03. Status: **A1 revision 3, granskningsutkast till Codex. Inte registrerat, inte godkänt, ingen registerrad.**
 Revision 2 rättar de fyra fynden i [Codex granskning av cb335ee](momentum-a1-granskning-cb335ee.md) (D17–D20) och
-preciserar marginalmodellen och DSR. Revision 1 (cb335ee) är inte godkänd och gäller inte.
+preciserar marginalmodellen och DSR. Revision 3 rättar R2-01 och R2-02 samt textjusteringarna i
+[Codex omgranskning av 979fb30](momentum-a1-granskning-979fb30.md) (D18 preciserad, D21). Revision 1 (cb335ee) och
+revision 2 (979fb30) är inte godkända och gäller inte.
 Hypotes-id tilldelas först i A2 efter att Codex godkänt exakt denna revision; här skrivs det `H-XXXX`.
 
 Underlag: [forskningsplanen](h0013-efterfoljare-forskningsplan-20261103.md) (f43c1e7),
@@ -20,7 +22,7 @@ av formlerna, inte strategimotorn.
 
 | Del | Version i A1 | Vid A2 |
 |---|---|---|
-| Protokoll | `momentum-protokoll/A1-r2` | `momentum-protokoll/1.0.0`, kopplat till id och registreringscommit |
+| Protokoll | `momentum-protokoll/A1-r3` | `momentum-protokoll/1.0.0`, kopplat till id och registreringscommit |
 | Signal | `mom-signal/1.0.0` | oförändrad om A1 godkänns |
 | Ledger och utförande | `mom-ledger/1.0.0` | oförändrad om A1 godkänns |
 | Resultat | `mom-result/1.0.0` | oförändrad om A1 godkänns |
@@ -44,15 +46,16 @@ Källa P = forskningsplanen, K = utkast 0.1. "Precisering" betyder att källan v
 | D08 | Legacy-storlek | K07: ska låsas; gamla motorn: notional = kapital före avgift | Legacy-inträde storleksätts med K04-lösaren till |w| = 1 efter kostnad och markvärde; enheterna ligger sedan fast till utgång. Signal, riktning, ATR-stop och spärr efter stop oförändrade. | M02/M04: samma kapital- och kostnadsbas som alla konton; gamla motorn gav exponering något över 1×. |
 | D09 | Legacy-funding | gamla motorn: per stapel till kontraktsöppning | Samma händelsebaserade funding till markpris som övriga konton. | En gemensam ledger. Gamla H-0013-nyckeltal kopieras därför inte (K07). |
 | D10 | Legacy intrastapel-bound | K06: får inte använda post-exit low som om positionen fanns, men inte anta gynnsam ordning | Stopstapel: lägsta mark med positionen kvar ingår i bounden. Endast diagnostik för jämförelser. §10.2. | Stop utlöses på kontraktspris; mark/kontrakt-vägen är inte observerbar, så att mark-lägsta inträffat före stop kan inte uteslutas. Den strängare läsningen väljs och märks. |
-| D11 | DSR | K08: öppen blockerare | Två försöksantal (registrerade id respektive full sökhistorik), två variansval, endast diagnostik. §14. | Beroende mellan försök är inte verifierat; intervallet redovisas i stället för en punktsiffra. |
+| D11 | DSR | K08: öppen blockerare | Två specificerade råa räknemått (registrerade id respektive N_sok), två variansval; känslighetsvärden, endast diagnostik. §14. | Beroende mellan försök är inte verifierat. Värdena bildar inget kalibrerat intervall och ingen bevisad gräns. |
 | D12 | Fördröjningsstress | K08: +4h, ersättningsregel saknas | Senaste normalavsikt ersätter äldre; riskavsikter slås ihop efter prioritet; terminal ej fördröjd. §12. | Ingen växande orderhög. |
 | D13 | Datafel | P §5: blockera nya köp och logga | Ofullständigt rutnät, saknad mark- eller fundingdata eller otillgänglig signal på en testdag stoppar körningen före beräkning: OGILTIG_DATA. | Strängare. En körning med blockerade köp kan inte ge ett jämförbart resultat. |
 | D14 | Implementationsfel | P kriterium 6: riskregelöverträdelse = underkänt | Brott mot invarianterna i §13.3 ger OGILTIG, sparas och räknas. Omkörning av samma frysta hypotes kräver granskad rättelse, som H-0003. Likvidation i huvudkontot är däremot ett ekonomiskt underkännande (REJECT). | Ett kodfel är inte ett ekonomiskt utfall. |
 | D15 | Stresser | P §6 | Kostnads-, funding- och fördröjningsstress körs bara för huvudmodellen. Kostnadsstress ingår i kriterierna, i varje scenario. Funding- och fördröjningsstress är diagnostik. | Enligt P; jämförelser stressas inte. |
 | D16 | Startläge för legacy | saknas | Legacy-konton, köp-och-behåll och momentumkonton får fylla vid första testöppningen om signalen från uppvärmningen redan anger position. | Lika behandling. Ingen position före testet. |
 | D17 | Riskavsikt efter gap | rev. 1: riskavsikt fryser w och får aldrig öka q | Riskavsikter är reduce-only vid utförandet: lösarens q* används bara om \|q*\| ≤ \|q_old\|, annars behålls q_old och händelsen loggas `risk_reduce_only_hold`. Reduce-only går före exakt målvikt. Normalavsikter löses exakt i valfri riktning. §6, §7. | Codex fynd 1: efter ett gap nedåt kan den frysta vikten kräva köp (O14). Ett legitimt gap får varken bryta riskinvarianten eller göra körningen ogiltig. |
-| D18 | Fundingtid | rev. 1: abs(t − T) < 60 s räknades som gränshändelse | Exakt avräkningstid behålls. Endast t = T exakt är samtidigt med fyllningen. Övriga bokförs kronologiskt i den stapel som innehåller t, på q vid t. Ingen händelse flyttas bakåt eller framåt. §8.3. | Codex fynd 2: toleransen kunde låta en senare avräkning påverka en tidigare fyllning (O16). |
+| D18 | Fundingtid | rev. 1: abs(t − T) < 60 s räknades som gränshändelse; rev. 2: L1/L2 för varje legacy-stopstapel | Exakt avräkningstid behålls. Endast t = T exakt är samtidigt med fyllningen. Övriga bokförs kronologiskt i den stapel som innehåller t, på q vid t. L1/L2 gäller bara verkligt okänd ordning mellan en stop inom stapeln och en mellanhändelse; kända öppningsutgångar och likvidation har företräde. §8.3. | Codex fynd 2 (O16) och R2-01: en gapstop vid öppningen får inte flyttas efter senare funding (O17). |
 | D19 | Kapitalfaser vid fyllning | rev. 1: E_after hade två definitioner | E_trade = efter affär, före scenario B-funding; E_post = efter B-funding. Målidentiteten och capkontrollen gäller E_trade. Funding efter affären är tillåten drift. §6, §8.1. | Codex fynd 4 (O5b). |
+| D21 | Avkastning efter likvidation | saknas; rev. 2 krävde ändliga kvoter men satte E = 0 | Absorberande nollkonvention: dagen då kontot går från E > 0 till likviderat E = 0 ger −100 %; följande dagar i dokumenterat likvidationstillstånd ger 0. E = C = q = 0 utan affärer, funding eller tillskott. E ≤ 0 utanför likvidationstillstånd ger OGILTIG. §4, §9, §13. | R2-02: en modellerad totalförlust ska ge ekonomiskt REJECT, inte NaN och OGILTIG (O18). |
 | D20 | Scenariogrid och klassificering | rev. 1: A och B samt T-regel | Gridet ordning {A, B} × marginal {5 %, 0,5 %} × legacy-ordning {L1, L2}. MORE_RESEARCH kräver alla kriterier sanna i varje scenario. Annars REJECT, med flaggan `scenariokanslig` om minst ett scenario klarar alla. §8.4. | Ersätter T-regeln. Kräver ingen monotonicitet hos Sharpe. |
 
 ## 2. Hypotes och omfattning
@@ -62,8 +65,9 @@ signal, 60 dagars volatilitetscap mot 10 % årlig målrisk, 2 procentenheters ha
 permanent stopp, ger positiv nettoavkastning efter kostnader och funding, och högre Sharpe än köp-och-behåll, varje
 ensam komponent och båda förregistrerade blandningar, med högst 20 % uppmätt drawdown.
 
-Vald efter H-0001–H-0016 på samma redan sedda BTC-historik. Parametrarna kommer från litteraturen och
-forskningsplanen utan sökning, men valet är inte blint (§14.3). Ingen period i detta protokoll är en ren
+Vald efter H-0001–H-0016 på samma redan sedda BTC-historik. De exakta parametrarna 7/14/28, 60 dagar, 10 % och 2 pp
+är projektets fasta designval utan sökning. Litteraturen i forskningsplanen stöder metodfamiljen (tidsseriemomentum,
+volatilitetsstyrning, kostnadsstyrning) men bevisar inte just dessa värden, och valet är inte blint (§14.3). Ingen period i detta protokoll är en ren
 bekräftelse. Ingen parameteroptimering, short, ATR-stop, take-profit, regimväljare eller ML i huvudmodellen.
 
 ## 3. Data
@@ -94,6 +98,14 @@ bekräftelse. Ingen parameteroptimering, short, ATR-stop, take-profit, regimväl
 - Dagsavkastning: r_D = E_end(D)/E_end(D−1) − 1, där E_end(D) är markvärderat kapital vid close av dag D:s 20-stapel
   (före gap, funding och handel vid D+1 00:00). E_end(2021-12-31) = 100 000. Sista dagen slutar med terminalt
   kapital. Gap, funding och affärer vid 00:00 tillhör det nya dygnet. Startpunkten är ingen extra avkastningsdag.
+- Absorberande nollkonvention (D21): om kontot likvideras under dag D, så att E_end(D−1) > 0 och E_end(D) = 0, är
+  r_D = −1. För varje senare dag med E_end(D−1) = 0 i dokumenterat likvidationstillstånd är r_D = 0 per definition.
+  Kvoten 0/0 räknas aldrig. Kedjad avkastning blir då exakt E_terminal/100 000 − 1 = −1. Likvidation på terminaldagen
+  ger r = −1 den dagen och inga fler dagar. En nolla eller ett negativt värde utan likvidationstillstånd normaliseras
+  inte: det är OGILTIG.
+- Blandningar räknas från summan av delkontonas faktiska E. Ett likviderat delkonto bidrar med 0 från likvidationen; ett
+  överlevande delkonto fortsätter. Blandningens kvot använder summan; den absorberande konventionen gäller blandningen
+  bara om alla delkonton är likviderade.
 
 ## 5. Signal
 
@@ -211,8 +223,17 @@ likvidationskontroll och intrastapel-bound (§10). Legacy-stop kontrolleras på 
 - M_ref enligt D03: mark_open för stapeln som innehåller t (vid samtidig händelse stapeln som börjar vid T).
   Diagnostik: samma körning med mark_close redovisas, ingår inte i gridet.
 - Huvud-, momentum- och köp-och-behåll-konton har konstant q mellan öppningar, så q vid t är entydigt.
-- Legacy-konto med ATR-stop i samma stapel som en mellanhändelse: q vid t beror på okänd ordning. Låst som två
-  kompletta scenarier i gridet: L1 = stop före varje sådan händelse (q = 0 vid händelsen), L2 = stop efter (q = q_old).
+- Kända öppningshändelser är utförda vid t_b, före varje mellanhändelse i stapeln: fyllning vid öppningen (inträde,
+  utgång, vändning, terminal), gapstop när kontraktsöppningen redan ligger bortom stopnivån, och likvidation vid
+  gappunkten. En mellanhändelse möter alltid q efter dessa (q_open). Funding exakt vid t_b följer A/B i §8.1.
+- Legacy-ordning L1/L2 gäller **endast** när en stop utlöses inom stapeln (long: kontraktsöppning > S ≥ kontraktslägsta;
+  short spegelvänt) och en mellanhändelse ligger i samma stapel. Ordningen mellan dem är då okänd och låses som två
+  kompletta scenarier i gridet: L1 = stopen före varje sådan händelse (q = 0 vid händelsen), L2 = stopen efter
+  (q = q_open). q_open är positionen efter öppningens fyllning, alltså den nya positionen om inträde skedde vid samma
+  öppning, aldrig en äldre position före inträdet.
+- En likviderad position återuppstår aldrig: efter likvidation är q = 0 i både L1 och L2 för alla senare händelser.
+  Likvidationskontrollen inom stapeln använder C efter betald och före mottagen funding från stapelns mellanhändelser,
+  samma ordning i alla scenarier.
 - Horisont: händelser med t < 2022-01-01 00:00 bokförs inte (q = 0 före start). En händelse exakt 2022-01-01 00:00 är
   samtidig med första fyllningen. Händelser efter terminal 2024-12-31 20:00 möter q = 0. Händelser från 2025-01-01 läses inte.
 - Antal samtidiga och mellanhändelser rapporteras. Fördelningen är inte verifierad i A1 eftersom ingen data har lästs.
@@ -242,7 +263,11 @@ tvetydighet löses genom att välja "ogynnsamt" för main och "gynnsamt" för j�
   (mark_low för long, mark_high för short) med det q som kan ha funnits. Long: m ≤ −C/(q(1 − mmr)).
   Short: m ≥ C/(|q|(1 + mmr)).
 - Vid träff: kontots E sätts till 0 och kontot är platt till terminal (modellval: total förlust, ingen likvidationsavgift).
-- Huvudmodellen: varje träff i något scenario gör C6 falskt där. Likvidation är inte utesluten: vid w = 1 är C ≈ 0
+  Det beräknade kapitalet före nollställningen loggas, även om det var negativt efter ett gap. Kontot går in i ett
+  dokumenterat likvidationstillstånd med E = C = q = 0: inga affärer, ingen funding, inga kapitaltillskott, inga nya
+  avsikter. Avkastning enligt den absorberande nollkonventionen i §4 (D21).
+- Huvudmodellen: varje träff i något scenario gör C6 falskt där. Underkännandet följer likvidationsflaggan och är ett
+  giltigt ekonomiskt REJECT, inte ett statistiskt fel. Likvidation är inte utesluten: vid w = 1 är C ≈ 0
   efter fyllning, och betald funding gör C negativ; då räcker ett tillräckligt stort senare prisfall (O11: efter 500 i
   betald funding ligger tröskeln vid mark 0,527 från inträde 100). Detta är en modellegenskap, ingen sannolikhetsbedömning,
   och marginalnivån påstås inte vara irrelevant för resultatet.
@@ -266,8 +291,10 @@ drawdown). Hypotetisk peak uppdateras med high innan low jämförs. Startkapital
 inte observerad drawdown. Den styr inga stopp.
 
 Mellanhändelser för funding inom stapeln: E(mark_high) räknas med C före betald och efter mottagen funding, E(mark_low)
-med C efter betald och före mottagen funding. Drawdown-måttet trough/peak − 1 är avtagande i trough och växande i peak,
-så detta är en bound för just intrastapel-drawdown inom den fasta prismodellen; inget påstående görs för Sharpe eller t.
+med C efter betald och före mottagen funding. Med positivt kapital ökar trough/peak − 1 med trough och
+minskar med peak, medan drawdownens positiva magnitud har motsatt riktning. Lägre trough och högre peak ger därför
+större magnitud, så konstruktionen är en strängare bound för just intrastapel-drawdown inom den fasta prismodellen;
+inget påstående görs för Sharpe eller t.
 
 Legacy med ATR-stop i stapeln (long; short spegelvänt med mark_high som ogynnsam):
 
@@ -329,8 +356,9 @@ tills den fyllts, reduce-only gäller även fördröjd fyllning. Terminal fördr
 
 ### 13.1 Mått
 
-- Dagsavkastning enligt §4, 1 096 värden, platta dagar inkluderade. Alla värden måste vara ändliga före anrop; en
-  icke-ändlig dag ger OGILTIG (ingen tyst borttagning, trots att `stats` annars filtrerar).
+- Dagsavkastning enligt §4, 1 096 värden, platta dagar inkluderade, med den absorberande nollkonventionen efter
+  likvidation (D21). Alla värden måste vara ändliga före anrop; en icke-ändlig dag ger OGILTIG (ingen tyst borttagning,
+  trots att `stats` annars filtrerar). Inget epsilonkapital, ingen framåtfyllning av positiva värden.
 - Sharpe = `stats.sharpe` (ddof=1, √365). Newey-West t = `stats.newey_west_t` med lags = 6 (= floor(4 × (1096/100)^(2/9))).
 - Nettoavkastning = E_terminal/100 000 − 1. Strikt > 0 krävs.
 - Drawdown redovisas med fälten `max_dd_close` och `max_dd_bound` (negativa) samt `_mag` (positiva).
@@ -360,7 +388,8 @@ OGILTIG_DATA: §3/§5-kontroller faller före beräkning. OGILTIG: brott mot nå
 eller granskning. Båda sparas med orsak och räknas; inget ekonomiskt beslut. Invarianter: inget köp i lock_day eller
 efter permanent stopp; ingen fyllning utanför tillåtna öppningar eller efter terminal; högst ett fill-event per konto
 och öppning (plus legacy-stop inom stapel); riskavsikt ökar aldrig |q| (varje `risk_reduce_only_hold` loggad); vikt vid `after_trade` efter köp ≤ cap(D) + 1e−12;
-funding tillämpad vid sin exakta tid; varje
+funding tillämpad vid sin exakta tid; E > 0 utanför dokumenterat likvidationstillstånd och E = C = q = 0 inom det;
+en mellanhändelse möter aldrig en position som redan stängts vid öppningen eller genom likvidation; varje
 funding-händelse bokförd exakt en gång per scenario; inga indata från 2025; storleksidentitet enligt §6.
 
 ### 13.4 Redovisning utöver kriterier
@@ -501,13 +530,29 @@ B, dag 2022-01-02. 2022-01-01 23:59:30: mellanhändelse i 20-stapeln före fylln
 E_close och dagsbeslutet. Första tillåtna samtidiga händelse 2022-01-01 00:00 (A på q = 0, B på första q_new); händelser
 före start bokförs inte. Exakt terminal 2024-12-31 20:00: A på q_old, B på 0; 20:00:30 och senare möter q = 0.
 
+**O17 legacy-ordning bara vid verkligt okänd ordning (R2-01).** Ränta 0,0001.
+Gapstop (C = 10 000, q = 900, S = 95, kontraktsöppning 94, mark_ref 94): stopen fylls vid öppningen och kontot har
+E = 94 464,64 med q = 0. Funding 00:00:30 är 0 i både L1 och L2; den generella regeln i revision 2 skulle felaktigt ha
+debiterat 900 × 94 × 0,0001 = 8,46. Samma gapstop med funding exakt vid öppningen: A debiterar ingående q, 8,46
+(E = 94 456,18), B debiterar 0 (E = 94 464,64). Inträde vid öppningen och stop inom stapeln (kontot platt med 100 000,
+legacy-long w = 1 vid P = M = 100 ger q_open = 998,40256; S = 97 träffas inom stapeln; mellanhändelse med mark_ref 100):
+L1 betalar 0 och slutar på 96 690,10; L2 betalar 9,98403 på den nya positionen q_open och slutar på 96 680,11. Ingen
+äldre position före inträdet används.
+
+**O18 absorberande nollkonvention (R2-02).** Likvidation mitt i perioden: E_end [100 000; 101 000; 0; 0; 0] ger
+r = [0,01; −1; 0; 0], full längd 4, kedjad −100 % = slut/start − 1, ändliga Sharpe −9,43 och Newey-West t −1,50.
+Likvidation på terminaldagen: [100 000; 99 000; 0] ger r = [−0,01; −1], kedjad −100 %. Blandning med ett likviderat
+delkonto ([50 000; 51 000; 0; 0]) och ett överlevande ([50 000; 50 500; 51 000; 52 000]): summan [100 000; 101 500;
+51 000; 52 000] ger r = [0,015; −0,49754; 0,01961], kedjad −48 % = 52 000/100 000 − 1. En nolla utan
+likvidationstillstånd ([100 000; 0; 0]) ger OGILTIG. Main med likvidationsflagga: giltig körning, C6 falskt, REJECT.
+
 ## 17. Lösning av M01–M08
 
 | Fynd | Löst i |
 |---|---|
-| M01 funding/handelsordning | §8.1, §8.3, §8.4, D01, D18, D20, O5, O6, O16 |
+| M01 funding/handelsordning | §8.1, §8.3, §8.4, D01, D18, D20, O5, O6, O16, O17 |
 | M02 vikt, avgiftsbas, mättid | §6, §7, D08, D17, D19, O1–O5b, O14, O15 |
-| M03 intrastapel, mark, marginal | §9, §10, D02–D04, D10, O7, O8, O11 |
+| M03 intrastapel, mark, marginal | §4, §9, §10, D02–D04, D10, D21, O7, O8, O11, O18 |
 | M04 jämförelsematris | §11, D05, D08, D16, D20, O9, O13 |
 | M05 första/sista event, midnatt | §4, §7, §8.1, O6, O10 |
 | M06 startkapital i drawdown | §10.1 |
@@ -516,8 +561,9 @@ före start bokförs inte. Exakt terminal 2024-12-31 20:00: A på q_old, B på 0
 
 ## 18. Kvarstående begränsningar och vad som är verifierat
 
-Verifierat i revision 2: orakelräkningen i §16 (skriptet, `--check`), inklusive att O14 reproducerar Codex q* för
-gapfallet och O13 Codex Sharpe-motexempel; Codex `review.py --check` passerar oförändrat; t_krav(17) och
+Verifierat i revision 3: orakelräkningen i §16 (skriptet, `--check`), inklusive att O14 reproducerar Codex q* för
+gapfallet och O13 Codex Sharpe-motexempel, att O17 ger 0/0 vid gapstop där R2-01 visade 8,46, och att O18 ger full längd och ändliga
+Sharpe/t-indata; båda Codex `review.py --check` passerar oförändrade; t_krav(17) och
 Newey-West-lags genom `stats`-formlerna; att mark-datasetets verifieringsfil anger 10 962 staplar och
 `holdout_loaded = false`.
 
@@ -533,7 +579,8 @@ känslighetsgrind, ingen gräns för Sharpe eller t; DSR-varianterna är känsli
 2022–2024 är redan sedd och kan inte ge ren bekräftelse.
 
 Codex besked om revision 1: både A och B behålls som grind för exakt samtidiga event; legacy-bounden behålls som sträng
-diagnostik; 5 % behålls som forsknings-/stressmodell med 0,5 % redovisat (här båda i gridet). Nya val i revision 2 som
-Codex bör pröva: reduce-only-regeln (D17), exakt fundingtid med L1/L2 för legacy (D18), kapitalfaserna (D19) och
-gridet med krav i varje scenario (D20). Inga materiella modellval är lämnade öppna; underkänns något ska det ändras före
+diagnostik; 5 % behålls som forsknings-/stressmodell med 0,5 % redovisat (här båda i gridet). Codex omgranskning av
+revision 2 accepterade D17, D19 och D20 och den preciserade marginal- och DSR-texten. Nya val i revision 3 som Codex bör
+pröva: avgränsningen av L1/L2 till verkligt okänd ordning med kända öppningshändelser och likvidation först (D18) och
+den absorberande nollkonventionen (D21). Inga materiella modellval är lämnade öppna; underkänns något ska det ändras före
 A2, inte efter ett resultat.

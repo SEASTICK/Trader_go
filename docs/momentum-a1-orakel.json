@@ -250,5 +250,120 @@
    "typ": "mellan",
    "q": 0
   }
+ },
+ "O17_legacy_ordning": {
+  "gapstop_plus_30s": {
+   "E_efter_gapstop": 94464.64,
+   "q_vid_handelse": 0,
+   "L1": 0.0,
+   "L2": 0.0,
+   "felaktig_generell_L2": 8.46
+  },
+  "gapstop_exakt_vid_oppning": {
+   "A": 8.46,
+   "B": 0.0,
+   "E_A": 94456.18,
+   "E_B": 94464.64
+  },
+  "inträde_vid_oppning_stop_inom_stapel": {
+   "q_open": 998.4025559105431,
+   "S": 97,
+   "mark_ref": 100,
+   "L1_funding": 0.0,
+   "L2_funding": 9.984025559105431,
+   "E_L1": 96690.09584664536,
+   "E_L2": 96680.11182108625,
+   "stopkostnad": 154.95207667731628,
+   "aldre_position_anvands": false
+  }
+ },
+ "O18_likvidation": {
+  "mitt_i_perioden": {
+   "E_end": [
+    100000,
+    101000,
+    0,
+    0,
+    0
+   ],
+   "r": [
+    0.010000000000000009,
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "langd": 4,
+   "kedjad": -1.0,
+   "slut_mot_start": -1.0,
+   "kedjad_stammer": true,
+   "alla_andliga": true,
+   "sharpe": -9.425127137293707,
+   "nw_t": -1.4987640121284973
+  },
+  "terminaldag": {
+   "E_end": [
+    100000,
+    99000,
+    0
+   ],
+   "r": [
+    -0.010000000000000009,
+    -1.0
+   ],
+   "langd": 2,
+   "kedjad": -1.0,
+   "slut_mot_start": -1.0,
+   "kedjad_stammer": true,
+   "alla_andliga": true,
+   "sharpe": -13.782170350472079,
+   "nw_t": 0.0
+  },
+  "blandning_ett_delkonto_likviderat": {
+   "E_end": [
+    100000,
+    101500,
+    51000,
+    52000
+   ],
+   "r": [
+    0.014999999999999902,
+    -0.49753694581280783,
+    0.019607843137254832
+   ],
+   "langd": 3,
+   "kedjad": -0.48,
+   "slut_mot_start": -0.48,
+   "kedjad_stammer": true,
+   "alla_andliga": true,
+   "sharpe": -9.917774521594337,
+   "nw_t": -1.9072542634319911
+  },
+  "delkonto_likviderat": {
+   "E_end": [
+    50000,
+    51000,
+    0,
+    0
+   ],
+   "r": [
+    0.020000000000000018,
+    -1.0,
+    0.0
+   ],
+   "langd": 3,
+   "kedjad": -1.0,
+   "slut_mot_start": -1.0,
+   "kedjad_stammer": true,
+   "alla_andliga": true,
+   "sharpe": -10.701056463462326,
+   "nw_t": -2.057403439491282
+  },
+  "oforklarad_nolla_ger_ogiltig": true,
+  "main_beslut": {
+   "likvidationsflagga": true,
+   "C6": false,
+   "giltig": true,
+   "beslut": "REJECT"
+  }
  }
 }
