@@ -290,9 +290,13 @@
             {
               "file": "docs/fas2-jamforelsekurvor-granskning-78.md",
               "detail": "db9a4ec: befintliga jämförelseutfall identiska mot de70580, men nya comparison_curves saknar utvecklingskontroll vid direkt anrop (P1)."
+            },
+            {
+              "file": "engine/tests/test_fas2_eval.py",
+              "detail": "fec2e51 (PR #78): comparison_curves kör utvecklingskontrollen på huvudserien och varje jämförelse före beräkning, även utan jämförelser; slutprov, data före 2020 och index utan UTC avvisas utan att någon kontrollsumma räknas (spion). Python 553 och frontend 118 tester samt bygge passerar; avsiktliga fel i skydd, urval och tidsaxelkontroll fångas. Endast syntetisk data, inget driftsatt."
             }
           ],
-          "note": "Återöppnad för ny oskyddad jämförelseingång. Kriterier och tidigare jämförelseberäkningar oförändrade; bara syntetisk verifiering."
+          "note": "Rättat i fec2e51 efter granskning av db9a4ec. Väntar på Codex omgranskning; inte godkänt."
         },
         {
           "id": "F2-502",
@@ -470,9 +474,13 @@
             {
               "file": "docs/fas2-jamforelsekurvor-granskning-78.md",
               "detail": "db9a4ec: kurvor implementerade och visuellt provade i ljus/mörk Chrome-vy. Ogiltiga tidsaxlar accepteras (P2); 1500-gränsen kan överskridas (P3). 105 frontendtester och bygge passerar."
+            },
+            {
+              "file": "app/src/features/research-engine/h0013.dom.test.tsx",
+              "detail": "fec2e51 (PR #78): högst 1 500 punkter med gemensamt jämnt urval och båda ändpunkterna; appen kräver UTC-tidpunkter på 4h-rutnätet, strikt stigande, inom testfönstren och i huvudkurvan, och att H-0013-värdena stämmer med huvudkurvan (relativ tolerans 1e-6); annars visas kurvorna som saknade med förklaring. Fixturerna har nu samma serie i båda representationerna. Python 553 och frontend 118 tester samt bygge passerar; avsiktliga fel i skydd, urval och tidsaxelkontroll fångas. Endast syntetisk data, inget driftsatt."
             }
           ],
-          "note": "Öppen i väntan på rättade kurvkontroller. Driftsatt dee88eb saknar kurvorna; inget riktigt jobb eller installerat app-test."
+          "note": "Rättat i fec2e51 efter granskning av db9a4ec. Väntar på Codex omgranskning; inte godkänt."
         },
         {
           "id": "F2-705",
