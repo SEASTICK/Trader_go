@@ -3,7 +3,7 @@
   "title": "Fas 2 – Adaptive Strategy Engine",
   "hypothesis": "H-0013",
   "updated": "2026-11-03",
-  "reviewed_revision": "db9a4ec",
+  "reviewed_revision": "08a8966",
   "note": "Klar betyder verifierad. Kod som bara finns lokalt eller tester utan granskning är inte slutgodkända.",
   "groups": [
     {
@@ -281,7 +281,7 @@
         {
           "id": "F2-501",
           "title": "Jämför med köp-och-behåll, varje kandidat ensam och en likaviktad blandning",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-utvardering-granskning-72.md",
@@ -290,9 +290,13 @@
             {
               "file": "docs/fas2-jamforelsekurvor-granskning-78.md",
               "detail": "db9a4ec: befintliga jämförelseutfall identiska mot de70580, men nya comparison_curves saknar utvecklingskontroll vid direkt anrop (P1)."
+            },
+            {
+              "file": "docs/fas2-jamforelsekurvor-granskning-78.md",
+              "detail": "08a8966 (kod fec2e51): oberoende omgranskning godkänd. 553 Python-/118 frontendtester och bygge passerar; direkta skydd, tidsaxel, huvudkurvans värden, högst 1500 punkter och syntetisk motor–worker–läsarintegration verifierade."
             }
           ],
-          "note": "Återöppnad för ny oskyddad jämförelseingång. Kriterier och tidigare jämförelseberäkningar oförändrade; bara syntetisk verifiering."
+          "note": "PR #78 kodmässigt godkänd på 08a8966 med grön CI. Bara syntetisk lokal verifiering. Driftsatt dee88eb saknar jämförelsekurvorna; riktigt appflöde och installerad app återstår i arbetsområde 8."
         },
         {
           "id": "F2-502",
@@ -461,7 +465,7 @@
         {
           "id": "F2-704",
           "title": "Visa marknadslägen, kandidatval och jämförelsekurvor med spårbara källor",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-research-lab-granskning-77.md",
@@ -470,9 +474,13 @@
             {
               "file": "docs/fas2-jamforelsekurvor-granskning-78.md",
               "detail": "db9a4ec: kurvor implementerade och visuellt provade i ljus/mörk Chrome-vy. Ogiltiga tidsaxlar accepteras (P2); 1500-gränsen kan överskridas (P3). 105 frontendtester och bygge passerar."
+            },
+            {
+              "file": "docs/fas2-jamforelsekurvor-granskning-78.md",
+              "detail": "08a8966 (kod fec2e51): oberoende omgranskning godkänd. 553 Python-/118 frontendtester och bygge passerar; direkta skydd, tidsaxel, huvudkurvans värden, högst 1500 punkter och syntetisk motor–worker–läsarintegration verifierade."
             }
           ],
-          "note": "Öppen i väntan på rättade kurvkontroller. Driftsatt dee88eb saknar kurvorna; inget riktigt jobb eller installerat app-test."
+          "note": "PR #78 kodmässigt godkänd på 08a8966 med grön CI. Bara syntetisk lokal verifiering. Driftsatt dee88eb saknar jämförelsekurvorna; riktigt appflöde och installerad app återstår i arbetsområde 8."
         },
         {
           "id": "F2-705",
@@ -530,5 +538,5 @@
       ]
     }
   ],
-  "reviewed_scope": "PR #78 granskad på db9a4ec (kod e42c534): 541 Python-/105 frontendtester och bygge passerar. Ny direkt kurvingång saknar slutprovsskydd, läsaren godkänner felaktiga tidsaxlar och urvalet kan ge 1501 punkter. Ej godkänd för merge. Tidigare nyckeltal återverifierade med identiskt före/efter-resultat; ingen riktig körning eller driftsättning."
+  "reviewed_scope": "PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Python-/118 frontendtester och bygge passerar, CI grön. Egna slutprovs-/tidsaxel-/punktgränsprov samt syntetiskt motor–workerpaket–frontendläsarprov passerar. Kodmässigt godkänd för merge. Ingen riktig körning, driftsättning eller publicering."
 }
