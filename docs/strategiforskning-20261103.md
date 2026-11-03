@@ -40,3 +40,12 @@ Idén är vald efter att resultaten redan setts och räknas som ett nytt försö
 5. Granska resultat och riskutfall. REJECT bevaras vid underkänt resultat; ändring av regler kräver nytt id. Ett eventuellt slutprov kräver separat beslut efter MORE_RESEARCH.
 
 Fas 3:s tekniska planering kan fortsätta parallellt, men framåttestet väntar på en kandidat med READY_FOR_PAPER. Inga riktiga pengar eller börsnycklar används.
+
+## Verifiering av denna leverans
+
+- H-0016 förregistrerad i commit e65012e före implementation eller historisk körning. Motorns require_registered accepterar id:t och räknar N=16; låst t-krav 2,7343687865331763. H-0016 saknar resultatbeslut och H-0013 är fortsatt REJECT.
+- De 15 befintliga testerna i test_registry_and_experiment.py, test_registered_export.py och test_catalog.py passerar. Pytest kunde inte skriva sin lokala cache under sandboxen; testerna passerade ändå.
+- H-0013-diagnosen gav byteidentiskt JSON vid två läsningar av den hashverifierade originalfilen. Alla sex sparade spelböcker överensstämmer med den låsta träningsregeln.
+- Fas 2- och Fas 3-generatorernas --check samt git diff --check passerar. Tidigare resultat, protokoll och motor är oförändrade. Inga nya dataarkiv har lästs.
+
+**Nästa arbetsleverans är implementation och syntetisk verifiering av H-0016:s risklager. Detta är inte ett nytt lönsamt strategiresultat.**
