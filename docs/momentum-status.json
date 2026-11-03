@@ -361,9 +361,22 @@
         {
           "id": "MOM-C02",
           "title": "Implementera handelsband, avsikter och riskprioritet utan dold ombalansering",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "engine/traderlab/momentum_risk.py",
+              "detail": "mom-risk/1.0.0: rena tillståndsövergångar vid 4H-gränser, band 2 pp, dagsbeslut i §7:s ordning, sammanslagning terminal > permanent > dag > cap/platt > normal, dagsreset och lock_day."
+            },
+            {
+              "file": "engine/tests/test_momentum_risk.py",
+              "detail": "61 syntetiska tester mot O6, O14, O15 och handräkning med exakta float-gränser; 17 av 19 riktade felprov fångade, två bevisat ekvivalenta."
+            },
+            {
+              "file": "docs/momentum-risk-C3.md",
+              "detail": "API, tillståndsövergångar, gräns mot eventloop, fel, verifiering och gränser för C3."
+            }
+          ],
+          "note": "C3: band, avsikter och riskprioritet som rena funktioner på claude/momentum-c3; väntar på Codex granskning. Integration i eventloop återstår."
         },
         {
           "id": "MOM-C03",
@@ -393,16 +406,37 @@
             {
               "file": "docs/momentum-C2-granskning-fcf5cb4.md",
               "detail": "Codex godkänner fundingdelen på exakt fcf5cb4; fas-/tidsvakt, processed-validering och källfeltyp verifierade. 170 riktade prov/759 motorprov samt oberoende Decimal-/regressionsaudit passerar."
+            },
+            {
+              "file": "engine/traderlab/momentum_risk.py",
+              "detail": "mom-risk/1.0.0: rena tillståndsövergångar vid 4H-gränser, band 2 pp, dagsbeslut i §7:s ordning, sammanslagning terminal > permanent > dag > cap/platt > normal, dagsreset och lock_day."
+            },
+            {
+              "file": "engine/tests/test_momentum_risk.py",
+              "detail": "61 syntetiska tester mot O6, O14, O15 och handräkning med exakta float-gränser; 17 av 19 riktade felprov fångade, två bevisat ekvivalenta."
             }
           ],
-          "note": "Fundingdelen godkänd på fcf5cb4. Dagsreset och första/sista event är ännu inte integrerade; C03 förblir in_progress."
+          "note": "Funding (C2, godkänd) och dagsreset (C3, väntar på granskning) finns; första/sista event i eventloopen återstår."
         },
         {
           "id": "MOM-C04",
           "title": "Implementera 2 % dagsstopp, 15 % permanent stopp och konservativ 20 %-riskkontroll",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "engine/traderlab/momentum_risk.py",
+              "detail": "mom-risk/1.0.0: rena tillståndsövergångar vid 4H-gränser, band 2 pp, dagsbeslut i §7:s ordning, sammanslagning terminal > permanent > dag > cap/platt > normal, dagsreset och lock_day."
+            },
+            {
+              "file": "engine/tests/test_momentum_risk.py",
+              "detail": "61 syntetiska tester mot O6, O14, O15 och handräkning med exakta float-gränser; 17 av 19 riktade felprov fångade, två bevisat ekvivalenta."
+            },
+            {
+              "file": "docs/momentum-risk-C3.md",
+              "detail": "API, tillståndsövergångar, gräns mot eventloop, fel, verifiering och gränser för C3."
+            }
+          ],
+          "note": "C3: dagsstopp 2 % och permanent stopp 15 % som riskstatus; konservativ 20 %-kontroll och intrastapel-bound återstår."
         },
         {
           "id": "MOM-C05",
@@ -424,9 +458,17 @@
             {
               "file": "docs/momentum-C1-granskning-6f43505.md",
               "detail": "Codex godkänner exakt C1-revision 6f43505 efter rättade numeriska vakter, 82 ledgerprov/671 motorprov och oberoende Decimal-/före-efterkontroller. Likvidation/riskordning ännu inte verifierade."
+            },
+            {
+              "file": "engine/traderlab/momentum_risk.py",
+              "detail": "mom-risk/1.0.0: rena tillståndsövergångar vid 4H-gränser, band 2 pp, dagsbeslut i §7:s ordning, sammanslagning terminal > permanent > dag > cap/platt > normal, dagsreset och lock_day."
+            },
+            {
+              "file": "engine/tests/test_momentum_risk.py",
+              "detail": "61 syntetiska tester mot O6, O14, O15 och handräkning med exakta float-gränser; 17 av 19 riktade felprov fångade, två bevisat ekvivalenta."
             }
           ],
-          "note": "C1:s basis-/kostnads-/reduce-only-grund verifierad på 6f43505. Likvidation och full riskordning återstår."
+          "note": "C3: riskordning och gap-komposition med C1 prövade syntetiskt; marginal, likvidation och intrastapel återstår."
         }
       ]
     },
