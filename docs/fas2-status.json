@@ -416,6 +416,10 @@
             {
               "file": "docs/fas2-driftutfall-granskning-76.md",
               "detail": "2026-11-03: oberoende drift-/kontraktskontroller och privat export verifierade. Edwin redovisar DO veckobackup från 1 dag sedan och Supabase-backup 2026-11-03 06:47:12 UTC; skärmbild visar auth_enqueue=true, auth_result_ok=false, auth_finish=false."
+            },
+            {
+              "file": "docs/fas2-jamforelsekurvor-granskning-78.md",
+              "detail": "2026-11-03: slutpaket b44d3ce ombyggt och verifierat, SHA256 015c190c…23f0, 186 filer. Plan i PR #79 granskad på 8d85c10. Driftsatt kod kvar dee88eb enligt senaste driftunderlag; uppgraderingen är inte utförd här."
             }
           ],
           "note": "Driftsättning godkänd inom dokumenterad avgränsning. Riktigt medlemstest, appens E2E och JWT-samtidighet är inte verifierade av grantkontrollen. Inget H-0013-jobb startat."
@@ -538,5 +542,5 @@
       ]
     }
   ],
-  "reviewed_scope": "PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Python-/118 frontendtester och bygge passerar, CI grön. Egna slutprovs-/tidsaxel-/punktgränsprov samt syntetiskt motor–workerpaket–frontendläsarprov passerar. Kodmässigt godkänd för merge. Ingen riktig körning, driftsättning eller publicering."
+  "reviewed_scope": "PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Python-/118 frontendtester och bygge passerar, CI grön. Egna slutprovs-/tidsaxel-/punktgränsprov samt syntetiskt motor–workerpaket–frontendläsarprov passerar. Kodmässigt godkänd för merge. Ingen riktig körning, driftsättning eller publicering. Slutpaket b44d3ce oberoende ombyggt med identisk SHA256 och 186 verifierade filer; PR #79-plan granskad på 8d85c10. Ingen ny driftsättning utförd."
 }

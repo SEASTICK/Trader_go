@@ -70,3 +70,16 @@ Granskad head: `08a8966349cfc25137038c747c749615e215ae5f`, rättningskod `fec2e5
 **PR #78 är kodmässigt godkänd för merge på `08a8966`, med grön CI och bevarad granskad kod.** F2-501 återgodkänns och F2-704 markeras klar: **35 av 40 verifierade**. Inga öppna fynd från granskningen återstår.
 
 Nästa steg är merge med den senaste checklistestatusen bevarad, därefter ett reproducerbart releasepaket och konkret uppdaterad driftsättningsplan för separat driftbeslut. Nuvarande worker `dee88eb` saknar fortfarande kurvorna. Arbetsområde 8 återstår: relevanta slutkontroller, riktigt appflöde, installerad Mac, Stable och slutbedömning. Ingen riktig H-0013-körning, slutprovsåtkomst, merge, driftsättning eller publicering har utförts i denna omgranskning. Inget strategiresultat är godkänt för papper/live.
+
+
+## Slutpaket och uppgraderingsplan – PR #79
+
+2026-11-03: mergecommiten `b44d3cecaac6e05077c8ce2c74acf73a8455d0d8` är kontrollerad mot godkänd `08a8966`; app-/motorkod är oförändrad. PR #79:s plan granskad på `8d85c10176b5ba28522a522cb567baed2cdf39bb` via hela diffen.
+
+Eget bygge från mergecommiten ger `tradergo-research-b44d3cecaac6.tar.gz`, SHA-256 `015c190c5e9819c0d53795468dc00d551f23edbf78bc094fce34d8d6a46823f0`, identisk med leveransen. Egen uppackning och `verify-research-release.py` verifierar 186 filer och rätt revision.
+
+Mot driftsatt `dee88eb` ändras bara `fas2_eval.py` och `research_engine/h0013.py` bland motorns produktionsfiler. Migrationer, tjänster, beroenden och paketverifierare är oförändrade. Därför behövs ingen SQL-migration eller ändring av den delade venv-miljön. Återgång till `tradergo-research-dee88eb65196` behåller 0005 och samma kökontrakt; äldre kod saknar enbart jämförelsekurvorna.
+
+Planen är godkänd som underlag för Edwins driftbeslut. Före ändring ska faktisk serverrevision, ledig kö/slot, ny verifierad egen export samt senaste lyckade backup kontrolleras. DigitalOcean har enligt tidigare uppgift veckobackup; ett nytt backupdatum samma dag kan därför inte förutsättas. Redovisa faktisk backupålder enligt den befintliga frekvensen. Kontrollera exakt en worker, revision, databaskontrakt och marknadsinsamling efter installation; backa vid misslyckad kontroll. Om en oväntad H-0013-körning finns, avbryt uppgraderingsförberedelserna och rapportera den utan att själv starta eller avbryta forskning.
+
+Ingen server har kontaktats eller ändrats i denna paket-/plangranskning. Detta är inte genomförd uppgradering, inte godkännande att starta H-0013 och inte en Stable-publicering. Status kvarstår på **35/40**.

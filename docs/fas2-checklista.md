@@ -4,7 +4,7 @@
 
 H-0013 · Kontrollerad 2026-11-03 · Granskad kodversion `08a8966`.
 
-PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Python-/118 frontendtester och bygge passerar, CI grön. Egna slutprovs-/tidsaxel-/punktgränsprov samt syntetiskt motor–workerpaket–frontendläsarprov passerar. Kodmässigt godkänd för merge. Ingen riktig körning, driftsättning eller publicering.
+PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Python-/118 frontendtester och bygge passerar, CI grön. Egna slutprovs-/tidsaxel-/punktgränsprov samt syntetiskt motor–workerpaket–frontendläsarprov passerar. Kodmässigt godkänd för merge. Ingen riktig körning, driftsättning eller publicering. Slutpaket b44d3ce oberoende ombyggt med identisk SHA256 och 186 verifierade filer; PR #79-plan granskad på 8d85c10. Ingen ny driftsättning utförd.
 
 ## Uppdateringsregler
 
@@ -135,6 +135,7 @@ PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Pyt
   - Underlag: [docs/fas2-drift-granskning-74.md](fas2-drift-granskning-74.md) — e0c41ca: godkänt underlag efter omgranskning, 538 Python-tester och lokala SQL-/samtidighetstester passerar. Paket SHA256 11dd7a0faabd24f8939ec2c64ea3d59b0d2a33787f0c710e3833d702e7b7378b; 186 filer verifierar.
   - Underlag: [docs/fas2-drift-granskning-74.md](fas2-drift-granskning-74.md) — Slutpaket dee88eb: Engine check grön, 651 788 byte och SHA256 62c7d8e482ef6a1755d670f74a7631c221469e61259a09b285f32627936c8575. Eget bygge byteidentiskt; 186 filer verifierar.
   - Underlag: [docs/fas2-driftutfall-granskning-76.md](fas2-driftutfall-granskning-76.md) — 2026-11-03: oberoende drift-/kontraktskontroller och privat export verifierade. Edwin redovisar DO veckobackup från 1 dag sedan och Supabase-backup 2026-11-03 06:47:12 UTC; skärmbild visar auth_enqueue=true, auth_result_ok=false, auth_finish=false.
+  - Underlag: [docs/fas2-jamforelsekurvor-granskning-78.md](fas2-jamforelsekurvor-granskning-78.md) — 2026-11-03: slutpaket b44d3ce ombyggt och verifierat, SHA256 015c190c…23f0, 186 filer. Plan i PR #79 granskad på 8d85c10. Driftsatt kod kvar dee88eb enligt senaste driftunderlag; uppgraderingen är inte utförd här.
   - Driftsättning godkänd inom dokumenterad avgränsning. Riktigt medlemstest, appens E2E och JWT-samtidighet är inte verifierade av grantkontrollen. Inget H-0013-jobb startat.
 
 ## 7. Visa Fas 2 i Research Lab
