@@ -34,7 +34,8 @@ Fas 3-plan efter godkänd Fas 2. Edwin vill prioritera en bättre strategi med p
 - [ ] **F3-201** Identifiera en kandidat som klarat historiska krav; ny forskning kräver egen förregistrerad hypotes **Pågår.**
   - Underlag: [docs/strategiforskning-20261103.md](strategiforskning-20261103.md) — Läsande H-0013-diagnos: 46 av 48 träningsbedömningar har för få affärer; bara ett kandidatval kvalificerat. H-0012 positivt historiskt netto men otillräcklig styrka och för hög drawdown mot nya riskmålet.
   - Underlag: [research/h0016-protokoll.md](../research/h0016-protokoll.md) — Nytt försök, ännu inte implementerat eller kört: fasta standardparametrar, riskbudget 0,5 %, nettobaserade stopp och 20 % drawdown-kriterium. Ingen optimering eller ML.
-  - Orsaksanalys klar och nytt forskningsförsök H-0016 förregistrerat. Ingen kvalificerad kandidat ännu; H-0012/H-0013 förblir REJECT.
+  - Underlag: [docs/h0013-efterfoljare-forskningsplan-20261103.md](h0013-efterfoljare-forskningsplan-20261103.md) — Nätbaserad primärkällereview och ett samlat förslag: fast momentumensemble med volatilitetsstyrd risk och kostnadsband. Endast plan; inget nytt id, ingen implementation, historisk körning eller godkänd kandidat.
+  - Pågående strategiforskning. H-0016 är förregistrerad men oprövad; den forskningsbaserade H-0013-efterföljaren är ett separat planförslag. H-0013 behåller REJECT. Inget av detta ger READY_FOR_PAPER.
 - [ ] **F3-202** Verifiera dokumenterat slutprov och READY_FOR_PAPER innan riktigt framåttest får starta
 - [ ] **F3-203** Frys strategi eller väljare, kodrevision, parametrar och kostnadsmodell
 - [ ] **F3-204** Förregistrera minst tre månaders test, erforderligt antal affärer och slutregel

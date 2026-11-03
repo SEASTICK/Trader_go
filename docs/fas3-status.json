@@ -64,9 +64,13 @@
             {
               "file": "research/h0016-protokoll.md",
               "detail": "Nytt försök, ännu inte implementerat eller kört: fasta standardparametrar, riskbudget 0,5 %, nettobaserade stopp och 20 % drawdown-kriterium. Ingen optimering eller ML."
+            },
+            {
+              "file": "docs/h0013-efterfoljare-forskningsplan-20261103.md",
+              "detail": "Nätbaserad primärkällereview och ett samlat förslag: fast momentumensemble med volatilitetsstyrd risk och kostnadsband. Endast plan; inget nytt id, ingen implementation, historisk körning eller godkänd kandidat."
             }
           ],
-          "note": "Orsaksanalys klar och nytt forskningsförsök H-0016 förregistrerat. Ingen kvalificerad kandidat ännu; H-0012/H-0013 förblir REJECT."
+          "note": "Pågående strategiforskning. H-0016 är förregistrerad men oprövad; den forskningsbaserade H-0013-efterföljaren är ett separat planförslag. H-0013 behåller REJECT. Inget av detta ger READY_FOR_PAPER."
         },
         {
           "id": "F3-202",
