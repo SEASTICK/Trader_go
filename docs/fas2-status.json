@@ -655,7 +655,7 @@
         {
           "id": "F2-805",
           "title": "Dokumentera Fas 2-godkännande och fatta separat beslut om eventuellt slutprov; ingen automatisk paper- eller liveaktivering",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-h0013-granskning-20261103.md",
@@ -672,12 +672,16 @@
             {
               "file": "docs/fas2-release-verifiering-20261103.md",
               "detail": "Codex oberoende slutgranskning: GitHub-release/tagg/manifest och installerad Stable 0.1.23 verifierade. Publicerad och installerad Mac-binär byteidentiska; codesign strict PASS. Inloggat H-0013-resultat REJECT med fem affärer och rätt spårbarhet. En worker, tom aktiv kö, ett H-0013-resultat. Ingen ny forskning eller åtkomst till slutprov."
+            },
+            {
+              "file": "docs/fas2-release-verifiering-20261103.md",
+              "detail": "Edwins svar 2026-11-03: ”ja jag godkänner”, på frågan om slutgodkännande av Fas 2 med dokumenterade begränsningar. Codex tekniska granskning redan godkänd; F2-805 avslutad."
             }
           ],
-          "note": "Codex tekniska slutgranskning godkänd. Endast Edwins slutgodkännande av leveransen med dokumenterade begränsningar återstår. Ingen paper/live-aktivering; H-0013 REJECT och inget slutprov."
+          "note": "Edwin gav uttryckligt slutgodkännande 2026-11-03 efter Codex tekniska granskning, med redovisade begränsningar. Fas 2 är klar. H-0013 förblir REJECT; inget slutprov eller paper/live."
         }
       ]
     }
   ],
-  "reviewed_scope": "A1/A2/A3 och riktig H-0013 verifierade. Avbrott av aktiv process provat i riktig kö; 1H-katalogens behörighetsfel rättat med uttryckligt ja. H-0013 ca59d441 genomförd efter separat godkännande, försök 1, 516 s, ett resultat. Oberoende omräkning bekräftar alla fem fallna krav och REJECT; appens strikta läsare rapporterar inga saknade delar. Slutprovet oläst. En worker b44d3ce, tom kö. H-0013 REJECT registrerat i 82bd03f efter granskning 5ce848e. Stable 0.1.23 från 72107ed publicerad efter Edwins ja och approve (#83), verifierad i installerad app tillsammans med testkanal 0.1.21 och uppdateringsprov till 0.1.22; F2-804 klar. F2-805 underlag dokumenterat, inväntar Edwins slutgodkännande och granskning. Codex oberoende slutgranskning av release, installerad Stable och befintligt H-0013-resultat godkänd. F2-805 inväntar endast Edwins slutgodkännande med redovisade begränsningar."
+  "reviewed_scope": "Fas 2 slutgodkänd av Edwin 2026-11-03 efter Codex tekniska granskning: 40/40 verifierade inom dokumenterade begränsningar. A1/A2/A3 och riktig H-0013 ca59d441 verifierade, inklusive aktivt avbrott i kön. Stable 0.1.23 från 72107ed publicerad efter Edwins ja och approve (#83), och verifierad i installerad Mac-app; testkanalen och uppdatering 0.1.21 till 0.1.22 kontrollerade. En worker b44d3ce och tom aktiv kö. H-0013 förblir REJECT, alla fem krav faller; slutprovet oläst och ingen paper/live-aktivering. Manuellt Windowsprov saknas och driftlarm är uppskjutna enligt godkända begränsningar. Fas 3 har inte startats."
 }

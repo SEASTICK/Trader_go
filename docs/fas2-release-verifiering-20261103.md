@@ -46,7 +46,7 @@ Alla tre byggena kommer från main `72107eda7995a86ad990547faa10c3237c8d57a9`. A
 
 - Forskningsbeslut: H-0013 **REJECT** enligt förregistrerade kriterier. Inget slutprov öppnas för H-0013. Inga strategier är READY_FOR_PAPER. Ingen paper- eller liveaktivering.
 - Leverans: Adaptive Strategy Engine, kö, worker och Research Lab är släppta i Stable 0.1.23 och verifierade på installerad app.
-- Slutgodkännandet är Edwins beslut. Detta dokument är underlaget; F2-805 bockas av när Edwin har godkänt det och Codex har granskat.
+- Edwin gav uttryckligt slutgodkännande 2026-11-03 efter Codex granskning, med dokumenterade begränsningar. F2-805 är klar.
 
 ## Begränsningar
 
@@ -69,4 +69,10 @@ Claude har dokumenterat releaseflödet ovan i c73d061. Codex har därefter kontr
 - Läsande serverkontroll 2026-11-03T17:41:29Z: exakt en worker b44d3ce/PID 30868, lås taget, tom aktiv kö och exakt ett H-0013-resultat. Ingen ny körning, migration eller serverändring utfördes.
 
 
-**Codex tekniska granskning är godkänd inom begränsningarna ovan. F2-804 är klar. F2-805 inväntar endast Edwins slutgodkännande av leveransen med dessa begränsningar.** Ett sådant godkännande innebär att forskningsverktyget är levererat; H-0013 förblir REJECT, slutprovet öppnas inte och inget godkänns för papper eller live.
+**Codex tekniska granskning är godkänd inom begränsningarna ovan. F2-804 är klar. Edwin har därefter slutgodkänt leveransen med dessa begränsningar; F2-805 är klar.** Ett sådant godkännande innebär att forskningsverktyget är levererat; H-0013 förblir REJECT, slutprovet öppnas inte och inget godkänns för papper eller live.
+
+## Edwins slutgodkännande, 2026-11-03
+
+På Codex fråga om godkännande av Fas 2 med de dokumenterade begränsningarna, bland annat uteblivet manuellt Windows-test och uppskjutna driftlarm, svarade Edwin: **”ja jag godkänner”**. Codex tekniska granskning var redan godkänd.
+
+**Fas 2 är klar: 40 av 40 uppgifter.** Stable 0.1.23 är publicerad och verifierad i installerad Mac-app. Godkännandet gäller forskningsverktygets leverans inom redovisade begränsningar. H-0013 förblir REJECT; inget slutprov öppnas och ingen strategi aktiveras för papper eller live. Fas 3 har inte startats. Inga nya körningar, releaser, kodändringar eller serverändringar gjordes för detta godkännande.
