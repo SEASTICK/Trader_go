@@ -1,10 +1,10 @@
 # Efterföljare till H-0013 – Arbetsplan
 
-**10 av 40 uppgifter verifierade · 8 arbetsområden.**
+**11 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-Metodgranskning · Kontrollerad 2026-11-03 · Granskad kodversion `6eba8d61cca0df03c3aa6c352a26834011479094`.
+Metodgranskning · Kontrollerad 2026-11-03 · Granskad kodversion `6f4350569f52527d9a156333240b735530e423a6`.
 
-C1 på 6eba8d6 granskad: 40 ledgertester och 629 motorprov passerar; 250 oberoende Decimal-fall och tre felprov verifierade. Två P2-fynd blockerar C1: icke-ändliga konto-/utdata och odefinierad första lösardivision med olika Python/numpy-beteende. C01/C05 förblir in_progress, 10/40. A/B och fryst protokoll/register orörda. Ingen verklig historik, H-0017-körning eller drift.
+C1 godkänd på 6f43505: C1-01/C1-02 stängda, 82 ledgerprov och 671 motorprov godkända. 250 Decimal-fall, 500 identiska före/efter-fyllningar och egna numeriska gränsfall verifierade. C01 klar; C05 fortsatt in_progress eftersom likvidation/riskordning återstår. 11/40. Nästa avgränsade del C2 är fundingbokföring; ingen verklig historik, H-0017-körning, drift eller lönsamhet verifierad.
 
 ## Uppdateringsregler
 
@@ -101,15 +101,16 @@ C1 på 6eba8d6 granskad: 40 ledgertester och 629 motorprov passerar; 250 oberoen
 
 ## C. Utförande och nettobaserad risk
 
-0/5 verifierade.
+1/5 verifierade.
 
-- [ ] **MOM-C01** Implementera enhetsledger med partial fills, markvärdering och kostnad exakt en gång **Pågår.**
+- [x] **MOM-C01** Implementera enhetsledger med partial fills, markvärdering och kostnad exakt en gång
   - Underlag: [engine/traderlab/momentum_ledger.py](../engine/traderlab/momentum_ledger.py) — mom-ledger/1.0.0: konto C/q, E = C + qM, exakt §6-lösare, kostnad en gång, normal- och reduce-only-fyllning, E_trade i fas after_trade.
   - Underlag: [engine/tests/test_momentum_ledger.py](../engine/tests/test_momentum_ledger.py) — 40 syntetiska tester mot orakel O1–O4, O11, O14, O15 och handräkning; 14 riktade felprov fångade.
   - Underlag: [docs/momentum-ledger-C1.md](momentum-ledger-C1.md) — API, bokföringsidentiteter, fel, verifiering och gränser för C1.
   - Underlag: [docs/momentum-C1-granskning-6eba8d6.md](momentum-C1-granskning-6eba8d6.md) — Codex granskar exakt 6eba8d6. Orakel/Decimal stämmer för normala fall, men C1-01 och C1-02 behöver numerisk/API-rättning och regressioner före godkännande. 40 ledgerprov, 629 motorprov godkända.
   - Underlag: [engine/tests/test_momentum_ledger.py](../engine/tests/test_momentum_ledger.py) — Rättning av C1-01/C1-02 från granskningen av 6eba8d6: kontofält och beräknade belopp ändlighetskontrollerade, vakt för kostnadsfri nämnare, enhetliga skalärtyper. 82 syntetiska tester; 39 nya fäller 6eba8d6.
-  - C1-01/C1-02 rättade på claude/momentum-c1; väntar på Codex omgranskning av exakt revision.
+  - Underlag: [docs/momentum-C1-granskning-6f43505.md](momentum-C1-granskning-6f43505.md) — Codex godkänner exakt C1-revision 6f43505 efter rättade numeriska vakter, 82 ledgerprov/671 motorprov och oberoende Decimal-/före-efterkontroller. Likvidation/riskordning ännu inte verifierade.
+  - C1 godkänd på 6f43505. Framtida ändring av Account/fundingidentitet kräver återöppning och omgranskning.
 - [ ] **MOM-C02** Implementera handelsband, avsikter och riskprioritet utan dold ombalansering
 - [ ] **MOM-C03** Implementera funding, dagsreset och första/sista event enligt låst kontrakt
 - [ ] **MOM-C04** Implementera 2 % dagsstopp, 15 % permanent stopp och konservativ 20 %-riskkontroll
@@ -117,7 +118,8 @@ C1 på 6eba8d6 granskad: 40 ledgertester och 629 motorprov passerar; 250 oberoen
   - Underlag: [engine/tests/test_momentum_ledger.py](../engine/tests/test_momentum_ledger.py) — 40 syntetiska tester mot orakel O1–O4, O11, O14, O15 och handräkning; 14 riktade felprov fångade.
   - Underlag: [docs/momentum-C1-granskning-6eba8d6.md](momentum-C1-granskning-6eba8d6.md) — Codex granskar exakt 6eba8d6. Orakel/Decimal stämmer för normala fall, men C1-01 och C1-02 behöver numerisk/API-rättning och regressioner före godkännande. 40 ledgerprov, 629 motorprov godkända.
   - Underlag: [engine/tests/test_momentum_ledger.py](../engine/tests/test_momentum_ledger.py) — Rättning av C1-01/C1-02 från granskningen av 6eba8d6: kontofält och beräknade belopp ändlighetskontrollerade, vakt för kostnadsfri nämnare, enhetliga skalärtyper. 82 syntetiska tester; 39 nya fäller 6eba8d6.
-  - C1 inte slutgodkänd: två P2-fynd i ändlighetskontroller och första lösardivisionen. Nästa del av C väntar på omgranskning.
+  - Underlag: [docs/momentum-C1-granskning-6f43505.md](momentum-C1-granskning-6f43505.md) — Codex godkänner exakt C1-revision 6f43505 efter rättade numeriska vakter, 82 ledgerprov/671 motorprov och oberoende Decimal-/före-efterkontroller. Likvidation/riskordning ännu inte verifierade.
+  - C1:s basis-/kostnads-/reduce-only-grund verifierad på 6f43505. Likvidation och full riskordning återstår.
 
 ## D. Utvärderare och jämförelser
 

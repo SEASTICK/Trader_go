@@ -3,8 +3,8 @@
   "title": "Efterföljare till H-0013 – granskning och implementation",
   "hypothesis": "H-0017 – riskstyrd tidsseriemomentum på BTCUSDT",
   "updated": "2026-11-03",
-  "reviewed_revision": "6eba8d61cca0df03c3aa6c352a26834011479094",
-  "reviewed_scope": "C1 på 6eba8d6 granskad: 40 ledgertester och 629 motorprov passerar; 250 oberoende Decimal-fall och tre felprov verifierade. Två P2-fynd blockerar C1: icke-ändliga konto-/utdata och odefinierad första lösardivision med olika Python/numpy-beteende. C01/C05 förblir in_progress, 10/40. A/B och fryst protokoll/register orörda. Ingen verklig historik, H-0017-körning eller drift.",
+  "reviewed_revision": "6f4350569f52527d9a156333240b735530e423a6",
+  "reviewed_scope": "C1 godkänd på 6f43505: C1-01/C1-02 stängda, 82 ledgerprov och 671 motorprov godkända. 250 Decimal-fall, 500 identiska före/efter-fyllningar och egna numeriska gränsfall verifierade. C01 klar; C05 fortsatt in_progress eftersom likvidation/riskordning återstår. 11/40. Nästa avgränsade del C2 är fundingbokföring; ingen verklig historik, H-0017-körning, drift eller lönsamhet verifierad.",
   "groups": [
     {
       "id": "A",
@@ -321,7 +321,7 @@
         {
           "id": "MOM-C01",
           "title": "Implementera enhetsledger med partial fills, markvärdering och kostnad exakt en gång",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "engine/traderlab/momentum_ledger.py",
@@ -342,9 +342,13 @@
             {
               "file": "engine/tests/test_momentum_ledger.py",
               "detail": "Rättning av C1-01/C1-02 från granskningen av 6eba8d6: kontofält och beräknade belopp ändlighetskontrollerade, vakt för kostnadsfri nämnare, enhetliga skalärtyper. 82 syntetiska tester; 39 nya fäller 6eba8d6."
+            },
+            {
+              "file": "docs/momentum-C1-granskning-6f43505.md",
+              "detail": "Codex godkänner exakt C1-revision 6f43505 efter rättade numeriska vakter, 82 ledgerprov/671 motorprov och oberoende Decimal-/före-efterkontroller. Likvidation/riskordning ännu inte verifierade."
             }
           ],
-          "note": "C1-01/C1-02 rättade på claude/momentum-c1; väntar på Codex omgranskning av exakt revision."
+          "note": "C1 godkänd på 6f43505. Framtida ändring av Account/fundingidentitet kräver återöppning och omgranskning."
         },
         {
           "id": "MOM-C02",
@@ -383,9 +387,13 @@
             {
               "file": "engine/tests/test_momentum_ledger.py",
               "detail": "Rättning av C1-01/C1-02 från granskningen av 6eba8d6: kontofält och beräknade belopp ändlighetskontrollerade, vakt för kostnadsfri nämnare, enhetliga skalärtyper. 82 syntetiska tester; 39 nya fäller 6eba8d6."
+            },
+            {
+              "file": "docs/momentum-C1-granskning-6f43505.md",
+              "detail": "Codex godkänner exakt C1-revision 6f43505 efter rättade numeriska vakter, 82 ledgerprov/671 motorprov och oberoende Decimal-/före-efterkontroller. Likvidation/riskordning ännu inte verifierade."
             }
           ],
-          "note": "C1 inte slutgodkänd: två P2-fynd i ändlighetskontroller och första lösardivisionen. Nästa del av C väntar på omgranskning."
+          "note": "C1:s basis-/kostnads-/reduce-only-grund verifierad på 6f43505. Likvidation och full riskordning återstår."
         }
       ]
     },

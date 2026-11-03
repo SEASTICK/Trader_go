@@ -1,0 +1,16 @@
+{
+  "reviewed_revision": "6f4350569f52527d9a156333240b735530e423a6",
+  "previous_revision": "6eba8d61cca0df03c3aa6c352a26834011479094",
+  "synthetic_only": true,
+  "source_sha256": {
+    "before": "49831b1c89982e22227e4cd86dfe1fa2609b924e7e51d08007a97ba9f1208c29",
+    "after": "40e4ec0e02050b68f6dcc9196f088444e4c647bbcd0701939685686ef6dc1014"
+  },
+  "decimal_reference_cases": 250,
+  "identical_before_after_normal_risk_pairs": 500,
+  "rejected_invalid_constructions_and_replacements": 60,
+  "original_overflow_rejected_both_fill_paths": true,
+  "first_division_rejected_for_python_and_numpy": true,
+  "nonfinite_q0_rejected": true,
+  "input_account_unchanged_on_error": true
+}
