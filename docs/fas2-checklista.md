@@ -132,7 +132,8 @@ PR #74 mergad som dee88eb, Engine check grön. Eget slutpaketbygge är byteident
 - [ ] **F2-605** Driftsätt verifierad kod med loggar, resursgränser och dokumenterad återgång **Pågår.**
   - Underlag: [docs/fas2-drift-granskning-74.md](fas2-drift-granskning-74.md) — e0c41ca: godkänt underlag efter omgranskning, 538 Python-tester och lokala SQL-/samtidighetstester passerar. Paket SHA256 11dd7a0faabd24f8939ec2c64ea3d59b0d2a33787f0c710e3833d702e7b7378b; 186 filer verifierar.
   - Underlag: [docs/fas2-drift-granskning-74.md](fas2-drift-granskning-74.md) — Slutpaket dee88eb: Engine check grön, 651 788 byte och SHA256 62c7d8e482ef6a1755d670f74a7631c221469e61259a09b285f32627936c8575. Eget bygge byteidentiskt; 186 filer verifierar.
-  - PR #74 mergad och slutpaketet verifierat. Själva driftsättningen och 0005-migrationen är inte utförda i kontrollen; F2-605 förblir in_progress.
+  - Underlag: [docs/fas2-driftsattning-utfall-20261102.md](fas2-driftsattning-utfall-20261102.md) — Driftsatt enligt steg 1–8: paket dee88eb (SHA-256 62c7d8e4…8575) verifierat på servern, kontrollerat stopp, install.sh, start med revision=dee88eb, check-single-worker.sh godkänd (en worker, lås, paket, revision), egen export före ändring, 0005 applicerad av Edwin i SQL Editor efter ett misslyckat första försök; PostgREST ser funktionerna, kontraktet och anon-nekanden verifierade från servern, 0 H-0013-körningar, marknadsinsamling felfri på ny release. Ej verifierat: authenticated-rättighet med riktig session, leverantörernas backupdatum, larm.
+  - Driftsatt 2026-11-02/03 och verifierat från servern. Väntar på Codex granskning av utfallet; ingen H-0013-körning har startats.
 
 ## 7. Visa Fas 2 i Research Lab
 
