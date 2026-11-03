@@ -1,10 +1,10 @@
 # Fas 2 – Utvecklingsplan
 
-**35 av 40 uppgifter verifierade · 8 arbetsområden.**
+**36 av 40 uppgifter verifierade · 8 arbetsområden.**
 
 H-0013 · Kontrollerad 2026-11-03 · Granskad kodversion `08a8966`.
 
-PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Python-/118 frontendtester och bygge passerar, CI grön. Egna slutprovs-/tidsaxel-/punktgränsprov samt syntetiskt motor–workerpaket–frontendläsarprov passerar. Kodmässigt godkänd för merge. Ingen riktig körning, driftsättning eller publicering. Slutpaket b44d3ce oberoende ombyggt med identisk SHA256 och 186 verifierade filer; PR #79-plan granskad på 8d85c10. Ingen ny driftsättning utförd. PR #79 driftutfall omgranskat på 784d439: serverns b44d3ce, en worker PID 30868/0 omstarter, tom kö, 0 H-0013, lyckad insamling och privat exporthash verifierade läsande. Driftredovisningen godkänd; app-/sluttest återstår. PR #80 granskad på 4e85f4e: Rust-klockrättning kodmässigt godkänd; fmt, clippy, 44+4 tester och 20 egna upprepningar passerar. Windows-CI pågår. F2-801 fortsatt in_progress; nytt Mac-bygge och installerat sluttest återstår.
+PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Python-/118 frontendtester och bygge passerar, CI grön. Egna slutprovs-/tidsaxel-/punktgränsprov samt syntetiskt motor–workerpaket–frontendläsarprov passerar. Kodmässigt godkänd för merge. Ingen riktig körning, driftsättning eller publicering. Slutpaket b44d3ce oberoende ombyggt med identisk SHA256 och 186 verifierade filer; PR #79-plan granskad på 8d85c10. Ingen ny driftsättning utförd. PR #79 driftutfall omgranskat på 784d439: serverns b44d3ce, en worker PID 30868/0 omstarter, tom kö, 0 H-0013, lyckad insamling och privat exporthash verifierade läsande. Driftredovisningen godkänd; app-/sluttest återstår. PR #80 granskad på 4e85f4e: Rust-klockrättning kodmässigt godkänd; fmt, clippy, 44+4 tester och 20 egna upprepningar passerar. Windows-CI pågår. F2-801 fortsatt in_progress; nytt Mac-bygge och installerat sluttest återstår. PR #81 granskad på 66d59bb: A1 godkänd, CI på identiskt träd grön, kö/samtidighet/Universe/paket omkörda. Mac-hash/signatur verifierade utan start. Backupens 23 innehållsfiler och 9 SQLite-integriteter godkända; felaktig manifest-självpost (P2) ska rättas före A2.
 
 ## Uppdateringsregler
 
@@ -163,14 +163,15 @@ PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Pyt
 
 ## 8. Sluttest och godkännande
 
-0/5 verifierade.
+1/5 verifierade.
 
-- [ ] **F2-801** Kör relevanta Python-, frontend-, Rust- och databaskontroller **Pågår.**
+- [x] **F2-801** Kör relevanta Python-, frontend-, Rust- och databaskontroller
   - Underlag: [docs/fas2-sluttest-granskning-80.md](fas2-sluttest-granskning-80.md) — 4e85f4e (kod 144ab88): klockrättning oberoende godkänd. fmt, clippy, 44 Rust-enhetstester + 4 integrationstester och 20 egna upprepningar passerar; 1 nätverkstest ignorerat. App-/Rust-CI gröna, Windows pågår. Övrig app-/motorkod oförändrad.
-  - Underlag: [docs/fas2-sluttest-plan.md](fas2-sluttest-plan.md) — A1 omkörd på mergecommit 6c16638 (ren): motor 553, app 118 + bygge, Rust fmt/clippy/44+4 (1 ignorerat), Universe, PGlite x3, lokal PostgreSQL 17 x2 och workerpaket 2x identisk SHA-256 3f477aec… + verify PASS. CI på be9d958 (samma träd): App, Rust och Windows gröna.
-  - A1 komplett och grön på 6c16638; väntar på granskning av samlat underlag före avbockning. Mac-granskningspaket ombyggt från 6c16638 (a32f4ab-paketet ersatt).
+  - Underlag: [docs/fas2-a1-granskning-81.md](fas2-a1-granskning-81.md) — 66d59bb: A1 godkänt på 6c16638. CI på identiskt träd grön inklusive Windows; kö/samtidighet, Universe (27 Rust, 2 ignorerade), reproducerbart workerpaket och tidigare kodkontrollkedja verifierade.
+  - A1 verifierad. Installerad app, inloggat flöde, riktig H-0013 och Stable återstår.
 - [ ] **F2-802** Verifiera hela flödet från app till worker och sparat H-0013-resultat
 - [ ] **F2-803** Kontrollera Mac, anslutningsfel och att befintliga Fas 1-funktioner fungerar
-  - Förberett, inte utfört: granskningsbygge från 6c16638 (SHA-256 df0436dc…) och säkerhetskopia av delad lokal appdata tagen 2026-11-03 före test.
+  - Underlag: [docs/fas2-a1-granskning-81.md](fas2-a1-granskning-81.md) — 66d59bb: Mac-zip df0436dc…3cfc/signatur verifierade utan start. Backupens 23 innehållsfiler matchar och nio SQLite-integriteter är ok; manifestets felaktiga självpost behöver rättas (P2).
+  - A2 inte utfört. Rätta backupmanifestets självpost före start. Granskningskopian delar data med Stable.
 - [ ] **F2-804** Publicera granskad Stable och verifiera installerad kodversion samt uppdaterad checklista
 - [ ] **F2-805** Dokumentera Fas 2-godkännande och fatta separat beslut om eventuellt slutprov; ingen automatisk paper- eller liveaktivering
