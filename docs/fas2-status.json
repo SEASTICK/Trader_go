@@ -421,37 +421,62 @@
         {
           "id": "F2-701",
           "title": "Visa H-0013 separat från Fas 1 och tvärsnittshypoteserna",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "app/src/features/research-engine/h0013.test.tsx",
+              "detail": "Egen flik \"Fas 2 · H-0013\" i Research Lab, skild från Fas 1-resultaten (H-0009–H-0012), tvärsnittshypoteserna (H-0014/H-0015) och utforskning; H-0013-körningar visas inte i utforskningslistan. 62cc4bb (gren fas2-research-lab). app: 27 nya tester i h0013.test.tsx (syntetiska resultat, simulerade köanrop, renderad markup), hela frontendsviten 85 tester och bygget passerar; sex avsiktliga fel i den strikta läsningen fångas. Vyn granskad i webbförhandsvisning i ljust och mörkt tema, utloggad; resultatvyn är bara provad som renderad markup. Ingen H-0013-körning, inget slutprov, ingen driftsättning."
+            }
+          ],
+          "note": "Väntar på Codex granskning; inloggat flöde mot riktig kö och installerad app är inte provat."
         },
         {
           "id": "F2-702",
           "title": "Visa registrerade parametrar och förbered en fast forskningskörning",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "app/src/features/research-engine/h0013.test.tsx",
+              "detail": "Låsta inställningar från protokoll, migration och motor (testade mot källorna) och en tvåstegsförberedelse av den enda fasta körningen med stabil request_key; blockerad när en körning är aktiv eller ett resultat finns. 62cc4bb (gren fas2-research-lab). app: 27 nya tester i h0013.test.tsx (syntetiska resultat, simulerade köanrop, renderad markup), hela frontendsviten 85 tester och bygget passerar; sex avsiktliga fel i den strikta läsningen fångas. Vyn granskad i webbförhandsvisning i ljust och mörkt tema, utloggad; resultatvyn är bara provad som renderad markup. Ingen H-0013-körning, inget slutprov, ingen driftsättning."
+            }
+          ],
+          "note": "Väntar på Codex granskning; inloggat flöde mot riktig kö och installerad app är inte provat."
         },
         {
           "id": "F2-703",
           "title": "Visa köstatus, förlopp, fel och möjlighet att avbryta",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "app/src/features/research-engine/h0013.test.tsx",
+              "detail": "H-0013-körningar med status, förlopp, försök (av 3), felmeddelande och avbrott; köad, pågående, misslyckad och avbruten körning visar inget resultat, databasens avvisning visas. 62cc4bb (gren fas2-research-lab). app: 27 nya tester i h0013.test.tsx (syntetiska resultat, simulerade köanrop, renderad markup), hela frontendsviten 85 tester och bygget passerar; sex avsiktliga fel i den strikta läsningen fångas. Vyn granskad i webbförhandsvisning i ljust och mörkt tema, utloggad; resultatvyn är bara provad som renderad markup. Ingen H-0013-körning, inget slutprov, ingen driftsättning."
+            }
+          ],
+          "note": "Väntar på Codex granskning; inloggat flöde mot riktig kö och installerad app är inte provat."
         },
         {
           "id": "F2-704",
           "title": "Visa marknadslägen, kandidatval och jämförelsekurvor med spårbara källor",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "app/src/features/research-engine/h0013.test.tsx",
+              "detail": "Resultat per marknadsläge, kandidatval per testfönster och slutlig spelbok, jämförelser mot köp och behåll, kandidaterna ensamma, blandning och riskfilter på samma staplar, med kodrevision, dataset, datafingeravtryck och manifest; jämförelsekurvor saknas i resultatet och visas som saknade. 62cc4bb (gren fas2-research-lab). app: 27 nya tester i h0013.test.tsx (syntetiska resultat, simulerade köanrop, renderad markup), hela frontendsviten 85 tester och bygget passerar; sex avsiktliga fel i den strikta läsningen fångas. Vyn granskad i webbförhandsvisning i ljust och mörkt tema, utloggad; resultatvyn är bara provad som renderad markup. Ingen H-0013-körning, inget slutprov, ingen driftsättning."
+            }
+          ],
+          "note": "Väntar på Codex granskning; inloggat flöde mot riktig kö och installerad app är inte provat."
         },
         {
           "id": "F2-705",
           "title": "Visa kriterier, osäkerhet, historik och REJECT/MORE_RESEARCH utan SIM som verkliga resultat",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "app/src/features/research-engine/h0013.test.tsx",
+              "detail": "Fem kriterier, t mot 2,67, kostnadsstress, osäkerhetsintervall, utan bästa året, permutationstest och Deflated Sharpe; REJECT/MORE_RESEARCH visas bara när beslutet följer kriterierna, slutprovet var oläst, datasetet är det frysta och resultatet inte är simulerat. 62cc4bb (gren fas2-research-lab). app: 27 nya tester i h0013.test.tsx (syntetiska resultat, simulerade köanrop, renderad markup), hela frontendsviten 85 tester och bygget passerar; sex avsiktliga fel i den strikta läsningen fångas. Vyn granskad i webbförhandsvisning i ljust och mörkt tema, utloggad; resultatvyn är bara provad som renderad markup. Ingen H-0013-körning, inget slutprov, ingen driftsättning."
+            }
+          ],
+          "note": "Väntar på Codex granskning; inloggat flöde mot riktig kö och installerad app är inte provat."
         }
       ]
     },
