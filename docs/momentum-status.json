@@ -321,7 +321,7 @@
         {
           "id": "MOM-C01",
           "title": "Implementera enhetsledger med partial fills, markvärdering och kostnad exakt en gång",
-          "status": "done",
+          "status": "in_progress",
           "evidence": [
             {
               "file": "engine/traderlab/momentum_ledger.py",
@@ -346,9 +346,13 @@
             {
               "file": "docs/momentum-C1-granskning-6f43505.md",
               "detail": "Codex godkänner exakt C1-revision 6f43505 efter rättade numeriska vakter, 82 ledgerprov/671 motorprov och oberoende Decimal-/före-efterkontroller. Likvidation/riskordning ännu inte verifierade."
+            },
+            {
+              "file": "engine/traderlab/momentum_ledger.py",
+              "detail": "Kompletterad i C2: Account.funding_net och avstämning C = C0 + realized − costs − funding_net − q × avg_price; 82 C1-tester oförändrade och godkända."
             }
           ],
-          "note": "C1 godkänd på 6f43505. Framtida ändring av Account/fundingidentitet kräver återöppning och omgranskning."
+          "note": "Återöppnad i C2 eftersom Account och avstämningsidentiteten kompletterats; väntar på Codex omgranskning av exakt revision."
         },
         {
           "id": "MOM-C02",
@@ -360,9 +364,22 @@
         {
           "id": "MOM-C03",
           "title": "Implementera funding, dagsreset och första/sista event enligt låst kontrakt",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "engine/traderlab/momentum_funding.py",
+              "detail": "mom-funding/1.0.0: exakta fundingevent, betalning q × M_ref × ränta, mark_open-regel, stress bara på betalda belopp, dubbelbokningsskydd per konto och scenario."
+            },
+            {
+              "file": "engine/tests/test_momentum_funding.py",
+              "detail": "47 syntetiska tester mot O5, O5b, O16, O17 och Decimal; 15 riktade felprov fångade."
+            },
+            {
+              "file": "docs/momentum-funding-C2.md",
+              "detail": "API, regler, ledgerkomplettering, fel, verifiering och gränser för C2."
+            }
+          ],
+          "note": "Delvis: fundingbokföring och exakta event i C2. Dagsreset och första/sista event återstår."
         },
         {
           "id": "MOM-C04",

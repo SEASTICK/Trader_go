@@ -30,6 +30,8 @@ Modul: [engine/traderlab/momentum_ledger.py](../engine/traderlab/momentum_ledger
 - Vändning är ett Δq med kostnad på abs(Δq) = abs(q_old) + abs(q_new); hela gamla positionen realiseras och nytt
   snittpris blir P. Partialminskning realiserar bara sålda enheter och behåller snittpriset.
 - C = C0 + realized − costs − q × avg_price. Kapitalledgern C/q är källan; realized och avg_price är redovisning.
+  Kompletterat i C2: fältet funding_net och identiteten C = C0 + realized − costs − funding_net − q × avg_price; se
+  [momentum-funding-C2.md](momentum-funding-C2.md). Med funding_net = 0 är identiteten oförändrad.
 
 ## Typer och numeriskt kontrakt
 
