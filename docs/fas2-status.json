@@ -420,6 +420,10 @@
             {
               "file": "docs/fas2-jamforelsekurvor-granskning-78.md",
               "detail": "2026-11-03: slutpaket b44d3ce ombyggt och verifierat, SHA256 015c190c…23f0, 186 filer. Plan i PR #79 granskad på 8d85c10. Driftsatt kod kvar dee88eb enligt senaste driftunderlag; uppgraderingen är inte utförd här."
+            },
+            {
+              "file": "docs/fas2-driftsattning-utfall-b44d3ce.md",
+              "detail": "2026-11-03: workern uppgraderad från dee88eb till b44d3ce (paket SHA-256 015c190c…23f0, verifierat på servern) utan SQL-migration; ny verifierad export före ändringen; check-single-worker.sh godkänd (PID 30868, revision b44d3ce, 0 omstarter), databaskontraktet och anon-nekanden oförändrade, 0 H-0013-körningar, marknadsinsamling felfri på ny release. DigitalOcean-backupens exakta datum ej verifierat från servern. Ingen H-0013-körning, ingen Stable."
             }
           ],
           "note": "Driftsättning godkänd inom dokumenterad avgränsning. Riktigt medlemstest, appens E2E och JWT-samtidighet är inte verifierade av grantkontrollen. Inget H-0013-jobb startat."
