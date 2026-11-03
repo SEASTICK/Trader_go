@@ -1,10 +1,10 @@
 # Fas 2 – Utvecklingsplan
 
-**29 av 40 uppgifter verifierade · 8 arbetsområden.**
+**30 av 40 uppgifter verifierade · 8 arbetsområden.**
 
 H-0013 · Kontrollerad 2026-11-03 · Granskad kodversion `e0c8dc8`.
 
-PR #76 granskad som driftredovisning; worker dee88eb, aktiv insamling, rena kontraktsprov, anon-nekanden och 0 H-0013/running verifierade skrivskyddat. Privat export verifierad. Edwin bekräftar DO veckobackup från 1 dag sedan och Supabase-backup 2026-11-03 06:47:12 UTC. Authenticated-grants återstår för F2-605.
+F2-605 driftutfall godkänt 2026-11-03: worker dee88eb och 0005 kontrollerade, backupunderlag redovisat och SQL-grants bekräftade i Edwins skärmbild (true/false/false). 30/40 verifierade. Ingen H-0013-körning startad; medlemssession, appflöde och moln-JWT-samtidighet ingår inte i denna kontroll.
 
 ## Uppdateringsregler
 
@@ -115,7 +115,7 @@ PR #76 granskad som driftredovisning; worker dee88eb, aktiv insamling, rena kont
 
 ## 6. Supabase och DigitalOcean
 
-4/5 verifierade.
+5/5 verifierade.
 
 - [x] **F2-601** Skapa ett separat strikt kökontrakt för H-0013 med autentisering och RLS
   - Underlag: [docs/fas2-drift-granskning-74.md](fas2-drift-granskning-74.md) — e0c41ca (kod d01dccd): kökontrakt återverifierat efter ny kontroll under advisory lock. Båda ordningarna för köning/återgång passerar i lokal PostgreSQL; kö- och rättighetstester passerar.
@@ -129,11 +129,11 @@ PR #76 granskad som driftredovisning; worker dee88eb, aktiv insamling, rena kont
 - [x] **F2-604** Testa avbrott, timeout, återförsök och återhämtning efter workeromstart
   - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — 445178d (kod 2160c6e): oberoende omgranskning godkänd. 521 Python-tester, 8 riktiga signal-/processtester och båda PGlite-kösviterna passerar. Tidigare SIGTERM-felprov sparar nu försöket; felaktiga SQL-kriterier och beslut avvisas utan ändrad lease.
   - PR #73 mergad som d6f2eae, med godkänd kod 445178d. Lokalt verifierad. Faktiska Supabase-/driftkontroller återstår i F2-605.
-- [ ] **F2-605** Driftsätt verifierad kod med loggar, resursgränser och dokumenterad återgång **Pågår.**
+- [x] **F2-605** Driftsätt verifierad kod med loggar, resursgränser och dokumenterad återgång
   - Underlag: [docs/fas2-drift-granskning-74.md](fas2-drift-granskning-74.md) — e0c41ca: godkänt underlag efter omgranskning, 538 Python-tester och lokala SQL-/samtidighetstester passerar. Paket SHA256 11dd7a0faabd24f8939ec2c64ea3d59b0d2a33787f0c710e3833d702e7b7378b; 186 filer verifierar.
   - Underlag: [docs/fas2-drift-granskning-74.md](fas2-drift-granskning-74.md) — Slutpaket dee88eb: Engine check grön, 651 788 byte och SHA256 62c7d8e482ef6a1755d670f74a7631c221469e61259a09b285f32627936c8575. Eget bygge byteidentiskt; 186 filer verifierar.
-  - Underlag: [docs/fas2-driftutfall-granskning-76.md](fas2-driftutfall-granskning-76.md) — 2026-11-03: oberoende skrivskyddad kontroll av drift, kontraktsprov, anon och export. Edwin redovisar DO veckobackup från 1 dag sedan och Supabase-backup 2026-11-03 06:47:12 UTC. Authenticated-grants återstår.
-  - Driftsatt och oberoende kontrollerad; backupunderlag redovisat av Edwin. PR #76 godkänd som dokumentation. F2-605 väntar på authenticated-grants; inget H-0013-jobb startat.
+  - Underlag: [docs/fas2-driftutfall-granskning-76.md](fas2-driftutfall-granskning-76.md) — 2026-11-03: oberoende drift-/kontraktskontroller och privat export verifierade. Edwin redovisar DO veckobackup från 1 dag sedan och Supabase-backup 2026-11-03 06:47:12 UTC; skärmbild visar auth_enqueue=true, auth_result_ok=false, auth_finish=false.
+  - Driftsättning godkänd inom dokumenterad avgränsning. Riktigt medlemstest, appens E2E och JWT-samtidighet är inte verifierade av grantkontrollen. Inget H-0013-jobb startat.
 
 ## 7. Visa Fas 2 i Research Lab
 

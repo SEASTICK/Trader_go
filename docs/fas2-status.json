@@ -395,7 +395,7 @@
         {
           "id": "F2-605",
           "title": "Driftsätt verifierad kod med loggar, resursgränser och dokumenterad återgång",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-drift-granskning-74.md",
@@ -407,10 +407,10 @@
             },
             {
               "file": "docs/fas2-driftutfall-granskning-76.md",
-              "detail": "2026-11-03: oberoende skrivskyddad kontroll av drift, kontraktsprov, anon och export. Edwin redovisar DO veckobackup från 1 dag sedan och Supabase-backup 2026-11-03 06:47:12 UTC. Authenticated-grants återstår."
+              "detail": "2026-11-03: oberoende drift-/kontraktskontroller och privat export verifierade. Edwin redovisar DO veckobackup från 1 dag sedan och Supabase-backup 2026-11-03 06:47:12 UTC; skärmbild visar auth_enqueue=true, auth_result_ok=false, auth_finish=false."
             }
           ],
-          "note": "Driftsatt och oberoende kontrollerad; backupunderlag redovisat av Edwin. PR #76 godkänd som dokumentation. F2-605 väntar på authenticated-grants; inget H-0013-jobb startat."
+          "note": "Driftsättning godkänd inom dokumenterad avgränsning. Riktigt medlemstest, appens E2E och JWT-samtidighet är inte verifierade av grantkontrollen. Inget H-0013-jobb startat."
         }
       ]
     },
@@ -497,5 +497,5 @@
       ]
     }
   ],
-  "reviewed_scope": "PR #76 granskad som driftredovisning; worker dee88eb, aktiv insamling, rena kontraktsprov, anon-nekanden och 0 H-0013/running verifierade skrivskyddat. Privat export verifierad. Edwin bekräftar DO veckobackup från 1 dag sedan och Supabase-backup 2026-11-03 06:47:12 UTC. Authenticated-grants återstår för F2-605."
+  "reviewed_scope": "F2-605 driftutfall godkänt 2026-11-03: worker dee88eb och 0005 kontrollerade, backupunderlag redovisat och SQL-grants bekräftade i Edwins skärmbild (true/false/false). 30/40 verifierade. Ingen H-0013-körning startad; medlemssession, appflöde och moln-JWT-samtidighet ingår inte i denna kontroll."
 }

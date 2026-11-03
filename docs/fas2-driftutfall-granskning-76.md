@@ -12,10 +12,10 @@ Granskad dokumentations-head: `e0c8dc8f0386907fca2a110ff1b42b485f193564`, PR htt
 - Skrivskyddad kontroll visar 0 H-0013-körningar, inga running-körningar och H-0013 i hypotheses utan beslut, med registercommit 008f612.
 - Den rapporterade privata forskningsexporten finns med mode 0600. Dekomprimering och oberoende hashkontroll ger tables_sha256 `dcfb6fa4f669055d61c1372edb49a2e9bb17b53c5295e29e603fec68cbdf8074`, fångad 2026-11-02 20:16:20 UTC. Detta är forskningstabellsexporten, inte full databas-/Auth-backup. Inga backupvärden eller hemligheter har publicerats i granskningen.
 
-## Vad som återstår för F2-605
+## Kompletterat underlag och kvarstående avgränsningar
 
 - Backupunderlaget har kompletterats av Edwin 2026-11-03: DigitalOcean visar Automated Weekly Backups enabled och Last backup was 1 day ago; Supabase visar backup 2026-11-03 06:47:12 UTC. Detta är användarens dashboarduppgifter, inte en oberoende leverantörskontroll. DigitalOcean-backupen ska beskrivas som veckobackup. Den privata forskningsexporten är separat och har verifierats oberoende.
-- De driftsatta authenticated-rättigheterna behöver bekräftas. En skrivskyddad SQL-katalogfråga kan kontrollera att authenticated får enqueue, men inte resultatkontroll eller finish. En sådan grantkontroll är inte samma sak som ett genomfört medlemstest genom Auth/PostgREST; den senare begränsningen ska fortsatt framgå.
+- Edwin visar resultatet av den skrivskyddade SQL-katalogfrågan i skärmbild 2026-11-03: auth_enqueue=true, auth_result_ok=false och auth_finish=false. Detta bekräftar de driftsatta authenticated-grants. Det är inte ett genomfört medlemstest genom Auth/PostgREST; den begränsningen kvarstår för appens E2E-verifiering.
 - Samtidighet mot riktig Supabase med riktiga JWT har inte provats. Tidigare samtidighet är verifierad i lokal PostgreSQL 17. Detta får inte beskrivas som ett moln-E2E-test.
 - Larm är tidigare uttryckligen undantagna av Edwin och ska inte återinföras som godkännandekrav.
 
@@ -23,6 +23,6 @@ Inga nya kodtester behövs för dokumentationsändringen. Den gemensamma checkli
 
 ## Bedömning
 
-**PR #76 är godkänd för merge som driftredovisning på e0c8dc8.** Rapporten redovisar både det som verifierats och begränsningarna. Den faktiska driftsättningen bekräftas av de oberoende kontrollerna ovan, men F2-605 står kvar som in_progress tills rättighetsunderlaget är avklarat eller en ändrad avgränsning uttryckligen beslutats. Gemensam status: **29/40 verifierade**.
+**PR #76 är godkänd för merge som driftredovisning på e0c8dc8.** Rapporten redovisar både det som verifierats och begränsningarna. Den faktiska driftsättningen bekräftas av de oberoende kontrollerna ovan, och den återstående SQL-grantkontrollen är nu bekräftad genom Edwins skärmbild. **F2-605 är verifierad inom den dokumenterade driftavgränsningen. Gemensam status: 30/40 verifierade.** Riktig medlemssession, appflöde och JWT-samtidighet ska fortsatt hållas åtskilda från detta driftgodkännande.
 
-Detta är inte ett tillstånd att starta H-0013. Ingen strategi är godkänd för papper eller live. Backupdatumen är nu redovisade; nästa kontroll är authenticated-grants i SQL Editor; Research Lab och fullständigt appflöde återstår också i Fas 2.
+Detta är inte ett tillstånd att starta H-0013. Ingen strategi är godkänd för papper eller live. Backupunderlag och authenticated-grants är nu redovisade. Nästa arbetsområde är Research Lab och därefter fullständigt appflöde/sluttest i Fas 2. Ingen H-0013-körning har startats av granskningen.
