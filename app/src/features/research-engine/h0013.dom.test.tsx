@@ -57,6 +57,22 @@ describe("Diagram med konstanta värden", () => {
 });
 
 describe("Resultathämtning och felåterhämtning", () => {
+  it("visar ett listanslutningsfel och återhämtar sig vid nästa poll utan ny köning", async () => {
+    const api = fakeApi([], []);
+    api.h0013Runs.mockResolvedValueOnce([])
+      .mockRejectedValueOnce(new Error("Ingen serveranslutning. Försök igen när nätverket fungerar."))
+      .mockResolvedValue([]);
+    await render(<H0013Panel api={asApi(api)} connected login={<p>loginform</p>} />);
+    expect(text()).not.toContain("Ingen serveranslutning");
+    await flush(5000);
+    expect(text()).toContain("Ingen serveranslutning");
+    expect(text()).not.toContain("loginform");
+    await flush(5000);
+    expect(text()).not.toContain("Ingen serveranslutning");
+    expect(text()).toContain("Inga H-0013-körningar");
+    expect(api.enqueueH0013).not.toHaveBeenCalled();
+    expect(api.payload).not.toHaveBeenCalled();
+  });
   it("ett tillfälligt fel visas, döljs inte av listpollning och hämtas igen automatiskt", async () => {
     const api = fakeApi([run({ status: "done" })], [() => Promise.reject(new Error("Ingen serveranslutning. Försök igen när nätverket fungerar.")),
       async () => payload()]);

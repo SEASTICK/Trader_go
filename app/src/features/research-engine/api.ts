@@ -37,6 +37,9 @@ export class ResearchApi {
         if (response.status === 401 || response.status === 403) throw new Error("Inloggningen eller behörigheten kunde inte verifieras.");
         if (response.status === 404) throw new Error("Research-tjänsten är inte färdiginstallerad.");
         if (response.status === 400) {
+          if (path === "/auth/v1/token?grant_type=password") {
+            throw new Error("Det gick inte att logga in. Kontrollera e-postadress och lösenord.");
+          }
           // Databasens egna, svenska avvisningar (till exempel "Kön är full") visas; inga hemligheter finns i dem.
           const detail = await response.json().then((b: { message?: unknown }) => typeof b?.message === "string" ? b.message : "").catch(() => "");
           throw new Error(detail ? `Begäran nekades: ${detail}` : "Begäran nekades. Kontrollera parametrar, period och att kön inte är full.");

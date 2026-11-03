@@ -520,6 +520,10 @@
             {
               "file": "docs/fas2-a1-granskning-81.md",
               "detail": "66d59bb: A1 godkänt på 6c16638. CI på identiskt träd grön inklusive Windows; kö/samtidighet, Universe (27 Rust, 2 ignorerade), reproducerbart workerpaket och tidigare kodkontrollkedja verifierade."
+            },
+            {
+              "file": "docs/fas2-a2-utfall-20261103.md",
+              "detail": "A2-rättning: auth-400 får egen svensk feltext utan ändring av köavvisningar. 123 frontendtester och appbygge passerar; motor/Rust/server oförändrade."
             }
           ],
           "note": "A1 verifierad. Installerad app, inloggat flöde, riktig H-0013 och Stable återstår."
@@ -551,9 +555,17 @@
             {
               "file": "docs/fas2-a2-utfall-20261103.md",
               "detail": "Installerad 6c16638: riktig medlemssession verifierad, H-0013 visar inget resultat/inga körningar, befintlig utforsknings-/reproduktionslista läses. Ingen köknapp använd. Felaktig inloggning, nätprov och utloggning återstår."
+            },
+            {
+              "file": "docs/fas2-a2-utfall-20261103.md",
+              "detail": "Installerat 6c16638 visar missvisande köfel vid nekad inloggning. Rättning och 123 gröna frontendtester klara, men nytt installerat prov återstår. Wi-Fi-prov gav inget observerat fel och sessionen var därefter borta; fel/5-sekundersåterhämtning ej verifierade."
+            },
+            {
+              "file": "docs/fas2-a2-utfall-20261103.md",
+              "detail": "9471e51: rättad auth-feltext verifierad i installerad Mac-kopia i ljust/mörkt tema. Zip d9b3670a…ed87, signatur och ny privat backup verifierade. Korrekt inloggning i nya kopian, fysiskt nätprov och utloggning återstår."
             }
           ],
-          "note": "A2 pågår. Riktig läsande medlemssession verifierad. Återstående: felaktig inloggning, anslutningsfel/återhämtning och utloggning. Inget jobb har köats."
+          "note": "A2 pågår. Nekad inloggning är nu begriplig och verifierad i 9471e51. Invändta riktig inloggning i nya kopian; därefter återstår observerat nätavbrott/återhämtning och utloggning."
         },
         {
           "id": "F2-804",
@@ -572,5 +584,5 @@
       ]
     }
   ],
-  "reviewed_scope": "PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Python-/118 frontendtester och bygge passerar, CI grön. Egna slutprovs-/tidsaxel-/punktgränsprov samt syntetiskt motor–workerpaket–frontendläsarprov passerar. Kodmässigt godkänd för merge. Ingen riktig körning, driftsättning eller publicering. Slutpaket b44d3ce oberoende ombyggt med identisk SHA256 och 186 verifierade filer; PR #79-plan granskad på 8d85c10. Ingen ny driftsättning utförd. PR #79 driftutfall omgranskat på 784d439: serverns b44d3ce, en worker PID 30868/0 omstarter, tom kö, 0 H-0013, lyckad insamling och privat exporthash verifierade läsande. Driftredovisningen godkänd; app-/sluttest återstår. PR #80 granskad på 4e85f4e: Rust-klockrättning kodmässigt godkänd; fmt, clippy, 44+4 tester och 20 egna upprepningar passerar. Windows-CI pågår. F2-801 fortsatt in_progress; nytt Mac-bygge och installerat sluttest återstår. PR #81 granskad på 66d59bb: A1 godkänd, CI på identiskt träd grön, kö/samtidighet/Universe/paket omkörda. Mac-hash/signatur verifierade utan start. Backupens 23 innehållsfiler och 9 SQLite-integriteter godkända; felaktig manifest-självpost (P2) ska rättas före A2. PR #81 omgranskad på 6ff6b5e: manifestets självpost rättad, alla 23 innehållsfiler och 10 SQLite-integriteter oberoende verifierade. Tidigare antal 9 berodde på missad .sqlite3-fil. PR godkänd som förberedelse, A2 ännu inte utfört. A2 övertaget i installerad Mac-kopia: oavsiktligt versionsbyte upptäckt, kopian återställd till 6c16638 med ny verifierad privat backup. System-tema återställt och H-0013-inloggning förberedd. Inloggning/nätprov/utloggning återstår. A2: installerad app har nu verifierad riktig läsande medlemssession och befintlig körningslista. Nätprov, felaktig inloggning och utloggning återstår."
+  "reviewed_scope": "PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Python-/118 frontendtester och bygge passerar, CI grön. Egna slutprovs-/tidsaxel-/punktgränsprov samt syntetiskt motor–workerpaket–frontendläsarprov passerar. Kodmässigt godkänd för merge. Ingen riktig körning, driftsättning eller publicering. Slutpaket b44d3ce oberoende ombyggt med identisk SHA256 och 186 verifierade filer; PR #79-plan granskad på 8d85c10. Ingen ny driftsättning utförd. PR #79 driftutfall omgranskat på 784d439: serverns b44d3ce, en worker PID 30868/0 omstarter, tom kö, 0 H-0013, lyckad insamling och privat exporthash verifierade läsande. Driftredovisningen godkänd; app-/sluttest återstår. PR #80 granskad på 4e85f4e: Rust-klockrättning kodmässigt godkänd; fmt, clippy, 44+4 tester och 20 egna upprepningar passerar. Windows-CI pågår. F2-801 fortsatt in_progress; nytt Mac-bygge och installerat sluttest återstår. PR #81 granskad på 66d59bb: A1 godkänd, CI på identiskt träd grön, kö/samtidighet/Universe/paket omkörda. Mac-hash/signatur verifierade utan start. Backupens 23 innehållsfiler och 9 SQLite-integriteter godkända; felaktig manifest-självpost (P2) ska rättas före A2. PR #81 omgranskad på 6ff6b5e: manifestets självpost rättad, alla 23 innehållsfiler och 10 SQLite-integriteter oberoende verifierade. Tidigare antal 9 berodde på missad .sqlite3-fil. PR godkänd som förberedelse, A2 ännu inte utfört. A2 övertaget i installerad Mac-kopia: oavsiktligt versionsbyte upptäckt, kopian återställd till 6c16638 med ny verifierad privat backup. System-tema återställt och H-0013-inloggning förberedd. Inloggning/nätprov/utloggning återstår. A2: installerad app har nu verifierad riktig läsande medlemssession och befintlig körningslista. Nätprov, felaktig inloggning och utloggning återstår. A2 fann missvisande feltext vid nekad inloggning; avgränsad API-rättning regressionstestad med 123 frontendtester + bygge. Nytt Mac-prov återstår och Wi-Fi-provet är inte godkänt. PR #82 rättning 9471e51 verifierad i installerad Mac-app (båda teman), App-CI grön. Felaktig inloggning rättad; ny medlemssession/nätprov/utloggning återstår."
 }
