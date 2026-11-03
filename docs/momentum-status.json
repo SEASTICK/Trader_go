@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "title": "Efterföljare till H-0013 – granskning och implementation",
-  "hypothesis": "Ej registrerad – id kontrolleras i leverans A",
+  "hypothesis": "H-0017 – registrerad i A2, väntar på Codex granskning av registreringen",
   "updated": "2026-11-03",
   "reviewed_revision": "a25db812c1ea60932de7bf8fbcaf33a009859b46",
   "reviewed_scope": "A1 revision 3 på a25db81 godkänd som metodkontrakt för A2. R2-01/R2-02 och textjusteringar verifierade med oberoende syntetiska beräkningar, fulla 1 096-dagarsserier och 29 befintliga tester. MOM-A03/A04 klara för specifikationen; A05 väntar på registrering och Codex A2-granskning. Ingen implementation, marknadshistorik, historisk körning, drift eller lönsamhet verifierad. H-0013 REJECT och H-0016 oförändrade.",
@@ -129,7 +129,7 @@
         {
           "id": "MOM-A05",
           "title": "Förregistrera ett nytt ledigt id och låt Codex granska leverans A före implementation",
-          "status": "todo",
+          "status": "in_progress",
           "evidence": [
             {
               "file": "docs/momentum-a1-granskning-cb335ee.md",
@@ -142,9 +142,17 @@
             {
               "file": "docs/momentum-a1-granskning-a25db81.md",
               "detail": "Codex godkänner exakt A1-revision a25db81 för A2 efter oberoende kontroll av O17/O18 och full horisont. Ingen registrering eller motor i granskningsleveransen."
+            },
+            {
+              "file": "research/h0017-protokoll.md",
+              "detail": "Slutligt protokoll H-0017, momentum-protokoll/1.0.0. §1–§18 byte-identiska med godkänt A1 a25db81 utom länkprefix ../docs/. Låsta värden: N=17, t-krav 2,754268270633685, N_sok=1 213."
+            },
+            {
+              "file": "research/registry.md",
+              "detail": "En ny rad H-0017 sist; tidigare rader oförändrade (git diff: 1 tillagd, 0 borttagna). registry.count_attempts = 17."
             }
           ],
-          "note": "A1 a25db81 godkänd för A2. Registrering och Codex granskning av exakt A2-revision återstår; leverans B väntar."
+          "note": "A2 registrerad och committad; inte verifierad klar före Codex A2-granskning. Leverans B väntar."
         }
       ]
     },

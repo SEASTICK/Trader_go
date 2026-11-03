@@ -48,11 +48,13 @@ A1 revision 3 på a25db81 godkänd som metodkontrakt för A2. R2-01/R2-02 och te
   - Underlag: [docs/momentum-protokoll-A1.md](momentum-protokoll-A1.md) — Revision 3 efter Codex omgranskning av 979fb30: L1/L2 avgränsad till verkligt okänd ordning, kända öppningsutgångar och likvidation först (R2-01, D18); absorberande nollkonvention efter likvidation (R2-02, D21); textjusteringar i D11, §2 och §10.2. Väntar på omgranskning.
   - Underlag: [docs/momentum-a1-granskning-a25db81.md](momentum-a1-granskning-a25db81.md) — Codex godkänner exakt A1-revision a25db81 för A2 efter oberoende kontroll av O17/O18 och full horisont. Ingen registrering eller motor i granskningsleveransen.
   - Metodkontrakt godkänt på a25db81. Implementation, data och resultat ska verifieras separat i senare leveranser.
-- [ ] **MOM-A05** Förregistrera ett nytt ledigt id och låt Codex granska leverans A före implementation
+- [ ] **MOM-A05** Förregistrera ett nytt ledigt id och låt Codex granska leverans A före implementation **Pågår.**
   - Underlag: [docs/momentum-a1-granskning-cb335ee.md](momentum-a1-granskning-cb335ee.md) — Codex granskning av exakt cb335ee: fyra syntetiskt reproducerade kontraktsfynd. A1 inte godkänd; A2 väntar på rättning och omgranskning.
   - Underlag: [docs/momentum-a1-granskning-979fb30.md](momentum-a1-granskning-979fb30.md) — Oberoende omgranskning av 979fb30: ursprungliga fyra fynd rättade; R2-01 och R2-02 behöver precisering och syntetiska orakel före A2.
   - Underlag: [docs/momentum-a1-granskning-a25db81.md](momentum-a1-granskning-a25db81.md) — Codex godkänner exakt A1-revision a25db81 för A2 efter oberoende kontroll av O17/O18 och full horisont. Ingen registrering eller motor i granskningsleveransen.
-  - A1 a25db81 godkänd för A2. Registrering och Codex granskning av exakt A2-revision återstår; leverans B väntar.
+  - Underlag: [research/h0017-protokoll.md](../research/h0017-protokoll.md) — Slutligt protokoll H-0017, momentum-protokoll/1.0.0. §1–§18 byte-identiska med godkänt A1 a25db81 utom länkprefix ../docs/. Låsta värden: N=17, t-krav 2,754268270633685, N_sok=1 213.
+  - Underlag: [research/registry.md](../research/registry.md) — En ny rad H-0017 sist; tidigare rader oförändrade (git diff: 1 tillagd, 0 borttagna). registry.count_attempts = 17.
+  - A2 registrerad och committad; inte verifierad klar före Codex A2-granskning. Leverans B väntar.
 
 ## B. Ren signalmodul och tidskontrakt
 
