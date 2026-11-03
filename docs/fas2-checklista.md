@@ -1,10 +1,10 @@
 # Fas 2 – Utvecklingsplan
 
-**30 av 40 uppgifter verifierade · 8 arbetsområden.**
+**32 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-H-0013 · Kontrollerad 2026-11-03 · Granskad kodversion `e0c8dc8`.
+H-0013 · Kontrollerad 2026-11-03 · Granskad kodversion `f36a3ee`.
 
-F2-605 driftutfall godkänt 2026-11-03: worker dee88eb och 0005 kontrollerade, backupunderlag redovisat och SQL-grants bekräftade i Edwins skärmbild (true/false/false). 30/40 verifierade. Ingen H-0013-körning startad; medlemssession, appflöde och moln-JWT-samtidighet ingår inte i denna kontroll.
+PR #76 mergad som d1e32ed. PR #77 granskad på f36a3ee: 85 frontendtester och bygge passerar; syntetisk vy provad i Chrome i ljust/mörkt tema. Tre fynd före merge: konstant graf, låst resultathämtning efter fel och saknad affärslogg som visas som noll. Ingen riktig körning/publicering.
 
 ## Uppdateringsregler
 
@@ -137,23 +137,23 @@ F2-605 driftutfall godkänt 2026-11-03: worker dee88eb och 0005 kontrollerade, b
 
 ## 7. Visa Fas 2 i Research Lab
 
-0/5 verifierade.
+2/5 verifierade.
 
-- [ ] **F2-701** Visa H-0013 separat från Fas 1 och tvärsnittshypoteserna **Pågår.**
-  - Underlag: [app/src/features/research-engine/h0013.test.tsx](../app/src/features/research-engine/h0013.test.tsx) — Egen flik "Fas 2 · H-0013" i Research Lab, skild från Fas 1-resultaten (H-0009–H-0012), tvärsnittshypoteserna (H-0014/H-0015) och utforskning; H-0013-körningar visas inte i utforskningslistan. 62cc4bb (gren fas2-research-lab). app: 27 nya tester i h0013.test.tsx (syntetiska resultat, simulerade köanrop, renderad markup), hela frontendsviten 85 tester och bygget passerar; sex avsiktliga fel i den strikta läsningen fångas. Vyn granskad i webbförhandsvisning i ljust och mörkt tema, utloggad; resultatvyn är bara provad som renderad markup. Ingen H-0013-körning, inget slutprov, ingen driftsättning.
-  - Väntar på Codex granskning; inloggat flöde mot riktig kö och installerad app är inte provat.
-- [ ] **F2-702** Visa registrerade parametrar och förbered en fast forskningskörning **Pågår.**
-  - Underlag: [app/src/features/research-engine/h0013.test.tsx](../app/src/features/research-engine/h0013.test.tsx) — Låsta inställningar från protokoll, migration och motor (testade mot källorna) och en tvåstegsförberedelse av den enda fasta körningen med stabil request_key; blockerad när en körning är aktiv eller ett resultat finns. 62cc4bb (gren fas2-research-lab). app: 27 nya tester i h0013.test.tsx (syntetiska resultat, simulerade köanrop, renderad markup), hela frontendsviten 85 tester och bygget passerar; sex avsiktliga fel i den strikta läsningen fångas. Vyn granskad i webbförhandsvisning i ljust och mörkt tema, utloggad; resultatvyn är bara provad som renderad markup. Ingen H-0013-körning, inget slutprov, ingen driftsättning.
-  - Väntar på Codex granskning; inloggat flöde mot riktig kö och installerad app är inte provat.
+- [x] **F2-701** Visa H-0013 separat från Fas 1 och tvärsnittshypoteserna
+  - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — f36a3ee (kod 62cc4bb): Separat H-0013-flik och avgränsning mot Fas 1, tvärsnitt och utforskning verifierade.
+  - Lokal syntetisk verifiering; ingen riktig köning, installerad app eller publicering. PR #77 har öppna fynd och är inte godkänd för merge.
+- [x] **F2-702** Visa registrerade parametrar och förbered en fast forskningskörning
+  - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — f36a3ee (kod 62cc4bb): Låsta parametrar matchar protokoll/migration/motor; fast köanrop och tvåstegsförberedelse med aktiv/resultatblockerare verifierade lokalt.
+  - Lokal syntetisk verifiering; ingen riktig köning, installerad app eller publicering. PR #77 har öppna fynd och är inte godkänd för merge.
 - [ ] **F2-703** Visa köstatus, förlopp, fel och möjlighet att avbryta **Pågår.**
-  - Underlag: [app/src/features/research-engine/h0013.test.tsx](../app/src/features/research-engine/h0013.test.tsx) — H-0013-körningar med status, förlopp, försök (av 3), felmeddelande och avbrott; köad, pågående, misslyckad och avbruten körning visar inget resultat, databasens avvisning visas. 62cc4bb (gren fas2-research-lab). app: 27 nya tester i h0013.test.tsx (syntetiska resultat, simulerade köanrop, renderad markup), hela frontendsviten 85 tester och bygget passerar; sex avsiktliga fel i den strikta läsningen fångas. Vyn granskad i webbförhandsvisning i ljust och mörkt tema, utloggad; resultatvyn är bara provad som renderad markup. Ingen H-0013-körning, inget slutprov, ingen driftsättning.
-  - Väntar på Codex granskning; inloggat flöde mot riktig kö och installerad app är inte provat.
+  - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — f36a3ee (kod 62cc4bb): Status och avbrott finns; interaktivt prov visar 10 listpollningar men bara ett payload-anrop efter tillfälligt fel, sedan permanent laddning utan feltext.
+  - Lokal syntetisk verifiering; ingen riktig köning, installerad app eller publicering. PR #77 har öppna fynd och är inte godkänd för merge.
 - [ ] **F2-704** Visa marknadslägen, kandidatval och jämförelsekurvor med spårbara källor **Pågår.**
-  - Underlag: [app/src/features/research-engine/h0013.test.tsx](../app/src/features/research-engine/h0013.test.tsx) — Resultat per marknadsläge, kandidatval per testfönster och slutlig spelbok, jämförelser mot köp och behåll, kandidaterna ensamma, blandning och riskfilter på samma staplar, med kodrevision, dataset, datafingeravtryck och manifest; jämförelsekurvor saknas i resultatet och visas som saknade. 62cc4bb (gren fas2-research-lab). app: 27 nya tester i h0013.test.tsx (syntetiska resultat, simulerade köanrop, renderad markup), hela frontendsviten 85 tester och bygget passerar; sex avsiktliga fel i den strikta läsningen fångas. Vyn granskad i webbförhandsvisning i ljust och mörkt tema, utloggad; resultatvyn är bara provad som renderad markup. Ingen H-0013-körning, inget slutprov, ingen driftsättning.
-  - Väntar på Codex granskning; inloggat flöde mot riktig kö och installerad app är inte provat.
+  - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — f36a3ee (kod 62cc4bb): Lägen och kandidatval visas, men konstant equity/drawdown ger NaN och tom graf. Jämförelsekurvor saknas i payload och visas inte.
+  - Lokal syntetisk verifiering; ingen riktig köning, installerad app eller publicering. PR #77 har öppna fynd och är inte godkänd för merge.
 - [ ] **F2-705** Visa kriterier, osäkerhet, historik och REJECT/MORE_RESEARCH utan SIM som verkliga resultat **Pågår.**
-  - Underlag: [app/src/features/research-engine/h0013.test.tsx](../app/src/features/research-engine/h0013.test.tsx) — Fem kriterier, t mot 2,67, kostnadsstress, osäkerhetsintervall, utan bästa året, permutationstest och Deflated Sharpe; REJECT/MORE_RESEARCH visas bara när beslutet följer kriterierna, slutprovet var oläst, datasetet är det frysta och resultatet inte är simulerat. 62cc4bb (gren fas2-research-lab). app: 27 nya tester i h0013.test.tsx (syntetiska resultat, simulerade köanrop, renderad markup), hela frontendsviten 85 tester och bygget passerar; sex avsiktliga fel i den strikta läsningen fångas. Vyn granskad i webbförhandsvisning i ljust och mörkt tema, utloggad; resultatvyn är bara provad som renderad markup. Ingen H-0013-körning, inget slutprov, ingen driftsättning.
-  - Väntar på Codex granskning; inloggat flöde mot riktig kö och installerad app är inte provat.
+  - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — f36a3ee (kod 62cc4bb): Kriterier, osäkerhet och kontraktskontroll finns; saknad trades-lista presenteras felaktigt som 0 affärer i stället för saknad logg.
+  - Lokal syntetisk verifiering; ingen riktig köning, installerad app eller publicering. PR #77 har öppna fynd och är inte godkänd för merge.
 
 ## 8. Sluttest och godkännande
 
