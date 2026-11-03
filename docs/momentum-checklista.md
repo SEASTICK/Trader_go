@@ -103,11 +103,17 @@ Leverans B godkänd på 3294e8f: tomdataschema och dokumenterat uppslagsfel veri
 
 0/5 verifierade.
 
-- [ ] **MOM-C01** Implementera enhetsledger med partial fills, markvärdering och kostnad exakt en gång
+- [ ] **MOM-C01** Implementera enhetsledger med partial fills, markvärdering och kostnad exakt en gång **Pågår.**
+  - Underlag: [engine/traderlab/momentum_ledger.py](../engine/traderlab/momentum_ledger.py) — mom-ledger/1.0.0: konto C/q, E = C + qM, exakt §6-lösare, kostnad en gång, normal- och reduce-only-fyllning, E_trade i fas after_trade.
+  - Underlag: [engine/tests/test_momentum_ledger.py](../engine/tests/test_momentum_ledger.py) — 40 syntetiska tester mot orakel O1–O4, O11, O14, O15 och handräkning; 14 riktade felprov fångade.
+  - Underlag: [docs/momentum-ledger-C1.md](momentum-ledger-C1.md) — API, bokföringsidentiteter, fel, verifiering och gränser för C1.
+  - C1 implementerad på claude/momentum-c1; väntar på Codex granskning av exakt revision.
 - [ ] **MOM-C02** Implementera handelsband, avsikter och riskprioritet utan dold ombalansering
 - [ ] **MOM-C03** Implementera funding, dagsreset och första/sista event enligt låst kontrakt
 - [ ] **MOM-C04** Implementera 2 % dagsstopp, 15 % permanent stopp och konservativ 20 %-riskkontroll
-- [ ] **MOM-C05** Verifiera gap, basis, likvidation och riskordning med handräknade prov och kodgranskning
+- [ ] **MOM-C05** Verifiera gap, basis, likvidation och riskordning med handräknade prov och kodgranskning **Pågår.**
+  - Underlag: [engine/tests/test_momentum_ledger.py](../engine/tests/test_momentum_ledger.py) — 40 syntetiska tester mot orakel O1–O4, O11, O14, O15 och handräkning; 14 riktade felprov fångade.
+  - Delvis: handräknade prov för basis, kostnad, partial och reduce-only efter gap i C1. Gap mot stopp, likvidation och riskordning återstår i senare del av C.
 
 ## D. Utvärderare och jämförelser
 

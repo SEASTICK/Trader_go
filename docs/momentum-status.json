@@ -321,9 +321,22 @@
         {
           "id": "MOM-C01",
           "title": "Implementera enhetsledger med partial fills, markvärdering och kostnad exakt en gång",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "engine/traderlab/momentum_ledger.py",
+              "detail": "mom-ledger/1.0.0: konto C/q, E = C + qM, exakt §6-lösare, kostnad en gång, normal- och reduce-only-fyllning, E_trade i fas after_trade."
+            },
+            {
+              "file": "engine/tests/test_momentum_ledger.py",
+              "detail": "40 syntetiska tester mot orakel O1–O4, O11, O14, O15 och handräkning; 14 riktade felprov fångade."
+            },
+            {
+              "file": "docs/momentum-ledger-C1.md",
+              "detail": "API, bokföringsidentiteter, fel, verifiering och gränser för C1."
+            }
+          ],
+          "note": "C1 implementerad på claude/momentum-c1; väntar på Codex granskning av exakt revision."
         },
         {
           "id": "MOM-C02",
@@ -349,9 +362,14 @@
         {
           "id": "MOM-C05",
           "title": "Verifiera gap, basis, likvidation och riskordning med handräknade prov och kodgranskning",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "engine/tests/test_momentum_ledger.py",
+              "detail": "40 syntetiska tester mot orakel O1–O4, O11, O14, O15 och handräkning; 14 riktade felprov fångade."
+            }
+          ],
+          "note": "Delvis: handräknade prov för basis, kostnad, partial och reduce-only efter gap i C1. Gap mot stopp, likvidation och riskordning återstår i senare del av C."
         }
       ]
     },
