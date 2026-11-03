@@ -147,13 +147,16 @@ PR #76 mergad som d1e32ed. PR #77 granskad på f36a3ee: 85 frontendtester och by
   - Lokal syntetisk verifiering; ingen riktig köning, installerad app eller publicering. PR #77 har öppna fynd och är inte godkänd för merge.
 - [ ] **F2-703** Visa köstatus, förlopp, fel och möjlighet att avbryta **Pågår.**
   - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — f36a3ee (kod 62cc4bb): Status och avbrott finns; interaktivt prov visar 10 listpollningar men bara ett payload-anrop efter tillfälligt fel, sedan permanent laddning utan feltext.
-  - Lokal syntetisk verifiering; ingen riktig köning, installerad app eller publicering. PR #77 har öppna fynd och är inte godkänd för merge.
+  - Underlag: [app/src/features/research-engine/h0013.dom.test.tsx](../app/src/features/research-engine/h0013.dom.test.tsx) — a883094 (PR #77): resultathämtningens fel hålls skilt från listans och döljs inte av lyckade listpollningar; automatiskt nytt försök efter 15 s och knappen Försök igen nu; sent svar efter byte av körning eller utloggning används inte; inget köas vid nytt försök. 13 nya DOM-tester (happy-dom, riktiga React-effekter), hela frontendsviten 98 tester och bygget passerar; sex avsiktliga fel fångas. Syntetiska resultat och simulerat API; ingen H-0013-körning.
+  - Rättat i a883094 efter granskning av f36a3ee. Väntar på Codex omgranskning; inloggat flöde mot riktig kö och installerad app är inte provat.
 - [ ] **F2-704** Visa marknadslägen, kandidatval och jämförelsekurvor med spårbara källor **Pågår.**
   - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — f36a3ee (kod 62cc4bb): Lägen och kandidatval visas, men konstant equity/drawdown ger NaN och tom graf. Jämförelsekurvor saknas i payload och visas inte.
-  - Lokal syntetisk verifiering; ingen riktig köning, installerad app eller publicering. PR #77 har öppna fynd och är inte godkänd för merge.
+  - Underlag: [app/src/features/research-engine/h0013.dom.test.tsx](../app/src/features/research-engine/h0013.dom.test.tsx) — a883094 (PR #77): kapital- och drawdown-diagram ritas med ändliga koordinater även när kurvan är platt eller drawdown alltid är noll (chartDomain i den delade grafen, varierande kurvor oförändrade). Jämförelsekurvor saknas fortfarande i resultatet. 13 nya DOM-tester (happy-dom, riktiga React-effekter), hela frontendsviten 98 tester och bygget passerar; sex avsiktliga fel fångas. Syntetiska resultat och simulerat API; ingen H-0013-körning.
+  - Rättat i a883094. Förblir öppen: jämförelsekurvorna saknas i H-0013-resultatet. Väntar på Codex omgranskning.
 - [ ] **F2-705** Visa kriterier, osäkerhet, historik och REJECT/MORE_RESEARCH utan SIM som verkliga resultat **Pågår.**
   - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — f36a3ee (kod 62cc4bb): Kriterier, osäkerhet och kontraktskontroll finns; saknad trades-lista presenteras felaktigt som 0 affärer i stället för saknad logg.
-  - Lokal syntetisk verifiering; ingen riktig köning, installerad app eller publicering. PR #77 har öppna fynd och är inte godkänd för merge.
+  - Underlag: [app/src/features/research-engine/h0013.dom.test.tsx](../app/src/features/research-engine/h0013.dom.test.tsx) — a883094 (PR #77): saknad eller feltypad affärslogg visas som saknad, oläsbara rader och avvikelse mot rapporterat antal redovisas, och bara en verifierat tom logg visas som tom. 13 nya DOM-tester (happy-dom, riktiga React-effekter), hela frontendsviten 98 tester och bygget passerar; sex avsiktliga fel fångas. Syntetiska resultat och simulerat API; ingen H-0013-körning.
+  - Rättat i a883094 efter granskning av f36a3ee. Väntar på Codex omgranskning; inloggat flöde mot riktig kö och installerad app är inte provat.
 
 ## 8. Sluttest och godkännande
 
