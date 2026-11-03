@@ -162,6 +162,47 @@ def mixed(a: dict, b: dict) -> dict:
             "costs": (a["costs"] + b["costs"]) / 2, "funding": (a["funding"] + b["funding"]) / 2, "windows": windows}
 
 
+CURVE_POINTS = 1500
+CURVE_SOURCES = {"h0013": "fas2.walk_forward", "buy_and_hold": "fas2_eval.buy_and_hold",
+                 EMA: "fas2_eval.candidate_alone(ema_adx_trend)", BB: "fas2_eval.candidate_alone(bb_rsi_reversion)",
+                 "equal_weight_mix": "fas2_eval.mixed(ema_adx_trend, bb_rsi_reversion)", "risk_filter": "fas2_eval.risk_filter"}
+
+
+def _returns_sha256(r: pd.Series) -> str:
+    h = hashlib.sha256()
+    h.update(r.index.asi8.tobytes())
+    h.update(np.ascontiguousarray(r.to_numpy(dtype=float)).tobytes())
+    return h.hexdigest()
+
+
+def curve_selection(n: int, points: int = CURVE_POINTS) -> list[int]:
+    """Högst `points` index, jämnt fördelade, alltid med första och sista stapeln (J3)."""
+    if points < 2:
+        raise ValueError("Minst två punkter behövs för en kurva")
+    if n <= points:
+        return list(range(n))
+    return sorted({round(i * (n - 1) / (points - 1)) for i in range(points)})
+
+
+def comparison_curves(h0013_returns: pd.Series, others: dict[str, pd.Series], points: int = CURVE_POINTS) -> dict:
+    """Kapitalkurvor (start 1,0) för H-0013 och jämförelserna på exakt samma staplar, nedsamplade med samma index
+    (docs/fas2-jamforelsekurvor-tolkningar.md, J1–J5). Varje kurva får källa och SHA-256 av hela avkastningsserien."""
+    series = {"h0013": h0013_returns, **others}
+    for name, r in series.items():   # slutprovsskyddet först, för varje serie, innan något räknas
+        _guard(pd.DataFrame(index=r.index))
+    for name, r in series.items():
+        if not r.index.equals(h0013_returns.index):
+            raise AssertionError(f"{name} har inte samma staplar som H-0013")
+    n = len(h0013_returns)
+    sel = curve_selection(n, points)
+    equity = {name: (1 + r).cumprod() for name, r in series.items()}
+    return {"t": [h0013_returns.index[i].isoformat() for i in sel],
+            "series": {name: [round(float(eq.iloc[i]), 8) for i in sel] for name, eq in equity.items()},
+            "sources": {name: {"source": CURVE_SOURCES.get(name, name), "bars": int(len(r)),
+                               "returns_sha256": _returns_sha256(r)} for name, r in series.items()},
+            "points": len(sel), "bars": n, "start_capital": 1.0, "evaluation_version": EVALUATION_VERSION}
+
+
 def regime_results(bars, wf: fas2.WalkForward, labels=None) -> dict:
     """Dagar, affärer, avkastning och Sharpe per läge utanför urvalet (U17)."""
     _guard(bars, labels=labels)
@@ -304,7 +345,10 @@ def evaluate(bars, funding, costs: CostModel = fas2.COSTS, n_permutations: int =
         if not curves[name]["returns"].index.equals(wf.returns.index):
             raise AssertionError(f"{name} har inte samma observationsperiod som H-0013")
         comp[name] = summary(curves[name])
-    comp["equal_weight_mix"] = summary(mixed(curves[EMA], curves[BB]))
+    mix = mixed(curves[EMA], curves[BB])
+    comp["equal_weight_mix"] = summary(mix)
+    p["comparison_curves"] = comparison_curves(wf.returns, {**{k: v["returns"] for k, v in curves.items()},
+                                                            "equal_weight_mix": mix["returns"]})
     p["steps"]["comparisons"] = "done"
     crit = done("criteria", criteria(main, stressed, comp["buy_and_hold"], {EMA: comp[EMA], BB: comp[BB]},
                                      comp["equal_weight_mix"]))
@@ -327,7 +371,7 @@ def evaluate(bars, funding, costs: CostModel = fas2.COSTS, n_permutations: int =
         "steps": p["steps"],
         "walk_forward": p["walk_forward"], "out_of_sample": [fas2.TEST_STARTS[0], fas2.HOLDOUT_START],
         "holdout": "2025-01-01 och framåt, oläst",
-        "h0013": main, "stressed": stressed, "comparisons": comp,
+        "h0013": main, "stressed": stressed, "comparisons": comp, "comparison_curves": p["comparison_curves"],
         "criteria": crit, "decision": decision(crit),
         "t_required": T_REQUIRED, "registered_n": REGISTERED_N,
         "attempts_now": attempts_now, "t_required_now": stats.t_krav(attempts_now) if attempts_now else None,

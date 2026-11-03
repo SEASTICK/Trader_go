@@ -89,8 +89,77 @@ export type H0013View =
       finalPlaybook: [string, string][] | null;
       permutation: { p: number | null; n: number | null; k: number | null } | null;
       deflated: { standard: number | null; playbooks: number | null } | null;
-      tRequiredNow: number | null; equity: { t: string[]; equity: number[] } | null;
+      tRequiredNow: number | null; equity: { t: string[]; equity: number[] } | null; comparisonCurves: ComparisonCurves | null;
       trace: { label: string; value: string }[]; trades: Dict[] | null; tradeIssues: string[]; warnings: string[]; missing: string[] };
+
+export type ComparisonCurve = { key: string; label: string; data: number[] | null; source: string; sha: string | null;
+  bars: number | null; problem: string | null };
+export type ComparisonCurves = { t: string[]; points: number | null; bars: number | null; curves: ComparisonCurve[];
+  axisProblem: string | null };
+const UTC_STAMP = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|\+00:00)$/;
+const BAR_MS = 4 * 3600 * 1000;
+const OOS_MS = [Date.parse(PROTOCOL.testStarts[0] + "T00:00:00Z"), Date.parse(PROTOCOL.development[1] + "T00:00:00Z")];
+/** Avrundningstolerans mellan jämförelsediagrammets H-0013-värden (8 decimaler) och huvudkurvan. */
+export const CURVE_TOLERANCE = 1e-6;
+
+/** Tidsaxelns problem, eller null. Kräver UTC-tidpunkter på 4h-rutnätet, strikt stigande, inom testfönstren
+ *  2022-01-01 till 2025-01-01, som alla finns bland huvudkurvans staplar. */
+export function comparisonAxisProblem(t: unknown[], main: { t: string[]; equity: number[] } | null): string | null {
+  if (!t.every(x => typeof x === "string" && UTC_STAMP.test(x))) return "Tidsaxeln innehåller värden som inte är UTC-tidpunkter.";
+  const ms = (t as string[]).map(x => Date.parse(x));
+  if (!ms.every(Number.isFinite)) return "Tidsaxeln innehåller ogiltiga datum.";
+  if (ms.some((v, i) => i > 0 && v <= ms[i - 1])) return "Tidsaxeln är inte strikt stigande (dubbletter eller fel ordning).";
+  if (ms.some(v => v % BAR_MS !== 0)) return "Tidsaxeln ligger inte på 4h-rutnätet.";
+  if (ms[0] < OOS_MS[0] || ms[ms.length - 1] >= OOS_MS[1]) return "Tidsaxeln ligger utanför testfönstren 2022–2024.";
+  if (!main) return "Huvudkurvan saknas, så tidsaxeln kan inte kopplas till resultatets staplar.";
+  const position = new Map(main.t.map((x, i) => [Date.parse(x), i]));
+  if (!ms.every(v => position.has(v))) return "Tidsaxeln har tidpunkter som inte finns i huvudkurvan.";
+  return null;
+}
+export const CURVE_KEYS = ["h0013", ...Object.keys(COMPARISONS)];
+const curveLabel = (k: string) => (k === "h0013" ? "H-0013" : COMPARISONS[k]);
+
+/** Jämförelsekurvorna (docs/fas2-jamforelsekurvor-tolkningar.md). null för ett äldre resultat utan kurvor. En kurva
+ *  med fel längd, ogiltiga värden eller ett slutvärde som inte stämmer med nyckeltalen visas inte; den blir saknad. */
+export function readComparisonCurves(raw: unknown, totals: Record<string, number | null>,
+                                     main: { t: string[]; equity: number[] } | null = null): ComparisonCurves | null {
+  if (!isDict(raw) || !Array.isArray(raw.t) || raw.t.length < 2) return null;
+  const series = isDict(raw.series) ? raw.series : {};
+  const sources = isDict(raw.sources) ? raw.sources : {};
+  const axisProblem = comparisonAxisProblem(raw.t, main);
+  if (axisProblem) {
+    return { t: [], points: num(raw.points), bars: num(raw.bars), axisProblem, curves: CURVE_KEYS.map(key => {
+      const src = isDict(sources[key]) ? sources[key] as Dict : {};
+      return { key, label: curveLabel(key), data: null, problem: axisProblem, source: str(src.source) ?? "Saknas",
+        sha: str(src.returns_sha256), bars: num(src.bars) };
+    }) };
+  }
+  const t = raw.t as string[];
+  const position = new Map((main as { t: string[] }).t.map((x, i) => [Date.parse(x), i]));
+  const curves = CURVE_KEYS.map(key => {
+    const src = isDict(sources[key]) ? sources[key] as Dict : {};
+    const values = series[key];
+    let problem: string | null = null;
+    if (!Array.isArray(values)) problem = "Kurvan saknas i resultatet.";
+    else if (values.length !== t.length) problem = "Kurvan har andra tidpunkter än H-0013 och visas inte.";
+    else if (!values.every(v => typeof v === "number" && Number.isFinite(v))) problem = "Kurvan innehåller ogiltiga värden och visas inte.";
+    else {
+      const total = totals[key];
+      const last = values[values.length - 1] as number;
+      if (total !== null && total !== undefined && Math.abs(last - (1 + total)) > CURVE_TOLERANCE * Math.max(1, Math.abs(1 + total))) {
+        problem = "Kurvans slutvärde stämmer inte med nyckeltalen och visas inte.";
+      } else if (key === "h0013" && main && t.some((x, i) => {
+        const m = main.equity[position.get(Date.parse(x)) as number];
+        return Math.abs((values[i] as number) - m) > CURVE_TOLERANCE * Math.max(1, Math.abs(m));
+      })) {
+        problem = "H-0013-kurvan stämmer inte med huvudkurvan vid samma tidpunkter och visas inte.";
+      }
+    }
+    return { key, label: curveLabel(key), data: problem ? null : (values as number[]), problem,
+      source: str(src.source) ?? "Saknas", sha: str(src.returns_sha256), bars: num(src.bars) };
+  });
+  return { t, points: num(raw.points), bars: num(raw.bars), curves, axisProblem: null };
+}
 
 /** Affärsloggen: null när den saknas eller inte är en lista. Ogiltiga rader och avvikelse mot nyckeltalens
  *  antal redovisas; de döljs inte och inget fylls i. */
@@ -159,6 +228,12 @@ export function readResult(payload: unknown): H0013View {
     && curves.equity.every(v => typeof v === "number" && Number.isFinite(v))
     ? { t: curves.t.map(String), equity: curves.equity as number[] } : null;
   if (!equity) missing.push("Kapitalkurva");
+  const totals: Record<string, number | null> = { h0013: main!.total_return,
+    ...Object.fromEntries(comparisons.map(([k, sm]) => [k, sm ? sm.total_return : null])) };
+  const comparisonCurves = readComparisonCurves(curves.comparisons, totals, equity);
+  if (!comparisonCurves) missing.push("Jämförelsekurvor");
+  else if (comparisonCurves.axisProblem) missing.push("Jämförelsekurvor (ogiltig tidsaxel)");
+  else comparisonCurves.curves.filter(c => !c.data).forEach(c => missing.push(`Kurva: ${c.label}`));
   const tradeLog = readTrades(payload.trades, main!.trades);
   if (tradeLog.trades === null) missing.push("Affärslogg");
   else if (tradeLog.issues.length) missing.push("Fullständig affärslogg");
@@ -179,7 +254,7 @@ export function readResult(payload: unknown): H0013View {
     comparisons, regimes, windows, finalPlaybook,
     permutation: perm ? { p: num(perm.p_value), n: num(perm.n), k: num(perm.at_least_as_high) } : null,
     deflated: dsr ? { standard: num(dsr.default_variance), playbooks: num(dsr.playbook_variance) } : null,
-    tRequiredNow: num(inner.t_required_now), equity, trace,
+    tRequiredNow: num(inner.t_required_now), equity, comparisonCurves, trace,
     trades: tradeLog.trades, tradeIssues: tradeLog.issues,
     warnings: (Array.isArray(payload.warnings) ? payload.warnings : []).filter((w): w is string => typeof w === "string"),
     missing,

@@ -62,7 +62,7 @@ export function LineChart({ series, labels, height = 280, watermark = "SIMULERAD
             <text x={width - padR + 8} y={y(t) + 4} className="axis">{t.toFixed(0)}</text>
           </g>
         ))}
-        {xt.map((i) => <text key={i} x={x(i)} y={height - 6} textAnchor={i === 0 ? "start" : i === n - 1 ? "end" : "middle"} className="axis">{labels[i]}</text>)}
+        {xt.map((i, k) => <text key={k} x={x(i)} y={height - 6} textAnchor={i === 0 ? "start" : i === n - 1 ? "end" : "middle"} className="axis">{labels[i]}</text>)}
         <defs>
           <linearGradient id="fill" x1="0" x2="0" y1="0" y2="1">
             <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.18" />

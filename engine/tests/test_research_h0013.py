@@ -190,6 +190,10 @@ def test_run_job_writes_a_strict_result_and_records_the_attempt(quick, tmp_path)
     assert len(payload["data"]["sha256"]) == 64 and payload["attempt"] == 1
     assert all(set(t) == {"side", "entry_time", "exit_time", "entry_price", "exit_price", "net_return", "exit_reason"}
                for t in payload["trades"])
+    cc = payload["curves"]["comparisons"]
+    assert set(cc["series"]) == {"h0013", "buy_and_hold", "ema_adx_trend", "bb_rsi_reversion", "equal_weight_mix", "risk_filter"}
+    assert all(len(v) == len(cc["t"]) for v in cc["series"].values()) and "comparison_curves" not in payload["result"]
+    assert payload["curves"]["t"] and payload["curves"]["equity"], "the original curve fields are unchanged"
     saved = list((root / "h0013-attempts").glob("H-0013-*-completed.json"))
     assert saved and json.loads(saved[-1].read_text())["decision"] == payload["decision"]
     assert float(out.with_suffix(".progress").read_text()) == pytest.approx(0.95)
