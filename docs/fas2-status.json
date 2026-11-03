@@ -3,7 +3,7 @@
   "title": "Fas 2 – Adaptive Strategy Engine",
   "hypothesis": "H-0013",
   "updated": "2026-11-03",
-  "reviewed_revision": "677752f",
+  "reviewed_revision": "db9a4ec",
   "note": "Klar betyder verifierad. Kod som bara finns lokalt eller tester utan granskning är inte slutgodkända.",
   "groups": [
     {
@@ -281,14 +281,18 @@
         {
           "id": "F2-501",
           "title": "Jämför med köp-och-behåll, varje kandidat ensam och en likaviktad blandning",
-          "status": "done",
+          "status": "in_progress",
           "evidence": [
             {
               "file": "docs/fas2-utvardering-granskning-72.md",
               "detail": "a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov."
+            },
+            {
+              "file": "docs/fas2-jamforelsekurvor-granskning-78.md",
+              "detail": "db9a4ec: befintliga jämförelseutfall identiska mot de70580, men nya comparison_curves saknar utvecklingskontroll vid direkt anrop (P1)."
             }
           ],
-          "note": "PR #72 mergad, kod verifierad syntetiskt och nu del av driftsatt worker dee88eb. Ingen full H-0013-forskningskörning är startad."
+          "note": "Återöppnad för ny oskyddad jämförelseingång. Kriterier och tidigare jämförelseberäkningar oförändrade; bara syntetisk verifiering."
         },
         {
           "id": "F2-502",
@@ -428,7 +432,7 @@
               "detail": "f36a3ee (kod 62cc4bb): Separat H-0013-flik och avgränsning mot Fas 1, tvärsnitt och utforskning verifierade."
             }
           ],
-          "note": "PR #77 kodmässigt godkänd på 677752f; merge kräver grön CI. Bara lokal syntetisk verifiering, ingen riktig köning eller installerad app/publicering."
+          "note": "PR #77 mergad i de70580 med app-/motorkod oförändrad mot godkänd 677752f. PR #78:s nya kurvor granskas separat. Ingen riktig köning eller installerad app/publicering verifierad."
         },
         {
           "id": "F2-702",
@@ -440,7 +444,7 @@
               "detail": "f36a3ee (kod 62cc4bb): Låsta parametrar matchar protokoll/migration/motor; fast köanrop och tvåstegsförberedelse med aktiv/resultatblockerare verifierade lokalt."
             }
           ],
-          "note": "PR #77 kodmässigt godkänd på 677752f; merge kräver grön CI. Bara lokal syntetisk verifiering, ingen riktig köning eller installerad app/publicering."
+          "note": "PR #77 mergad i de70580 med app-/motorkod oförändrad mot godkänd 677752f. PR #78:s nya kurvor granskas separat. Ingen riktig köning eller installerad app/publicering verifierad."
         },
         {
           "id": "F2-703",
@@ -452,7 +456,7 @@
               "detail": "677752f (kod a883094): Eget payloadfel, automatisk återhämtning och manuell knapp verifierade med DOM-tester. Eget Chrome-prov ger andra payload-anropet och resultat, utan köning."
             }
           ],
-          "note": "PR #77 kodmässigt godkänd på 677752f; merge kräver grön CI. Bara lokal syntetisk verifiering, ingen riktig köning eller installerad app/publicering."
+          "note": "PR #77 mergad i de70580 med app-/motorkod oförändrad mot godkänd 677752f. PR #78:s nya kurvor granskas separat. Ingen riktig köning eller installerad app/publicering verifierad."
         },
         {
           "id": "F2-704",
@@ -462,9 +466,13 @@
             {
               "file": "docs/fas2-research-lab-granskning-77.md",
               "detail": "677752f (kod a883094): Platt kapital och noll-drawdown nu visuellt verifierade i ljust/mörkt tema med ändlig SVG. Jämförelsekurvor saknas fortfarande i payload och uppgiften förblir öppen."
+            },
+            {
+              "file": "docs/fas2-jamforelsekurvor-granskning-78.md",
+              "detail": "db9a4ec: kurvor implementerade och visuellt provade i ljus/mörk Chrome-vy. Ogiltiga tidsaxlar accepteras (P2); 1500-gränsen kan överskridas (P3). 105 frontendtester och bygge passerar."
             }
           ],
-          "note": "PR #77 kodmässigt godkänd på 677752f; merge kräver grön CI. Bara lokal syntetisk verifiering, ingen riktig köning eller installerad app/publicering."
+          "note": "Öppen i väntan på rättade kurvkontroller. Driftsatt dee88eb saknar kurvorna; inget riktigt jobb eller installerat app-test."
         },
         {
           "id": "F2-705",
@@ -476,7 +484,7 @@
               "detail": "677752f (kod a883094): Saknad/feltypad logg, ogiltiga rader, avvikande antal och faktiskt tom logg skiljs åt och redovisas. Tidigare egna felprov och DOM-regressioner passerar."
             }
           ],
-          "note": "PR #77 kodmässigt godkänd på 677752f; merge kräver grön CI. Bara lokal syntetisk verifiering, ingen riktig köning eller installerad app/publicering."
+          "note": "PR #77 mergad i de70580 med app-/motorkod oförändrad mot godkänd 677752f. PR #78:s nya kurvor granskas separat. Ingen riktig köning eller installerad app/publicering verifierad."
         }
       ]
     },
@@ -522,5 +530,5 @@
       ]
     }
   ],
-  "reviewed_scope": "PR #77 omgranskad på 677752f (kod a883094): alla tre fynd rättade. 98 frontendtester och bygge passerar; platta diagram, automatisk återhämtning och saknad affärslogg verifierade i lokalt syntetiskt Chrome-prov. Kodmässigt godkänd för merge när erforderlig CI är grön. F2-704 öppen för jämförelsekurvor; inget riktigt jobb eller publicering."
+  "reviewed_scope": "PR #78 granskad på db9a4ec (kod e42c534): 541 Python-/105 frontendtester och bygge passerar. Ny direkt kurvingång saknar slutprovsskydd, läsaren godkänner felaktiga tidsaxlar och urvalet kan ge 1501 punkter. Ej godkänd för merge. Tidigare nyckeltal återverifierade med identiskt före/efter-resultat; ingen riktig körning eller driftsättning."
 }
