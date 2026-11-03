@@ -3,8 +3,8 @@
   "title": "Efterföljare till H-0013 – granskning och implementation",
   "hypothesis": "Ej registrerad – id kontrolleras i leverans A",
   "updated": "2026-11-03",
-  "reviewed_revision": "979fb30f483b856d9210be3591101cd0fb3b3b98",
-  "reviewed_scope": "Codex omgranskning av A1 revision 2 på 979fb30: de fyra ursprungliga fynden rättade på metodnivå. Två kvarstående kontraktsluckor blockerar A2: L1/L2 efter känd gapstop och avkastning efter total likvidation. 29 tester och syntetiska kontroller passerar; ingen motor, historik, registrering eller drift verifierad. H-0013 REJECT och H-0016 oförändrade.",
+  "reviewed_revision": "a25db812c1ea60932de7bf8fbcaf33a009859b46",
+  "reviewed_scope": "A1 revision 3 på a25db81 godkänd som metodkontrakt för A2. R2-01/R2-02 och textjusteringar verifierade med oberoende syntetiska beräkningar, fulla 1 096-dagarsserier och 29 befintliga tester. MOM-A03/A04 klara för specifikationen; A05 väntar på registrering och Codex A2-granskning. Ingen implementation, marknadshistorik, historisk körning, drift eller lönsamhet verifierad. H-0013 REJECT och H-0016 oförändrade.",
   "groups": [
     {
       "id": "A",
@@ -37,7 +37,7 @@
         {
           "id": "MOM-A03",
           "title": "Färdigställ eventordning, konto, intrastapel-risk och marginalmodell",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/momentum-metodgranskning-20261103.md",
@@ -78,14 +78,18 @@
             {
               "file": "docs/momentum-a1-orakel.json",
               "detail": "Nya syntetiska fall O17 (gapstop +30 s och exakt vid öppning, inträde vid öppning med stop inom stapel) och O18 (likvidation mitt i perioden, på terminaldag, likviderat delkonto i blandning, oförklarad nolla, main-beslut). scripts/momentum-a1-oracles.py --check."
+            },
+            {
+              "file": "docs/momentum-a1-granskning-a25db81.md",
+              "detail": "Codex godkänner exakt A1-revision a25db81 för A2 efter oberoende kontroll av O17/O18 och full horisont. Ingen registrering eller motor i granskningsleveransen."
             }
           ],
-          "note": "Revision 3 lämnad för Codex omgranskning av R2-01/R2-02. Inte godkänd; ingen registrering eller leverans B."
+          "note": "Metodkontrakt godkänt på a25db81. Implementation, data och resultat ska verifieras separat i senare leveranser."
         },
         {
           "id": "MOM-A04",
           "title": "Lås exakta jämförelser, försöksräkning, DSR och beslutskriterier",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/momentum-metodgranskning-20261103.md",
@@ -114,9 +118,13 @@
             {
               "file": "docs/momentum-protokoll-A1.md",
               "detail": "Revision 3 efter Codex omgranskning av 979fb30: L1/L2 avgränsad till verkligt okänd ordning, kända öppningsutgångar och likvidation först (R2-01, D18); absorberande nollkonvention efter likvidation (R2-02, D21); textjusteringar i D11, §2 och §10.2. Väntar på omgranskning."
+            },
+            {
+              "file": "docs/momentum-a1-granskning-a25db81.md",
+              "detail": "Codex godkänner exakt A1-revision a25db81 för A2 efter oberoende kontroll av O17/O18 och full horisont. Ingen registrering eller motor i granskningsleveransen."
             }
           ],
-          "note": "Revision 3 lämnad för Codex omgranskning av R2-01/R2-02. Inte godkänd; ingen registrering eller leverans B."
+          "note": "Metodkontrakt godkänt på a25db81. Implementation, data och resultat ska verifieras separat i senare leveranser."
         },
         {
           "id": "MOM-A05",
@@ -130,9 +138,13 @@
             {
               "file": "docs/momentum-a1-granskning-979fb30.md",
               "detail": "Oberoende omgranskning av 979fb30: ursprungliga fyra fynd rättade; R2-01 och R2-02 behöver precisering och syntetiska orakel före A2."
+            },
+            {
+              "file": "docs/momentum-a1-granskning-a25db81.md",
+              "detail": "Codex godkänner exakt A1-revision a25db81 för A2 efter oberoende kontroll av O17/O18 och full horisont. Ingen registrering eller motor i granskningsleveransen."
             }
           ],
-          "note": "Väntar på Codex omgranskning av revision 3. Ingen registerrad lagd."
+          "note": "A1 a25db81 godkänd för A2. Registrering och Codex granskning av exakt A2-revision återstår; leverans B väntar."
         }
       ]
     },

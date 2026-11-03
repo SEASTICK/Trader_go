@@ -1,0 +1,48 @@
+{
+  "reviewed_revision": "a25db812c1ea60932de7bf8fbcaf33a009859b46",
+  "synthetic_only": true,
+  "source_sha256": {
+    "docs/momentum-protokoll-A1.md": "fc99dd37908e6c9605dace8688d0c2b187a428ebe56030185c2ff77efdabe9d7",
+    "docs/momentum-a1-orakel.json": "887d08ad9bc10e3319b608c9703214db7519441614021944086dea1eae7cce3b",
+    "scripts/momentum-a1-oracles.py": "668cc43daaad30939e273c373d5a3f4dc1f6ad27764b633d8f05a4b7e2ddcbe5"
+  },
+  "R2_01": {
+    "gap_stop_later_funding_both_L": 0.0,
+    "at_open_A": 8.46,
+    "at_open_B": 0.0,
+    "new_entry_L2_funding": 9.984025559105431
+  },
+  "R2_02": {
+    "fixture_series_verified": [
+      "mitt_i_perioden",
+      "terminaldag",
+      "delkonto_likviderat",
+      "blandning_ett_delkonto_likviderat"
+    ],
+    "full_horizon_cases": [
+      {
+        "liquidation_day": 1,
+        "days": 1096,
+        "net_return": -1.0,
+        "sharpe": -0.5770868193610836,
+        "nw_t_lags6": -1.0004631859106659
+      },
+      {
+        "liquidation_day": 500,
+        "days": 1096,
+        "net_return": -1.0,
+        "sharpe": -0.5770868193610836,
+        "nw_t_lags6": -1.003215533832835
+      },
+      {
+        "liquidation_day": 1096,
+        "days": 1096,
+        "net_return": -1.0,
+        "sharpe": -0.5770868193610836,
+        "nw_t_lags6": -1.0004631859106659
+      }
+    ],
+    "mix_net_return": -0.48,
+    "engine_decision_tested": false
+  }
+}
