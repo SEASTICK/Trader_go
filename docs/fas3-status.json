@@ -84,9 +84,13 @@
             {
               "file": "docs/momentum-a1-granskning-a25db81.md",
               "detail": "Momentummodellens A1-metodkontrakt godkänt på a25db81 för A2-förregistrering. Ingen historiskt godkänd kandidat eller startad pilot; F3-201 förblir in_progress."
+            },
+            {
+              "file": "docs/momentum-a2-granskning-db7f83b.md",
+              "detail": "H-0017 är förregistrerad och A2 godkänd på db7f83b. Endast signalimplementation med syntetiska tester får nu börja; inget historiskt resultat eller pilotgodkännande finns."
             }
           ],
-          "note": "Pågående strategiforskning. H-0016 är förregistrerad men oprövad; den forskningsbaserade H-0013-efterföljaren är ett separat planförslag. H-0013 behåller REJECT. Inget av detta ger READY_FOR_PAPER."
+          "note": "H-0017 är separat förregistrerad och metodgranskad. Implementation och historisk utvärdering återstår. H-0013 REJECT och H-0016 oförändrade; ingen kandidat har READY_FOR_PAPER."
         },
         {
           "id": "F3-202",

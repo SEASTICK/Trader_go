@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "title": "Efterföljare till H-0013 – granskning och implementation",
-  "hypothesis": "H-0017 – registrerad i A2, väntar på Codex granskning av registreringen",
+  "hypothesis": "H-0017 – riskstyrd tidsseriemomentum på BTCUSDT",
   "updated": "2026-11-03",
-  "reviewed_revision": "a25db812c1ea60932de7bf8fbcaf33a009859b46",
-  "reviewed_scope": "A1 revision 3 på a25db81 godkänd som metodkontrakt för A2. R2-01/R2-02 och textjusteringar verifierade med oberoende syntetiska beräkningar, fulla 1 096-dagarsserier och 29 befintliga tester. MOM-A03/A04 klara för specifikationen; A05 väntar på registrering och Codex A2-granskning. Ingen implementation, marknadshistorik, historisk körning, drift eller lönsamhet verifierad. H-0013 REJECT och H-0016 oförändrade.",
+  "reviewed_revision": "db7f83b56e79f8a76b5e0d297be4503170070c0f",
+  "reviewed_scope": "A2 på db7f83b godkänd: H-0017 committad, exakt en ny registerrad, oförändrade godkända metodregler och giltiga länkar/källhashar. Registreringsspärr, N=17, t=2,754268270633685 och N_sok=1 213 verifierade; 36 tester och orakel/audits passerar. Leverans A klar; endast ren signalmodul med syntetiska tester får nu påbörjas i B. Ingen datakvalitet, motor, historisk körning, drift eller lönsamhet verifierad.",
   "groups": [
     {
       "id": "A",
@@ -129,7 +129,7 @@
         {
           "id": "MOM-A05",
           "title": "Förregistrera ett nytt ledigt id och låt Codex granska leverans A före implementation",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/momentum-a1-granskning-cb335ee.md",
@@ -150,9 +150,13 @@
             {
               "file": "research/registry.md",
               "detail": "En ny rad H-0017 sist; tidigare rader oförändrade (git diff: 1 tillagd, 0 borttagna). registry.count_attempts = 17."
+            },
+            {
+              "file": "docs/momentum-a2-granskning-db7f83b.md",
+              "detail": "Codex verifierar exakt registreringscommit db7f83b: H-0017, N=17, t=2,754268270633685, N_sok=1 213 och oförändrat metodkontrakt. Leverans A godkänd."
             }
           ],
-          "note": "A2 registrerad och committad; inte verifierad klar före Codex A2-granskning. Leverans B väntar."
+          "note": "A2 registrerad och godkänd på db7f83b. B får börja enligt docs/claude-uppdrag-momentum-B.md; ingen historisk körning godkänd."
         }
       ]
     },

@@ -1,0 +1,19 @@
+{
+  "reviewed_revision": "db7f83b56e79f8a76b5e0d297be4503170070c0f",
+  "diff_base": "0cbc32b",
+  "hypothesis_id": "H-0017",
+  "method_body_unchanged_after_link_relocation": true,
+  "valid_local_links": 11,
+  "previous_register_bytes_preserved": true,
+  "appended_rows": 1,
+  "columns": 13,
+  "registration_commit": "db7f83b56e79f8a76b5e0d297be4503170070c0f",
+  "N": 17,
+  "t_requirement": 2.754268270633685,
+  "N_sok": 1213,
+  "source_sha256": {
+    "research/h0017-protokoll.md": "e15197c7d17c815eb89845909d7719e825607e4e49cc856b603af7549acc827d",
+    "research/registry.md": "6362325f1991e185d02d46756b62f4c43925cafa5fdfeae228df0ee46fccc127"
+  },
+  "market_history_read": false
+}

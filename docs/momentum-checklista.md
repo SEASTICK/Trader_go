@@ -1,10 +1,10 @@
 # Efterföljare till H-0013 – Arbetsplan
 
-**4 av 40 uppgifter verifierade · 8 arbetsområden.**
+**5 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-Metodgranskning · Kontrollerad 2026-11-03 · Granskad kodversion `a25db812c1ea60932de7bf8fbcaf33a009859b46`.
+Metodgranskning · Kontrollerad 2026-11-03 · Granskad kodversion `db7f83b56e79f8a76b5e0d297be4503170070c0f`.
 
-A1 revision 3 på a25db81 godkänd som metodkontrakt för A2. R2-01/R2-02 och textjusteringar verifierade med oberoende syntetiska beräkningar, fulla 1 096-dagarsserier och 29 befintliga tester. MOM-A03/A04 klara för specifikationen; A05 väntar på registrering och Codex A2-granskning. Ingen implementation, marknadshistorik, historisk körning, drift eller lönsamhet verifierad. H-0013 REJECT och H-0016 oförändrade.
+A2 på db7f83b godkänd: H-0017 committad, exakt en ny registerrad, oförändrade godkända metodregler och giltiga länkar/källhashar. Registreringsspärr, N=17, t=2,754268270633685 och N_sok=1 213 verifierade; 36 tester och orakel/audits passerar. Leverans A klar; endast ren signalmodul med syntetiska tester får nu påbörjas i B. Ingen datakvalitet, motor, historisk körning, drift eller lönsamhet verifierad.
 
 ## Uppdateringsregler
 
@@ -19,7 +19,7 @@ A1 revision 3 på a25db81 godkänd som metodkontrakt för A2. R2-01/R2-02 och te
 
 ## A. Metodkontrakt och förregistrering
 
-4/5 verifierade.
+5/5 verifierade.
 
 - [x] **MOM-A01** Kontrollera Git-läge, projektinstruktioner, tidigare beslut och separat hypotesidentitet
   - Underlag: [docs/momentum-metodgranskning-20261103.md](momentum-metodgranskning-20261103.md) — Inledande granskning på f43c1e7. Git och diagnos verifierade; M01–M08 kräver exakt metodkontrakt och omgranskning före frysning.
@@ -48,13 +48,14 @@ A1 revision 3 på a25db81 godkänd som metodkontrakt för A2. R2-01/R2-02 och te
   - Underlag: [docs/momentum-protokoll-A1.md](momentum-protokoll-A1.md) — Revision 3 efter Codex omgranskning av 979fb30: L1/L2 avgränsad till verkligt okänd ordning, kända öppningsutgångar och likvidation först (R2-01, D18); absorberande nollkonvention efter likvidation (R2-02, D21); textjusteringar i D11, §2 och §10.2. Väntar på omgranskning.
   - Underlag: [docs/momentum-a1-granskning-a25db81.md](momentum-a1-granskning-a25db81.md) — Codex godkänner exakt A1-revision a25db81 för A2 efter oberoende kontroll av O17/O18 och full horisont. Ingen registrering eller motor i granskningsleveransen.
   - Metodkontrakt godkänt på a25db81. Implementation, data och resultat ska verifieras separat i senare leveranser.
-- [ ] **MOM-A05** Förregistrera ett nytt ledigt id och låt Codex granska leverans A före implementation **Pågår.**
+- [x] **MOM-A05** Förregistrera ett nytt ledigt id och låt Codex granska leverans A före implementation
   - Underlag: [docs/momentum-a1-granskning-cb335ee.md](momentum-a1-granskning-cb335ee.md) — Codex granskning av exakt cb335ee: fyra syntetiskt reproducerade kontraktsfynd. A1 inte godkänd; A2 väntar på rättning och omgranskning.
   - Underlag: [docs/momentum-a1-granskning-979fb30.md](momentum-a1-granskning-979fb30.md) — Oberoende omgranskning av 979fb30: ursprungliga fyra fynd rättade; R2-01 och R2-02 behöver precisering och syntetiska orakel före A2.
   - Underlag: [docs/momentum-a1-granskning-a25db81.md](momentum-a1-granskning-a25db81.md) — Codex godkänner exakt A1-revision a25db81 för A2 efter oberoende kontroll av O17/O18 och full horisont. Ingen registrering eller motor i granskningsleveransen.
   - Underlag: [research/h0017-protokoll.md](../research/h0017-protokoll.md) — Slutligt protokoll H-0017, momentum-protokoll/1.0.0. §1–§18 byte-identiska med godkänt A1 a25db81 utom länkprefix ../docs/. Låsta värden: N=17, t-krav 2,754268270633685, N_sok=1 213.
   - Underlag: [research/registry.md](../research/registry.md) — En ny rad H-0017 sist; tidigare rader oförändrade (git diff: 1 tillagd, 0 borttagna). registry.count_attempts = 17.
-  - A2 registrerad och committad; inte verifierad klar före Codex A2-granskning. Leverans B väntar.
+  - Underlag: [docs/momentum-a2-granskning-db7f83b.md](momentum-a2-granskning-db7f83b.md) — Codex verifierar exakt registreringscommit db7f83b: H-0017, N=17, t=2,754268270633685, N_sok=1 213 och oförändrat metodkontrakt. Leverans A godkänd.
+  - A2 registrerad och godkänd på db7f83b. B får börja enligt docs/claude-uppdrag-momentum-B.md; ingen historisk körning godkänd.
 
 ## B. Ren signalmodul och tidskontrakt
 

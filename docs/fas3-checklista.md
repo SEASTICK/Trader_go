@@ -39,7 +39,8 @@ Fas 3-plan efter godkänd Fas 2. Edwin vill prioritera en bättre strategi med p
   - Underlag: [docs/momentum-a1-granskning-cb335ee.md](momentum-a1-granskning-cb335ee.md) — Momentummodellens A1 har granskats på cb335ee, men kontraktsfynd blockerar förregistrering. Ingen ny kandidat godkänd och ingen pilot startad.
   - Underlag: [docs/momentum-a1-granskning-979fb30.md](momentum-a1-granskning-979fb30.md) — A1 revision 2 på 979fb30 omgranskad utan historikkörning. Två kontraktsluckor återstår före förregistrering; ingen godkänd kandidat eller startad pilot.
   - Underlag: [docs/momentum-a1-granskning-a25db81.md](momentum-a1-granskning-a25db81.md) — Momentummodellens A1-metodkontrakt godkänt på a25db81 för A2-förregistrering. Ingen historiskt godkänd kandidat eller startad pilot; F3-201 förblir in_progress.
-  - Pågående strategiforskning. H-0016 är förregistrerad men oprövad; den forskningsbaserade H-0013-efterföljaren är ett separat planförslag. H-0013 behåller REJECT. Inget av detta ger READY_FOR_PAPER.
+  - Underlag: [docs/momentum-a2-granskning-db7f83b.md](momentum-a2-granskning-db7f83b.md) — H-0017 är förregistrerad och A2 godkänd på db7f83b. Endast signalimplementation med syntetiska tester får nu börja; inget historiskt resultat eller pilotgodkännande finns.
+  - H-0017 är separat förregistrerad och metodgranskad. Implementation och historisk utvärdering återstår. H-0013 REJECT och H-0016 oförändrade; ingen kandidat har READY_FOR_PAPER.
 - [ ] **F3-202** Verifiera dokumenterat slutprov och READY_FOR_PAPER innan riktigt framåttest får starta
 - [ ] **F3-203** Frys strategi eller väljare, kodrevision, parametrar och kostnadsmodell
 - [ ] **F3-204** Förregistrera minst tre månaders test, erforderligt antal affärer och slutregel
