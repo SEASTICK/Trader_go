@@ -4,7 +4,7 @@
 
 H-0013 · Kontrollerad 2026-11-03 · Granskad kodversion `9471e51`.
 
-A1, A2 och A3 verifierade inom dokumenterade avgränsningar. Installerad Mac 9471e51 (kod mergad som 915cf44), 123 frontendtester och bygge. A3 omfattar fem separat godkända utforskande jobb: tre klara, ett PermissionError och ett aktivt avbrutet. 1H-katalogägare rättad med uttryckligt godkännande och skrivprov. Aktiv process stoppad, slot släppt och inget resultat publicerat för avbrutet jobb; en worker b44d3ce och tom kö. 0 H-0013, inget slutprov och ingen publicering. F2-802/804/805 återstår.
+A1, A2 och A3 verifierade inom dokumenterade avgränsningar. Installerad Mac 9471e51 (kod mergad som 915cf44), 123 frontendtester och bygge. A3 omfattar fem separat godkända utforskande jobb: tre klara, ett PermissionError och ett aktivt avbrutet. 1H-katalogägare rättad med uttryckligt godkännande och skrivprov. Aktiv process stoppad, slot släppt och inget resultat publicerat för avbrutet jobb; en worker b44d3ce och tom kö. 0 H-0013, inget slutprov och ingen publicering. F2-802/804/805 återstår. Edwin har därefter uttryckligen godkänt H-0013; körning ca59d441 startad från installerad app, försök 1. Resultatgranskning återstår; ingen slutprovsåtkomst eller publicering.
 
 ## Uppdateringsregler
 
@@ -177,7 +177,7 @@ A1, A2 och A3 verifierade inom dokumenterade avgränsningar. Installerad Mac 947
   - Underlag: [docs/fas2-a3-utfall-20261103.md](fas2-a3-utfall-20261103.md) — Extra uttryckligen godkänt 4H-jobb över 2020–2024 klart på cirka 7,63 s, med exakt ett resultat. Beräkningsprocess observerad men avslutad före avbrottsklick; molnavbrott ännu ej verifierat. Separat 1H-prov godkänt men inte köat: appstyrningens fönsteråtkomst bröts.
   - Underlag: [docs/fas2-a3-utfall-20261103.md](fas2-a3-utfall-20261103.md) — A3 omprov 7bbad445: installerad app visar Körs→Avbruten. Servern ser aktiv process 35173 vid avbrott, därefter processen borta och slot släppt; 0 resultat och ingen sen publicering. Behörighetsfel i föregående jobb bevarat, katalogägare rättad med separat godkännande och skrivprov PASS. En worker PID 30868/b44d3ce, 0 omstarter, tom kö och 0 H-0013.
   - Underlag: [docs/fas2-h0013-forkontroll-20261103.md](fas2-h0013-forkontroll-20261103.md) — Läsande förkontroll som tradergo: 120 frysta utvecklingsarkiv verifierar namn/SHA/CHECKSUM. Ingen träning eller utvärdering. Appens förberedelsekort öppnat med obekräftad ruta; H-0013-köning kräver separat beslut.
-  - A3 verifierad för utforskning, inklusive avbrott av en aktiv beräkningsprocess och släppt slot utan resultat. Riktig H-0013-körning och dess resultat återstår och kräver separat godkännande.
+  - A3 verifierad inklusive aktivt avbrott utan resultat. Edwin har därefter godkänt riktig H-0013; ca59d441 köad en gång från installerad app och pågår som försök 1 av 3. F2-802 förblir in_progress tills sparat resultat och appvisning är granskade.
 - [x] **F2-803** Kontrollera Mac, anslutningsfel och att befintliga Fas 1-funktioner fungerar
   - Underlag: [docs/fas2-a1-granskning-81.md](fas2-a1-granskning-81.md) — 66d59bb: Mac-zip df0436dc…3cfc/signatur verifierade utan start. Backupens 23 innehållsfiler matchar och nio SQLite-integriteter är ok; manifestets felaktiga självpost behöver rättas (P2).
   - Underlag: [docs/fas2-a1-granskning-81.md](fas2-a1-granskning-81.md) — 6ff6b5e: manifestfynd rättat och omgranskat. 23 giltiga poster, 24 filer totalt, manifesthash f86865d5…fec4 och 10 SQLite-integriteter verifierade. A2 ej utfört.

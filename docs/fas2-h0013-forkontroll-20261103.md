@@ -25,3 +25,14 @@ En registrerad körning från appen med fasta inställningar: BTCUSDT UM 4H, utv
 Beslutet efter körningen kan bara vara REJECT eller MORE_RESEARCH. Resultatet granskas innan något förs in i registret. Detta godkänner ingen strategi för papper eller live. Slutprov och Stable-/testpublicering är separata beslut och ingår inte.
 
 Sluttestplanens avsnitt B säger: **"Startas bara efter Edwins uttryckliga ja, från appen, med tvåstegsförberedelsen."** Förkontrollen slutar därför före bekräftelserutan och köknappen.
+
+
+## Körbeslut och start
+
+Efter förkontrollen gav Edwin uttryckligt ja till den registrerade H-0013-körningen enligt ovan, med slutprov och publicering fortsatt undantagna. Bekräftelserutan markerades i installerad app 9471e51 och Köa H-0013 trycktes **en gång**.
+
+- Körnings-id: **ca59d441-3ab3-489b-b762-c368a6220834**.
+- Workerstart **2026-11-03 14:26:29,305311 UTC**, försök **1 av 3**.
+- Appen visar I kö och därefter Körs, först 0 procent och senare 66 procent. Ingen avbrytåtgärd används för denna forskningskörning.
+- En worker verifierad på PID 30868/b44d3ce; beräkningsprocess 35360 observerad med ungefär 91 MB RSS. Detta är enstaka stickprov, inte en uppmätt resurstopp.
+- Körningen pågår. Resultat, beslut och F2-802 godkänns inte före slutförd oberoende resultatkontroll.
