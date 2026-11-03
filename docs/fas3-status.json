@@ -108,6 +108,10 @@
             {
               "file": "docs/momentum-C2-granskning-1d9359f.md",
               "detail": "H-0017:s C2-funding granskad på 1d9359f med syntetiska tal. Ledger kompletterad och omverifierad; funding-API har två kvarstående valideringsfynd. Ingen ekonomisk utvärdering eller pilot godkänd."
+            },
+            {
+              "file": "docs/momentum-C2-granskning-fcf5cb4.md",
+              "detail": "H-0017:s C2-funding godkänd på fcf5cb4 med enbart syntetiska data. Risk-/eventintegration och ekonomisk utvärdering återstår; ingen kandidat eller pilot godkänd."
             }
           ],
           "note": "H-0017 är separat förregistrerad och metodgranskad. Implementation och historisk utvärdering återstår. H-0013 REJECT och H-0016 oförändrade; ingen kandidat har READY_FOR_PAPER."

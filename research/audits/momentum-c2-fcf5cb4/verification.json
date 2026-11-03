@@ -1,0 +1,16 @@
+{
+  "reviewed_revision": "fcf5cb4a42f76b6151a8fe66f0c87f9617e95430",
+  "synthetic_only": true,
+  "source_sha256": {
+    "ledger": "717b5d39cac8d03663a39d060968da753c7d16e948bdf5166f7cf32a27a83655",
+    "funding": "ba956ee6cd887f6f18030f8cff70817a7d1b1604f113c5b7f0f9793801f3c2dd"
+  },
+  "decimal_funding_stress_cases": 400,
+  "previous_C1_decimal_cases": 250,
+  "valid_before_after_identical_cases": 400,
+  "phase_matrix_cases": 15,
+  "invalid_state_constructor_replace_checks": 22,
+  "restored_whole_id_duplicate_rejections": 4,
+  "separate_scenario_verified": true,
+  "invalid_price_source_checks": 5
+}

@@ -3,8 +3,8 @@
   "title": "Efterföljare till H-0013 – granskning och implementation",
   "hypothesis": "H-0017 – riskstyrd tidsseriemomentum på BTCUSDT",
   "updated": "2026-11-03",
-  "reviewed_revision": "1d9359fe71259a9099ac7443993a48dfa8c1423f",
-  "reviewed_scope": "C2 på 1d9359f granskad: 129 funding-/ledgerprov och 718 motorprov godkända; 400 egna Decimal-fundingfall och 250 C1-fall stämmer. C01 återgodkänd för funding_net-kompletteringen. Två P2-fynd i funding-API (fas mot exakt tid och processed-state) blockerar C2; C03/C05 fortsatt in_progress. 11/40. Ingen verklig historik, H-0017-körning eller drift.",
+  "reviewed_revision": "fcf5cb4a42f76b6151a8fe66f0c87f9617e95430",
+  "reviewed_scope": "C2 godkänd på fcf5cb4: C2-01/C2-02 och källfeltyp rättade. 170 riktade prov, 759 motorprov, 400 egna Decimal-/före-efterfall och 250 C1-fall passerar. C01 oförändrad; C03/C05 fortsatt in_progress. 11/40. Nästa avgränsade C3: avsikter, band och riskstatus, endast syntetiskt.",
   "groups": [
     {
       "id": "A",
@@ -389,9 +389,13 @@
             {
               "file": "engine/tests/test_momentum_funding.py",
               "detail": "Rättning av C2-01/C2-02 från granskningen av 1d9359f: fas mot exakt eventtid, validerad processed-samling och strängkälla. 88 fundingtester; 27 nya fäller 1d9359f; 20 riktade felprov fångade."
+            },
+            {
+              "file": "docs/momentum-C2-granskning-fcf5cb4.md",
+              "detail": "Codex godkänner fundingdelen på exakt fcf5cb4; fas-/tidsvakt, processed-validering och källfeltyp verifierade. 170 riktade prov/759 motorprov samt oberoende Decimal-/regressionsaudit passerar."
             }
           ],
-          "note": "Fundingdelen rättad efter granskningen av 1d9359f; väntar på omgranskning. Dagsreset och första/sista event återstår."
+          "note": "Fundingdelen godkänd på fcf5cb4. Dagsreset och första/sista event är ännu inte integrerade; C03 förblir in_progress."
         },
         {
           "id": "MOM-C04",

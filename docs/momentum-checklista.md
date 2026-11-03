@@ -2,9 +2,9 @@
 
 **11 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-Metodgranskning · Kontrollerad 2026-11-03 · Granskad kodversion `1d9359fe71259a9099ac7443993a48dfa8c1423f`.
+Metodgranskning · Kontrollerad 2026-11-03 · Granskad kodversion `fcf5cb4a42f76b6151a8fe66f0c87f9617e95430`.
 
-C2 på 1d9359f granskad: 129 funding-/ledgerprov och 718 motorprov godkända; 400 egna Decimal-fundingfall och 250 C1-fall stämmer. C01 återgodkänd för funding_net-kompletteringen. Två P2-fynd i funding-API (fas mot exakt tid och processed-state) blockerar C2; C03/C05 fortsatt in_progress. 11/40. Ingen verklig historik, H-0017-körning eller drift.
+C2 godkänd på fcf5cb4: C2-01/C2-02 och källfeltyp rättade. 170 riktade prov, 759 motorprov, 400 egna Decimal-/före-efterfall och 250 C1-fall passerar. C01 oförändrad; C03/C05 fortsatt in_progress. 11/40. Nästa avgränsade C3: avsikter, band och riskstatus, endast syntetiskt.
 
 ## Uppdateringsregler
 
@@ -120,7 +120,8 @@ C2 på 1d9359f granskad: 129 funding-/ledgerprov och 718 motorprov godkända; 40
   - Underlag: [docs/momentum-funding-C2.md](momentum-funding-C2.md) — API, regler, ledgerkomplettering, fel, verifiering och gränser för C2.
   - Underlag: [docs/momentum-C2-granskning-1d9359f.md](momentum-C2-granskning-1d9359f.md) — Codex granskar exakt 1d9359f: C01:s funding_net/avstämning verifierad; C2-01/C2-02 i funding-API återstår. 129 riktade prov/718 motorprov och oberoende Decimal-kontroller passerar.
   - Underlag: [engine/tests/test_momentum_funding.py](../engine/tests/test_momentum_funding.py) — Rättning av C2-01/C2-02 från granskningen av 1d9359f: fas mot exakt eventtid, validerad processed-samling och strängkälla. 88 fundingtester; 27 nya fäller 1d9359f; 20 riktade felprov fångade.
-  - Fundingdelen rättad efter granskningen av 1d9359f; väntar på omgranskning. Dagsreset och första/sista event återstår.
+  - Underlag: [docs/momentum-C2-granskning-fcf5cb4.md](momentum-C2-granskning-fcf5cb4.md) — Codex godkänner fundingdelen på exakt fcf5cb4; fas-/tidsvakt, processed-validering och källfeltyp verifierade. 170 riktade prov/759 motorprov samt oberoende Decimal-/regressionsaudit passerar.
+  - Fundingdelen godkänd på fcf5cb4. Dagsreset och första/sista event är ännu inte integrerade; C03 förblir in_progress.
 - [ ] **MOM-C04** Implementera 2 % dagsstopp, 15 % permanent stopp och konservativ 20 %-riskkontroll
 - [ ] **MOM-C05** Verifiera gap, basis, likvidation och riskordning med handräknade prov och kodgranskning **Pågår.**
   - Underlag: [engine/tests/test_momentum_ledger.py](../engine/tests/test_momentum_ledger.py) — 40 syntetiska tester mot orakel O1–O4, O11, O14, O15 och handräkning; 14 riktade felprov fångade.
