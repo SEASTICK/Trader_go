@@ -1,10 +1,10 @@
 # Fas 2 – Utvecklingsplan
 
-**33 av 40 uppgifter verifierade · 8 arbetsområden.**
+**35 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-H-0013 · Kontrollerad 2026-11-03 · Granskad kodversion `db9a4ec`.
+H-0013 · Kontrollerad 2026-11-03 · Granskad kodversion `08a8966`.
 
-PR #78 granskad på db9a4ec (kod e42c534): 541 Python-/105 frontendtester och bygge passerar. Ny direkt kurvingång saknar slutprovsskydd, läsaren godkänner felaktiga tidsaxlar och urvalet kan ge 1501 punkter. Ej godkänd för merge. Tidigare nyckeltal återverifierade med identiskt före/efter-resultat; ingen riktig körning eller driftsättning.
+PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Python-/118 frontendtester och bygge passerar, CI grön. Egna slutprovs-/tidsaxel-/punktgränsprov samt syntetiskt motor–workerpaket–frontendläsarprov passerar. Kodmässigt godkänd för merge. Ingen riktig körning, driftsättning eller publicering.
 
 ## Uppdateringsregler
 
@@ -95,13 +95,13 @@ PR #78 granskad på db9a4ec (kod e42c534): 541 Python-/105 frontendtester och by
 
 ## 5. Utvärdering och robusthet
 
-4/5 verifierade.
+5/5 verifierade.
 
-- [ ] **F2-501** Jämför med köp-och-behåll, varje kandidat ensam och en likaviktad blandning **Pågår.**
+- [x] **F2-501** Jämför med köp-och-behåll, varje kandidat ensam och en likaviktad blandning
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov.
   - Underlag: [docs/fas2-jamforelsekurvor-granskning-78.md](fas2-jamforelsekurvor-granskning-78.md) — db9a4ec: befintliga jämförelseutfall identiska mot de70580, men nya comparison_curves saknar utvecklingskontroll vid direkt anrop (P1).
-  - Underlag: [engine/tests/test_fas2_eval.py](../engine/tests/test_fas2_eval.py) — fec2e51 (PR #78): comparison_curves kör utvecklingskontrollen på huvudserien och varje jämförelse före beräkning, även utan jämförelser; slutprov, data före 2020 och index utan UTC avvisas utan att någon kontrollsumma räknas (spion). Python 553 och frontend 118 tester samt bygge passerar; avsiktliga fel i skydd, urval och tidsaxelkontroll fångas. Endast syntetisk data, inget driftsatt.
-  - Rättat i fec2e51 efter granskning av db9a4ec. Väntar på Codex omgranskning; inte godkänt.
+  - Underlag: [docs/fas2-jamforelsekurvor-granskning-78.md](fas2-jamforelsekurvor-granskning-78.md) — 08a8966 (kod fec2e51): oberoende omgranskning godkänd. 553 Python-/118 frontendtester och bygge passerar; direkta skydd, tidsaxel, huvudkurvans värden, högst 1500 punkter och syntetisk motor–worker–läsarintegration verifierade.
+  - PR #78 kodmässigt godkänd på 08a8966 med grön CI. Bara syntetisk lokal verifiering. Driftsatt dee88eb saknar jämförelsekurvorna; riktigt appflöde och installerad app återstår i arbetsområde 8.
 - [x] **F2-502** Verifiera kostnadsstress, funding och riskmodell för H-0013
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov.
   - PR #72 mergad, kod verifierad syntetiskt och nu del av driftsatt worker dee88eb. Ingen full H-0013-forskningskörning är startad.
@@ -139,7 +139,7 @@ PR #78 granskad på db9a4ec (kod e42c534): 541 Python-/105 frontendtester och by
 
 ## 7. Visa Fas 2 i Research Lab
 
-4/5 verifierade.
+5/5 verifierade.
 
 - [x] **F2-701** Visa H-0013 separat från Fas 1 och tvärsnittshypoteserna
   - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — f36a3ee (kod 62cc4bb): Separat H-0013-flik och avgränsning mot Fas 1, tvärsnitt och utforskning verifierade.
@@ -150,11 +150,11 @@ PR #78 granskad på db9a4ec (kod e42c534): 541 Python-/105 frontendtester och by
 - [x] **F2-703** Visa köstatus, förlopp, fel och möjlighet att avbryta
   - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — 677752f (kod a883094): Eget payloadfel, automatisk återhämtning och manuell knapp verifierade med DOM-tester. Eget Chrome-prov ger andra payload-anropet och resultat, utan köning.
   - PR #77 mergad i de70580 med app-/motorkod oförändrad mot godkänd 677752f. PR #78:s nya kurvor granskas separat. Ingen riktig köning eller installerad app/publicering verifierad.
-- [ ] **F2-704** Visa marknadslägen, kandidatval och jämförelsekurvor med spårbara källor **Pågår.**
+- [x] **F2-704** Visa marknadslägen, kandidatval och jämförelsekurvor med spårbara källor
   - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — 677752f (kod a883094): Platt kapital och noll-drawdown nu visuellt verifierade i ljust/mörkt tema med ändlig SVG. Jämförelsekurvor saknas fortfarande i payload och uppgiften förblir öppen.
   - Underlag: [docs/fas2-jamforelsekurvor-granskning-78.md](fas2-jamforelsekurvor-granskning-78.md) — db9a4ec: kurvor implementerade och visuellt provade i ljus/mörk Chrome-vy. Ogiltiga tidsaxlar accepteras (P2); 1500-gränsen kan överskridas (P3). 105 frontendtester och bygge passerar.
-  - Underlag: [app/src/features/research-engine/h0013.dom.test.tsx](../app/src/features/research-engine/h0013.dom.test.tsx) — fec2e51 (PR #78): högst 1 500 punkter med gemensamt jämnt urval och båda ändpunkterna; appen kräver UTC-tidpunkter på 4h-rutnätet, strikt stigande, inom testfönstren och i huvudkurvan, och att H-0013-värdena stämmer med huvudkurvan (relativ tolerans 1e-6); annars visas kurvorna som saknade med förklaring. Fixturerna har nu samma serie i båda representationerna. Python 553 och frontend 118 tester samt bygge passerar; avsiktliga fel i skydd, urval och tidsaxelkontroll fångas. Endast syntetisk data, inget driftsatt.
-  - Rättat i fec2e51 efter granskning av db9a4ec. Väntar på Codex omgranskning; inte godkänt.
+  - Underlag: [docs/fas2-jamforelsekurvor-granskning-78.md](fas2-jamforelsekurvor-granskning-78.md) — 08a8966 (kod fec2e51): oberoende omgranskning godkänd. 553 Python-/118 frontendtester och bygge passerar; direkta skydd, tidsaxel, huvudkurvans värden, högst 1500 punkter och syntetisk motor–worker–läsarintegration verifierade.
+  - PR #78 kodmässigt godkänd på 08a8966 med grön CI. Bara syntetisk lokal verifiering. Driftsatt dee88eb saknar jämförelsekurvorna; riktigt appflöde och installerad app återstår i arbetsområde 8.
 - [x] **F2-705** Visa kriterier, osäkerhet, historik och REJECT/MORE_RESEARCH utan SIM som verkliga resultat
   - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — 677752f (kod a883094): Saknad/feltypad logg, ogiltiga rader, avvikande antal och faktiskt tom logg skiljs åt och redovisas. Tidigare egna felprov och DOM-regressioner passerar.
   - PR #77 mergad i de70580 med app-/motorkod oförändrad mot godkänd 677752f. PR #78:s nya kurvor granskas separat. Ingen riktig köning eller installerad app/publicering verifierad.
