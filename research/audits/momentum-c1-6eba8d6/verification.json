@@ -1,0 +1,30 @@
+{
+  "reviewed_revision": "6eba8d61cca0df03c3aa6c352a26834011479094",
+  "synthetic_only": true,
+  "source_sha256": "49831b1c89982e22227e4cd86dfe1fa2609b924e7e51d08007a97ba9f1208c29",
+  "decimal_reference_cases": 250,
+  "precision": 50,
+  "normal_and_risk_checked": true,
+  "caught_in_memory_mutations": [
+    "double_cost",
+    "ignore_basis",
+    "risk_increase"
+  ],
+  "C1_01_nonfinite_ledger": {
+    "nan_account_metadata_accepted": true,
+    "finite_equity_with_nan_realized_delta": true,
+    "finite_inputs_return_infinite_equity": true
+  },
+  "C1_02_initial_denominator_zero": {
+    "inputs": {
+      "E": 1000,
+      "q_old": 0,
+      "P": 200,
+      "M": 100,
+      "w": -1
+    },
+    "native_float_error": "ZeroDivisionError",
+    "numpy_float64_returns": -3125.0000000000664,
+    "numpy_division_warning": true
+  }
+}

@@ -96,6 +96,10 @@
             {
               "file": "docs/momentum-B-granskning-3294e8f.md",
               "detail": "H-0017:s rena signalmodul B godkänd på 3294e8f, enbart syntetiskt. Ledger, verklig data och ekonomisk utvärdering återstår; inget pilotgodkännande."
+            },
+            {
+              "file": "docs/momentum-C1-granskning-6eba8d6.md",
+              "detail": "H-0017:s C1-ledger granskad på 6eba8d6 med enbart syntetiska tal. Två numeriska valideringsfynd återstår; inga ekonomiska resultat eller pilotgodkännanden."
             }
           ],
           "note": "H-0017 är separat förregistrerad och metodgranskad. Implementation och historisk utvärdering återstår. H-0013 REJECT och H-0016 oförändrade; ingen kandidat har READY_FOR_PAPER."

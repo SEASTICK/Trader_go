@@ -42,6 +42,7 @@ Fas 3-plan efter godkänd Fas 2. Edwin vill prioritera en bättre strategi med p
   - Underlag: [docs/momentum-a2-granskning-db7f83b.md](momentum-a2-granskning-db7f83b.md) — H-0017 är förregistrerad och A2 godkänd på db7f83b. Endast signalimplementation med syntetiska tester får nu börja; inget historiskt resultat eller pilotgodkännande finns.
   - Underlag: [docs/momentum-B-granskning-bfdb33b.md](momentum-B-granskning-bfdb33b.md) — H-0017:s B-del granskad på bfdb33b, enbart syntetiskt. Signalberäkningar verifierade men tomdata-API behöver rättas före C. Inget ekonomiskt resultat eller pilotgodkännande.
   - Underlag: [docs/momentum-B-granskning-3294e8f.md](momentum-B-granskning-3294e8f.md) — H-0017:s rena signalmodul B godkänd på 3294e8f, enbart syntetiskt. Ledger, verklig data och ekonomisk utvärdering återstår; inget pilotgodkännande.
+  - Underlag: [docs/momentum-C1-granskning-6eba8d6.md](momentum-C1-granskning-6eba8d6.md) — H-0017:s C1-ledger granskad på 6eba8d6 med enbart syntetiska tal. Två numeriska valideringsfynd återstår; inga ekonomiska resultat eller pilotgodkännanden.
   - H-0017 är separat förregistrerad och metodgranskad. Implementation och historisk utvärdering återstår. H-0013 REJECT och H-0016 oförändrade; ingen kandidat har READY_FOR_PAPER.
 - [ ] **F3-202** Verifiera dokumenterat slutprov och READY_FOR_PAPER innan riktigt framåttest får starta
 - [ ] **F3-203** Frys strategi eller väljare, kodrevision, parametrar och kostnadsmodell
