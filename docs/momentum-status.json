@@ -3,8 +3,8 @@
   "title": "Efterföljare till H-0013 – granskning och implementation",
   "hypothesis": "Ej registrerad – id kontrolleras i leverans A",
   "updated": "2026-11-03",
-  "reviewed_revision": "f43c1e7",
-  "reviewed_scope": "Inledande metodgranskning klar som underlag: Git/status och sparad diagnos verifierade. Kontraktsutkast 0.1 och leverans A till Claude förberedda. Metodkontraktet är inte godkänt eller förregistrerat; inga nya signaler, historiska körningar eller driftkontroller genomförda. H-0013 REJECT och H-0016 oförändrade. Claude har lämnat A1-protokollutkast och orakel (docs/momentum-protokoll-A1.md) för granskning; inget id registrerat.",
+  "reviewed_revision": "cb335eec6b70002affc41b632b5931457e6a53fc",
+  "reviewed_scope": "A1 cb335ee oberoende granskad: 29 befintliga tester och syntetiska orakel passerar, men fyra kontraktsfynd blockerar A2 (riskavsikt efter gap, fundingtid, Sharpe-bound och kapitalfaser). Inget metodgodkännande, ingen registrering, historikläsning, implementation eller drift. H-0013 REJECT och H-0016 oförändrade.",
   "groups": [
     {
       "id": "A",
@@ -54,9 +54,13 @@
             {
               "file": "docs/momentum-a1-orakel.json",
               "detail": "Handräknade fall O1–O12 (syntetiska tal), omräknade av scripts/momentum-a1-oracles.py --check. Verifierar formler, inte motorkod."
+            },
+            {
+              "file": "docs/momentum-a1-granskning-cb335ee.md",
+              "detail": "Codex granskning av exakt cb335ee: fyra syntetiskt reproducerade kontraktsfynd. A1 inte godkänd; A2 väntar på rättning och omgranskning."
             }
           ],
-          "note": "A1 lämnad för Codex granskning; förblir in_progress tills exakt revision godkänts."
+          "note": "A1 cb335ee inte godkänd. Rätta fynden i granskningsdokumentet; ingen registrering eller leverans B."
         },
         {
           "id": "MOM-A04",
@@ -74,16 +78,25 @@
             {
               "file": "docs/momentum-protokoll-A1.md",
               "detail": "§11–§14: jämförelsematris, sex kriterier i scenario A och B, N-regel (17 → t 2,754268270633685 om H-0017 är ledigt vid A2), DSR med N=17 och N_sok=1 213 som diagnostik."
+            },
+            {
+              "file": "docs/momentum-a1-granskning-cb335ee.md",
+              "detail": "Codex granskning av exakt cb335ee: fyra syntetiskt reproducerade kontraktsfynd. A1 inte godkänd; A2 väntar på rättning och omgranskning."
             }
           ],
-          "note": "A1 lämnad för Codex granskning; N och t-krav låses först i A2."
+          "note": "A1 cb335ee inte godkänd. Rätta fynden i granskningsdokumentet; ingen registrering eller leverans B."
         },
         {
           "id": "MOM-A05",
           "title": "Förregistrera ett nytt ledigt id och låt Codex granska leverans A före implementation",
           "status": "todo",
-          "evidence": [],
-          "note": "Väntar på Codex godkännande av exakt A1-revision. Ingen registerrad lagd."
+          "evidence": [
+            {
+              "file": "docs/momentum-a1-granskning-cb335ee.md",
+              "detail": "Codex granskning av exakt cb335ee: fyra syntetiskt reproducerade kontraktsfynd. A1 inte godkänd; A2 väntar på rättning och omgranskning."
+            }
+          ],
+          "note": "A1 cb335ee inte godkänd. Rätta fynden i granskningsdokumentet; ingen registrering eller leverans B."
         }
       ]
     },

@@ -1,0 +1,40 @@
+{
+  "reviewed_revision": "cb335eec6b70002affc41b632b5931457e6a53fc",
+  "synthetic_only": true,
+  "scenario_B_phases": {
+    "q": "499.6003197442046362909672262190247801759",
+    "equity_before_funding": "99920.06394884092725819344524380495603517",
+    "funding_paid": "4.996003197442046362909672262190247801759",
+    "equity_after_funding": "99915.06794564348521183053557154276578737",
+    "weight_before_funding": "0.5",
+    "weight_after_funding": "0.5000250012500625031251562578128906445323"
+  },
+  "risk_intent_after_gap": {
+    "old_units": "2",
+    "target_weight": "0.195",
+    "opening_weight": "0.1836734693877551020408163265306122448980",
+    "solver_units": "2.123294865335348704537517627833449297153",
+    "increase": "0.123294865335348704537517627833449297153"
+  },
+  "funding_snap": {
+    "actual_event": "2022-01-02T00:00:30+00:00",
+    "booked_boundary": "2022-01-02T00:00:00+00:00",
+    "moved_back_seconds": 30
+  },
+  "nonmonotone_sharpe": {
+    "original_returns": [
+      0.01,
+      0.011,
+      0.009,
+      0.1
+    ],
+    "financially_worse_returns": [
+      0.01,
+      0.011,
+      0.009,
+      0.01
+    ],
+    "original_annual_sharpe": 13.795765460594735,
+    "financially_worse_annual_sharpe": 233.98717913595178
+  }
+}

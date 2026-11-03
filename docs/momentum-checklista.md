@@ -2,9 +2,9 @@
 
 **2 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-Metodgranskning · Kontrollerad 2026-11-03 · Granskad kodversion `f43c1e7`.
+Metodgranskning · Kontrollerad 2026-11-03 · Granskad kodversion `cb335eec6b70002affc41b632b5931457e6a53fc`.
 
-Inledande metodgranskning klar som underlag: Git/status och sparad diagnos verifierade. Kontraktsutkast 0.1 och leverans A till Claude förberedda. Metodkontraktet är inte godkänt eller förregistrerat; inga nya signaler, historiska körningar eller driftkontroller genomförda. H-0013 REJECT och H-0016 oförändrade. Claude har lämnat A1-protokollutkast och orakel (docs/momentum-protokoll-A1.md) för granskning; inget id registrerat.
+A1 cb335ee oberoende granskad: 29 befintliga tester och syntetiska orakel passerar, men fyra kontraktsfynd blockerar A2 (riskavsikt efter gap, fundingtid, Sharpe-bound och kapitalfaser). Inget metodgodkännande, ingen registrering, historikläsning, implementation eller drift. H-0013 REJECT och H-0016 oförändrade.
 
 ## Uppdateringsregler
 
@@ -30,14 +30,17 @@ Inledande metodgranskning klar som underlag: Git/status och sparad diagnos verif
   - Underlag: [docs/momentum-implementationskontrakt-utkast.md](momentum-implementationskontrakt-utkast.md) — Utkast 0.1 till Claude. Kvarstående A-blockerare framgår; inte godkänt som fryst protokoll.
   - Underlag: [docs/momentum-protokoll-A1.md](momentum-protokoll-A1.md) — A1-utkast till Codex: eventordning A/B med klassificering, ledger och storlek, avgränsad korsmarginal, intrastapel-bound även för legacy-stop, jämförelsematris, metodtabell D01–D16. Inte registrerat eller godkänt.
   - Underlag: [docs/momentum-a1-orakel.json](momentum-a1-orakel.json) — Handräknade fall O1–O12 (syntetiska tal), omräknade av scripts/momentum-a1-oracles.py --check. Verifierar formler, inte motorkod.
-  - A1 lämnad för Codex granskning; förblir in_progress tills exakt revision godkänts.
+  - Underlag: [docs/momentum-a1-granskning-cb335ee.md](momentum-a1-granskning-cb335ee.md) — Codex granskning av exakt cb335ee: fyra syntetiskt reproducerade kontraktsfynd. A1 inte godkänd; A2 väntar på rättning och omgranskning.
+  - A1 cb335ee inte godkänd. Rätta fynden i granskningsdokumentet; ingen registrering eller leverans B.
 - [ ] **MOM-A04** Lås exakta jämförelser, försöksräkning, DSR och beslutskriterier **Pågår.**
   - Underlag: [docs/momentum-metodgranskning-20261103.md](momentum-metodgranskning-20261103.md) — Inledande granskning på f43c1e7. Git och diagnos verifierade; M01–M08 kräver exakt metodkontrakt och omgranskning före frysning.
   - Underlag: [docs/momentum-implementationskontrakt-utkast.md](momentum-implementationskontrakt-utkast.md) — Utkast 0.1 till Claude. Kvarstående A-blockerare framgår; inte godkänt som fryst protokoll.
   - Underlag: [docs/momentum-protokoll-A1.md](momentum-protokoll-A1.md) — §11–§14: jämförelsematris, sex kriterier i scenario A och B, N-regel (17 → t 2,754268270633685 om H-0017 är ledigt vid A2), DSR med N=17 och N_sok=1 213 som diagnostik.
-  - A1 lämnad för Codex granskning; N och t-krav låses först i A2.
+  - Underlag: [docs/momentum-a1-granskning-cb335ee.md](momentum-a1-granskning-cb335ee.md) — Codex granskning av exakt cb335ee: fyra syntetiskt reproducerade kontraktsfynd. A1 inte godkänd; A2 väntar på rättning och omgranskning.
+  - A1 cb335ee inte godkänd. Rätta fynden i granskningsdokumentet; ingen registrering eller leverans B.
 - [ ] **MOM-A05** Förregistrera ett nytt ledigt id och låt Codex granska leverans A före implementation
-  - Väntar på Codex godkännande av exakt A1-revision. Ingen registerrad lagd.
+  - Underlag: [docs/momentum-a1-granskning-cb335ee.md](momentum-a1-granskning-cb335ee.md) — Codex granskning av exakt cb335ee: fyra syntetiskt reproducerade kontraktsfynd. A1 inte godkänd; A2 väntar på rättning och omgranskning.
+  - A1 cb335ee inte godkänd. Rätta fynden i granskningsdokumentet; ingen registrering eller leverans B.
 
 ## B. Ren signalmodul och tidskontrakt
 

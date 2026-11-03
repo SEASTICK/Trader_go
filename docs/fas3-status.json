@@ -72,6 +72,10 @@
             {
               "file": "docs/momentum-metodgranskning-20261103.md",
               "detail": "Codex första metodgranskning: separat statuskälla och kontraktsutkast till Claude; metodblockerare före förregistrering. Ingen ny godkänd kandidat eller historisk körning."
+            },
+            {
+              "file": "docs/momentum-a1-granskning-cb335ee.md",
+              "detail": "Momentummodellens A1 har granskats på cb335ee, men kontraktsfynd blockerar förregistrering. Ingen ny kandidat godkänd och ingen pilot startad."
             }
           ],
           "note": "Pågående strategiforskning. H-0016 är förregistrerad men oprövad; den forskningsbaserade H-0013-efterföljaren är ett separat planförslag. H-0013 behåller REJECT. Inget av detta ger READY_FOR_PAPER."
