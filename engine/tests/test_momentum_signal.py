@@ -234,3 +234,38 @@ def test_input_is_not_modified():
     copy = bars.copy()
     ms.signals(bars)
     pd.testing.assert_frame_equal(bars, copy)
+
+
+EMPTY = pd.DataFrame({"close": pd.Series(dtype=float)}, index=pd.DatetimeIndex([], tz="UTC"))
+
+
+@pytest.mark.parametrize("make", [lambda: EMPTY, lambda: bars_from_daily(returns_closes(cycling(65))).iloc[:0]],
+                         ids=["tom_ram", "tomt_prefix"])
+def test_empty_input_gives_empty_signal_frame_with_stable_schema(make):
+    bars = make()
+    ms.validate_bars(bars)
+    sig = ms.signals(bars)
+    ref = ms.signals(bars_from_daily(returns_closes(cycling(65))))
+    assert sig.empty and len(sig) == 0
+    assert list(sig.columns) == ms.COLUMNS
+    assert isinstance(sig.index, pd.DatetimeIndex) and str(sig.index.tz) == "UTC"
+    assert sig.index.dtype == ref.index.dtype
+    assert sig.dtypes.to_dict() == ref.dtypes.to_dict()
+    assert str(sig["decision_time"].dt.tz) == "UTC" and str(sig["earliest_fill"].dt.tz) == "UTC"
+    assert sig["available"].dtype == bool and sig["w_target"].dtype == float
+
+
+def test_latest_decision_on_empty_result_says_no_decision_known():
+    with pytest.raises(KeyError, match="Inget beslut känt"):
+        ms.latest_decision(ms.signals(EMPTY), pd.Timestamp("2022-01-01", tz="UTC"))
+
+
+def test_nonempty_incomplete_single_day_is_still_unavailable():
+    bars = bars_from_daily([100.0]).iloc[:2]                 # 00- och 04-staplarna, dagen pågår
+    sig = ms.signals(bars)
+    assert len(sig) == 1
+    row = sig.iloc[0]
+    assert row["reason"] == ms.INCOMPLETE_DAY
+    assert not row["available"] and math.isnan(row["w_target"]) and math.isnan(row["close"])
+    with pytest.raises(KeyError, match="Inget beslut känt"):
+        ms.latest_decision(sig, bars.index[-1] + ms.BAR)

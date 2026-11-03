@@ -112,7 +112,12 @@ def signals(bars: pd.DataFrame) -> pd.DataFrame:
                     reason = INVALID_VOL
                     row.update(s7=math.nan, s14=math.nan, s28=math.nan, s=math.nan, vol=math.nan)
         rows.append({**row, "close": c[i], "available": reason is None, "reason": reason})
-    out = pd.DataFrame(rows, index=daily.index)
+    # Kolumn för kolumn med fasta typer, så att även tom indata ger exakt COLUMNS och samma typer.
+    col = lambda k, dtype: pd.Series([r[k] for r in rows], index=daily.index, dtype=dtype)
+    out = pd.DataFrame({k: col(k, float) for k in ["close", "s7", "s14", "s28", "s", "vol", "cap", "w_target"]},
+                       index=daily.index)
+    out["available"] = col("available", bool)
+    out["reason"] = col("reason", object)
     out["decision_time"] = daily.index + pd.Timedelta(days=1)
     out["earliest_fill"] = out["decision_time"]
     out["version"] = VERSION

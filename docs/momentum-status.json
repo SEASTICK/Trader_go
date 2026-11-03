@@ -232,9 +232,13 @@
             {
               "file": "docs/momentum-B-granskning-bfdb33b.md",
               "detail": "Codex granskning av exakt bfdb33b: egna syntetiska avstämningar och tre fångade mutanter; ett P2-fynd för tom signalindata. 32 signaltester och 585 motorprov godkända."
+            },
+            {
+              "file": "engine/tests/test_momentum_signal.py",
+              "detail": "Rättning av P2 från granskningen av bfdb33b: signals() på tom ram och tomt prefix ger exakt COLUMNS med UTC-index och samma typer; latest_decision ger dokumenterat KeyError. 36 syntetiska tester; tre nya fäller bfdb33b."
             }
           ],
-          "note": "P2 i signals(empty) återstår enligt granskningen av bfdb33b. Ingen C före slutgodkänd B-revision."
+          "note": "P2 rättad på claude/momentum-b; väntar på Codex omgranskning av exakt revision. Ingen C före slutgodkänd B."
         },
         {
           "id": "MOM-B04",
@@ -280,9 +284,13 @@
             {
               "file": "docs/momentum-B-granskning-bfdb33b.md",
               "detail": "Codex granskning av exakt bfdb33b: egna syntetiska avstämningar och tre fångade mutanter; ett P2-fynd för tom signalindata. 32 signaltester och 585 motorprov godkända."
+            },
+            {
+              "file": "engine/tests/test_momentum_signal.py",
+              "detail": "Rättning av P2 från granskningen av bfdb33b: signals() på tom ram och tomt prefix ger exakt COLUMNS med UTC-index och samma typer; latest_decision ger dokumenterat KeyError. 36 syntetiska tester; tre nya fäller bfdb33b."
             }
           ],
-          "note": "P2 i signals(empty) återstår enligt granskningen av bfdb33b. Ingen C före slutgodkänd B-revision."
+          "note": "P2 rättad på claude/momentum-b; väntar på Codex omgranskning av exakt revision. Ingen C före slutgodkänd B."
         }
       ]
     },

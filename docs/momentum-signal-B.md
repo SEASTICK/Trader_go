@@ -1,6 +1,7 @@
 # H-0017 leverans B – signalmodul mom-signal/1.0.0
 
-Datum 2026-11-03. Underlag: [research/h0017-protokoll.md](../research/h0017-protokoll.md) §3–§5 och
+Datum 2026-11-03. Rättad efter [Codex granskning av bfdb33b](momentum-B-granskning-bfdb33b.md): tom indata ger nu
+ett stabilt tomt signalschema (P2). Underlag: [research/h0017-protokoll.md](../research/h0017-protokoll.md) §3–§5 och
 [uppdraget](claude-uppdrag-momentum-B.md). Implementation för Codex granskning, inte godkänd. Endast syntetiska
 indata har använts; ingen marknadshistorik har lästs och ingen H-0017-körning har startats.
 
@@ -19,6 +20,14 @@ Kolumner i `signals`: `decision_time` (D+1 00:00 UTC), `earliest_fill` (samma ti
 fylla vid), `close`, `s7`, `s14`, `s28`, `s`, `vol`, `cap`, `w_target`, `available`, `reason`, `version`.
 
 Endast kolumnen `close` läses. `open`, `high` och `low` påverkar aldrig ett beslut.
+
+Typer: `decision_time` och `earliest_fill` är `datetime64[ns, UTC]`; `close` till `w_target` är float; `available` är
+bool; `reason` och `version` är object. Indexet är ett DatetimeIndex i UTC med dagens början.
+
+**Tom indata.** En tom ram med kolumnen `close` och tomt UTC-index godkänns av `validate_bars`. Då ger `signals` en tom
+ram med exakt `COLUMNS`, UTC-index och samma typer som ovan, utan påhittade dagsrader, nollvikter eller tidigare signaler.
+`latest_decision` på ett tomt resultat, eller före första kända beslut, ger KeyError "Inget beslut känt vid …".
+Körlagret avgör därefter enligt protokollet om saknade data är OGILTIG_DATA.
 
 ## Tidsregler
 
@@ -44,13 +53,16 @@ som ligger på 4H-rutnätet), dubbletter, osorterat, tid utanför 4H-gränserna,
 
 ## Verifiering
 
-- [engine/tests/test_momentum_signal.py](../engine/tests/test_momentum_signal.py): 32 tester, alla godkända. Handräknade
+- [engine/tests/test_momentum_signal.py](../engine/tests/test_momentum_signal.py): 36 tester, alla godkända. Fyra nya
+  regressionstester för tom ram, tomt prefix av en giltig serie (schema, UTC och typer jämförda med ett icke-tomt
+  resultat), `latest_decision` på tomt resultat och en icke-tom pågående dag (`incomplete_day`, ej tillgänglig, NaN-vikt).
+  Tre av dem fäller den granskade modulen bfdb33b och passerar på rättningen. Handräknade
   horisonter och mål (s = 0, 1/3, 2/3, 1; stigande, fallande, lika pris), volatilitet mot `statistics.stdev` och
   avgränsad mot ddof=0, 59/61 avkastningar, logavkastning, prisernas std och sqrt(252), första tillgängliga dag,
   dagsgräns och beslutstid, att bara 20-stapelns close räknas, pågående sista dag, prefix vid hel- och halvdag,
   ändrade framtida priser, ändrade open/high/low, saknad dag och saknad stapel, nollvolatilitet och 13 felaktiga indata.
-- Hela motorsviten: 585 godkända med `engine/.venv/bin/python -m pytest`.
-- Riktade felprov: 14 avsiktliga fel infördes ett i taget i modulen och testfilen kördes. Alla 14 fångades: beslut
+- Hela motorsviten: 589 godkända efter rättningen (585 på bfdb33b) med `engine/.venv/bin/python -m pytest`.
+- Riktade felprov: 14 avsiktliga fel infördes ett i taget i modulen och testfilen kördes. Alla 14 fångades, även efter tomdata-rättningen: beslut
   vid D 20:00, nästa dags close, observationer i stället för kalenderdagar, 60 stängningar, ddof=0, sqrt(252),
   ändrade vikter, logavkastning, lika pris ger 1, ofullständig dag tillåten, nollvolatilitet godkänd, tyst sortering,
   icke-UTC godkänd, 59 dagars uppvärmning. En femtonde mutant (full vikt vid nollvolatilitet inne i grenen vol > 0)
