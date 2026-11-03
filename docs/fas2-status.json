@@ -635,9 +635,14 @@
         {
           "id": "F2-804",
           "title": "Publicera granskad Stable och verifiera installerad kodversion samt uppdaterad checklista",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "docs/fas2-release-overlamning-20261103.md",
+              "detail": "Releaseanteckningar och konkret testkanalshandoff förberedda. App/Rust-källkod oförändrad mot installerad 9471e51. Ingen release startad eller publicerad; projektets release-skill kräver att människan startar workflow."
+            }
+          ],
+          "note": "Inväntar Edwins start av test-workflow och verifiering, sedan separat Stable-beslut, publicering och installerat prov. Ingen ny version publicerad."
         },
         {
           "id": "F2-805",
@@ -647,6 +652,10 @@
             {
               "file": "docs/fas2-h0013-granskning-20261103.md",
               "detail": "Riktig H-0013 ca59d441 genomförd efter uttryckligt ja, försök 1, 516 s, exakt ett resultat. Arkiv/data/revision spårbara, 200 permutationer/81 spelböcker, oberoende omräkning av kriterier och kurva PASS; alla fem krav faller → REJECT. Installerad app visar verkligt resultat, strict reader missing=[]; en worker och tom slot efteråt. Inget slutprov."
+            },
+            {
+              "file": "docs/fas2-release-overlamning-20261103.md",
+              "detail": "H-0013 REJECT registrerat i egen commit 82bd03f efter granskning 5ce848e. Slutprov ska inte öppnas. Samlat godkännande inväntar verifierad release; inga strategier är READY_FOR_PAPER."
             }
           ],
           "note": "Forskningsbeslutet är REJECT enligt förregistrerade kriterier; H-0013 går inte vidare till slutprov. Samlat Fas 2-godkännande inväntar release och verifierad installerad Stable. Ingen paper/live-aktivering."
@@ -654,5 +663,5 @@
       ]
     }
   ],
-  "reviewed_scope": "A1/A2/A3 och riktig H-0013 verifierade. Avbrott av aktiv process provat i riktig kö; 1H-katalogens behörighetsfel rättat med uttryckligt ja. H-0013 ca59d441 genomförd efter separat godkännande, försök 1, 516 s, ett resultat. Oberoende omräkning bekräftar alla fem fallna krav och REJECT; appens strikta läsare rapporterar inga saknade delar. Slutprovet oläst. En worker b44d3ce, tom kö. Stable-publicering och slutligt Fas 2-godkännande återstår."
+  "reviewed_scope": "A1/A2/A3 och riktig H-0013 verifierade. Avbrott av aktiv process provat i riktig kö; 1H-katalogens behörighetsfel rättat med uttryckligt ja. H-0013 ca59d441 genomförd efter separat godkännande, försök 1, 516 s, ett resultat. Oberoende omräkning bekräftar alla fem fallna krav och REJECT; appens strikta läsare rapporterar inga saknade delar. Slutprovet oläst. En worker b44d3ce, tom kö. Stable-publicering och slutligt Fas 2-godkännande återstår. H-0013 REJECT registrerat i 82bd03f efter granskning 5ce848e. Releaseanteckningar och manuell testkanalshandoff förberedda; F2-804/805 pågår, inget publicerat."
 }

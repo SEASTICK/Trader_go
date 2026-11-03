@@ -57,7 +57,7 @@ De fem affärernas procenttal har kapital vid respektive inträde som nämnare. 
 - 1500 jämförelsepunkter på samma urval av 6570 staplar, ändliga värden och slutvärden som stämmer med nyckeltalen. H-0013:s jämförelsekurva stämmer med huvudkurvan vid samma tidpunkter.
 - `check-single-worker.sh` PASS: PID **30868**, b44d3ce, taget lås, paket verifierat, **0 omstarter**. Efteråt tom slot, ingen queued/running och exakt en H-0013-körning.
 - Journalen visar `result_accepted=True`, 0 WARNING/ERROR under H-0013. Tjänstens kumulativa MemoryPeak **118521856 byte** sedan tjänstestart; inte en isolerad mätning av enbart H-0013. CPU-stickprov på beräkningsprocessen visade ungefär en kärna och cirka 91 MB RSS.
-- Kön skrev inte registrets beslut: Supabase hypotheses.decision var fortsatt null vid efterkontroll. Ett nytt Git-registerbeslut läggs till separat efter denna granskning. Den driftsatta katalogspegeln följer fortfarande sitt paketerade register, inte senare Git-commits.
+- Kön skrev inte registrets beslut: Supabase hypotheses.decision var fortsatt null vid efterkontroll. Git-registerbeslutet REJECT lades till separat efter denna granskning, i 82bd03f; tidigare rader bevarades. Den driftsatta katalogspegeln följer fortfarande sitt paketerade register, inte senare Git-commits.
 
 ## Register- och exportkontroller
 

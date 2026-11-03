@@ -1,9 +1,9 @@
-# TraderGO 0.1.18
+# TraderGO – Research Lab för Fas 2
 
-- Marknadsdiagrammet ritas även efter sidbyte, omstart och ändrad fönsterstorlek på Mac.
-- Registrerade Fas 1-resultat kan reproduceras från Research Lab via den gemensamma serverkön. Besluten är fortfarande REJECT.
-- Korrekt köp-och-behåll-jämförelse och historiska terminsstaplar för Fas 1.
-- Automatisk insamling framåt på servern; frysta analysdata och slutprov skyddas.
-- Spårbar mark-price-kontroll vid 1× och provad isolerad återställning.
+- Ny separat H-0013-vy i Research Lab med låsta forskningsinställningar, köstatus, förlopp och avbrott.
+- Verifierade resultat visar beslutskriterier, osäkerhet, jämförelsekurvor, marknadslägen, kandidatval och affärer.
+- Kodrevision, dataversion och kontrollsummor följer resultatet. Saknade uppgifter visas tydligt.
+- Platta kapital- och drawdownkurvor visas korrekt. Resultathämtning kan återhämta sig efter anslutningsfel.
+- Tydligare felmeddelande vid nekad inloggning.
 
-Endast historisk forskning och papper. Ingen livehandel. Windows manuella app-test och driftlarm är uppskjutna.
+Endast historisk forskning och papper. Ingen livehandel och inget automatiskt godkännande av strategier för papper eller live.
