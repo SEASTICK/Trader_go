@@ -24,16 +24,24 @@ export function Sparkline({ data, w = 84, h = 26 }: { data: number[]; w?: number
 
 type Series = { name: string; data: number[]; cls: string };
 
+/** Y-axelns domän. En konstant serie (platt kapital, drawdown som alltid är noll) får ett eget intervall runt
+ *  värdet, så att linjen ritas med ändliga koordinater i stället för att dela med noll. */
+export function chartDomain(values: number[]): [number, number] {
+  const finite = values.filter(Number.isFinite);
+  if (!finite.length) return [0, 1];
+  const min = Math.min(...finite), max = Math.max(...finite);
+  const pad = max > min ? (max - min) * 0.08 : Math.max(Math.abs(max) * 0.05, 1);
+  const lo = min >= 0 ? Math.max(0, min - pad) : min - pad;  // kapital kan inte bli negativt
+  return [lo, max + pad];
+}
+
 export function LineChart({ series, labels, height = 280, watermark = "SIMULERAD DATA" }: { series: Series[]; labels: string[]; height?: number; watermark?: string | null }) {
   const [ref, width] = useWidth<HTMLDivElement>();
   const [hover, setHover] = useState<number | null>(null);
   const padL = 8, padR = 52, padT = 12, padB = 26;
-  const all = series.flatMap((s) => s.data);
-  const min = Math.min(...all), max = Math.max(...all);
-  const pad = (max - min) * 0.08;
-  const lo = min >= 0 ? Math.max(0, min - pad) : min - pad, hi = max + pad;  // kapital kan inte bli negativt
+  const [lo, hi] = chartDomain(series.flatMap((s) => s.data));
   const n = series[0].data.length;
-  const x = (i: number) => padL + (i / (n - 1)) * (width - padL - padR);
+  const x = (i: number) => padL + (n > 1 ? i / (n - 1) : 0) * (width - padL - padR);
   const y = (v: number) => padT + (1 - (v - lo) / (hi - lo)) * (height - padT - padB);
   const path = (d: number[]) => d.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
   const ticks = [0, 1, 2, 3].map((k) => lo + ((hi - lo) * k) / 3);

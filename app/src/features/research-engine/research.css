@@ -26,3 +26,6 @@
 }
 .research-table td { white-space:nowrap; }
 .research-table .btn { white-space:normal; }
+.research-table td.research-wrap { white-space:normal; }
+.research-check { flex-direction:row !important; align-items:flex-start; gap:8px; }
+.research-check input { width:auto !important; margin-top:3px; }
