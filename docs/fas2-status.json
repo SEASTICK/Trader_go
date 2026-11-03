@@ -531,9 +531,14 @@
         {
           "id": "F2-802",
           "title": "Verifiera hela flödet från app till worker och sparat H-0013-resultat",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "docs/fas2-a3-utfall-20261103.md",
+              "detail": "A3: två uttryckligen godkända exploration-jobb från appen sparade var sitt resultat, attempts=1 och utan fel. Identiska stats/kurvor/fingerprints, ledig kö och noll H-0013 efteråt. Jobb 2 hann bli klart före avbrott; molnavbrott inte verifierat."
+            }
+          ],
+          "note": "Utforskningens app–kö–worker–resultatflöde verifierat. Avbrott hann inte genomföras inom de två godkända jobben. Riktig H-0013-körning och dess resultat återstår och kräver separat godkännande."
         },
         {
           "id": "F2-803",
@@ -588,5 +593,5 @@
       ]
     }
   ],
-  "reviewed_scope": "A2 verifierad i installerad Mac-granskningskopia, rättning 9471e51 mergad som 915cf44. 123 frontendtester, bygge och App-CI passerar. Nekad inloggning har begriplig feltext, riktig medlemssession och explicit utloggning verifierade. Edwin observerade nätfel och återhämtning; Codex verifierade kvarvarande session och borttaget fel efteråt. Exakt latens ej uppmätt. Inga jobb köade, ingen publicering eller serverändring; F2-802/804/805 återstår."
+  "reviewed_scope": "A2 verifierad i installerad Mac-granskningskopia, rättning 9471e51 mergad som 915cf44. 123 frontendtester, bygge och App-CI passerar. Nekad inloggning har begriplig feltext, riktig medlemssession och explicit utloggning verifierade. Edwin observerade nätfel och återhämtning; Codex verifierade kvarvarande session och borttaget fel efteråt. Exakt latens ej uppmätt. Inga jobb köade, ingen publicering eller serverändring; F2-802/804/805 återstår. A3 genomfört inom taket två utforskande jobb: båda klara med sparade identiska resultat och verifierad workerjournal. Andra hann bli klart före avbrott; inget extra jobb startat. F2-802 pågår, H-0013 fortfarande inte kört."
 }

@@ -1,6 +1,6 @@
 # Fas 2: sluttestplan för installerad Mac-app och inloggat flöde (arbetsområde 8)
 
-Skriven 2026-11-03 för granskning. A1 är kört (se nedan), och säkerhetskopian före A2 är tagen. A2–A4, B och C är inte utförda. Den täcker F2-801 till F2-805 och skiljer på
+Skriven 2026-11-03. A1 och A2 är verifierade (se även docs/fas2-a2-utfall-20261103.md). A3 har två sparade utforskningsresultat men inget verifierat molnavbrott (docs/fas2-a3-utfall-20261103.md). A4, B och C är inte utförda. Den täcker F2-801 till F2-805 och skiljer på
 kontroller som går att göra **utan** en riktig forskningskörning och kontroller som **kräver** den riktiga H-0013-körningen.
 Slutprovet (2025-01-01 och framåt) förblir oläst i hela planen. Ingen strategi aktiveras för papper eller live
 automatiskt (CLAUDE.md, regel 1 och 5).

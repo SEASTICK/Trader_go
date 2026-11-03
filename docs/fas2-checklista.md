@@ -4,7 +4,7 @@
 
 H-0013 · Kontrollerad 2026-11-03 · Granskad kodversion `9471e51`.
 
-A2 verifierad i installerad Mac-granskningskopia, rättning 9471e51 mergad som 915cf44. 123 frontendtester, bygge och App-CI passerar. Nekad inloggning har begriplig feltext, riktig medlemssession och explicit utloggning verifierade. Edwin observerade nätfel och återhämtning; Codex verifierade kvarvarande session och borttaget fel efteråt. Exakt latens ej uppmätt. Inga jobb köade, ingen publicering eller serverändring; F2-802/804/805 återstår.
+A2 verifierad i installerad Mac-granskningskopia, rättning 9471e51 mergad som 915cf44. 123 frontendtester, bygge och App-CI passerar. Nekad inloggning har begriplig feltext, riktig medlemssession och explicit utloggning verifierade. Edwin observerade nätfel och återhämtning; Codex verifierade kvarvarande session och borttaget fel efteråt. Exakt latens ej uppmätt. Inga jobb köade, ingen publicering eller serverändring; F2-802/804/805 återstår. A3 genomfört inom taket två utforskande jobb: båda klara med sparade identiska resultat och verifierad workerjournal. Andra hann bli klart före avbrott; inget extra jobb startat. F2-802 pågår, H-0013 fortfarande inte kört.
 
 ## Uppdateringsregler
 
@@ -170,7 +170,9 @@ A2 verifierad i installerad Mac-granskningskopia, rättning 9471e51 mergad som 9
   - Underlag: [docs/fas2-a1-granskning-81.md](fas2-a1-granskning-81.md) — 66d59bb: A1 godkänt på 6c16638. CI på identiskt träd grön inklusive Windows; kö/samtidighet, Universe (27 Rust, 2 ignorerade), reproducerbart workerpaket och tidigare kodkontrollkedja verifierade.
   - Underlag: [docs/fas2-a2-utfall-20261103.md](fas2-a2-utfall-20261103.md) — A2-rättning: auth-400 får egen svensk feltext utan ändring av köavvisningar. 123 frontendtester och appbygge passerar; motor/Rust/server oförändrade.
   - A1 verifierad. Installerad app, inloggat flöde, riktig H-0013 och Stable återstår.
-- [ ] **F2-802** Verifiera hela flödet från app till worker och sparat H-0013-resultat
+- [ ] **F2-802** Verifiera hela flödet från app till worker och sparat H-0013-resultat **Pågår.**
+  - Underlag: [docs/fas2-a3-utfall-20261103.md](fas2-a3-utfall-20261103.md) — A3: två uttryckligen godkända exploration-jobb från appen sparade var sitt resultat, attempts=1 och utan fel. Identiska stats/kurvor/fingerprints, ledig kö och noll H-0013 efteråt. Jobb 2 hann bli klart före avbrott; molnavbrott inte verifierat.
+  - Utforskningens app–kö–worker–resultatflöde verifierat. Avbrott hann inte genomföras inom de två godkända jobben. Riktig H-0013-körning och dess resultat återstår och kräver separat godkännande.
 - [x] **F2-803** Kontrollera Mac, anslutningsfel och att befintliga Fas 1-funktioner fungerar
   - Underlag: [docs/fas2-a1-granskning-81.md](fas2-a1-granskning-81.md) — 66d59bb: Mac-zip df0436dc…3cfc/signatur verifierade utan start. Backupens 23 innehållsfiler matchar och nio SQLite-integriteter är ok; manifestets felaktiga självpost behöver rättas (P2).
   - Underlag: [docs/fas2-a1-granskning-81.md](fas2-a1-granskning-81.md) — 6ff6b5e: manifestfynd rättat och omgranskat. 23 giltiga poster, 24 filer totalt, manifesthash f86865d5…fec4 och 10 SQLite-integriteter verifierade. A2 ej utfört.
