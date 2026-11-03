@@ -1,6 +1,6 @@
 # Fas 2: sluttestplan för installerad Mac-app och inloggat flöde (arbetsområde 8)
 
-Skriven 2026-11-03 för granskning. Inget i planen är utfört än. Den täcker F2-801 till F2-805 och skiljer på
+Skriven 2026-11-03 för granskning. A1 är kört (se nedan), och säkerhetskopian före A2 är tagen. A2–A4, B och C är inte utförda. Den täcker F2-801 till F2-805 och skiljer på
 kontroller som går att göra **utan** en riktig forskningskörning och kontroller som **kräver** den riktiga H-0013-körningen.
 Slutprovet (2025-01-01 och framåt) förblir oläst i hela planen. Ingen strategi aktiveras för papper eller live
 automatiskt (CLAUDE.md, regel 1 och 5).
@@ -12,8 +12,8 @@ automatiskt (CLAUDE.md, regel 1 och 5).
 | Driftsatt worker | `b44d3cecaac6…` (jämförelsekurvor), exakt en worker, kontrollerad 2026-11-03 (`docs/fas2-driftsattning-utfall-b44d3ce.md`) |
 | Databas | 0001–0005 applicerade, 0 H-0013-körningar, H-0013 utan beslut |
 | Installerad Mac-app | Stable `v0.1.20`, byggd från `1f2b6b1`. Den saknar Research Lab-vyn för H-0013 (#77) och jämförelsekurvorna (#78). |
-| Kod på `main` | `a32f4ab` (app, motor och worker med #77 och #78) |
-| Granskningsbygge | Lokalt Mac-bygge från `a32f4ab`, se nedan. Inte installerat, inte publicerat. |
+| Kod på `main` | `6c16638` (merge av PR #80: #77, #78 och rättat Rust-test). Workerinnehållet är oförändrat sedan `b44d3ce`. |
+| Granskningsbygge | Lokalt Mac-bygge från `6c16638`, se A2. Inte installerat, inte publicerat. Bygget från `a32f4ab` är ersatt och används inte. |
 
 Följden är att H-0013-delarna av F2-802 och F2-803 inte kan provas i den installerade appen förrän en ny version
 med #77 och #78 är installerad: antingen det lokala granskningsbygget som separat kopia, eller en testkanal-
@@ -56,25 +56,74 @@ utfallet 4 stängda staplar i stället för 6.
 - Testet styrs av en fast testklocka, med alla ursprungliga kontroller kvar och oförändrade tidsgränser.
 - 60 upprepade körningar passerar. Med väggklockan, eller med en senare klocka, faller testet igen.
 - `fmt`, `clippy` och hela Rust-sviten (44 + 4 tester, 1 ignorerat nätverkstest) passerar.
-- Väntar på granskning.
+- Godkänt av Codex på `4e85f4e` (`docs/fas2-sluttest-granskning-80.md`) och mergat som `6c16638`.
+
+**Andra körningen av A1, 2026-11-03 på mergecommiten `6c16638` (lokalt, Mac, ren arbetskopia):**
+
+| Kontroll | Utfall |
+|---|---|
+| Motor | PASS, 553 tester |
+| App | PASS, 118 tester, och `npm run build` lyckas |
+| Appens Rust | PASS: `cargo fmt --check`, `clippy -D warnings`, 44 enhetstester + 4 integrationstester (1 ignorerat nätverkstest) |
+| Universe | PASS (npm-test, bygge och `cargo test`) |
+| Kö i PGlite (tre skript) | PASS (`PGLITE_MODULE` från `/tmp/tradergo-pg-test`) |
+| Samtidighet i lokal PostgreSQL 17 (två skript) | PASS |
+| Paket | `build-research-release.sh 6c16638` två gånger: samma SHA-256 `3f477aecb886ae630d878fe4f5320f93aa1d23430f50559c64de717b227f112d`. `verify-research-release.py` godkänner 186 filer. Bara byggt lokalt, inte driftsatt (servern kör fortsatt `b44d3ce`, med samma workerinnehåll). |
+| CI | PR #80 på `be9d958`: App check, Rust check och Windows-bygge gröna. Mergecommiten `6c16638` har samma träd (`7228743…`), och App check och Rust check på `main` är gröna. |
+
+**Återstår för F2-801:** Codex granskning av den samlade A1-redovisningen. Inga kända fel återstår.
 
 ### A2. Installerad Mac-app med granskningsbygget (F2-803, delvis F2-802)
 
-**Granskningsbygge 2026-11-03:**
-- byggt lokalt från ren `a32f4ab` med `npm --prefix app run tauri -- build --bundles app --config '{"bundle":{"createUpdaterArtifacts":false}}'`, som `scripts/install-macos.sh` men utan installation;
-- `app/src-tauri/target/release/bundle/macos/TraderGO.app`: arm64, program-id `com.seastick.tradergo`, ad hoc-signerad, `codesign --verify --deep --strict` godkänner, inte notariserad;
-- version 0.1.0, eftersom release-flödet sätter versionen, och byggcommit `a32f4ab` utan `+ändrad`;
-- gränssnittet innehåller fliken "Fas 2 · H-0013" och jämförelsekurvorna;
-- för granskning packad som `dist/mac-review/TraderGO-a32f4ab-arm64-review.zip`, SHA-256 `0a92c8ac5be64bba938233bfd7b62e2d0c5036ba99c3595482e48ddfdf29f2a2` (git-ignorerad);
+**Granskningsbygge 2026-11-03, från mergecommiten `6c16638` (gäller för sluttestet):**
+- byggt lokalt från ren `6c16638823688c3577884ba2557a444d70e7df08` (`git status` tom, `npm ci`) med
+  `npm run tauri -- build --bundles app --config '{"bundle":{"createUpdaterArtifacts":false}}'` i `app/`, som
+  `scripts/install-macos.sh` men utan installation;
+- `TraderGO.app`: arm64, program-id `com.seastick.tradergo`, version 0.1.0 (versionen sätts av release-flödet);
+- signatur: ad hoc (`Signature=adhoc`, inget Team ID, inte notariserad). `codesign --verify --deep --strict` ger
+  "valid on disk" och "satisfies its Designated Requirement", både för bygget och efter uppackning av zip-filen;
+- gränssnittet innehåller byggcommit `6c16638` utan `+ändrad`, fliken "Fas 2 · H-0013" och jämförelsekurvorna;
+- packat som `dist/mac-review/TraderGO-6c16638-arm64-review.zip` (git-ignorerad), SHA-256
+  `df0436dc6517bd0f7779914e7e3c28a8d9f6e050febd6245e1c2b10f19463cfc`;
 - **inte installerat, inte publicerat.**
 
+**Ersatt:** bygget från `a32f4ab` (SHA-256 `0a92c8ac…f2a2`) saknar Rust-rättningen och ska inte användas för
+sluttestet. Den lokala filen har bytt namn till `TraderGO-a32f4ab-arm64-review.ANVAND-INTE.zip`.
 
+**Säkerhetskopia före A2 (gjord 2026-11-03 10:26 UTC, innan granskningskopian startats):**
+
+Granskningskopian har samma program-id som Stable och delar därför all lokal data. Allt kopierades till
+`~/TraderGO-backups/a2-20261103T102650Z/` (utanför repot, behörighet 700, 792 KB):
+- `app-support/`: `~/Library/Application Support/com.seastick.tradergo`. SQLite-filerna (`tradergo.db`,
+  `market/market-data.sqlite` och de fem `backups/tradergo-pre-update-*.db`) togs med `sqlite3 .backup` medan Stable
+  kördes, och `pragma integrity_check` ger `ok` för alla. Övriga filer kopierades med `rsync -a`.
+- `Library/WebKit/com.seastick.tradergo` (webbvyns lagring) och `Saved Application State`.
+- `MANIFEST.sha256` med 24 filer.
+
+`app/src-tauri/src/db.rs` och tauri-konfigurationen är oförändrade mellan Stable (`1f2b6b1`) och `6c16638`. Kopian
+kör alltså inga nya migrationer på den delade databasen. Den enda Rust-ändringen gäller testklockan i
+`market/runner.rs`.
+
+**Återställning om något ändras oväntat:**
+1. Avsluta båda apparna.
+2. Flytta den nuvarande mappen åt sidan.
+3. Kopiera `app-support/` tillbaka till `~/Library/Application Support/com.seastick.tradergo`.
+4. Kontrollera mot `MANIFEST.sha256`.
+5. Starta Stable.
+
+Ingenting raderas.
+
+**Före A2:**
+1. Avsluta Stable, så att två instanser inte skriver till samma databas samtidigt.
+2. Ta en ny säkerhetskopia på samma sätt om det har gått tid sedan den förra.
+3. Packa upp zip-filen till `~/Applications/TraderGO granskning.app`. Kontrollera först SHA-256 och
+   `codesign --verify`.
 
 Bygget installeras **som separat kopia**, till exempel `~/Applications/TraderGO granskning.app`, så att Stable-appen i
 `/Applications` lämnas orörd. Kopian har samma program-id och samma lokala data, så papperstrading och
 inställningar ska bara läsas, inte ändras. Inga order finns i appen.
 
-1. **Start och version:** appen startar, och toppfältet och Status visar commit `a32f4ab` (version 0.1.0, eftersom
+1. **Start och version:** appen startar, och toppfältet och Status visar commit `6c16638` (version 0.1.0, eftersom
    versionen sätts av release-flödet). Utan nät visas en rad under Status och ingen dialog.
 2. **Fas 1 utan inloggning:** Research Lab → Registrerade resultat visar H-0009 till H-0012 med REJECT, diagram,
    walk-forward och affärer, utan SIM-märkning. Marknad och Papper öppnas som förut.

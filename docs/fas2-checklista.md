@@ -167,8 +167,10 @@ PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Pyt
 
 - [ ] **F2-801** Kör relevanta Python-, frontend-, Rust- och databaskontroller **Pågår.**
   - Underlag: [docs/fas2-sluttest-granskning-80.md](fas2-sluttest-granskning-80.md) — 4e85f4e (kod 144ab88): klockrättning oberoende godkänd. fmt, clippy, 44 Rust-enhetstester + 4 integrationstester och 20 egna upprepningar passerar; 1 nätverkstest ignorerat. App-/Rust-CI gröna, Windows pågår. Övrig app-/motorkod oförändrad.
-  - Rust-felet rättat och granskat. Samlat A1-underlag och återstående Windows-CI behöver slutföras före avbockning. Mac-paketet från a32f4ab ska byggas om från rättad granskad kod.
+  - Underlag: [docs/fas2-sluttest-plan.md](fas2-sluttest-plan.md) — A1 omkörd på mergecommit 6c16638 (ren): motor 553, app 118 + bygge, Rust fmt/clippy/44+4 (1 ignorerat), Universe, PGlite x3, lokal PostgreSQL 17 x2 och workerpaket 2x identisk SHA-256 3f477aec… + verify PASS. CI på be9d958 (samma träd): App, Rust och Windows gröna.
+  - A1 komplett och grön på 6c16638; väntar på granskning av samlat underlag före avbockning. Mac-granskningspaket ombyggt från 6c16638 (a32f4ab-paketet ersatt).
 - [ ] **F2-802** Verifiera hela flödet från app till worker och sparat H-0013-resultat
 - [ ] **F2-803** Kontrollera Mac, anslutningsfel och att befintliga Fas 1-funktioner fungerar
+  - Förberett, inte utfört: granskningsbygge från 6c16638 (SHA-256 df0436dc…) och säkerhetskopia av delad lokal appdata tagen 2026-11-03 före test.
 - [ ] **F2-804** Publicera granskad Stable och verifiera installerad kodversion samt uppdaterad checklista
 - [ ] **F2-805** Dokumentera Fas 2-godkännande och fatta separat beslut om eventuellt slutprov; ingen automatisk paper- eller liveaktivering
