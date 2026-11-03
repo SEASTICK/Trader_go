@@ -90,7 +90,19 @@ export type H0013View =
       permutation: { p: number | null; n: number | null; k: number | null } | null;
       deflated: { standard: number | null; playbooks: number | null } | null;
       tRequiredNow: number | null; equity: { t: string[]; equity: number[] } | null;
-      trace: { label: string; value: string }[]; trades: Dict[]; warnings: string[]; missing: string[] };
+      trace: { label: string; value: string }[]; trades: Dict[] | null; tradeIssues: string[]; warnings: string[]; missing: string[] };
+
+/** Affärsloggen: null när den saknas eller inte är en lista. Ogiltiga rader och avvikelse mot nyckeltalens
+ *  antal redovisas; de döljs inte och inget fylls i. */
+export function readTrades(raw: unknown, reported: number | null): { trades: Dict[] | null; issues: string[] } {
+  if (!Array.isArray(raw)) return { trades: null, issues: ["Affärsloggen saknas i resultatet."] };
+  const valid = raw.filter((t): t is Dict => isDict(t) && typeof t.side === "string" && typeof t.entry_time === "string"
+    && typeof t.net_return === "number" && Number.isFinite(t.net_return));
+  const issues: string[] = [];
+  if (valid.length < raw.length) issues.push(`${raw.length - valid.length} av ${raw.length} rader i affärsloggen kan inte läsas och visas inte.`);
+  if (reported !== null && reported !== raw.length) issues.push(`Affärsloggen har ${raw.length} rader men nyckeltalen anger ${reported} affärer.`);
+  return { trades: valid, issues };
+}
 
 /** Läser ett H-0013-resultat från kön. Returnerar skälen om det inte kan visas som ett verkligt resultat. */
 export function readResult(payload: unknown): H0013View {
@@ -147,6 +159,9 @@ export function readResult(payload: unknown): H0013View {
     && curves.equity.every(v => typeof v === "number" && Number.isFinite(v))
     ? { t: curves.t.map(String), equity: curves.equity as number[] } : null;
   if (!equity) missing.push("Kapitalkurva");
+  const tradeLog = readTrades(payload.trades, main!.trades);
+  if (tradeLog.trades === null) missing.push("Affärslogg");
+  else if (tradeLog.issues.length) missing.push("Fullständig affärslogg");
   const revision = isDict(payload.revision) ? payload.revision : {};
   const data = isDict(payload.data) ? payload.data : {};
   const trace = [
@@ -165,7 +180,7 @@ export function readResult(payload: unknown): H0013View {
     permutation: perm ? { p: num(perm.p_value), n: num(perm.n), k: num(perm.at_least_as_high) } : null,
     deflated: dsr ? { standard: num(dsr.default_variance), playbooks: num(dsr.playbook_variance) } : null,
     tRequiredNow: num(inner.t_required_now), equity, trace,
-    trades: (Array.isArray(payload.trades) ? payload.trades : []).filter(isDict),
+    trades: tradeLog.trades, tradeIssues: tradeLog.issues,
     warnings: (Array.isArray(payload.warnings) ? payload.warnings : []).filter((w): w is string => typeof w === "string"),
     missing,
   };

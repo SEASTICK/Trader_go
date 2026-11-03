@@ -6,19 +6,23 @@ import { COMPARISONS, CRITERIA, describeRun, drawdown, enqueueBlocker, H0013View
 import { number } from "./ResultViews";
 
 const message = (e: unknown) => e instanceof Error ? e.message : "Ett oväntat fel inträffade.";
+export const RETRY_MS = 15_000;
 
 /** Fas 2 i Research Lab. Registrerad historisk forskning, skild från Fas 1, tvärsnitt och utforskning. */
 export default function H0013Panel({ api, connected, login }: { api: ResearchApi; connected: boolean; login: ReactNode }) {
   const [runs, setRuns] = useState<Run[]>([]);
   const [selected, setSelected] = useState("");
   const [payload, setPayload] = useState<{ id: string; value: unknown } | null>(null);
+  // Resultathämtningens fel hålls skilt från listans, så att en lyckad listpoll inte döljer det.
+  const [payloadError, setPayloadError] = useState<{ id: string; message: string } | null>(null);
+  const [retry, setRetry] = useState(0);
   const [error, setError] = useState(""); const [busy, setBusy] = useState(false);
   const [preparing, setPreparing] = useState(false); const [confirmed, setConfirmed] = useState(false);
   const requestKey = useRef<string | null>(null);
   const current = runs.find(r => r.id === selected) ?? runs[0];
 
   useEffect(() => {
-    if (!connected) { setRuns([]); setPayload(null); return; }
+    if (!connected) { setRuns([]); setPayload(null); setPayloadError(null); return; }
     let active = true, polling = false;
     const poll = async () => {
       if (polling) return; polling = true;
@@ -31,12 +35,19 @@ export default function H0013Panel({ api, connected, login }: { api: ResearchApi
   }, [api, connected]);
   useEffect(() => {
     let active = true;
-    if (current?.status === "done" && payload?.id !== current.id) {
-      void api.payload(current.id).then(v => { if (active) setPayload({ id: current.id, value: v }); })
-        .catch(e => { if (active) setError(message(e)); });
+    if (connected && current?.status === "done" && payload?.id !== current.id) {
+      const id = current.id;
+      setPayloadError(null);
+      void api.payload(id).then(v => { if (active) setPayload({ id, value: v }); })
+        .catch(e => { if (active) setPayloadError({ id, message: message(e) }); });
     }
-    return () => { active = false; };
-  }, [api, current?.id, current?.status, payload?.id]);
+    return () => { active = false; };   // byte av körning eller utloggning: ett sent svar används inte
+  }, [api, connected, current?.id, current?.status, payload?.id, retry]);
+  useEffect(() => {
+    if (!payloadError) return;
+    const timer = window.setTimeout(() => setRetry(r => r + 1), RETRY_MS);
+    return () => clearTimeout(timer);
+  }, [payloadError]);
 
   async function enqueue() {
     setBusy(true); setError("");
@@ -64,7 +75,8 @@ export default function H0013Panel({ api, connected, login }: { api: ResearchApi
         onPrepare={() => { setPreparing(true); setConfirmed(false); requestKey.current = null; }}
         onConfirm={setConfirmed} onClose={() => setPreparing(false)} onEnqueue={() => void enqueue()} />
       <RunsCard runs={runs} selected={current?.id ?? ""} busy={busy} onSelect={setSelected} onCancel={id => void cancel(id)} />
-      {current && <RunDetail run={current} payload={payload?.id === current.id ? payload.value : undefined} />}
+      {current && <RunDetail run={current} payload={payload?.id === current.id ? payload.value : undefined}
+        payloadError={payloadError?.id === current.id ? payloadError.message : null} onRetry={() => setRetry(r => r + 1)} />}
     </>}
   </>;
 }
@@ -132,7 +144,8 @@ export function RunsCard({ runs, selected, busy, onSelect, onCancel }: { runs: R
   </div>;
 }
 
-export function RunDetail({ run, payload }: { run: Run; payload: unknown | undefined }) {
+export function RunDetail({ run, payload, payloadError = null, onRetry }: { run: Run; payload: unknown | undefined;
+  payloadError?: string | null; onRetry?: () => void }) {
   const d = describeRun(run);
   if (run.status !== "done") return <div className="card pad"><h2>H-0013 · {STATUS[run.status]}</h2>
     <p className="muted">Körnings-id {run.id} · försök {d.attempts}</p>
@@ -140,6 +153,9 @@ export function RunDetail({ run, payload }: { run: Run; payload: unknown | undef
     {run.status === "cancelled" && <p>Avbruten. Inget resultat finns; försöket och dess delresultat är sparade på servern.</p>}
     {(run.status === "queued" || run.status === "running") && <p>Inget resultat ännu.</p>}
   </div>;
+  if (payload === undefined && payloadError) return <div className="card pad" role="alert"><h2>Resultatet kunde inte hämtas</h2>
+    <p>{payloadError}</p><p className="muted">Försöker igen automatiskt om {RETRY_MS / 1000} sekunder. Inget köas.</p>
+    {onRetry && <button className="btn" onClick={onRetry}>Försök igen nu</button>}</div>;
   if (payload === undefined) return <div className="card pad"><p>Hämtar resultat…</p></div>;
   return <H0013Result view={readResult(payload)} />;
 }
@@ -182,10 +198,13 @@ export function H0013Result({ view }: { view: H0013View }) {
       {v.windows.map(w => <tr key={w.test}><td>{w.test}</td><td>{w.train}</td>{(w.choices.length ? w.choices : [["", "Saknas"], ["", "Saknas"], ["", "Saknas"], ["", "Saknas"]]).map(([l, c], i) => <td key={l + i}>{c}</td>)}<td>{number(w.trades)}</td><td>{pct(w.localReturn)}</td></tr>)}
     </tbody></table></div>}
       <p>Slutlig spelbok (hela utvecklingsperioden): {v.finalPlaybook ? v.finalPlaybook.map(([l, c]) => `${l}: ${c}`).join(" · ") : "Saknas"}</p></div>
-    <div className="card pad"><h2>Affärer</h2><p className="muted">Senaste 100 av {v.trades.length}. Tider i UTC.</p>{v.trades.length === 0 ? <p>Inga affärer i resultatet.</p> : <div className="research-table"><table>
+    <div className="card pad"><h2>Affärer</h2>
+      {v.tradeIssues.map(i => <p key={i} role="note">{i}</p>)}
+      {v.trades === null ? <p>Affärsloggen saknas, så antalet affärer i loggen är okänt.</p>
+      : v.trades.length === 0 ? <p>Affärsloggen är tom{v.main.trades === 0 ? "; nyckeltalen anger också 0 affärer" : ""}.</p> : <><p className="muted">Senaste {Math.min(100, v.trades.length)} av {v.trades.length} lästa rader. Tider i UTC.</p><div className="research-table"><table>
       <thead><tr><th>Sida</th><th>Inträde</th><th>Utträde</th><th>Netto</th><th>Orsak</th></tr></thead><tbody>
-      {v.trades.slice(-100).map((t, i) => <tr key={i}><td>{String(t.side ?? "—")}</td><td>{String(t.entry_time ?? "—").slice(0, 16)}</td><td>{t.exit_time ? String(t.exit_time).slice(0, 16) : "—"}</td><td>{number(t.net_return, true)}</td><td>{String(t.exit_reason ?? "—")}</td></tr>)}
-    </tbody></table></div>}</div>
+      {v.trades.slice(-100).map((t, i) => <tr key={i}><td>{String(t.side)}</td><td>{String(t.entry_time).slice(0, 16)}</td><td>{t.exit_time ? String(t.exit_time).slice(0, 16) : "—"}</td><td>{number(t.net_return, true)}</td><td>{String(t.exit_reason ?? "—")}</td></tr>)}
+    </tbody></table></div></>}</div>
     <div className="card pad"><h2>Spårbarhet</h2><div className="research-table"><table><tbody>
       {v.trace.map(t => <tr key={t.label}><th>{t.label}</th><td><code className="research-hash">{t.value}</code></td></tr>)}
     </tbody></table></div>
