@@ -6,9 +6,9 @@ import { createRoot, Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { chartDomain, LineChart } from "../../components/Charts";
 import type { ResearchApi, Run } from "./api";
-import { readComparisonCurves, readResult, readTrades } from "./h0013";
+import { comparisonAxisProblem, CURVE_TOLERANCE, readComparisonCurves, readResult, readTrades } from "./h0013";
 import H0013Panel, { H0013Result, RETRY_MS } from "./H0013Panel";
-import { comparisonCurves, payload, run } from "./h0013.fixtures";
+import { comparisonCurves, MAIN_EQUITY, MAIN_T, payload, run } from "./h0013.fixtures";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 let host: HTMLDivElement; let root: Root;
@@ -178,5 +178,54 @@ describe("Jämförelsekurvor", () => {
     expect(readComparisonCurves({ t: ["x"], series: {} }, {})).toBeNull();
     expect(readComparisonCurves({ t: "nope" }, {})).toBeNull();
     expect(readComparisonCurves(undefined, {})).toBeNull();
+  });
+});
+
+describe("Jämförelsekurvornas tidsaxel (granskning av PR #78)", () => {
+  const withAxis = (t: unknown) => payload({ curves: { ...payload().curves, comparisons: comparisonCurves({ t }) } });
+  it.each([
+    ["inte datum", ["x", "y", "z"], "inte är UTC-tidpunkter"],
+    ["dubbletter", [MAIN_T[0], MAIN_T[0], MAIN_T[0]], "inte strikt stigande"],
+    ["fallande", [...MAIN_T].reverse(), "inte strikt stigande"],
+    ["slutprovet", ["2025-01-01T00:00:00+00:00", "2025-01-01T04:00:00+00:00", "2025-01-01T08:00:00+00:00"], "utanför testfönstren"],
+    ["utan UTC", ["2022-01-01T04:00:00", "2022-01-01T08:00:00", "2022-01-01T12:00:00"], "inte är UTC-tidpunkter"],
+    ["fel tidszon", ["2022-01-01T05:00:00+01:00", "2022-01-01T09:00:00+01:00", "2022-01-01T13:00:00+01:00"], "inte är UTC-tidpunkter"],
+    ["utanför rutnätet", ["2022-01-01T04:30:00+00:00", "2022-01-01T08:30:00+00:00", "2022-01-01T12:30:00+00:00"], "4h-rutnätet"],
+    ["före testfönstren", ["2021-12-31T12:00:00+00:00", "2021-12-31T16:00:00+00:00", "2021-12-31T20:00:00+00:00"], "utanför testfönstren"],
+    ["inte i huvudkurvan", ["2022-01-02T04:00:00+00:00", "2022-01-02T08:00:00+00:00", "2022-01-02T12:00:00+00:00"], "inte finns i huvudkurvan"],
+  ])("%s avvisas och visas som saknade kurvor med förklaring", async (_n, t, problem) => {
+    const v = readResult(withAxis(t));
+    expect(v.ok).toBe(true); if (!v.ok) return;
+    expect(v.comparisonCurves?.axisProblem).toContain(problem);
+    expect(v.comparisonCurves?.curves.every(c => c.data === null)).toBe(true);
+    expect(v.missing).toEqual(["Jämförelsekurvor (ogiltig tidsaxel)"]);
+    await render(<H0013Result view={v} />);
+    expect(text()).toContain("Jämförelsekurvorna kan inte visas"); expect(text()).toContain(problem);
+    expect(text()).toContain("Köp och behåll"); expect(text()).toContain("HISTORIK · H-0013");
+  });
+  it("H-0013-värden som inte stämmer med huvudkurvan vid samma tidpunkter visas inte", () => {
+    const series = { ...comparisonCurves().series, h0013: [1, 1.07, 1.12] };
+    const v = readResult(payload({ curves: { ...payload().curves, comparisons: comparisonCurves({ series }) } }));
+    expect(v.ok).toBe(true); if (!v.ok) return;
+    const own = v.comparisonCurves!.curves.find(c => c.key === "h0013")!;
+    expect(own.data).toBeNull(); expect(own.problem).toContain("stämmer inte med huvudkurvan");
+    expect(v.missing).toEqual(["Kurva: H-0013"]);
+  });
+  it("avrundning inom toleransen godtas", () => {
+    const series = { ...comparisonCurves().series, h0013: MAIN_EQUITY.map(x => x * (1 + CURVE_TOLERANCE / 10)) };
+    const v = readResult(payload({ curves: { ...payload().curves, comparisons: comparisonCurves({ series }) } }));
+    expect(v.ok && v.comparisonCurves!.curves.every(c => c.data !== null)).toBe(true);
+  });
+  it("utan huvudkurva kan tidsaxeln inte kopplas och kurvorna visas som saknade", () => {
+    const v = readResult(payload({ curves: { comparisons: comparisonCurves() } }));
+    expect(v.ok).toBe(true); if (!v.ok) return;
+    expect(v.comparisonCurves?.axisProblem).toContain("Huvudkurvan saknas");
+    expect(v.missing).toEqual(expect.arrayContaining(["Kapitalkurva", "Jämförelsekurvor (ogiltig tidsaxel)"]));
+  });
+  it("fixturens huvudkurva och jämförelsekurvor är samma serie", () => {
+    const p = payload();
+    expect(p.curves.comparisons.t).toEqual(p.curves.t);
+    expect(p.curves.comparisons.series.h0013).toEqual(p.curves.equity);
+    expect(comparisonAxisProblem(p.curves.comparisons.t, { t: p.curves.t, equity: p.curves.equity })).toBeNull();
   });
 });

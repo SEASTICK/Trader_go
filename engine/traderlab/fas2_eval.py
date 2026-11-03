@@ -175,18 +175,26 @@ def _returns_sha256(r: pd.Series) -> str:
     return h.hexdigest()
 
 
+def curve_selection(n: int, points: int = CURVE_POINTS) -> list[int]:
+    """Högst `points` index, jämnt fördelade, alltid med första och sista stapeln (J3)."""
+    if points < 2:
+        raise ValueError("Minst två punkter behövs för en kurva")
+    if n <= points:
+        return list(range(n))
+    return sorted({round(i * (n - 1) / (points - 1)) for i in range(points)})
+
+
 def comparison_curves(h0013_returns: pd.Series, others: dict[str, pd.Series], points: int = CURVE_POINTS) -> dict:
     """Kapitalkurvor (start 1,0) för H-0013 och jämförelserna på exakt samma staplar, nedsamplade med samma index
     (docs/fas2-jamforelsekurvor-tolkningar.md, J1–J5). Varje kurva får källa och SHA-256 av hela avkastningsserien."""
     series = {"h0013": h0013_returns, **others}
+    for name, r in series.items():   # slutprovsskyddet först, för varje serie, innan något räknas
+        _guard(pd.DataFrame(index=r.index))
     for name, r in series.items():
         if not r.index.equals(h0013_returns.index):
             raise AssertionError(f"{name} har inte samma staplar som H-0013")
     n = len(h0013_returns)
-    step = max(1, -(-n // points)) if n else 1
-    sel = list(range(0, n, step))
-    if n and sel[-1] != n - 1:
-        sel.append(n - 1)
+    sel = curve_selection(n, points)
     equity = {name: (1 + r).cumprod() for name, r in series.items()}
     return {"t": [h0013_returns.index[i].isoformat() for i in sel],
             "series": {name: [round(float(eq.iloc[i]), 8) for i in sel] for name, eq in equity.items()},

@@ -220,6 +220,8 @@ export function ComparisonCurvesCard({ curves }: { curves: ComparisonCurves | nu
   const [chosen, setChosen] = useState(options[0]);
   if (!curves) return <div className="card pad"><h2>Jämförelsekurvor</h2>
     <p>Jämförelsekurvorna saknas i resultatet. Resultat från den driftsatta workern före denna version innehåller bara jämförelsernas nyckeltal.</p></div>;
+  if (curves.axisProblem) return <div className="card pad" role="note"><h2>Jämförelsekurvor</h2>
+    <p>Jämförelsekurvorna kan inte visas: {curves.axisProblem} Nyckeltalen för jämförelserna ovan påverkas inte.</p></div>;
   const own = curves.curves.find(c => c.key === "h0013")!;
   const other = curves.curves.find(c => c.label === chosen)!;
   const labels = curves.t.map(t => t.slice(0, 10));

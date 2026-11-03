@@ -570,7 +570,46 @@ def test_comparison_curves_downsample_with_the_same_index_and_refuse_other_bars(
     idx = pd.date_range("2022-01-01", periods=4001, freq="4h", tz="UTC")
     a = pd.Series(0.001, index=idx); b = pd.Series(-0.0005, index=idx)
     cc = fas2_eval.comparison_curves(a, {"buy_and_hold": b}, points=1500)
-    assert cc["points"] <= 1501 and cc["t"][0] == idx[0].isoformat() and cc["t"][-1] == idx[-1].isoformat()
+    assert cc["points"] == 1500 and cc["t"][0] == idx[0].isoformat() and cc["t"][-1] == idx[-1].isoformat()
     assert cc["series"]["h0013"][-1] == pytest.approx(1.001 ** 4001, rel=1e-6)
     with pytest.raises(AssertionError, match="samma staplar"):
         fas2_eval.comparison_curves(a, {"buy_and_hold": b.iloc[1:]})
+
+
+# Granskning av PR #78: slutprovsskydd i comparison_curves och gränsen 1 500 punkter
+
+def _returns(start, n=3, tz="UTC"):
+    return pd.Series([0.1, 0.2, 0.3][:n] + [0.0] * max(0, n - 3), index=pd.date_range(start, periods=n, freq="4h", tz=tz))
+
+
+@pytest.mark.parametrize("case", ["holdout", "before_2020", "naive", "holdout_comparison", "holdout_only_main"])
+def test_comparison_curves_reject_forbidden_input_before_any_computation(monkeypatch, case):
+    monkeypatch.setattr(fas2_eval, "_returns_sha256", lambda r: pytest.fail("hashed forbidden input"))
+    ok = _returns("2022-01-01")
+    if case == "holdout":                                     # granskningens prov: [0.1, 0.2, 0.3] från 2025-01-01
+        main, others = _returns("2025-01-01"), {"buy_and_hold": _returns("2025-01-01")}
+    elif case == "before_2020":
+        main, others = _returns("2019-12-31 12:00"), {}
+    elif case == "naive":
+        main, others = _returns("2022-01-01", tz=None), {}
+    elif case == "holdout_comparison":
+        main, others = ok, {"buy_and_hold": _returns("2025-01-01")}
+    else:                                                     # tom jämförelsesamling
+        main, others = _returns("2025-01-01"), {}
+    with pytest.raises(ValueError, match="slutprovet|före|UTC"):
+        fas2_eval.comparison_curves(main, others)
+
+
+@pytest.mark.parametrize("n, expected", [(2, 2), (1499, 1499), (1500, 1500), (1501, 1500), (3000, 1500), (10957, 1500)])
+def test_curve_selection_never_exceeds_1500_and_keeps_both_ends(n, expected):
+    sel = fas2_eval.curve_selection(n)
+    assert len(sel) == expected and sel[0] == 0 and sel[-1] == n - 1 and sel == sorted(set(sel))
+
+
+def test_3000_bars_give_1500_points_with_the_same_index_for_every_curve():
+    """Granskningens prov: 3 000 syntetiska 4h-avkastningar från 2022 gav 1 501 punkter."""
+    idx = pd.date_range("2022-01-01", periods=3000, freq="4h", tz="UTC")
+    a, b = pd.Series(0.0002, index=idx), pd.Series(-0.0001, index=idx)
+    cc = fas2_eval.comparison_curves(a, {"buy_and_hold": b})
+    assert cc["points"] == len(cc["t"]) == 1500 == len(cc["series"]["h0013"]) == len(cc["series"]["buy_and_hold"])
+    assert cc["t"][0] == idx[0].isoformat() and cc["t"][-1] == idx[-1].isoformat()
