@@ -58,9 +58,17 @@
             {
               "file": "docs/momentum-a1-granskning-cb335ee.md",
               "detail": "Codex granskning av exakt cb335ee: fyra syntetiskt reproducerade kontraktsfynd. A1 inte godkänd; A2 väntar på rättning och omgranskning."
+            },
+            {
+              "file": "docs/momentum-protokoll-A1.md",
+              "detail": "Revision 2 efter Codex granskning av cb335ee: reduce-only för riskavsikter (D17), exakt fundingtid utan tolerans (D18), separata faser E_trade/E_post (D19), T-regeln ersatt av scenariogrid A/B × mmr 5 %/0,5 % × legacy L1/L2 med krav i varje scenario (D20); preciserad marginal och DSR. Väntar på omgranskning."
+            },
+            {
+              "file": "docs/momentum-a1-orakel.json",
+              "detail": "Nya syntetiska fall O5b, O13–O16 (kapitalfaser, Sharpe-motexempel, reduce-only vid gap båda riktningar, normalavsikt som byter riktning, exakta fundingtider ±30 s, dagsgräns, första/sista). scripts/momentum-a1-oracles.py --check."
             }
           ],
-          "note": "A1 cb335ee inte godkänd. Rätta fynden i granskningsdokumentet; ingen registrering eller leverans B."
+          "note": "Revision 2 lämnad för Codex omgranskning av fynd 1–4. Inte godkänd; ingen registrering eller leverans B."
         },
         {
           "id": "MOM-A04",
@@ -82,9 +90,13 @@
             {
               "file": "docs/momentum-a1-granskning-cb335ee.md",
               "detail": "Codex granskning av exakt cb335ee: fyra syntetiskt reproducerade kontraktsfynd. A1 inte godkänd; A2 väntar på rättning och omgranskning."
+            },
+            {
+              "file": "docs/momentum-protokoll-A1.md",
+              "detail": "Revision 2 efter Codex granskning av cb335ee: reduce-only för riskavsikter (D17), exakt fundingtid utan tolerans (D18), separata faser E_trade/E_post (D19), T-regeln ersatt av scenariogrid A/B × mmr 5 %/0,5 % × legacy L1/L2 med krav i varje scenario (D20); preciserad marginal och DSR. Väntar på omgranskning."
             }
           ],
-          "note": "A1 cb335ee inte godkänd. Rätta fynden i granskningsdokumentet; ingen registrering eller leverans B."
+          "note": "Revision 2 lämnad för Codex omgranskning av fynd 1–4. Inte godkänd; ingen registrering eller leverans B."
         },
         {
           "id": "MOM-A05",
@@ -96,7 +108,7 @@
               "detail": "Codex granskning av exakt cb335ee: fyra syntetiskt reproducerade kontraktsfynd. A1 inte godkänd; A2 väntar på rättning och omgranskning."
             }
           ],
-          "note": "A1 cb335ee inte godkänd. Rätta fynden i granskningsdokumentet; ingen registrering eller leverans B."
+          "note": "Väntar på Codex omgranskning av revision 2. Ingen registerrad lagd."
         }
       ]
     },

@@ -6,6 +6,9 @@ inte strategimotorn. Ledgern är kontantekvivalent C och enheter q: E = C + q*M.
 """
 import argparse
 import json
+import math
+import statistics
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -138,7 +141,57 @@ def cases():
                                                'efter_betald_funding_500': liq_mark(o2['C'] - 500, o2['q'], 0.05)}}
     # O12 målvikt från planens exempel och lika pris ger 0.
     out['O12_mal'] = {'w': (2 / 3) * min(1, 0.10 / 0.60), 'lika_pris_signal': int(100 / 100 - 1 > 0)}
+    # O5b kapitalfaser i scenario B: identitet och cap mot E_trade, drift efter funding mot E_post.
+    E_post = b_C + a_in['q'] * 100
+    out['O5b_kapitalfaser_B'] = {'q': a_in['q'], 'E_trade': a_in['E_after'], 'vikt_after_trade': a_in['weight_after'],
+                                 'funding': b_pay, 'E_post': E_post, 'vikt_after_funding_B': a_in['q'] * 100 / E_post,
+                                 'cap': 0.5, 'cap_kontroll_after_trade': a_in['weight_after'] <= 0.5 + 1e-12}
+    # O13 Codex motexempel: ekonomiskt sämre avkastning kan ge högre Sharpe.
+    sharpe = lambda r: statistics.mean(r) / statistics.stdev(r) * math.sqrt(365)
+    orig, worse = [0.010, 0.011, 0.009, 0.100], [0.010, 0.011, 0.009, 0.010]
+    out['O13_sharpe_ej_monoton'] = {'original': sharpe(orig), 'ekonomiskt_samre': sharpe(worse),
+                                    'samre_ger_hogre_sharpe': sharpe(worse) > sharpe(orig)}
+    # O14 reduce-only: riskavsikt till frusen vikt 0,195 från C=800, q=2 (vikt 0,20 vid close 100).
+    out['O14_reduce_only'] = {f'open_{px}': risk_fill(800, 2, px, px, 0.195) for px in (90, 110)}
+    # O15 normalavsikt sälj till 0,15 blir köp efter gap ned till 70; riskavsikt samtidigt stryker normal.
+    n = fill(800 + 2 * 70, 800, 2, 70, 70, 0.15)
+    out['O15_normal_efter_gap'] = {'vikt_vid_beslut': 2 * 100 / 1000, 'vikt_vid_open': 2 * 70 / 940, 'fyllning': n,
+                                   'riktning': 'köp' if n['q'] > 2 else 'sälj',
+                                   'med_samtidig_riskavsikt': 'normal strykt, riskavsikt fylls reduce-only'}
+    # O16 exakta fundingtider kring fyllningen 2022-01-02 00:00 (q 0 -> 500, M=P=100, ränta 0,0001).
+    T = datetime(2022, 1, 2, tzinfo=timezone.utc)
+    q_old, q_new = 0.0, 500.0
+    events = {'samtidig_exakt_T': T, 'plus_30s': T + timedelta(seconds=30), 'minus_30s': T - timedelta(seconds=30)}
+    rows = {}
+    for name, t in events.items():
+        kind = funding_kind(t, T)
+        pay = {'A': q_old * 100 * rate if kind == 'samtidig' else (q_new if t > T else q_old) * 100 * rate}
+        pay['B'] = q_new * 100 * rate if kind == 'samtidig' else pay['A']
+        rows[name] = {'tid': t.isoformat(), 'typ': kind, 'dag': (t.date()).isoformat(),
+                      'efter_fyllning': t > T, 'betalt_A': pay['A'], 'betalt_B': pay['B']}
+    start, term = datetime(2022, 1, 1, tzinfo=timezone.utc), datetime(2024, 12, 31, 20, tzinfo=timezone.utc)
+    rows['forsta_exakt_2022_01_01'] = {'typ': funding_kind(start, start), 'q_A': 'q_old = 0', 'q_B': 'första q_new'}
+    rows['fore_start_2021_12_31_23_59_30'] = {'bokfors': False, 'skal': 'före startpunkten, q = 0'}
+    rows['exakt_terminal_2024_12_31_20'] = {'typ': funding_kind(term, term), 'q_A': 'q_old', 'q_B': '0 efter terminal'}
+    rows['efter_terminal_20_00_30'] = {'typ': funding_kind(term + timedelta(seconds=30), term), 'q': 0}
+    out['O16_fundingtider'] = rows
     return out
+
+
+def funding_kind(t, T):
+    """D18: bara exakt samma tid som fyllningen är samtidig; allt annat är en kronologisk mellanhändelse."""
+    return 'samtidig' if t == T else 'mellan'
+
+
+def risk_fill(C, q_old, P, M, w, c=C16):
+    """D17: riskavsikt är reduce-only. Lösarens q* används bara om den inte ökar |q|."""
+    E = C + q_old * M
+    q_star = size(E, q_old, P, M, w, c)
+    hold = abs(q_star) > abs(q_old) or q_star * q_old < 0
+    q = q_old if hold else q_star
+    C2, cost = trade(C, q_old, q, P, c)
+    return {'vikt_vid_open': q_old * M / E, 'q_star': q_star, 'risk_reduce_only_hold': hold, 'q': q,
+            'cost': cost, 'E_trade': C2 + q * M, 'vikt_after_trade': q * M / (C2 + q * M)}
 
 
 def main():

@@ -158,5 +158,97 @@
  "O12_mal": {
   "w": 0.11111111111111112,
   "lika_pris_signal": 0
+ },
+ "O5b_kapitalfaser_B": {
+  "q": 499.6003197442046,
+  "E_trade": 99920.06394884092,
+  "vikt_after_trade": 0.5,
+  "funding": 4.996003197442047,
+  "E_post": 99915.06794564349,
+  "vikt_after_funding_B": 0.5000250012500624,
+  "cap": 0.5,
+  "cap_kontroll_after_trade": true
+ },
+ "O13_sharpe_ej_monoton": {
+  "original": 13.795765460594735,
+  "ekonomiskt_samre": 233.98717913595178,
+  "samre_ger_hogre_sharpe": true
+ },
+ "O14_reduce_only": {
+  "open_90": {
+   "vikt_vid_open": 0.1836734693877551,
+   "q_star": 2.1232948653353487,
+   "risk_reduce_only_hold": true,
+   "q": 2,
+   "cost": 0.0,
+   "E_trade": 980.0,
+   "vikt_after_trade": 0.1836734693877551
+  },
+  "open_110": {
+   "vikt_vid_open": 0.21568627450980393,
+   "q_star": 1.8081219522309142,
+   "risk_reduce_only_hold": false,
+   "q": 1.8081219522309142,
+   "cost": 0.0337705364073591,
+   "E_trade": 1019.9662294635926,
+   "vikt_after_trade": 0.195
+  }
+ },
+ "O15_normal_efter_gap": {
+  "vikt_vid_beslut": 0.2,
+  "vikt_vid_open": 0.14893617021276595,
+  "fyllning": {
+   "q": 2.0142822865369454,
+   "cost": 0.001599616092137886,
+   "C": 798.9986403263217,
+   "E_after": 939.9984003839079,
+   "weight_after": 0.15
+  },
+  "riktning": "köp",
+  "med_samtidig_riskavsikt": "normal strykt, riskavsikt fylls reduce-only"
+ },
+ "O16_fundingtider": {
+  "samtidig_exakt_T": {
+   "tid": "2022-01-02T00:00:00+00:00",
+   "typ": "samtidig",
+   "dag": "2022-01-02",
+   "efter_fyllning": false,
+   "betalt_A": 0.0,
+   "betalt_B": 5.0
+  },
+  "plus_30s": {
+   "tid": "2022-01-02T00:00:30+00:00",
+   "typ": "mellan",
+   "dag": "2022-01-02",
+   "efter_fyllning": true,
+   "betalt_A": 5.0,
+   "betalt_B": 5.0
+  },
+  "minus_30s": {
+   "tid": "2022-01-01T23:59:30+00:00",
+   "typ": "mellan",
+   "dag": "2022-01-01",
+   "efter_fyllning": false,
+   "betalt_A": 0.0,
+   "betalt_B": 0.0
+  },
+  "forsta_exakt_2022_01_01": {
+   "typ": "samtidig",
+   "q_A": "q_old = 0",
+   "q_B": "första q_new"
+  },
+  "fore_start_2021_12_31_23_59_30": {
+   "bokfors": false,
+   "skal": "före startpunkten, q = 0"
+  },
+  "exakt_terminal_2024_12_31_20": {
+   "typ": "samtidig",
+   "q_A": "q_old",
+   "q_B": "0 efter terminal"
+  },
+  "efter_terminal_20_00_30": {
+   "typ": "mellan",
+   "q": 0
+  }
  }
 }
