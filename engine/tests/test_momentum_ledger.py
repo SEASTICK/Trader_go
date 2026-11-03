@@ -3,8 +3,10 @@
 Facit kommer från docs/momentum-a1-orakel.json (separat räknekod i scripts/) och handräknade uttryck, aldrig från
 produktionslösaren.
 """
+import dataclasses
 import json
 import math
+import warnings
 from pathlib import Path
 
 import numpy as np
@@ -212,3 +214,82 @@ def test_long_sequence_reconciles():
         assert close(f.weight_trade, w) if w else acct.q == 0
         assert acct.reconciliation_gap() == pytest.approx(0, abs=1e-8)
     assert acct.q == 0 and close(acct.C, acct.deposit + acct.realized - acct.costs)
+
+
+# Regressioner för Codex granskning av 6eba8d6 (C1-01 och C1-02).
+
+FIELDS = ("C", "q", "deposit", "avg_price", "realized", "costs")
+
+
+@pytest.mark.parametrize("field", FIELDS)
+@pytest.mark.parametrize("value", [math.nan, math.inf, -math.inf, True, "1"])
+def test_account_fields_must_be_finite_numbers(field, value):
+    ok = dict(C=800.0, q=2.0, deposit=1000.0, avg_price=100.0)
+    with pytest.raises(L.LedgerError):
+        L.Account(**(ok | {field: value}))
+    with pytest.raises(L.LedgerError):
+        dataclasses.replace(L.Account(**ok), **{field: value})
+
+
+def test_valid_negative_cash_short_and_losses_are_kept():
+    acct = L.Account(C=-450.0, q=8.0, deposit=1000.0, avg_price=150.0, realized=-200.0, costs=50.0)
+    assert acct.reconciliation_gap() == pytest.approx(0, abs=1e-9) and acct.equity(150) == 750
+    short = L.Account(C=1900.0, q=-6.0, deposit=1000.0, avg_price=150.0)
+    assert short.weight(150) == pytest.approx(-900 / 1000)
+    new, f = L.fill_normal(acct, 0.5, 150, 150)
+    assert math.isfinite(new.realized) and new.realized < 0 and new.reconciliation_gap() == pytest.approx(0, abs=1e-9)
+
+
+@pytest.mark.parametrize("fill", [L.fill_normal, L.fill_risk])
+def test_overflow_from_finite_arguments_raises_and_leaves_account(fill):
+    acct = pos(800, 2, 100, 1000)
+    before = dataclasses.replace(acct)
+    with pytest.raises(L.LedgerError):
+        fill(acct, 0.0, 1e308, 100)            # stängning: realiserat och C överflödar
+    assert acct == before
+
+
+@pytest.mark.parametrize("fill,w", [(L.fill_normal, 0.2), (L.fill_risk, 0.5)])
+def test_no_trade_and_hold_paths_also_check_overflow(fill, w):
+    acct = pos(800, 2, 100, 1000)
+    with pytest.raises(L.LedgerError):
+        fill(acct, w, 1e308, 1e308)            # E före affär = 800 + 2e308 = inf
+
+
+def test_public_values_never_return_nonfinite():
+    big = L.Account(C=1e308, q=0.0, deposit=-1e308)
+    with pytest.raises(L.LedgerError):
+        big.reconciliation_gap()
+    with pytest.raises(L.LedgerError):
+        L.Account(C=1e308, q=1e308).equity(10)
+    with pytest.raises(L.LedgerError):
+        L.Account(C=1e308, q=1e308).weight(10)
+
+
+@pytest.mark.parametrize("args", [
+    (1000, 0, 200.0, 100, -1),
+    (1000.0, 0.0, np.float64(200), 100.0, -1.0),
+    (np.int64(1000), np.int64(0), np.int64(200), np.int64(100), np.int64(-1)),
+    (np.float64(1000), 0, 200, np.float64(100), np.float64(-1)),
+])
+def test_zero_first_denominator_is_ledger_error_for_all_scalar_types(args):
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")         # ingen numpy-varning eller inf får välja gren
+        with pytest.raises(L.LedgerError, match="kostnadsfria nämnaren"):
+            L.solve_units(*args)
+        acct = L.Account(C=args[0], q=args[1], deposit=args[0])
+        with pytest.raises(L.LedgerError):
+            L.fill_normal(acct, args[4], args[2], args[3])
+
+
+def test_nonfinite_intermediate_from_finite_arguments_raises():
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        with pytest.raises(L.LedgerError, match="q0"):
+            L.solve_units(1e308, 0.0, 1e-300, 1e-300, 1.0)
+
+
+def test_numpy_scalars_give_same_result_as_python_floats():
+    a = L.solve_units(1000.0, 2.0, 101.0, 100.5, 0.3)
+    b = L.solve_units(np.float64(1000), np.int64(2), np.float64(101), np.float64(100.5), np.float64(0.3))
+    assert a == b and type(b) is float

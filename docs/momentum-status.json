@@ -338,9 +338,13 @@
             {
               "file": "docs/momentum-C1-granskning-6eba8d6.md",
               "detail": "Codex granskar exakt 6eba8d6. Orakel/Decimal stämmer för normala fall, men C1-01 och C1-02 behöver numerisk/API-rättning och regressioner före godkännande. 40 ledgerprov, 629 motorprov godkända."
+            },
+            {
+              "file": "engine/tests/test_momentum_ledger.py",
+              "detail": "Rättning av C1-01/C1-02 från granskningen av 6eba8d6: kontofält och beräknade belopp ändlighetskontrollerade, vakt för kostnadsfri nämnare, enhetliga skalärtyper. 82 syntetiska tester; 39 nya fäller 6eba8d6."
             }
           ],
-          "note": "C1 inte slutgodkänd: två P2-fynd i ändlighetskontroller och första lösardivisionen. Nästa del av C väntar på omgranskning."
+          "note": "C1-01/C1-02 rättade på claude/momentum-c1; väntar på Codex omgranskning av exakt revision."
         },
         {
           "id": "MOM-C02",
@@ -375,6 +379,10 @@
             {
               "file": "docs/momentum-C1-granskning-6eba8d6.md",
               "detail": "Codex granskar exakt 6eba8d6. Orakel/Decimal stämmer för normala fall, men C1-01 och C1-02 behöver numerisk/API-rättning och regressioner före godkännande. 40 ledgerprov, 629 motorprov godkända."
+            },
+            {
+              "file": "engine/tests/test_momentum_ledger.py",
+              "detail": "Rättning av C1-01/C1-02 från granskningen av 6eba8d6: kontofält och beräknade belopp ändlighetskontrollerade, vakt för kostnadsfri nämnare, enhetliga skalärtyper. 82 syntetiska tester; 39 nya fäller 6eba8d6."
             }
           ],
           "note": "C1 inte slutgodkänd: två P2-fynd i ändlighetskontroller och första lösardivisionen. Nästa del av C väntar på omgranskning."

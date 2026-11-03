@@ -18,7 +18,9 @@ q_old utan affär och kostnad, och fyllningen märks risk_reduce_only_hold. w = 
 Redovisning: genomsnittligt inträdespris och realiserat resultat följer partialminskning och vändning utan fiktiva
 avslut. Identitet: C = C0 + realized - costs - q * avg_price (avg_price = 0 när platt). Kapitalledgern C/q är källan.
 
-Inga avrundningar, ingen klippning, inget epsilonkapital. Felaktig indata ger LedgerError.
+Inga avrundningar, ingen klippning, inget epsilonkapital. Felaktig indata ger LedgerError. Kontots fält valideras
+vid konstruktion; alla tal räknas som Python-float oavsett om de kom som numpy-skalärer, och varje beräknat belopp
+kontrolleras för NaN och oändlighet (även overflow från ändliga tal) innan konto, fill eller publikt värde returneras.
 """
 from __future__ import annotations
 
@@ -38,10 +40,23 @@ class LedgerError(ValueError):
     """Ogiltig indata eller ingen konsekvent lösning. Ingen tyst klippning."""
 
 
+def _num(name: str, v) -> float:
+    """Ändligt reellt tal (även numpy-skalär) som Python-float, så att alla typer räknas lika. Bool avvisas."""
+    if not isinstance(v, numbers.Real) or isinstance(v, bool) or not math.isfinite(v):
+        raise LedgerError(f"{name} måste vara ett ändligt tal, fick {v!r}.")
+    return float(v)
+
+
 def _finite(**values) -> None:
     for name, v in values.items():
-        if not isinstance(v, numbers.Real) or isinstance(v, bool) or not math.isfinite(v):
-            raise LedgerError(f"{name} måste vara ett ändligt tal, fick {v!r}.")
+        _num(name, v)
+
+
+def _out(name: str, v: float) -> float:
+    """Beräknat belopp får inte bli NaN eller oändligt, inte heller genom overflow från ändliga tal."""
+    if not math.isfinite(v):
+        raise LedgerError(f"Beräknat {name} är inte ändligt ({v}); inget konto eller fill returneras.")
+    return v
 
 
 def _prices(P: float, M: float) -> None:
@@ -71,6 +86,11 @@ class Account:
     realized: float = 0.0          # summerat realiserat resultat före kostnader
     costs: float = 0.0             # summerade handelskostnader
 
+    def __post_init__(self) -> None:
+        # Bara ändlighet; inga teckenregler (negativ C, short och förluster är giltiga).
+        for f in ("C", "q", "deposit", "avg_price", "realized", "costs"):
+            object.__setattr__(self, f, _num(f, getattr(self, f)))
+
     @classmethod
     def open(cls, capital: float) -> "Account":
         _finite(capital=capital)
@@ -79,20 +99,20 @@ class Account:
         return cls(C=float(capital), deposit=float(capital))
 
     def equity(self, M: float) -> float:
-        _finite(M=M)
+        M = _num("M", M)
         if M <= 0:
             raise LedgerError(f"Markpris måste vara > 0, fick {M}.")
-        return self.C + self.q * M
+        return _out("E", self.C + self.q * M)
 
     def weight(self, M: float) -> float:
         E = self.equity(M)
         if E <= 0:
             raise LedgerError(f"Nettokapitalet är {E}; vikt saknas.")
-        return self.q * M / E
+        return _out("vikt", self.q * float(M) / E)
 
     def reconciliation_gap(self) -> float:
         """C minus C0 + realized - costs - q * avg_price. Ska vara 0 inom flyttalstolerans."""
-        return self.C - (self.deposit + self.realized - self.costs - self.q * self.avg_price)
+        return _out("avstämningsgap", self.C - (self.deposit + self.realized - self.costs - self.q * self.avg_price))
 
 
 @dataclass(frozen=True)
@@ -121,7 +141,7 @@ class Fill:
 
 def solve_units(E: float, q_old: float, P: float, M: float, w: float, c: float = COST_NORMAL) -> float:
     """Exakt q_new enligt §6 med q_new * M = w * E_trade. Grenen väljs från den kostnadsfria lösningen."""
-    _finite(E=E, q_old=q_old)
+    E, q_old, P, M, w, c = (_num(n, v) for n, v in (("E", E), ("q_old", q_old), ("P", P), ("M", M), ("w", w), ("c", c)))
     _prices(P, M)
     _weight(w)
     _cost_rate(c)
@@ -129,12 +149,15 @@ def solve_units(E: float, q_old: float, P: float, M: float, w: float, c: float =
         raise LedgerError(f"Kapital före affär måste vara > 0, fick {E}.")
     if w == 0:
         return 0.0
-    q0 = w * (E - q_old * (M - P)) / (M - w * (M - P))
+    d0 = _out("kostnadsfri nämnare", M - w * (M - P))
+    if d0 == 0:
+        raise LedgerError("Ingen lösning: den kostnadsfria nämnaren M - w(M - P) är 0.")
+    q0 = _out("kostnadsfri lösning q0", w * (E - q_old * (M - P)) / d0)
     if q0 == q_old:
         return q_old
     buy = q0 > q_old
     k = M - P - c * P if buy else M - P + c * P
-    den = M - w * k
+    den = _out("nämnare", M - w * k)
     if not den > 0:
         raise LedgerError("Ingen lösning: nämnaren är inte positiv.")
     q = w * (E - q_old * k) / den
@@ -148,7 +171,7 @@ def _book(acct: Account, q_new: float, P: float, c: float) -> tuple[Account, flo
     q_old, dq = acct.q, q_new - acct.q
     if dq == 0:
         return acct, 0.0, 0.0
-    cost = c * P * abs(dq)
+    cost = _out("kostnad", c * P * abs(dq))
     realized, avg = 0.0, acct.avg_price
     if q_old != 0 and (q_new == 0 or (q_new > 0) != (q_old > 0)):
         realized = q_old * (P - acct.avg_price)          # hela gamla positionen stängs
@@ -157,6 +180,7 @@ def _book(acct: Account, q_new: float, P: float, c: float) -> tuple[Account, flo
         realized = (q_old - q_new) * (P - acct.avg_price)  # bara sålda enheter realiseras
     else:
         avg = (abs(q_old) * acct.avg_price + abs(dq) * P) / abs(q_new)
+    realized = _out("realiserat", realized)
     new = replace(acct, C=acct.C - dq * P - cost, q=q_new, avg_price=avg,
                   realized=acct.realized + realized, costs=acct.costs + cost)
     return new, cost, realized
@@ -165,16 +189,17 @@ def _book(acct: Account, q_new: float, P: float, c: float) -> tuple[Account, flo
 def _fill(acct: Account, kind: str, w: float, q_star: float, q_new: float, P: float, M: float, c: float,
           E_before: float, hold: bool) -> tuple[Account, Fill]:
     new, cost, realized = _book(acct, q_new, P, c)
-    E_trade = new.equity(M)
+    E_trade = new.equity(M)                        # ändlighet kontrolleras i equity
     if not E_trade > 0:
         raise LedgerError(f"Nettokapital efter affär är {E_trade}; insolvens döljs inte.")
     return new, Fill(kind=kind, w=w, P=P, M=M, c=c, q_old=acct.q, q_star=q_star, q_new=q_new, dq=q_new - acct.q,
-                     cost=cost, E_before=E_before, E_trade=E_trade, weight_trade=q_new * M / E_trade,
+                     cost=cost, E_before=E_before, E_trade=E_trade, weight_trade=_out("vikt", q_new * M / E_trade),
                      realized_delta=realized, risk_reduce_only_hold=hold)
 
 
 def fill_normal(acct: Account, w: float, P: float, M: float, c: float = COST_NORMAL) -> tuple[Account, Fill]:
     """Normalavsikt: exakt målvikt w, köp eller sälj beroende på läget vid öppningen."""
+    w, P, M, c = _num("w", w), _num("P", P), _num("M", M), _num("c", c)
     E = acct.equity(M)
     q_star = solve_units(E, acct.q, P, M, w, c)
     return _fill(acct, NORMAL, w, q_star, q_star, P, M, c, E, False)
@@ -182,6 +207,7 @@ def fill_normal(acct: Account, w: float, P: float, M: float, c: float = COST_NOR
 
 def fill_risk(acct: Account, w: float, P: float, M: float, c: float = COST_NORMAL) -> tuple[Account, Fill]:
     """Riskavsikt, reduce-only: ökar aldrig |q|. Underskrids målet redan behålls q och fyllningen loggas hold."""
+    w, P, M, c = _num("w", w), _num("P", P), _num("M", M), _num("c", c)
     E = acct.equity(M)
     q_star = solve_units(E, acct.q, P, M, w, c)
     hold = abs(q_star) > abs(acct.q) or q_star * acct.q < 0
