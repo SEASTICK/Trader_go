@@ -1,0 +1,136 @@
+{
+  "source": "research/results/H-0013-20261103T143504962276Z-completed.json",
+  "sha256": "f752202e7c6413265d0dc404f546720d835d569af2251704134a41b44d561ee1",
+  "scope": "existing archived result only; no new backtest or holdout access",
+  "candidate_regime_assessments": {
+    "both_fail": 28,
+    "trade_count_only": 18,
+    "eligible": 1,
+    "t_only": 1
+  },
+  "windows": [
+    {
+      "test": [
+        "2022-01-01",
+        "2022-07-01"
+      ],
+      "eligible": [],
+      "executed_trades": 0,
+      "local_return": 0.0
+    },
+    {
+      "test": [
+        "2022-07-01",
+        "2023-01-01"
+      ],
+      "eligible": [],
+      "executed_trades": 0,
+      "local_return": 0.0
+    },
+    {
+      "test": [
+        "2023-01-01",
+        "2023-07-01"
+      ],
+      "eligible": [],
+      "executed_trades": 0,
+      "local_return": 0.0
+    },
+    {
+      "test": [
+        "2023-07-01",
+        "2024-01-01"
+      ],
+      "eligible": [],
+      "executed_trades": 0,
+      "local_return": 0.0
+    },
+    {
+      "test": [
+        "2024-01-01",
+        "2024-07-01"
+      ],
+      "eligible": [
+        {
+          "candidate": "bb_rsi_reversion",
+          "regime": "upp/låg vol",
+          "days": 470,
+          "trades": 22,
+          "sharpe": 0.13633720021211,
+          "t": 0.1654523060705628
+        }
+      ],
+      "executed_trades": 5,
+      "local_return": -0.10864184437833257
+    },
+    {
+      "test": [
+        "2024-07-01",
+        "2025-01-01"
+      ],
+      "eligible": [],
+      "executed_trades": 0,
+      "local_return": 0.0
+    }
+  ],
+  "final_training_candidates": {
+    "ema_adx_trend": {
+      "upp/hög vol": {
+        "days": 307,
+        "trades": 1,
+        "sharpe": -0.8925951479266846,
+        "t": -1.0256263088933748
+      },
+      "upp/låg vol": {
+        "days": 685,
+        "trades": 7,
+        "sharpe": 1.6187446480834424,
+        "t": 2.1410553874867135
+      },
+      "ned/hög vol": {
+        "days": 297,
+        "trades": 4,
+        "sharpe": -0.5204842017608822,
+        "t": -0.5557897433767898
+      },
+      "ned/låg vol": {
+        "days": 336,
+        "trades": 5,
+        "sharpe": -0.9232663556027412,
+        "t": -0.8605040484219769
+      }
+    },
+    "bb_rsi_reversion": {
+      "upp/hög vol": {
+        "days": 307,
+        "trades": 10,
+        "sharpe": 1.2173545754688693,
+        "t": 1.229834855164008
+      },
+      "upp/låg vol": {
+        "days": 685,
+        "trades": 31,
+        "sharpe": -0.7607238975609423,
+        "t": -1.1708790130927655
+      },
+      "ned/hög vol": {
+        "days": 297,
+        "trades": 13,
+        "sharpe": 1.1982774156546077,
+        "t": 1.1016307219568369
+      },
+      "ned/låg vol": {
+        "days": 336,
+        "trades": 17,
+        "sharpe": -2.141806325681133,
+        "t": -2.4714399663789606
+      }
+    }
+  },
+  "final_choices": {
+    "upp/hög vol": "platt",
+    "upp/låg vol": "platt",
+    "ned/hög vol": "platt",
+    "ned/låg vol": "platt"
+  }
+}

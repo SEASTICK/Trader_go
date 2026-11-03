@@ -5,7 +5,7 @@
   "updated": "2026-11-03",
   "reviewed_revision": "72107ed",
   "note": "Planering kan börja. Framåttest kräver godkänd och fryst strategi; H-0013 förblir REJECT.",
-  "reviewed_scope": "Ny genomförandeplan efter godkänd Fas 2 (40/40). Alla Fas 3-punkter är ännu overifierade. Teknisk utveckling och SIM-prov kan förberedas; ingen strategi är godkänd för framåttest. Inga körningar eller driftsättningar startas av denna plan.",
+  "reviewed_scope": "Fas 3-plan efter godkänd Fas 2. Edwin vill prioritera en bättre strategi med positivt netto och cirka 20 % maximal nedgång. H-0013:s sparade urval är diagnostiserat utan nytt backtest; H-0016 förregistreras som fast squeeze med separat risklager. Ingen implementation eller riktig körning ännu. Ingen kandidat har READY_FOR_PAPER; papperspiloten väntar.",
   "groups": [
     {
       "id": "scope",
@@ -55,9 +55,18 @@
         {
           "id": "F3-201",
           "title": "Identifiera en kandidat som klarat historiska krav; ny forskning kräver egen förregistrerad hypotes",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "docs/strategiforskning-20261103.md",
+              "detail": "Läsande H-0013-diagnos: 46 av 48 träningsbedömningar har för få affärer; bara ett kandidatval kvalificerat. H-0012 positivt historiskt netto men otillräcklig styrka och för hög drawdown mot nya riskmålet."
+            },
+            {
+              "file": "research/h0016-protokoll.md",
+              "detail": "Nytt försök, ännu inte implementerat eller kört: fasta standardparametrar, riskbudget 0,5 %, nettobaserade stopp och 20 % drawdown-kriterium. Ingen optimering eller ML."
+            }
+          ],
+          "note": "Orsaksanalys klar och nytt forskningsförsök H-0016 förregistrerat. Ingen kvalificerad kandidat ännu; H-0012/H-0013 förblir REJECT."
         },
         {
           "id": "F3-202",

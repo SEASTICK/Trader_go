@@ -4,7 +4,7 @@
 
 Planering · Kontrollerad 2026-11-03 · Granskad kodversion `72107ed`.
 
-Ny genomförandeplan efter godkänd Fas 2 (40/40). Alla Fas 3-punkter är ännu overifierade. Teknisk utveckling och SIM-prov kan förberedas; ingen strategi är godkänd för framåttest. Inga körningar eller driftsättningar startas av denna plan.
+Fas 3-plan efter godkänd Fas 2. Edwin vill prioritera en bättre strategi med positivt netto och cirka 20 % maximal nedgång. H-0013:s sparade urval är diagnostiserat utan nytt backtest; H-0016 förregistreras som fast squeeze med separat risklager. Ingen implementation eller riktig körning ännu. Ingen kandidat har READY_FOR_PAPER; papperspiloten väntar.
 
 ## Uppdateringsregler
 
@@ -31,7 +31,10 @@ Ny genomförandeplan efter godkänd Fas 2 (40/40). Alla Fas 3-punkter är ännu 
 
 0/5 verifierade.
 
-- [ ] **F3-201** Identifiera en kandidat som klarat historiska krav; ny forskning kräver egen förregistrerad hypotes
+- [ ] **F3-201** Identifiera en kandidat som klarat historiska krav; ny forskning kräver egen förregistrerad hypotes **Pågår.**
+  - Underlag: [docs/strategiforskning-20261103.md](strategiforskning-20261103.md) — Läsande H-0013-diagnos: 46 av 48 träningsbedömningar har för få affärer; bara ett kandidatval kvalificerat. H-0012 positivt historiskt netto men otillräcklig styrka och för hög drawdown mot nya riskmålet.
+  - Underlag: [research/h0016-protokoll.md](../research/h0016-protokoll.md) — Nytt försök, ännu inte implementerat eller kört: fasta standardparametrar, riskbudget 0,5 %, nettobaserade stopp och 20 % drawdown-kriterium. Ingen optimering eller ML.
+  - Orsaksanalys klar och nytt forskningsförsök H-0016 förregistrerat. Ingen kvalificerad kandidat ännu; H-0012/H-0013 förblir REJECT.
 - [ ] **F3-202** Verifiera dokumenterat slutprov och READY_FOR_PAPER innan riktigt framåttest får starta
 - [ ] **F3-203** Frys strategi eller väljare, kodrevision, parametrar och kostnadsmodell
 - [ ] **F3-204** Förregistrera minst tre månaders test, erforderligt antal affärer och slutregel
