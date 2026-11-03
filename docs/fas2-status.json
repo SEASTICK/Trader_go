@@ -3,7 +3,7 @@
   "title": "Fas 2 – Adaptive Strategy Engine",
   "hypothesis": "H-0013",
   "updated": "2026-11-03",
-  "reviewed_revision": "f36a3ee",
+  "reviewed_revision": "677752f",
   "note": "Klar betyder verifierad. Kod som bara finns lokalt eller tester utan granskning är inte slutgodkända.",
   "groups": [
     {
@@ -428,7 +428,7 @@
               "detail": "f36a3ee (kod 62cc4bb): Separat H-0013-flik och avgränsning mot Fas 1, tvärsnitt och utforskning verifierade."
             }
           ],
-          "note": "Lokal syntetisk verifiering; ingen riktig köning, installerad app eller publicering. PR #77 har öppna fynd och är inte godkänd för merge."
+          "note": "PR #77 kodmässigt godkänd på 677752f; merge kräver grön CI. Bara lokal syntetisk verifiering, ingen riktig köning eller installerad app/publicering."
         },
         {
           "id": "F2-702",
@@ -440,19 +440,19 @@
               "detail": "f36a3ee (kod 62cc4bb): Låsta parametrar matchar protokoll/migration/motor; fast köanrop och tvåstegsförberedelse med aktiv/resultatblockerare verifierade lokalt."
             }
           ],
-          "note": "Lokal syntetisk verifiering; ingen riktig köning, installerad app eller publicering. PR #77 har öppna fynd och är inte godkänd för merge."
+          "note": "PR #77 kodmässigt godkänd på 677752f; merge kräver grön CI. Bara lokal syntetisk verifiering, ingen riktig köning eller installerad app/publicering."
         },
         {
           "id": "F2-703",
           "title": "Visa köstatus, förlopp, fel och möjlighet att avbryta",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-research-lab-granskning-77.md",
-              "detail": "f36a3ee (kod 62cc4bb): Status och avbrott finns; interaktivt prov visar 10 listpollningar men bara ett payload-anrop efter tillfälligt fel, sedan permanent laddning utan feltext."
+              "detail": "677752f (kod a883094): Eget payloadfel, automatisk återhämtning och manuell knapp verifierade med DOM-tester. Eget Chrome-prov ger andra payload-anropet och resultat, utan köning."
             }
           ],
-          "note": "Lokal syntetisk verifiering; ingen riktig köning, installerad app eller publicering. PR #77 har öppna fynd och är inte godkänd för merge."
+          "note": "PR #77 kodmässigt godkänd på 677752f; merge kräver grön CI. Bara lokal syntetisk verifiering, ingen riktig köning eller installerad app/publicering."
         },
         {
           "id": "F2-704",
@@ -461,22 +461,22 @@
           "evidence": [
             {
               "file": "docs/fas2-research-lab-granskning-77.md",
-              "detail": "f36a3ee (kod 62cc4bb): Lägen och kandidatval visas, men konstant equity/drawdown ger NaN och tom graf. Jämförelsekurvor saknas i payload och visas inte."
+              "detail": "677752f (kod a883094): Platt kapital och noll-drawdown nu visuellt verifierade i ljust/mörkt tema med ändlig SVG. Jämförelsekurvor saknas fortfarande i payload och uppgiften förblir öppen."
             }
           ],
-          "note": "Lokal syntetisk verifiering; ingen riktig köning, installerad app eller publicering. PR #77 har öppna fynd och är inte godkänd för merge."
+          "note": "PR #77 kodmässigt godkänd på 677752f; merge kräver grön CI. Bara lokal syntetisk verifiering, ingen riktig köning eller installerad app/publicering."
         },
         {
           "id": "F2-705",
           "title": "Visa kriterier, osäkerhet, historik och REJECT/MORE_RESEARCH utan SIM som verkliga resultat",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-research-lab-granskning-77.md",
-              "detail": "f36a3ee (kod 62cc4bb): Kriterier, osäkerhet och kontraktskontroll finns; saknad trades-lista presenteras felaktigt som 0 affärer i stället för saknad logg."
+              "detail": "677752f (kod a883094): Saknad/feltypad logg, ogiltiga rader, avvikande antal och faktiskt tom logg skiljs åt och redovisas. Tidigare egna felprov och DOM-regressioner passerar."
             }
           ],
-          "note": "Lokal syntetisk verifiering; ingen riktig köning, installerad app eller publicering. PR #77 har öppna fynd och är inte godkänd för merge."
+          "note": "PR #77 kodmässigt godkänd på 677752f; merge kräver grön CI. Bara lokal syntetisk verifiering, ingen riktig köning eller installerad app/publicering."
         }
       ]
     },
@@ -522,5 +522,5 @@
       ]
     }
   ],
-  "reviewed_scope": "PR #76 mergad som d1e32ed. PR #77 granskad på f36a3ee: 85 frontendtester och bygge passerar; syntetisk vy provad i Chrome i ljust/mörkt tema. Tre fynd före merge: konstant graf, låst resultathämtning efter fel och saknad affärslogg som visas som noll. Ingen riktig körning/publicering."
+  "reviewed_scope": "PR #77 omgranskad på 677752f (kod a883094): alla tre fynd rättade. 98 frontendtester och bygge passerar; platta diagram, automatisk återhämtning och saknad affärslogg verifierade i lokalt syntetiskt Chrome-prov. Kodmässigt godkänd för merge när erforderlig CI är grön. F2-704 öppen för jämförelsekurvor; inget riktigt jobb eller publicering."
 }

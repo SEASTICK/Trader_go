@@ -1,10 +1,10 @@
 # Fas 2 – Utvecklingsplan
 
-**32 av 40 uppgifter verifierade · 8 arbetsområden.**
+**34 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-H-0013 · Kontrollerad 2026-11-03 · Granskad kodversion `f36a3ee`.
+H-0013 · Kontrollerad 2026-11-03 · Granskad kodversion `677752f`.
 
-PR #76 mergad som d1e32ed. PR #77 granskad på f36a3ee: 85 frontendtester och bygge passerar; syntetisk vy provad i Chrome i ljust/mörkt tema. Tre fynd före merge: konstant graf, låst resultathämtning efter fel och saknad affärslogg som visas som noll. Ingen riktig körning/publicering.
+PR #77 omgranskad på 677752f (kod a883094): alla tre fynd rättade. 98 frontendtester och bygge passerar; platta diagram, automatisk återhämtning och saknad affärslogg verifierade i lokalt syntetiskt Chrome-prov. Kodmässigt godkänd för merge när erforderlig CI är grön. F2-704 öppen för jämförelsekurvor; inget riktigt jobb eller publicering.
 
 ## Uppdateringsregler
 
@@ -137,23 +137,23 @@ PR #76 mergad som d1e32ed. PR #77 granskad på f36a3ee: 85 frontendtester och by
 
 ## 7. Visa Fas 2 i Research Lab
 
-2/5 verifierade.
+4/5 verifierade.
 
 - [x] **F2-701** Visa H-0013 separat från Fas 1 och tvärsnittshypoteserna
   - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — f36a3ee (kod 62cc4bb): Separat H-0013-flik och avgränsning mot Fas 1, tvärsnitt och utforskning verifierade.
-  - Lokal syntetisk verifiering; ingen riktig köning, installerad app eller publicering. PR #77 har öppna fynd och är inte godkänd för merge.
+  - PR #77 kodmässigt godkänd på 677752f; merge kräver grön CI. Bara lokal syntetisk verifiering, ingen riktig köning eller installerad app/publicering.
 - [x] **F2-702** Visa registrerade parametrar och förbered en fast forskningskörning
   - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — f36a3ee (kod 62cc4bb): Låsta parametrar matchar protokoll/migration/motor; fast köanrop och tvåstegsförberedelse med aktiv/resultatblockerare verifierade lokalt.
-  - Lokal syntetisk verifiering; ingen riktig köning, installerad app eller publicering. PR #77 har öppna fynd och är inte godkänd för merge.
-- [ ] **F2-703** Visa köstatus, förlopp, fel och möjlighet att avbryta **Pågår.**
-  - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — f36a3ee (kod 62cc4bb): Status och avbrott finns; interaktivt prov visar 10 listpollningar men bara ett payload-anrop efter tillfälligt fel, sedan permanent laddning utan feltext.
-  - Lokal syntetisk verifiering; ingen riktig köning, installerad app eller publicering. PR #77 har öppna fynd och är inte godkänd för merge.
+  - PR #77 kodmässigt godkänd på 677752f; merge kräver grön CI. Bara lokal syntetisk verifiering, ingen riktig köning eller installerad app/publicering.
+- [x] **F2-703** Visa köstatus, förlopp, fel och möjlighet att avbryta
+  - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — 677752f (kod a883094): Eget payloadfel, automatisk återhämtning och manuell knapp verifierade med DOM-tester. Eget Chrome-prov ger andra payload-anropet och resultat, utan köning.
+  - PR #77 kodmässigt godkänd på 677752f; merge kräver grön CI. Bara lokal syntetisk verifiering, ingen riktig köning eller installerad app/publicering.
 - [ ] **F2-704** Visa marknadslägen, kandidatval och jämförelsekurvor med spårbara källor **Pågår.**
-  - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — f36a3ee (kod 62cc4bb): Lägen och kandidatval visas, men konstant equity/drawdown ger NaN och tom graf. Jämförelsekurvor saknas i payload och visas inte.
-  - Lokal syntetisk verifiering; ingen riktig köning, installerad app eller publicering. PR #77 har öppna fynd och är inte godkänd för merge.
-- [ ] **F2-705** Visa kriterier, osäkerhet, historik och REJECT/MORE_RESEARCH utan SIM som verkliga resultat **Pågår.**
-  - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — f36a3ee (kod 62cc4bb): Kriterier, osäkerhet och kontraktskontroll finns; saknad trades-lista presenteras felaktigt som 0 affärer i stället för saknad logg.
-  - Lokal syntetisk verifiering; ingen riktig köning, installerad app eller publicering. PR #77 har öppna fynd och är inte godkänd för merge.
+  - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — 677752f (kod a883094): Platt kapital och noll-drawdown nu visuellt verifierade i ljust/mörkt tema med ändlig SVG. Jämförelsekurvor saknas fortfarande i payload och uppgiften förblir öppen.
+  - PR #77 kodmässigt godkänd på 677752f; merge kräver grön CI. Bara lokal syntetisk verifiering, ingen riktig köning eller installerad app/publicering.
+- [x] **F2-705** Visa kriterier, osäkerhet, historik och REJECT/MORE_RESEARCH utan SIM som verkliga resultat
+  - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — 677752f (kod a883094): Saknad/feltypad logg, ogiltiga rader, avvikande antal och faktiskt tom logg skiljs åt och redovisas. Tidigare egna felprov och DOM-regressioner passerar.
+  - PR #77 kodmässigt godkänd på 677752f; merge kräver grön CI. Bara lokal syntetisk verifiering, ingen riktig köning eller installerad app/publicering.
 
 ## 8. Sluttest och godkännande
 
