@@ -4,7 +4,7 @@
 
 H-0013 · Kontrollerad 2026-11-03 · Granskad kodversion `08a8966`.
 
-PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Python-/118 frontendtester och bygge passerar, CI grön. Egna slutprovs-/tidsaxel-/punktgränsprov samt syntetiskt motor–workerpaket–frontendläsarprov passerar. Kodmässigt godkänd för merge. Ingen riktig körning, driftsättning eller publicering. Slutpaket b44d3ce oberoende ombyggt med identisk SHA256 och 186 verifierade filer; PR #79-plan granskad på 8d85c10. Ingen ny driftsättning utförd.
+PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Python-/118 frontendtester och bygge passerar, CI grön. Egna slutprovs-/tidsaxel-/punktgränsprov samt syntetiskt motor–workerpaket–frontendläsarprov passerar. Kodmässigt godkänd för merge. Ingen riktig körning, driftsättning eller publicering. Slutpaket b44d3ce oberoende ombyggt med identisk SHA256 och 186 verifierade filer; PR #79-plan granskad på 8d85c10. Ingen ny driftsättning utförd. PR #79 driftutfall omgranskat på 784d439: serverns b44d3ce, en worker PID 30868/0 omstarter, tom kö, 0 H-0013, lyckad insamling och privat exporthash verifierade läsande. Driftredovisningen godkänd; app-/sluttest återstår.
 
 ## Uppdateringsregler
 
@@ -101,7 +101,7 @@ PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Pyt
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov.
   - Underlag: [docs/fas2-jamforelsekurvor-granskning-78.md](fas2-jamforelsekurvor-granskning-78.md) — db9a4ec: befintliga jämförelseutfall identiska mot de70580, men nya comparison_curves saknar utvecklingskontroll vid direkt anrop (P1).
   - Underlag: [docs/fas2-jamforelsekurvor-granskning-78.md](fas2-jamforelsekurvor-granskning-78.md) — 08a8966 (kod fec2e51): oberoende omgranskning godkänd. 553 Python-/118 frontendtester och bygge passerar; direkta skydd, tidsaxel, huvudkurvans värden, högst 1500 punkter och syntetisk motor–worker–läsarintegration verifierade.
-  - PR #78 kodmässigt godkänd på 08a8966 med grön CI. Bara syntetisk lokal verifiering. Driftsatt dee88eb saknar jämförelsekurvorna; riktigt appflöde och installerad app återstår i arbetsområde 8.
+  - PR #78 mergad som b44d3ce med granskad kod oförändrad. Workern b44d3ce är driftsatt och verifierad via PR #79. Resultatflödet är bara syntetiskt provat; riktig H-0013-körning och installerad app/Stable återstår i arbetsområde 8.
 - [x] **F2-502** Verifiera kostnadsstress, funding och riskmodell för H-0013
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov.
   - PR #72 mergad, kod verifierad syntetiskt och nu del av driftsatt worker dee88eb. Ingen full H-0013-forskningskörning är startad.
@@ -136,8 +136,8 @@ PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Pyt
   - Underlag: [docs/fas2-drift-granskning-74.md](fas2-drift-granskning-74.md) — Slutpaket dee88eb: Engine check grön, 651 788 byte och SHA256 62c7d8e482ef6a1755d670f74a7631c221469e61259a09b285f32627936c8575. Eget bygge byteidentiskt; 186 filer verifierar.
   - Underlag: [docs/fas2-driftutfall-granskning-76.md](fas2-driftutfall-granskning-76.md) — 2026-11-03: oberoende drift-/kontraktskontroller och privat export verifierade. Edwin redovisar DO veckobackup från 1 dag sedan och Supabase-backup 2026-11-03 06:47:12 UTC; skärmbild visar auth_enqueue=true, auth_result_ok=false, auth_finish=false.
   - Underlag: [docs/fas2-jamforelsekurvor-granskning-78.md](fas2-jamforelsekurvor-granskning-78.md) — 2026-11-03: slutpaket b44d3ce ombyggt och verifierat, SHA256 015c190c…23f0, 186 filer. Plan i PR #79 granskad på 8d85c10. Driftsatt kod kvar dee88eb enligt senaste driftunderlag; uppgraderingen är inte utförd här.
-  - Underlag: [docs/fas2-driftsattning-utfall-b44d3ce.md](fas2-driftsattning-utfall-b44d3ce.md) — 2026-11-03: workern uppgraderad från dee88eb till b44d3ce (paket SHA-256 015c190c…23f0, verifierat på servern) utan SQL-migration; ny verifierad export före ändringen; check-single-worker.sh godkänd (PID 30868, revision b44d3ce, 0 omstarter), databaskontraktet och anon-nekanden oförändrade, 0 H-0013-körningar, marknadsinsamling felfri på ny release. DigitalOcean-backupens exakta datum ej verifierat från servern. Ingen H-0013-körning, ingen Stable.
-  - Driftsättning godkänd inom dokumenterad avgränsning. Riktigt medlemstest, appens E2E och JWT-samtidighet är inte verifierade av grantkontrollen. Inget H-0013-jobb startat.
+  - Underlag: [docs/fas2-driftutfall-granskning-79.md](fas2-driftutfall-granskning-79.md) — 784d439: oberoende läsande driftkontroll godkänd. Servern kör b44d3ce, PID 30868/0 omstarter, tom kö och 0 H-0013. Marknadsinsamling lyckad, exporthash 203aba6f…f8b6 och 0600 verifierade.
+  - Driftsatt worker är nu b44d3ce med jämförelsekurvor. Driftredovisning PR #79 godkänd på 784d439. Exakt DO-backupdatum kvar som dokumenterad begränsning. Riktigt medlemstest, appflöde och installerad app återstår; inget H-0013-jobb startat.
 
 ## 7. Visa Fas 2 i Research Lab
 
@@ -156,7 +156,7 @@ PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Pyt
   - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — 677752f (kod a883094): Platt kapital och noll-drawdown nu visuellt verifierade i ljust/mörkt tema med ändlig SVG. Jämförelsekurvor saknas fortfarande i payload och uppgiften förblir öppen.
   - Underlag: [docs/fas2-jamforelsekurvor-granskning-78.md](fas2-jamforelsekurvor-granskning-78.md) — db9a4ec: kurvor implementerade och visuellt provade i ljus/mörk Chrome-vy. Ogiltiga tidsaxlar accepteras (P2); 1500-gränsen kan överskridas (P3). 105 frontendtester och bygge passerar.
   - Underlag: [docs/fas2-jamforelsekurvor-granskning-78.md](fas2-jamforelsekurvor-granskning-78.md) — 08a8966 (kod fec2e51): oberoende omgranskning godkänd. 553 Python-/118 frontendtester och bygge passerar; direkta skydd, tidsaxel, huvudkurvans värden, högst 1500 punkter och syntetisk motor–worker–läsarintegration verifierade.
-  - PR #78 kodmässigt godkänd på 08a8966 med grön CI. Bara syntetisk lokal verifiering. Driftsatt dee88eb saknar jämförelsekurvorna; riktigt appflöde och installerad app återstår i arbetsområde 8.
+  - PR #78 mergad som b44d3ce med granskad kod oförändrad. Workern b44d3ce är driftsatt och verifierad via PR #79. Resultatflödet är bara syntetiskt provat; riktig H-0013-körning och installerad app/Stable återstår i arbetsområde 8.
 - [x] **F2-705** Visa kriterier, osäkerhet, historik och REJECT/MORE_RESEARCH utan SIM som verkliga resultat
   - Underlag: [docs/fas2-research-lab-granskning-77.md](fas2-research-lab-granskning-77.md) — 677752f (kod a883094): Saknad/feltypad logg, ogiltiga rader, avvikande antal och faktiskt tom logg skiljs åt och redovisas. Tidigare egna felprov och DOM-regressioner passerar.
   - PR #77 mergad i de70580 med app-/motorkod oförändrad mot godkänd 677752f. PR #78:s nya kurvor granskas separat. Ingen riktig köning eller installerad app/publicering verifierad.
