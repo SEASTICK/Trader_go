@@ -57,3 +57,16 @@ Alla tre byggena kommer från main `72107eda7995a86ad990547faa10c3237c8d57a9`. A
 - Prisdiagrammet förblir mörkt i ljust tema (fanns före Fas 2).
 - Universe 0.1.23 publicerades i Stable-körningen trots rekommendation att stänga av det. Universe-koden är oförändrad.
 - Den driftsatta hypoteskatalogen speglar fortfarande registret i b44d3ce (null för H-0013), se överlämningen.
+
+## Codex oberoende slutgranskning, 2026-11-03
+
+Claude har dokumenterat releaseflödet ovan i c73d061. Codex har därefter kontrollerat GitHubs körningar, taggar, publicerat manifest och den installerade Stable-appen. Historiska GUI-steg för testuppdateringen och minisign-verifieringen är Claudes/Edwins redovisning; de kryptografiska minisign-proven upprepades inte i denna granskning.
+
+- GitHub visar lyckad Stable-körning 41683850552, inklusive Universe på båda plattformarna och godkännandet från Edwin i #83. Stable- och testtaggarna pekar på 72107eda7995a86ad990547faa10c3237c8d57a9. Testkörningarna lyckades och dubbelstarten är avbruten.
+- Den installerade `/Applications/TraderGO.app` var redan 0.1.23 när Codex började. Ingen ominstallation gjordes. Granskningskopian kördes inte. Bundle-id är `com.seastick.tradergo` och `codesign --verify --deep --strict` passerar.
+- Publicerad Mac-uppdatering har SHA-256 `64f153218200d7686929fb8a27401b84c415d079bdcc0d3b863dda5b38f4b80d`. Dess binär är byteidentisk med den installerade, SHA-256 `fd47ae0ede824a1fda7b33698cb94ea1e6c5c935a2d597ec519a719170e5c5e7`.
+- Efter Edwins inloggning visar verkliga Stable H-0013 ca59d441-3ab3-489b-b762-c368a6220834: klar, 100 %, försök 1 av 3, HISTORIK och REJECT. Alla fem krav faller, t är −1,8 mot 2,67, netto −10,86 % och kostnadsstress −13,01 %. Fem affärer, sex testfönster, kapital/drawdown, regimtabell och full spårbarhet stämmer med resultatgranskningen. Ingen ny köknapp erbjuds eftersom resultat redan finns.
+- Läsande serverkontroll 2026-11-03T17:41:29Z: exakt en worker b44d3ce/PID 30868, lås taget, tom aktiv kö och exakt ett H-0013-resultat. Ingen ny körning, migration eller serverändring utfördes.
+
+
+**Codex tekniska granskning är godkänd inom begränsningarna ovan. F2-804 är klar. F2-805 inväntar endast Edwins slutgodkännande av leveransen med dessa begränsningar.** Ett sådant godkännande innebär att forskningsverktyget är levererat; H-0013 förblir REJECT, slutprovet öppnas inte och inget godkänns för papper eller live.

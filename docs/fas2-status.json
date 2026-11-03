@@ -3,7 +3,7 @@
   "title": "Fas 2 – Adaptive Strategy Engine",
   "hypothesis": "H-0013",
   "updated": "2026-11-03",
-  "reviewed_revision": "9471e51",
+  "reviewed_revision": "72107ed",
   "note": "Klar betyder verifierad. Kod som bara finns lokalt eller tester utan granskning är inte slutgodkända.",
   "groups": [
     {
@@ -566,7 +566,7 @@
               "detail": "A2-rättning: auth-400 får egen svensk feltext utan ändring av köavvisningar. 123 frontendtester och appbygge passerar; motor/Rust/server oförändrade."
             }
           ],
-          "note": "A1 verifierad, A2 och A3 genomförda. Riktig H-0013-körning och Stable återstår."
+          "note": "A1/A2/A3 och riktig H-0013 verifierade. Stable 0.1.23 publicerad och installerad; teknisk slutgranskning godkänd."
         },
         {
           "id": "F2-802",
@@ -594,7 +594,7 @@
               "detail": "Riktig H-0013 ca59d441 genomförd efter uttryckligt ja, försök 1, 516 s, exakt ett resultat. Arkiv/data/revision spårbara, 200 permutationer/81 spelböcker, oberoende omräkning av kriterier och kurva PASS; alla fem krav faller → REJECT. Installerad app visar verkligt resultat, strict reader missing=[]; en worker och tom slot efteråt. Inget slutprov."
             }
           ],
-          "note": "Hela riktiga app–kö–worker–sparat H-0013-resultat verifierat och granskat. REJECT efter alla fem fallna krav; slutprovet oläst. Release och Fas 2-slutgodkännande återstår."
+          "note": "Hela riktiga app–kö–worker–sparat H-0013-resultat verifierat och granskat, även i Stable 0.1.23. REJECT; slutprovet oläst."
         },
         {
           "id": "F2-803",
@@ -630,7 +630,7 @@
               "detail": "A2 slutförd i 9471e51 (kod mergad som 915cf44): felaktig/riktig inloggning, riktig listläsning, manuellt nätfel/återhämtning med bevarad session och explicit utloggning verifierade. Teman kontrollerade, System återställt. Exakt nätlatens ej uppmätt; ingen installerad Windows-verifiering."
             }
           ],
-          "note": "A2 godkänd inom dokumenterad avgränsning. Appen lämnad utloggad. Känd mörk priskarta i ljust tema är oförändrad Stable-begränsning. Riktig köexekvering/H-0013 och Stable-publicering återstår."
+          "note": "A2 och installerad Stable 0.1.23 verifierade. Exakt nätlatens ej uppmätt. Inget manuellt Windowsprov; känd mörk priskarta i ljust tema kvarstår."
         },
         {
           "id": "F2-804",
@@ -644,6 +644,10 @@
             {
               "file": "docs/fas2-release-verifiering-20261103.md",
               "detail": "Edwin startade test 0.1.21 (41658461455) och 0.1.22 (41681950148) samt Stable 0.1.23 (41683850552) och skrev approve i #83. Alla på 72107ed; taggar, manifest, filhashar och minisign-signaturer verifierade. Testappen 0.1.21 kontrollerad (Fas 1, Marknad, Papper, H-0013 REJECT med kurvor, affärer och spårbarhet) och uppdaterad i appen till 0.1.22. Installerad Stable uppdaterad 0.1.20 → 0.1.23 i appen: Status v0.1.23 (72107ed) kanal Stable, Info.plist 0.1.23, codesign OK, H-0013-resultatet visas."
+            },
+            {
+              "file": "docs/fas2-release-verifiering-20261103.md",
+              "detail": "Codex oberoende slutgranskning: GitHub-release/tagg/manifest och installerad Stable 0.1.23 verifierade. Publicerad och installerad Mac-binär byteidentiska; codesign strict PASS. Inloggat H-0013-resultat REJECT med fem affärer och rätt spårbarhet. En worker, tom aktiv kö, ett H-0013-resultat. Ingen ny forskning eller åtkomst till slutprov."
             }
           ],
           "note": "Stable 0.1.23 publicerad efter Edwins ja och approve, verifierad installerad. Begränsningar: inget manuellt Windowsprov, Gatekeeper ej prövat, +ändrad-märkning i releasebyggen."
@@ -664,12 +668,16 @@
             {
               "file": "docs/fas2-release-verifiering-20261103.md",
               "detail": "Slutgodkännandeunderlag: H-0013 REJECT, inget slutprov, inget READY_FOR_PAPER, ingen paper/live. Leveransen släppt och verifierad i Stable 0.1.23. Begränsningar redovisade (Windows manuellt, driftlarm, Gatekeeper, +ändrad, ljust tema, Universe publicerad)."
+            },
+            {
+              "file": "docs/fas2-release-verifiering-20261103.md",
+              "detail": "Codex oberoende slutgranskning: GitHub-release/tagg/manifest och installerad Stable 0.1.23 verifierade. Publicerad och installerad Mac-binär byteidentiska; codesign strict PASS. Inloggat H-0013-resultat REJECT med fem affärer och rätt spårbarhet. En worker, tom aktiv kö, ett H-0013-resultat. Ingen ny forskning eller åtkomst till slutprov."
             }
           ],
-          "note": "Underlaget är dokumenterat. Bockas av först när Edwin har godkänt slutgodkännandet och Codex har granskat. Ingen paper/live-aktivering."
+          "note": "Codex tekniska slutgranskning godkänd. Endast Edwins slutgodkännande av leveransen med dokumenterade begränsningar återstår. Ingen paper/live-aktivering; H-0013 REJECT och inget slutprov."
         }
       ]
     }
   ],
-  "reviewed_scope": "A1/A2/A3 och riktig H-0013 verifierade. Avbrott av aktiv process provat i riktig kö; 1H-katalogens behörighetsfel rättat med uttryckligt ja. H-0013 ca59d441 genomförd efter separat godkännande, försök 1, 516 s, ett resultat. Oberoende omräkning bekräftar alla fem fallna krav och REJECT; appens strikta läsare rapporterar inga saknade delar. Slutprovet oläst. En worker b44d3ce, tom kö. H-0013 REJECT registrerat i 82bd03f efter granskning 5ce848e. Stable 0.1.23 från 72107ed publicerad efter Edwins ja och approve (#83), verifierad i installerad app tillsammans med testkanal 0.1.21 och uppdateringsprov till 0.1.22; F2-804 klar. F2-805 underlag dokumenterat, inväntar Edwins slutgodkännande och granskning."
+  "reviewed_scope": "A1/A2/A3 och riktig H-0013 verifierade. Avbrott av aktiv process provat i riktig kö; 1H-katalogens behörighetsfel rättat med uttryckligt ja. H-0013 ca59d441 genomförd efter separat godkännande, försök 1, 516 s, ett resultat. Oberoende omräkning bekräftar alla fem fallna krav och REJECT; appens strikta läsare rapporterar inga saknade delar. Slutprovet oläst. En worker b44d3ce, tom kö. H-0013 REJECT registrerat i 82bd03f efter granskning 5ce848e. Stable 0.1.23 från 72107ed publicerad efter Edwins ja och approve (#83), verifierad i installerad app tillsammans med testkanal 0.1.21 och uppdateringsprov till 0.1.22; F2-804 klar. F2-805 underlag dokumenterat, inväntar Edwins slutgodkännande och granskning. Codex oberoende slutgranskning av release, installerad Stable och befintligt H-0013-resultat godkänd. F2-805 inväntar endast Edwins slutgodkännande med redovisade begränsningar."
 }

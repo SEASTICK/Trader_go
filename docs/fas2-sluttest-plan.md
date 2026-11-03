@@ -1,6 +1,6 @@
 # Fas 2: sluttestplan för installerad Mac-app och inloggat flöde (arbetsområde 8)
 
-Skriven 2026-11-03. A1 och A2 är verifierade (se även docs/fas2-a2-utfall-20261103.md). A3:s utforskande appflöde och aktiva molnavbrott är verifierade (docs/fas2-a3-utfall-20261103.md). B är nu genomförd med REJECT enligt docs/fas2-h0013-granskning-20261103.md. A4 och C återstår. Den täcker F2-801 till F2-805 och skiljer på
+Skriven 2026-11-03. A1 och A2 är verifierade (se även docs/fas2-a2-utfall-20261103.md). A3:s utforskande appflöde och aktiva molnavbrott är verifierade (docs/fas2-a3-utfall-20261103.md). B är nu genomförd med REJECT enligt docs/fas2-h0013-granskning-20261103.md. A4 och den tekniska delen av C är verifierade i docs/fas2-release-verifiering-20261103.md. Endast Edwins samlade slutgodkännande återstår. Den täcker F2-801 till F2-805 och skiljer på
 kontroller som går att göra **utan** en riktig forskningskörning och kontroller som **kräver** den riktiga H-0013-körningen.
 Slutprovet (2025-01-01 och framåt) förblir oläst i hela planen. Ingen strategi aktiveras för papper eller live
 automatiskt (CLAUDE.md, regel 1 och 5).
