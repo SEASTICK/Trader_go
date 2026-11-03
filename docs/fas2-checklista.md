@@ -4,7 +4,7 @@
 
 H-0013 · Kontrollerad 2026-11-03 · Granskad kodversion `08a8966`.
 
-PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Python-/118 frontendtester och bygge passerar, CI grön. Egna slutprovs-/tidsaxel-/punktgränsprov samt syntetiskt motor–workerpaket–frontendläsarprov passerar. Kodmässigt godkänd för merge. Ingen riktig körning, driftsättning eller publicering. Slutpaket b44d3ce oberoende ombyggt med identisk SHA256 och 186 verifierade filer; PR #79-plan granskad på 8d85c10. Ingen ny driftsättning utförd. PR #79 driftutfall omgranskat på 784d439: serverns b44d3ce, en worker PID 30868/0 omstarter, tom kö, 0 H-0013, lyckad insamling och privat exporthash verifierade läsande. Driftredovisningen godkänd; app-/sluttest återstår.
+PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Python-/118 frontendtester och bygge passerar, CI grön. Egna slutprovs-/tidsaxel-/punktgränsprov samt syntetiskt motor–workerpaket–frontendläsarprov passerar. Kodmässigt godkänd för merge. Ingen riktig körning, driftsättning eller publicering. Slutpaket b44d3ce oberoende ombyggt med identisk SHA256 och 186 verifierade filer; PR #79-plan granskad på 8d85c10. Ingen ny driftsättning utförd. PR #79 driftutfall omgranskat på 784d439: serverns b44d3ce, en worker PID 30868/0 omstarter, tom kö, 0 H-0013, lyckad insamling och privat exporthash verifierade läsande. Driftredovisningen godkänd; app-/sluttest återstår. PR #80 granskad på 4e85f4e: Rust-klockrättning kodmässigt godkänd; fmt, clippy, 44+4 tester och 20 egna upprepningar passerar. Windows-CI pågår. F2-801 fortsatt in_progress; nytt Mac-bygge och installerat sluttest återstår.
 
 ## Uppdateringsregler
 
@@ -165,7 +165,9 @@ PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Pyt
 
 0/5 verifierade.
 
-- [ ] **F2-801** Kör relevanta Python-, frontend-, Rust- och databaskontroller
+- [ ] **F2-801** Kör relevanta Python-, frontend-, Rust- och databaskontroller **Pågår.**
+  - Underlag: [docs/fas2-sluttest-granskning-80.md](fas2-sluttest-granskning-80.md) — 4e85f4e (kod 144ab88): klockrättning oberoende godkänd. fmt, clippy, 44 Rust-enhetstester + 4 integrationstester och 20 egna upprepningar passerar; 1 nätverkstest ignorerat. App-/Rust-CI gröna, Windows pågår. Övrig app-/motorkod oförändrad.
+  - Rust-felet rättat och granskat. Samlat A1-underlag och återstående Windows-CI behöver slutföras före avbockning. Mac-paketet från a32f4ab ska byggas om från rättad granskad kod.
 - [ ] **F2-802** Verifiera hela flödet från app till worker och sparat H-0013-resultat
 - [ ] **F2-803** Kontrollera Mac, anslutningsfel och att befintliga Fas 1-funktioner fungerar
 - [ ] **F2-804** Publicera granskad Stable och verifiera installerad kodversion samt uppdaterad checklista
