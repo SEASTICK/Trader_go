@@ -167,7 +167,8 @@ PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Pyt
 
 - [ ] **F2-801** Kör relevanta Python-, frontend-, Rust- och databaskontroller **Pågår.**
   - Underlag: [docs/fas2-sluttest-plan.md](fas2-sluttest-plan.md) — 2026-11-03 på a32f4ab (lokalt): motor 553, app 118 + bygge, Universe, PGlite-kötester och lokal PostgreSQL 17-samtidighet passerar. Appens Rust: fmt och clippy passerar, men testet market::runner::tests::reconnects_after_a_drop_catches_up_and_stops_cleanly faller deterministiskt eftersom fixturen T0 (2026-11-01 08:00 UTC) har passerats av den verkliga klockan; befintlig marknadskod, inte Fas 2. Ej godkänt förrän testet rättats.
-  - Sluttestplan och första körning av A1; ett tidsberoende Rust-test måste rättas före godkännande.
+  - Underlag: [app/src-tauri/src/market/runner.rs](../app/src-tauri/src/market/runner.rs) — 144ab88 (PR #80): Runner läser väggklockan via en injicerad Clock (alltid now_ms i appen, with_clock bara i tester); testet reconnects_after_a_drop_catches_up_and_stops_cleanly styrs av en fast testklocka (under stapel 4, sedan efter stapel 5) med alla ursprungliga kontroller och oförändrade tidsgränser. 10 + 50 upprepade körningar passerar; samma test faller med väggklockan eller en senare klocka (bevis för att det inte läser dagens datum). cargo fmt --check, clippy -D warnings och hela Rust-sviten (44 + 4, 1 ignorerat nätverkstest) passerar tre gånger i rad.
+  - Rust-testet rättat i 144ab88; väntar på Codex granskning. Övriga A1-kontroller passerade 2026-11-03.
 - [ ] **F2-802** Verifiera hela flödet från app till worker och sparat H-0013-resultat
 - [ ] **F2-803** Kontrollera Mac, anslutningsfel och att befintliga Fas 1-funktioner fungerar
 - [ ] **F2-804** Publicera granskad Stable och verifiera installerad kodversion samt uppdaterad checklista

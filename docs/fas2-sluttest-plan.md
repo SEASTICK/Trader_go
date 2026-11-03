@@ -48,8 +48,15 @@ eller Stable-release efter beslut.
 Rust-felet ligger i marknadsinsamlingens befintliga test (`app/src-tauri/src/market/runner.rs`, senast ändrad
 2026-11-01) och inte i Fas 2-koden. Testets fixtur `T0` är låst till 2026-11-01 08:00 UTC (`sync.rs`), medan
 insamlingen räknar luckor mot den verkliga klockan (`now_ms()`). När klockan har passerat fixturens staplar blir
-utfallet 4 stängda staplar i stället för 6. Testet behöver en injicerad klocka eller tider relativa till nu. **F2-801
-kan inte godkännas förrän det är rättat** (egen uppgift).
+utfallet 4 stängda staplar i stället för 6.
+
+**Rättat i PR #80:**
+- `Runner` läser väggklockan via en injicerad `Clock`. Den är alltid `now_ms` i appen, och `with_clock` finns bara i
+  tester.
+- Testet styrs av en fast testklocka, med alla ursprungliga kontroller kvar och oförändrade tidsgränser.
+- 60 upprepade körningar passerar. Med väggklockan, eller med en senare klocka, faller testet igen.
+- `fmt`, `clippy` och hela Rust-sviten (44 + 4 tester, 1 ignorerat nätverkstest) passerar.
+- Väntar på granskning.
 
 ### A2. Installerad Mac-app med granskningsbygget (F2-803, delvis F2-802)
 
