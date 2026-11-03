@@ -19,3 +19,9 @@ Läs `CLAUDE.md` och relevanta projektinstruktioner före ändringar.
 - Regenerera med `python3 scripts/render-fas3-checklist.py` och kontrollera med `--check`. Chatvyn är en ögonblicksbild.
 - Skilj tekniska SIM-prov från fryst framåttest. Pilot kräver READY_FOR_PAPER, fryst strategi och dokumenterat startbeslut; H-0013 förblir REJECT.
 - Skilj implementation, driftsättning, pågående observationsperiod och slutgodkännande. Ingen automatisk liveövergång.
+
+## H-0016
+
+- Följ docs/h0016-status.json och docs/h0016-checklista.md efter relevanta ändringar eller verifieringar; bocka bara av granskat och verifierat arbete med underlag.
+- Regenerera med `python3 scripts/render-h0016-checklist.py` och kontrollera med `--check`. Chatvyn är en ögonblicksbild.
+- Förregistrerade regler i research/h0016-protokoll.md ändras inte för att rädda ett resultat. Skilj dokumenterat kontrakt från implementation, körning och resultat. H-0013 förblir REJECT.

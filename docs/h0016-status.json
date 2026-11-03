@@ -1,0 +1,384 @@
+{
+  "schema_version": 1,
+  "title": "H-0016 – Fast squeeze med riskgränser",
+  "hypothesis": "H-0016",
+  "updated": "2026-11-03",
+  "reviewed_revision": "e65012e",
+  "note": "Målet är positivt netto och högst 20 % uppmätt drawdown, inte ett löfte. Inget nytt backtest har körts.",
+  "reviewed_scope": "Protokoll och registrering committade i e65012e före implementation. Förberedelserna nedan är verifierade som dokumenterade; signaler, risklager, körning och resultat är ännu inte verifierade. H-0013 förblir REJECT. Slutprovet är oläst och ingen paper/live-aktivering ingår.",
+  "groups": [
+    {
+      "id": "registration",
+      "title": "1. Förregistrering och mål",
+      "tasks": [
+        {
+          "id": "H16-101",
+          "title": "Registrera H-0016 och committa protokollet före implementation och körning",
+          "status": "done",
+          "evidence": [
+            {
+              "file": "research/h0016-protokoll.md",
+              "detail": "Förregistrerat i e65012e; endast dokumenterat kontrakt godkänt, inte implementerat beteende."
+            },
+            {
+              "file": "docs/strategiforskning-20261103.md",
+              "detail": "Registrering verifierad av motorn: N=16, inget resultatbeslut; äldre REJECT bevarade."
+            }
+          ],
+          "note": ""
+        },
+        {
+          "id": "H16-102",
+          "title": "Lås BTCUSDT 4H, utvecklingsperiod 2020–2024 och skyddat slutprov från 2025",
+          "status": "done",
+          "evidence": [
+            {
+              "file": "research/h0016-protokoll.md",
+              "detail": "Förregistrerat i e65012e; endast dokumenterat kontrakt godkänt, inte implementerat beteende."
+            },
+            {
+              "file": "docs/strategiforskning-20261103.md",
+              "detail": "Registrering verifierad av motorn: N=16, inget resultatbeslut; äldre REJECT bevarade."
+            }
+          ],
+          "note": ""
+        },
+        {
+          "id": "H16-103",
+          "title": "Lås squeeze-standardparametrar, long/platt och förbud mot optimering",
+          "status": "done",
+          "evidence": [
+            {
+              "file": "research/h0016-protokoll.md",
+              "detail": "Förregistrerat i e65012e; endast dokumenterat kontrakt godkänt, inte implementerat beteende."
+            },
+            {
+              "file": "docs/strategiforskning-20261103.md",
+              "detail": "Registrering verifierad av motorn: N=16, inget resultatbeslut; äldre REJECT bevarade."
+            }
+          ],
+          "note": ""
+        },
+        {
+          "id": "H16-104",
+          "title": "Dokumentera riskbudget 0,5 %, dagsstopp 2 %, permanent stopp 15 % och drawdown-mål 20 %",
+          "status": "done",
+          "evidence": [
+            {
+              "file": "research/h0016-protokoll.md",
+              "detail": "Förregistrerat i e65012e; endast dokumenterat kontrakt godkänt, inte implementerat beteende."
+            },
+            {
+              "file": "docs/strategiforskning-20261103.md",
+              "detail": "Registrering verifierad av motorn: N=16, inget resultatbeslut; äldre REJECT bevarade."
+            }
+          ],
+          "note": ""
+        },
+        {
+          "id": "H16-105",
+          "title": "Lås kostnader, jämförelser och de sex beslutskriterierna, inklusive t ≥ 2,7343687865331763",
+          "status": "done",
+          "evidence": [
+            {
+              "file": "research/h0016-protokoll.md",
+              "detail": "Förregistrerat i e65012e; endast dokumenterat kontrakt godkänt, inte implementerat beteende."
+            },
+            {
+              "file": "docs/strategiforskning-20261103.md",
+              "detail": "Registrering verifierad av motorn: N=16, inget resultatbeslut; äldre REJECT bevarade."
+            }
+          ],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "data",
+      "title": "2. Data och skydd",
+      "tasks": [
+        {
+          "id": "H16-201",
+          "title": "Verifiera att arkivnamn, SHA-256 och CHECKSUM motsvarar det frysta datasetet",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-202",
+          "title": "Kontrollera OHLC, UTC, 4H-rutnät, ordning, dubbletter och luckor",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-203",
+          "title": "Verifiera fundingserien och kontrollsumman för inlästa data",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-204",
+          "title": "Avvisa data från 2025 innan filer öppnas eller beräkningar börjar",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-205",
+          "title": "Skilj uppvärmning 2020–2021 från den sammanhängande testperioden 2022–2024",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "signals",
+      "title": "3. Implementera signalerna",
+      "tasks": [
+        {
+          "id": "H16-301",
+          "title": "Återanvänd squeeze_breakout 1.0.0 med de låsta standardparametrarna",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-302",
+          "title": "Tillåt endast long eller platt och avvisa short, ML och parameteroptimering",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-303",
+          "title": "Kräv en ny squeeze-release efter utgång, stop eller dagspaus",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-304",
+          "title": "Verifiera beslut vid stängning, fyllning vid nästa öppning och fast ATR-stop",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-305",
+          "title": "Testa uppvärmning, signalbyten och framtidsläckage med syntetiska data",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "risk",
+      "title": "4. Implementera risklagret",
+      "tasks": [
+        {
+          "id": "H16-401",
+          "title": "Beräkna positionsstorlek från 0,5 % riskbudget inklusive kostnader för in- och utträde",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-402",
+          "title": "Begränsa till en position, högst 1× exponering vid inträde och två inträden per UTC-dygn",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-403",
+          "title": "Implementera dagsstopp vid 2 % nettoförlust och krav på ny signal efter pausen",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-404",
+          "title": "Implementera permanent stopp vid 15 % nettodrawdown utan reset mellan halvår",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-405",
+          "title": "Testa riskgränser mot verkligt simulerat nettokapital, gap och ogiltiga indata",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "accounting",
+      "title": "5. Backtest och redovisning",
+      "tasks": [
+        {
+          "id": "H16-501",
+          "title": "Behåll fast positionsstorlek under affären utan dold ombalansering",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-502",
+          "title": "Verifiera avgifter, spread, slippage, funding och gap för varje affär",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-503",
+          "title": "Bygg en sammanhängande kurva med startkapital 100 000 och utan framtida slutstapel",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-504",
+          "title": "Beräkna konservativ intrastapel-drawdown samt drawdown vid stapelstängning",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-505",
+          "title": "Stäm av affärslogg, nettokapital, kostnader, funding och eventuella likvidationer",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "evaluation",
+      "title": "6. Jämförelser och stresstester",
+      "tasks": [
+        {
+          "id": "H16-601",
+          "title": "Implementera köp-och-behåll och fast squeeze utan nytt risklager på exakt samma staplar",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-602",
+          "title": "Kör 2,5× kostnadsstress med omräknade positioner och riskstopp",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-603",
+          "title": "Implementera separat fundingstress enligt protokollet",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-604",
+          "title": "Beräkna netto, t-värde, osäkerhet, drawdown och resultat per år och halvår",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-605",
+          "title": "Testa alla sex beslutskriterier och avvisa ofullständiga eller icke ändliga resultat",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "execution",
+      "title": "7. Granskning och registrerad körning",
+      "tasks": [
+        {
+          "id": "H16-701",
+          "title": "Granska kod och protokolltolkningar före riktig historik; registrera nya regler som nytt id",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-702",
+          "title": "Kör relevanta automatiska tester och verifiera identiska resultat vid återspelning",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-703",
+          "title": "Förbered separat H-0016-körväg, versionsmärkt paket och verifierade data",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-704",
+          "title": "Genomför den registrerade historiska körningen med låsta jämförelser och stresser",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-705",
+          "title": "Spara resultat och avbrutna försök med kodrevision, datahash och körnings-id",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "decision",
+      "title": "8. Resultatgranskning och nästa beslut",
+      "tasks": [
+        {
+          "id": "H16-801",
+          "title": "Räkna oberoende om netto, kostnader och de sex kriterierna från sparat resultat",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-802",
+          "title": "Granska affärer, riskstopp, intrastapel-risk och terminsmodellens begränsningar",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-803",
+          "title": "Registrera REJECT eller MORE_RESEARCH på ny registerrad utan att ändra gamla beslut",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-804",
+          "title": "Dokumentera separat slutprovsbeslut vid MORE_RESEARCH; öppna inget vid REJECT",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "H16-805",
+          "title": "Överlämna nästa steg till Fas 3 först efter READY_FOR_PAPER, annars dokumentera fortsatt forskning",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    }
+  ]
+}
