@@ -167,37 +167,102 @@
         {
           "id": "MOM-B01",
           "title": "Implementera fasta momentumsignaler för 7, 14 och 28 kompletta UTC-dagar",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "engine/traderlab/momentum_signal.py",
+              "detail": "mom-signal/1.0.0: ren funktion av stängda 4H-staplar, endast close läses; uttrycklig otillgänglighet med orsak."
+            },
+            {
+              "file": "engine/tests/test_momentum_signal.py",
+              "detail": "32 syntetiska tester godkända; 14 riktade felprov fångade (docs/momentum-signal-B.md). Horisonter i kalenderdagar, lika pris ger 0, handräknade s = 0, 1/3, 2/3, 1."
+            },
+            {
+              "file": "docs/momentum-signal-B.md",
+              "detail": "API, tidsregler, otillgänglighet, verifiering och begränsningar för leverans B."
+            }
+          ],
+          "note": "Implementerad på claude/momentum-b; väntar på Codex granskning av exakt revision. Leverans C börjar inte före godkännande."
         },
         {
           "id": "MOM-B02",
           "title": "Implementera 60 dagsavkastningar, ddof=1 och annualisering sqrt(365)",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "engine/traderlab/momentum_signal.py",
+              "detail": "mom-signal/1.0.0: ren funktion av stängda 4H-staplar, endast close läses; uttrycklig otillgänglighet med orsak."
+            },
+            {
+              "file": "engine/tests/test_momentum_signal.py",
+              "detail": "32 syntetiska tester godkända; 14 riktade felprov fångade (docs/momentum-signal-B.md). 60 enkla avkastningar/61 stängningar, ddof=1, sqrt(365); avgränsat mot ddof=0, 59/61, log, prisstd, sqrt(252)."
+            },
+            {
+              "file": "docs/momentum-signal-B.md",
+              "detail": "API, tidsregler, otillgänglighet, verifiering och begränsningar för leverans B."
+            }
+          ],
+          "note": "Implementerad på claude/momentum-b; väntar på Codex granskning av exakt revision. Leverans C börjar inte före godkännande."
         },
         {
           "id": "MOM-B03",
           "title": "Versionera lika vikt, 10 % målrisk och beteende vid otillräcklig eller ogiltig data",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "engine/traderlab/momentum_signal.py",
+              "detail": "mom-signal/1.0.0: ren funktion av stängda 4H-staplar, endast close läses; uttrycklig otillgänglighet med orsak."
+            },
+            {
+              "file": "engine/tests/test_momentum_signal.py",
+              "detail": "32 syntetiska tester godkända; 14 riktade felprov fångade (docs/momentum-signal-B.md). VERSION mom-signal/1.0.0, lika vikt, 10 % målrisk, cap och w_target; warmup, incomplete_day, missing_day, invalid_vol."
+            },
+            {
+              "file": "docs/momentum-signal-B.md",
+              "detail": "API, tidsregler, otillgänglighet, verifiering och begränsningar för leverans B."
+            }
+          ],
+          "note": "Implementerad på claude/momentum-b; väntar på Codex granskning av exakt revision. Leverans C börjar inte före godkännande."
         },
         {
           "id": "MOM-B04",
           "title": "Verifiera dagsstängning, första beslut och nästa öppning med syntetiska gränsfall",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "engine/traderlab/momentum_signal.py",
+              "detail": "mom-signal/1.0.0: ren funktion av stängda 4H-staplar, endast close läses; uttrycklig otillgänglighet med orsak."
+            },
+            {
+              "file": "engine/tests/test_momentum_signal.py",
+              "detail": "32 syntetiska tester godkända; 14 riktade felprov fångade (docs/momentum-signal-B.md). decision_time = earliest_fill = D+1 00:00, bara 20-stapelns close, pågående sista dag, latest_decision vid D 20:00 ger D−1."
+            },
+            {
+              "file": "docs/momentum-signal-B.md",
+              "detail": "API, tidsregler, otillgänglighet, verifiering och begränsningar för leverans B."
+            }
+          ],
+          "note": "Implementerad på claude/momentum-b; väntar på Codex granskning av exakt revision. Leverans C börjar inte före godkännande."
         },
         {
           "id": "MOM-B05",
           "title": "Granska prefix-/framtidsprov och godkänn exakt signalrevision",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "engine/traderlab/momentum_signal.py",
+              "detail": "mom-signal/1.0.0: ren funktion av stängda 4H-staplar, endast close läses; uttrycklig otillgänglighet med orsak."
+            },
+            {
+              "file": "engine/tests/test_momentum_signal.py",
+              "detail": "32 syntetiska tester godkända; 14 riktade felprov fångade (docs/momentum-signal-B.md). Prefixprov vid hel- och halvdag, ändrade framtida priser och open/high/low ändrar inga kända beslut."
+            },
+            {
+              "file": "docs/momentum-signal-B.md",
+              "detail": "API, tidsregler, otillgänglighet, verifiering och begränsningar för leverans B."
+            }
+          ],
+          "note": "Implementerad på claude/momentum-b; väntar på Codex granskning av exakt revision. Leverans C börjar inte före godkännande."
         }
       ]
     },
