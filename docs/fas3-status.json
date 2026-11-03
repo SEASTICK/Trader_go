@@ -104,6 +104,10 @@
             {
               "file": "docs/momentum-C1-granskning-6f43505.md",
               "detail": "H-0017:s syntetiska ledgergrund C1 godkänd på 6f43505. Funding, marginal, risklager, verklig data och ekonomiska resultat återstår; inget pilotgodkännande."
+            },
+            {
+              "file": "docs/momentum-C2-granskning-1d9359f.md",
+              "detail": "H-0017:s C2-funding granskad på 1d9359f med syntetiska tal. Ledger kompletterad och omverifierad; funding-API har två kvarstående valideringsfynd. Ingen ekonomisk utvärdering eller pilot godkänd."
             }
           ],
           "note": "H-0017 är separat förregistrerad och metodgranskad. Implementation och historisk utvärdering återstår. H-0013 REJECT och H-0016 oförändrade; ingen kandidat har READY_FOR_PAPER."

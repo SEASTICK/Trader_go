@@ -1,0 +1,39 @@
+{
+  "reviewed_revision": "1d9359fe71259a9099ac7443993a48dfa8c1423f",
+  "synthetic_only": true,
+  "source_sha256": {
+    "ledger": "717b5d39cac8d03663a39d060968da753c7d16e948bdf5166f7cf32a27a83655",
+    "funding": "555b44fc3a33363ad2cfc84e8b8fccca4a7513f4533f62ebb9a128fa91fabace"
+  },
+  "decimal_funding_stress_cases": 400,
+  "previous_C1_decimal_cases": 250,
+  "correct_state_duplicate_rejection_verified": true,
+  "C2_01_phase_time_mismatch_accepted": [
+    {
+      "time": "2022-01-01T00:00:30+00:00",
+      "accepted_phase": "funding_A",
+      "payment": 5.0
+    },
+    {
+      "time": "2022-01-01T00:00:30+00:00",
+      "accepted_phase": "funding_B",
+      "payment": 5.0
+    },
+    {
+      "time": "2022-01-01T00:00:00+00:00",
+      "accepted_phase": "funding_interior",
+      "payment": 5.0
+    }
+  ],
+  "C2_02_malformed_state": {
+    "string_input": "f1",
+    "normalized": [
+      "1",
+      "f"
+    ],
+    "cash_after_one": 49995.0,
+    "cash_after_duplicate": 49990.0,
+    "funding_net_after_duplicate": 10.0
+  },
+  "invalid_price_source_error": "TypeError"
+}
