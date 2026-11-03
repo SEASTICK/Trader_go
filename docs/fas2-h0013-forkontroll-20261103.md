@@ -36,3 +36,7 @@ Efter förkontrollen gav Edwin uttryckligt ja till den registrerade H-0013-körn
 - Appen visar I kö och därefter Körs, först 0 procent och senare 66 procent. Ingen avbrytåtgärd används för denna forskningskörning.
 - En worker verifierad på PID 30868/b44d3ce; beräkningsprocess 35360 observerad med ungefär 91 MB RSS. Detta är enstaka stickprov, inte en uppmätt resurstopp.
 - Körningen pågår. Resultat, beslut och F2-802 godkänns inte före slutförd oberoende resultatkontroll.
+
+## Slutförd körning
+
+H-0013 blev klar 14:35:05 UTC, försök 1, med ett sparat REJECT-resultat. Se [resultatgranskningen](fas2-h0013-granskning-20261103.md). Slutprovet förblir oläst.

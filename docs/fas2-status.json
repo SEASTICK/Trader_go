@@ -294,9 +294,13 @@
             {
               "file": "docs/fas2-jamforelsekurvor-granskning-78.md",
               "detail": "08a8966 (kod fec2e51): oberoende omgranskning godkänd. 553 Python-/118 frontendtester och bygge passerar; direkta skydd, tidsaxel, huvudkurvans värden, högst 1500 punkter och syntetisk motor–worker–läsarintegration verifierade."
+            },
+            {
+              "file": "docs/fas2-h0013-granskning-20261103.md",
+              "detail": "Riktig H-0013 ca59d441 genomförd efter uttryckligt ja, försök 1, 516 s, exakt ett resultat. Arkiv/data/revision spårbara, 200 permutationer/81 spelböcker, oberoende omräkning av kriterier och kurva PASS; alla fem krav faller → REJECT. Installerad app visar verkligt resultat, strict reader missing=[]; en worker och tom slot efteråt. Inget slutprov."
             }
           ],
-          "note": "PR #78 mergad som b44d3ce med granskad kod oförändrad. Workern b44d3ce är driftsatt och verifierad via PR #79. Resultatflödet är bara syntetiskt provat; riktig H-0013-körning och installerad app/Stable återstår i arbetsområde 8."
+          "note": "Tidigare kodkontroller kompletterade med riktig H-0013-körning på b44d3ce och installerad app 9471e51. REJECT, inget slutprov eller paper/live. Avgränsningar finns i resultatgranskningen."
         },
         {
           "id": "F2-502",
@@ -306,9 +310,13 @@
             {
               "file": "docs/fas2-utvardering-granskning-72.md",
               "detail": "a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov."
+            },
+            {
+              "file": "docs/fas2-h0013-granskning-20261103.md",
+              "detail": "Riktig H-0013 ca59d441 genomförd efter uttryckligt ja, försök 1, 516 s, exakt ett resultat. Arkiv/data/revision spårbara, 200 permutationer/81 spelböcker, oberoende omräkning av kriterier och kurva PASS; alla fem krav faller → REJECT. Installerad app visar verkligt resultat, strict reader missing=[]; en worker och tom slot efteråt. Inget slutprov."
             }
           ],
-          "note": "PR #72 mergad, kod verifierad syntetiskt och nu del av driftsatt worker dee88eb. Ingen full H-0013-forskningskörning är startad."
+          "note": "Tidigare kodkontroller kompletterade med riktig H-0013-körning på b44d3ce och installerad app 9471e51. REJECT, inget slutprov eller paper/live. Avgränsningar finns i resultatgranskningen."
         },
         {
           "id": "F2-503",
@@ -318,9 +326,13 @@
             {
               "file": "docs/fas2-utvardering-granskning-72.md",
               "detail": "a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov."
+            },
+            {
+              "file": "docs/fas2-h0013-granskning-20261103.md",
+              "detail": "Riktig H-0013 ca59d441 genomförd efter uttryckligt ja, försök 1, 516 s, exakt ett resultat. Arkiv/data/revision spårbara, 200 permutationer/81 spelböcker, oberoende omräkning av kriterier och kurva PASS; alla fem krav faller → REJECT. Installerad app visar verkligt resultat, strict reader missing=[]; en worker och tom slot efteråt. Inget slutprov."
             }
           ],
-          "note": "PR #72 mergad, kod verifierad syntetiskt och nu del av driftsatt worker dee88eb. Ingen full H-0013-forskningskörning är startad."
+          "note": "Tidigare kodkontroller kompletterade med riktig H-0013-körning på b44d3ce och installerad app 9471e51. REJECT, inget slutprov eller paper/live. Avgränsningar finns i resultatgranskningen."
         },
         {
           "id": "F2-504",
@@ -330,9 +342,13 @@
             {
               "file": "docs/fas2-utvardering-granskning-72.md",
               "detail": "a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov."
+            },
+            {
+              "file": "docs/fas2-h0013-granskning-20261103.md",
+              "detail": "Riktig H-0013 ca59d441 genomförd efter uttryckligt ja, försök 1, 516 s, exakt ett resultat. Arkiv/data/revision spårbara, 200 permutationer/81 spelböcker, oberoende omräkning av kriterier och kurva PASS; alla fem krav faller → REJECT. Installerad app visar verkligt resultat, strict reader missing=[]; en worker och tom slot efteråt. Inget slutprov."
             }
           ],
-          "note": "PR #72 mergad, kod verifierad syntetiskt och nu del av driftsatt worker dee88eb. Ingen full H-0013-forskningskörning är startad."
+          "note": "Tidigare kodkontroller kompletterade med riktig H-0013-körning på b44d3ce och installerad app 9471e51. REJECT, inget slutprov eller paper/live. Avgränsningar finns i resultatgranskningen."
         },
         {
           "id": "F2-505",
@@ -342,9 +358,13 @@
             {
               "file": "docs/fas2-utvardering-granskning-72.md",
               "detail": "a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov."
+            },
+            {
+              "file": "docs/fas2-h0013-granskning-20261103.md",
+              "detail": "Riktig H-0013 ca59d441 genomförd efter uttryckligt ja, försök 1, 516 s, exakt ett resultat. Arkiv/data/revision spårbara, 200 permutationer/81 spelböcker, oberoende omräkning av kriterier och kurva PASS; alla fem krav faller → REJECT. Installerad app visar verkligt resultat, strict reader missing=[]; en worker och tom slot efteråt. Inget slutprov."
             }
           ],
-          "note": "PR #72 mergad, kod verifierad syntetiskt och nu del av driftsatt worker dee88eb. Ingen full H-0013-forskningskörning är startad."
+          "note": "Tidigare kodkontroller kompletterade med riktig H-0013-körning på b44d3ce och installerad app 9471e51. REJECT, inget slutprov eller paper/live. Avgränsningar finns i resultatgranskningen."
         }
       ]
     },
@@ -384,9 +404,13 @@
             {
               "file": "docs/fas2-ko-granskning-73.md",
               "detail": "a852aa3 (kod cd9701d): Exakta manifestnamn före arkivläsning, SHA256 och CHECKSUM samt stapel-/fundinghash verifierade på syntetiska 120 arkiv; 2019/2025 öppnas inte."
+            },
+            {
+              "file": "docs/fas2-h0013-granskning-20261103.md",
+              "detail": "Riktig H-0013 ca59d441 genomförd efter uttryckligt ja, försök 1, 516 s, exakt ett resultat. Arkiv/data/revision spårbara, 200 permutationer/81 spelböcker, oberoende omräkning av kriterier och kurva PASS; alla fem krav faller → REJECT. Installerad app visar verkligt resultat, strict reader missing=[]; en worker och tom slot efteråt. Inget slutprov."
             }
           ],
-          "note": "Arkivkontrollen är oförändrad i 2160c6e och fortsatt verifierad på syntetiska arkiv. PR #73 kodmässigt godkänd på 445178d; ingen riktig datakörning eller driftsättning."
+          "note": "Tidigare kodkontroller kompletterade med riktig H-0013-körning på b44d3ce och installerad app 9471e51. REJECT, inget slutprov eller paper/live. Avgränsningar finns i resultatgranskningen."
         },
         {
           "id": "F2-604",
@@ -494,9 +518,13 @@
             {
               "file": "docs/fas2-jamforelsekurvor-granskning-78.md",
               "detail": "08a8966 (kod fec2e51): oberoende omgranskning godkänd. 553 Python-/118 frontendtester och bygge passerar; direkta skydd, tidsaxel, huvudkurvans värden, högst 1500 punkter och syntetisk motor–worker–läsarintegration verifierade."
+            },
+            {
+              "file": "docs/fas2-h0013-granskning-20261103.md",
+              "detail": "Riktig H-0013 ca59d441 genomförd efter uttryckligt ja, försök 1, 516 s, exakt ett resultat. Arkiv/data/revision spårbara, 200 permutationer/81 spelböcker, oberoende omräkning av kriterier och kurva PASS; alla fem krav faller → REJECT. Installerad app visar verkligt resultat, strict reader missing=[]; en worker och tom slot efteråt. Inget slutprov."
             }
           ],
-          "note": "PR #78 mergad som b44d3ce med granskad kod oförändrad. Workern b44d3ce är driftsatt och verifierad via PR #79. Resultatflödet är bara syntetiskt provat; riktig H-0013-körning och installerad app/Stable återstår i arbetsområde 8."
+          "note": "Tidigare kodkontroller kompletterade med riktig H-0013-körning på b44d3ce och installerad app 9471e51. REJECT, inget slutprov eller paper/live. Avgränsningar finns i resultatgranskningen."
         },
         {
           "id": "F2-705",
@@ -506,9 +534,13 @@
             {
               "file": "docs/fas2-research-lab-granskning-77.md",
               "detail": "677752f (kod a883094): Saknad/feltypad logg, ogiltiga rader, avvikande antal och faktiskt tom logg skiljs åt och redovisas. Tidigare egna felprov och DOM-regressioner passerar."
+            },
+            {
+              "file": "docs/fas2-h0013-granskning-20261103.md",
+              "detail": "Riktig H-0013 ca59d441 genomförd efter uttryckligt ja, försök 1, 516 s, exakt ett resultat. Arkiv/data/revision spårbara, 200 permutationer/81 spelböcker, oberoende omräkning av kriterier och kurva PASS; alla fem krav faller → REJECT. Installerad app visar verkligt resultat, strict reader missing=[]; en worker och tom slot efteråt. Inget slutprov."
             }
           ],
-          "note": "PR #77 mergad i de70580 med app-/motorkod oförändrad mot godkänd 677752f. PR #78:s nya kurvor granskas separat. Ingen riktig köning eller installerad app/publicering verifierad."
+          "note": "Tidigare kodkontroller kompletterade med riktig H-0013-körning på b44d3ce och installerad app 9471e51. REJECT, inget slutprov eller paper/live. Avgränsningar finns i resultatgranskningen."
         }
       ]
     },
@@ -539,7 +571,7 @@
         {
           "id": "F2-802",
           "title": "Verifiera hela flödet från app till worker och sparat H-0013-resultat",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-a3-utfall-20261103.md",
@@ -556,9 +588,13 @@
             {
               "file": "docs/fas2-h0013-forkontroll-20261103.md",
               "detail": "Läsande förkontroll som tradergo: 120 frysta utvecklingsarkiv verifierar namn/SHA/CHECKSUM. Ingen träning eller utvärdering. Appens förberedelsekort öppnat med obekräftad ruta; H-0013-köning kräver separat beslut."
+            },
+            {
+              "file": "docs/fas2-h0013-granskning-20261103.md",
+              "detail": "Riktig H-0013 ca59d441 genomförd efter uttryckligt ja, försök 1, 516 s, exakt ett resultat. Arkiv/data/revision spårbara, 200 permutationer/81 spelböcker, oberoende omräkning av kriterier och kurva PASS; alla fem krav faller → REJECT. Installerad app visar verkligt resultat, strict reader missing=[]; en worker och tom slot efteråt. Inget slutprov."
             }
           ],
-          "note": "A3 verifierad inklusive aktivt avbrott utan resultat. Edwin har därefter godkänt riktig H-0013; ca59d441 köad en gång från installerad app och pågår som försök 1 av 3. F2-802 förblir in_progress tills sparat resultat och appvisning är granskade."
+          "note": "Hela riktiga app–kö–worker–sparat H-0013-resultat verifierat och granskat. REJECT efter alla fem fallna krav; slutprovet oläst. Release och Fas 2-slutgodkännande återstår."
         },
         {
           "id": "F2-803",
@@ -606,12 +642,17 @@
         {
           "id": "F2-805",
           "title": "Dokumentera Fas 2-godkännande och fatta separat beslut om eventuellt slutprov; ingen automatisk paper- eller liveaktivering",
-          "status": "todo",
-          "evidence": [],
-          "note": ""
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "docs/fas2-h0013-granskning-20261103.md",
+              "detail": "Riktig H-0013 ca59d441 genomförd efter uttryckligt ja, försök 1, 516 s, exakt ett resultat. Arkiv/data/revision spårbara, 200 permutationer/81 spelböcker, oberoende omräkning av kriterier och kurva PASS; alla fem krav faller → REJECT. Installerad app visar verkligt resultat, strict reader missing=[]; en worker och tom slot efteråt. Inget slutprov."
+            }
+          ],
+          "note": "Forskningsbeslutet är REJECT enligt förregistrerade kriterier; H-0013 går inte vidare till slutprov. Samlat Fas 2-godkännande inväntar release och verifierad installerad Stable. Ingen paper/live-aktivering."
         }
       ]
     }
   ],
-  "reviewed_scope": "A1, A2 och A3 verifierade inom dokumenterade avgränsningar. Installerad Mac 9471e51 (kod mergad som 915cf44), 123 frontendtester och bygge. A3 omfattar fem separat godkända utforskande jobb: tre klara, ett PermissionError och ett aktivt avbrutet. 1H-katalogägare rättad med uttryckligt godkännande och skrivprov. Aktiv process stoppad, slot släppt och inget resultat publicerat för avbrutet jobb; en worker b44d3ce och tom kö. 0 H-0013, inget slutprov och ingen publicering. F2-802/804/805 återstår. Edwin har därefter uttryckligen godkänt H-0013; körning ca59d441 startad från installerad app, försök 1. Resultatgranskning återstår; ingen slutprovsåtkomst eller publicering."
+  "reviewed_scope": "A1/A2/A3 och riktig H-0013 verifierade. Avbrott av aktiv process provat i riktig kö; 1H-katalogens behörighetsfel rättat med uttryckligt ja. H-0013 ca59d441 genomförd efter separat godkännande, försök 1, 516 s, ett resultat. Oberoende omräkning bekräftar alla fem fallna krav och REJECT; appens strikta läsare rapporterar inga saknade delar. Slutprovet oläst. En worker b44d3ce, tom kö. Stable-publicering och slutligt Fas 2-godkännande återstår."
 }

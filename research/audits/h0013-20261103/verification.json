@@ -1,0 +1,24 @@
+{
+  "recalculated": {
+    "total_return": -0.10864184437833257,
+    "sharpe": -0.7675151112811262,
+    "t_daily_nw": -1.802333164899612,
+    "max_drawdown": -0.11472139244116342
+  },
+  "daily_observations": 1096,
+  "criteria": {
+    "t_at_least_required": false,
+    "stressed_costs_positive": false,
+    "sharpe_above_buy_and_hold": false,
+    "sharpe_above_best_candidate": false,
+    "sharpe_above_equal_weight_mix": false
+  },
+  "decision": "REJECT",
+  "trade_compounded_return": -0.10864184437833257,
+  "permutation_k": 175,
+  "permutation_p": 0.875,
+  "complete_steps": 10,
+  "curves_points": 6570,
+  "comparisons_points": 1500,
+  "canonical_payload_sha256": "7a9e582fb0703ca3dfd9aeea7c6cc53c8c27ec3e70d28f99be8499c16f44b87e"
+}
