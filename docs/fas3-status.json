@@ -1,0 +1,339 @@
+{
+  "schema_version": 1,
+  "title": "Fas 3 – Live Paper Trading",
+  "hypothesis": "Ingen strategi godkänd för pilot ännu",
+  "updated": "2026-11-03",
+  "reviewed_revision": "72107ed",
+  "note": "Planering kan börja. Framåttest kräver godkänd och fryst strategi; H-0013 förblir REJECT.",
+  "reviewed_scope": "Ny genomförandeplan efter godkänd Fas 2 (40/40). Alla Fas 3-punkter är ännu overifierade. Teknisk utveckling och SIM-prov kan förberedas; ingen strategi är godkänd för framåttest. Inga körningar eller driftsättningar startas av denna plan.",
+  "groups": [
+    {
+      "id": "scope",
+      "title": "1. Avgränsning och startvillkor",
+      "tasks": [
+        {
+          "id": "F3-101",
+          "title": "Kartlägg befintlig pappersmotor, serverdrift och återanvändbara komponenter",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-102",
+          "title": "Definiera BTCUSDT, tidsram, instrument och virtuellt startkapital för första pilot",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-103",
+          "title": "Skilj tekniska SIM-prov från godkänt framåttest och håll H-0013 REJECT",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-104",
+          "title": "Dokumentera ansvar, start/stopp och gränsen mellan app och server",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-105",
+          "title": "Registrera Fas 3-planens acceptanskriterier och koppling till forskningsgrindarna",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "qualification",
+      "title": "2. Godkänd och fryst strategi",
+      "tasks": [
+        {
+          "id": "F3-201",
+          "title": "Identifiera en kandidat som klarat historiska krav; ny forskning kräver egen förregistrerad hypotes",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-202",
+          "title": "Verifiera dokumenterat slutprov och READY_FOR_PAPER innan riktigt framåttest får starta",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-203",
+          "title": "Frys strategi eller väljare, kodrevision, parametrar och kostnadsmodell",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-204",
+          "title": "Förregistrera minst tre månaders test, erforderligt antal affärer och slutregel",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-205",
+          "title": "Lås jämförelseunderlag, osäkerhetsmått och kriterier för avvikelse eller underkännande",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "data",
+      "title": "3. Marknadsdata i realtid",
+      "tasks": [
+        {
+          "id": "F3-301",
+          "title": "Återanvänd publik insamling och verifiera serverns datakvalitet för piloten",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-302",
+          "title": "Beräkna signaler endast från kompletta stängda staplar med UTC-tider",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-303",
+          "title": "Återhämta luckor och anslutningsavbrott utan dubbletter eller ändrad ordning",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-304",
+          "title": "Hantera inaktuell data, ofullständiga dagar och indikatorernas uppvärmning",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-305",
+          "title": "Logga mottagningstider och dataversion så att varje beslut kan återskapas",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "decisions",
+      "title": "4. Beslut och pappersutförande",
+      "tasks": [
+        {
+          "id": "F3-401",
+          "title": "Återanvänd den frysta strategins beslut och eventuella godkända regimval",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-402",
+          "title": "Simulera fyllning vid nästa tillgängliga öppning utan framtidsdata",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-403",
+          "title": "Hantera virtuella positioner, kapital och realiserat respektive orealiserat resultat",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-404",
+          "title": "Simulera avgifter, spread, slippage, stop och take-profit med publicerad modell",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-405",
+          "title": "Hantera funding och relevanta terminsrisker utan börskonto eller riktiga order",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "risk",
+      "title": "5. Risk och återhämtning",
+      "tasks": [
+        {
+          "id": "F3-501",
+          "title": "Lås gränser för storlek, exponering, förlust och antal samtidiga positioner",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-502",
+          "title": "Blockera nya inträden vid inaktuell data eller osäkert kontotillstånd",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-503",
+          "title": "Definiera nödstopp, paus och hantering av befintliga virtuella positioner",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-504",
+          "title": "Säkerställ exakt en aktiv pilotprocess och idempotenta signaler och fyllningar",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-505",
+          "title": "Återställ positioner och beslutshistorik efter omstart utan dubbla affärer",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "storage",
+      "title": "6. Lagring och serverdrift",
+      "tasks": [
+        {
+          "id": "F3-601",
+          "title": "Versionera kontrakt för papperskörningar, signaler, affärer och händelser",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-602",
+          "title": "Spara oföränderlig journal och spårbarhet till strategi, data och kod",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-603",
+          "title": "Verifiera Supabase-behörigheter och skilj papper från historisk forskningskö",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-604",
+          "title": "Förbered driftsättning, backup och isolerad återställning av pappersdata",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-605",
+          "title": "Verifiera hälsostatus och loggar; håll externa driftlarm som uppskjutet separat val",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "ui",
+      "title": "7. Pappersportfölj i TraderGO",
+      "tasks": [
+        {
+          "id": "F3-701",
+          "title": "Visa tydligt PAPPER, virtuellt kapital och att inga riktiga pengar används",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-702",
+          "title": "Visa vald strategi, marknadsläge, senaste stapel och skäl till beslut eller platt läge",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-703",
+          "title": "Visa positioner, affärer, kostnader, kapitalutveckling och drawdown",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-704",
+          "title": "Visa startvillkor, paus, stopp, serverstatus och anslutningsfel utan dold aktivering",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-705",
+          "title": "Skilj tekniska SIM-körningar från fryst framåttest och verifiera gamla sidor offline",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "acceptance",
+      "title": "8. Tester, pilot och godkännande",
+      "tasks": [
+        {
+          "id": "F3-801",
+          "title": "Jämför deterministisk återspelning med backtest på samma data och antaganden",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-802",
+          "title": "Prova avbrott, omstart, dubbletter, dataluckor och riskstopp med tekniska testdata",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-803",
+          "title": "Granska och driftsätt pilot efter dokumenterat strategigodkännande och startbeslut",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-804",
+          "title": "Följ hela förregistrerade perioden och jämför affärstakt, exponering, kostnader och utfall",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "F3-805",
+          "title": "Granska slutrapport, registrera beslut och godkänn Fas 3 separat utan automatisk liveövergång",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    }
+  ]
+}

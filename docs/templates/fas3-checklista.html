@@ -1,0 +1,89 @@
+<div id="fas3-checklista">
+  <style>
+    #fas3-checklista { color:var(--foreground); }
+    #fas3-checklista .phase-head { display:flex; flex-wrap:wrap; align-items:center; gap:12px; padding-right:96px; margin-bottom:16px; }
+    #fas3-checklista .phase-head h2 { margin:0; }
+    #fas3-checklista .phase-counts { display:flex; justify-content:space-between; gap:12px; margin-bottom:10px; }
+    #fas3-checklista .phase-groups { margin:20px 0; }
+    #fas3-checklista .phase-group { border-bottom:1px solid var(--border); padding:16px 0; }
+    #fas3-checklista .phase-group > summary { padding:8px 0; }
+    #fas3-checklista .phase-subcount { display:block; margin-top:6px; margin-left:20px; color:var(--muted-foreground); }
+    #fas3-checklista .phase-tasks { margin-top:12px; display:grid; gap:14px; }
+    #fas3-checklista .phase-task .form-check { align-items:start; }
+    #fas3-checklista .phase-evidence { margin:6px 0 0 28px; color:var(--muted-foreground); }
+    #fas3-checklista .phase-meta { margin-top:12px; color:var(--muted-foreground); }
+    #fas3-checklista .phase-status { color:var(--muted-foreground); margin-left:6px; }
+    #fas3-checklista .phase-actions { display:flex; flex-wrap:wrap; gap:8px; }
+    #fas3-checklista textarea { margin-top:12px; }
+    @media (max-width:480px) { #fas3-checklista .phase-head { padding-right:0; padding-top:32px; } }
+  </style>
+  <div class="phase-head"><h2>Fas 3 – Utvecklingsplan</h2><span class="viz-badge">8 arbetsområden</span></div>
+  <div class="phase-counts" aria-live="polite"><span id="f3-count"></span><span id="f3-percent" class="tabular-nums"></span></div>
+  <div class="progress" role="progressbar" aria-label="Verifierade uppgifter i Fas 3" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><div class="progress-bar" id="f3-bar" style="width:0%"></div></div>
+  <div id="f3-groups" class="phase-groups"></div>
+  <div class="phase-actions">
+    <button type="button" class="btn btn-primary" id="f3-refresh">Kontrollera senaste kod</button>
+    <button type="button" class="btn" id="f3-expand">Visa alla</button>
+    <button type="button" class="btn" id="f3-copy">Kopiera checklistan</button>
+  </div>
+  <p class="phase-meta text-small" id="f3-meta"></p>
+  <p class="phase-meta text-small">Bockar betyder verifierat arbete. Ny kod kräver granskning före nästa bock. Den här vyn visar senast kontrollerad status i projektet.</p>
+  <p id="f3-feedback" aria-live="polite" class="text-small"></p>
+  <textarea id="f3-copy-text" class="form-control" aria-label="Checklista att kopiera" rows="12" hidden readonly></textarea>
+  <script type="application/json" id="f3-data">__FAS3_DATA__</script>
+  <script>
+    (() => {
+      const root=document.getElementById('fas3-checklista');
+      const data=JSON.parse(root.querySelector('#f3-data').textContent);
+      const all=data.groups.flatMap(g=>g.tasks), done=all.filter(t=>t.status==='done').length;
+      const percent=Math.round(done/all.length*100);
+      root.querySelector('#f3-count').textContent=`${done} av ${all.length} uppgifter verifierade`;
+      root.querySelector('#f3-percent').textContent=percent+' %';
+      root.querySelector('[role="progressbar"]').setAttribute('aria-valuenow',String(percent));
+      root.querySelector('#f3-bar').style.width=percent+'%';
+      root.querySelector('#f3-meta').textContent=`Planering · Kontrollerad ${data.updated} · Kodversion ${data.reviewed_revision} · ${data.reviewed_scope || ''}`;
+      const groupNodes=[];
+      for (const [index,group] of data.groups.entries()) {
+        const details=document.createElement('details'); details.className='phase-group'; details.dataset.group=group.id; details.open=index===0;
+        const summary=document.createElement('summary'); summary.className='cursor-interaction';
+        const title=document.createElement('span');title.textContent=group.title;summary.append(title);
+        const count=document.createElement('span');count.className='phase-subcount text-small';
+        const complete=group.tasks.filter(t=>t.status==='done').length;
+        const ongoing=group.tasks.filter(t=>t.status==='in_progress').length;
+        count.textContent=`${complete}/${group.tasks.length} klara`+(ongoing?' · Pågår':'');summary.append(count);details.append(summary);
+        const tasks=document.createElement('div');tasks.className='phase-tasks';
+        for(const task of group.tasks) {
+          const row=document.createElement('div');row.className='phase-task';
+          const label=document.createElement('label');label.className='form-check';
+          const check=document.createElement('input');check.type='checkbox';check.className='form-check-input';check.checked=task.status==='done';check.disabled=true;
+          const name=document.createElement('span');name.className='form-check-label';name.textContent=task.title;
+          if(task.status==='in_progress'){const status=document.createElement('span');status.className='phase-status text-small';status.textContent='Pågår';name.append(status);}
+          label.append(check,name);row.append(label);
+          if(task.evidence.length){const proof=document.createElement('p');proof.className='phase-evidence text-small';proof.textContent=task.id+' · '+task.evidence.map(e=>e.file+' — '+e.detail).join(' ');row.append(proof);}
+          tasks.append(row);
+        }
+        details.append(tasks);root.querySelector('#f3-groups').append(details);groupNodes.push(details);
+      }
+      const expand=root.querySelector('#f3-expand');
+      const updateExpand=()=>{expand.textContent=groupNodes.every(n=>n.open)?'Fäll ihop':'Visa alla';};
+      const save=()=>{window.openai?.setWidgetState?.({modelContent:{phase:3},privateContent:{open:groupNodes.filter(n=>n.open).map(n=>n.dataset.group)}})?.catch(()=>{});};
+      const restore=state=>{const opened=state?.privateContent?.open;if(Array.isArray(opened)){for(const node of groupNodes)node.open=opened.includes(node.dataset.group);updateExpand();}};
+      restore(window.openai?.widgetState);
+      window.addEventListener('openai:set_globals',event=>restore(event.detail?.globals?.widgetState));
+      for(const node of groupNodes)node.addEventListener('toggle',updateExpand);
+      root.querySelector('#f3-groups').addEventListener('click',event=>{if(event.target.closest('summary'))queueMicrotask(save);});
+      expand.addEventListener('click',()=>{const opened=!groupNodes.every(n=>n.open);groupNodes.forEach(n=>n.open=opened);updateExpand();save();});
+      root.querySelector('#f3-copy').addEventListener('click',async()=>{
+        const text=[data.title,`${done}/${all.length} verifierade`,...data.groups.flatMap(g=>['',g.title,...g.tasks.map(t=>`- [${t.status==='done'?'x':' '}] ${t.id} ${t.title}${t.status==='in_progress'?' (pågår)':''}`)])].join('\n');
+        try {await navigator.clipboard.writeText(text);root.querySelector('#f3-feedback').textContent='Checklistan kopierad.';}
+        catch {const area=root.querySelector('#f3-copy-text');area.hidden=false;area.value=text;area.focus();area.select();root.querySelector('#f3-feedback').textContent='Markera och kopiera texten nedan.';}
+      });
+      root.querySelector('#f3-refresh').addEventListener('click',async()=>{
+        const feedback=root.querySelector('#f3-feedback');
+        if(!window.openai?.sendFollowUpMessage){feedback.textContent='Skriv ”uppdatera Fas 3-checklistan” i chatten för en ny kontroll.';return;}
+        try{await window.openai.sendFollowUpMessage({prompt:'Uppdatera Fas 3-checklistan från aktuell kod i SEASTICK/Trader_go. Läs docs/fas3-status.json och docs/fas3-checklista.md, granska relevanta kodändringar och tester, markera endast verifierat klart med källor och regenerera checklistan samt vyn. Starta inga forskningskörningar, papperspiloter, driftsättningar eller publiceringar. H-0013 förblir REJECT.',title:'Kontrollera Fas 3-status'});}
+        catch{feedback.textContent='Skriv ”uppdatera Fas 3-checklistan” i chatten för en ny kontroll.';}
+      });
+    })();
+  </script>
+</div>

@@ -12,3 +12,10 @@ Läs `CLAUDE.md` och relevanta projektinstruktioner före ändringar.
 - När checklistan visas i chatten: regenerera vyn från statuskällan. Påstå inte att chatvyn följer andra sessioner i bakgrunden.
 - Skilj H-0013 från tvärsnitt H-0014/H-0015 samt lokal kod från driftsättning och Stable.
 - Ändra inte frysta forskningsprotokoll, resultat eller REJECT-beslut för checklistans skull.
+
+## Fas 3 / Live Paper Trading
+
+- Följ docs/fas3-status.json och docs/fas3-checklista.md efter varje relevant ändring eller verifiering. Markera bara granskat och verifierat arbete klart, med underlag.
+- Regenerera med `python3 scripts/render-fas3-checklist.py` och kontrollera med `--check`. Chatvyn är en ögonblicksbild.
+- Skilj tekniska SIM-prov från fryst framåttest. Pilot kräver READY_FOR_PAPER, fryst strategi och dokumenterat startbeslut; H-0013 förblir REJECT.
+- Skilj implementation, driftsättning, pågående observationsperiod och slutgodkännande. Ingen automatisk liveövergång.

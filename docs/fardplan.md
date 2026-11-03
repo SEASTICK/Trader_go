@@ -29,7 +29,9 @@ Pengarna ska i en framtida liveversion finnas hos den valda handelsplatsen eller
 
 ## Aktuellt arbete
 
-Vi arbetar i Fas 2/H-0013. Regimmodulen är kodgranskad för merge. Nästa leverans är strategiväljaren enligt det förregistrerade protokollet, med syntetiska tester. Se den gemensamma [Fas 2-checklistan](fas2-checklista.md) för verifierad status.
+Fas 2 är slutgodkänd av Edwin 2026-11-03 (40/40), med dokumenterade begränsningar och verifierad Stable 0.1.23. H-0013 blev REJECT och går inte vidare till papper. Se [releaseverifieringen](fas2-release-verifiering-20261103.md).
+
+Nästa produktfas är [Fas 3 – Live Paper Trading](fas3-checklista.md). Planering och tekniska SIM-prov kan förberedas. Ett riktigt fryst framåttest får börja först när en kandidat klarat forskningsgrindarna och har READY_FOR_PAPER; någon sådan kandidat är ännu inte godkänd. Fas 3-listans statuskälla är docs/fas3-status.json. Bocka endast av verifierade punkter med underlag och regenerera med scripts/render-fas3-checklist.py.
 
 ML kan senare prövas som en separat förregistrerad forskningshypotes och jämföras med den enkla väljaren. ML är inget krav för slutmålet och ger inget undantag från validering eller riskgränser.
 
