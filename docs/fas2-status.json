@@ -552,6 +552,10 @@
             {
               "file": "docs/fas2-a3-utfall-20261103.md",
               "detail": "A3 omprov 7bbad445: installerad app visar Körs→Avbruten. Servern ser aktiv process 35173 vid avbrott, därefter processen borta och slot släppt; 0 resultat och ingen sen publicering. Behörighetsfel i föregående jobb bevarat, katalogägare rättad med separat godkännande och skrivprov PASS. En worker PID 30868/b44d3ce, 0 omstarter, tom kö och 0 H-0013."
+            },
+            {
+              "file": "docs/fas2-h0013-forkontroll-20261103.md",
+              "detail": "Läsande förkontroll som tradergo: 120 frysta utvecklingsarkiv verifierar namn/SHA/CHECKSUM. Ingen träning eller utvärdering. Appens förberedelsekort öppnat med obekräftad ruta; H-0013-köning kräver separat beslut."
             }
           ],
           "note": "A3 verifierad för utforskning, inklusive avbrott av en aktiv beräkningsprocess och släppt slot utan resultat. Riktig H-0013-körning och dess resultat återstår och kräver separat godkännande."
