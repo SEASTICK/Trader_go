@@ -3,8 +3,8 @@
   "title": "Efterföljare till H-0013 – granskning och implementation",
   "hypothesis": "H-0017 – riskstyrd tidsseriemomentum på BTCUSDT",
   "updated": "2026-11-03",
-  "reviewed_revision": "bfdb33b8c083ec65af2da8eecabc30de1f1a1b3f",
-  "reviewed_scope": "Leverans B på bfdb33b granskad: B01/B02/B04 verifierade med 32 signaltester, 585 motorprov och egna syntetiska beräkningar/prefix-/framtids-/felprov. Ett P2-fynd i signals(empty) blockerar B03/B05 och leverans C; 8/40 klara. A2 och fryst protokoll/register oförändrade. Ingen marknadshistorik, H-0017-körning eller drift.",
+  "reviewed_revision": "3294e8f992818e9f988077eafb2e6ef110be86f0",
+  "reviewed_scope": "Leverans B godkänd på 3294e8f: tomdataschema och dokumenterat uppslagsfel verifierade, beräknings-AST oförändrad och 17 icke-tomma fall identiska med bfdb33b. 36 signaltester och 589 motorprov godkända. A+B klara, 10/40. C får börja med avgränsad ledger-/storleks-/kostnadsgrund enligt C1-uppdraget; inga C-punkter verifierade. Ingen verklig historik, H-0017-körning, drift eller lönsamhet verifierad.",
   "groups": [
     {
       "id": "A",
@@ -184,9 +184,13 @@
             {
               "file": "docs/momentum-B-granskning-bfdb33b.md",
               "detail": "Codex granskning av exakt bfdb33b: egna syntetiska avstämningar och tre fångade mutanter; ett P2-fynd för tom signalindata. 32 signaltester och 585 motorprov godkända."
+            },
+            {
+              "file": "docs/momentum-B-granskning-3294e8f.md",
+              "detail": "Codex slutgodkänner exakt B-revision 3294e8f: P2 stängt, stabilt tomschema, 17 före/efter-fall identiska och oförändrad beräkningskod. 36 signaltester och 589 motorprov godkända."
             }
           ],
-          "note": "Verifierad del på bfdb33b. B som helhet och leverans C väntar på tomdata-rättning och omgranskning."
+          "note": "Leverans B godkänd på 3294e8f, enbart syntetiskt. Konto och utförande återstår i C; ingen historisk körning godkänd."
         },
         {
           "id": "MOM-B02",
@@ -208,14 +212,18 @@
             {
               "file": "docs/momentum-B-granskning-bfdb33b.md",
               "detail": "Codex granskning av exakt bfdb33b: egna syntetiska avstämningar och tre fångade mutanter; ett P2-fynd för tom signalindata. 32 signaltester och 585 motorprov godkända."
+            },
+            {
+              "file": "docs/momentum-B-granskning-3294e8f.md",
+              "detail": "Codex slutgodkänner exakt B-revision 3294e8f: P2 stängt, stabilt tomschema, 17 före/efter-fall identiska och oförändrad beräkningskod. 36 signaltester och 589 motorprov godkända."
             }
           ],
-          "note": "Verifierad del på bfdb33b. B som helhet och leverans C väntar på tomdata-rättning och omgranskning."
+          "note": "Leverans B godkänd på 3294e8f, enbart syntetiskt. Konto och utförande återstår i C; ingen historisk körning godkänd."
         },
         {
           "id": "MOM-B03",
           "title": "Versionera lika vikt, 10 % målrisk och beteende vid otillräcklig eller ogiltig data",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "engine/traderlab/momentum_signal.py",
@@ -236,9 +244,13 @@
             {
               "file": "engine/tests/test_momentum_signal.py",
               "detail": "Rättning av P2 från granskningen av bfdb33b: signals() på tom ram och tomt prefix ger exakt COLUMNS med UTC-index och samma typer; latest_decision ger dokumenterat KeyError. 36 syntetiska tester; tre nya fäller bfdb33b."
+            },
+            {
+              "file": "docs/momentum-B-granskning-3294e8f.md",
+              "detail": "Codex slutgodkänner exakt B-revision 3294e8f: P2 stängt, stabilt tomschema, 17 före/efter-fall identiska och oförändrad beräkningskod. 36 signaltester och 589 motorprov godkända."
             }
           ],
-          "note": "P2 rättad på claude/momentum-b; väntar på Codex omgranskning av exakt revision. Ingen C före slutgodkänd B."
+          "note": "Leverans B godkänd på 3294e8f, enbart syntetiskt. Konto och utförande återstår i C; ingen historisk körning godkänd."
         },
         {
           "id": "MOM-B04",
@@ -260,14 +272,18 @@
             {
               "file": "docs/momentum-B-granskning-bfdb33b.md",
               "detail": "Codex granskning av exakt bfdb33b: egna syntetiska avstämningar och tre fångade mutanter; ett P2-fynd för tom signalindata. 32 signaltester och 585 motorprov godkända."
+            },
+            {
+              "file": "docs/momentum-B-granskning-3294e8f.md",
+              "detail": "Codex slutgodkänner exakt B-revision 3294e8f: P2 stängt, stabilt tomschema, 17 före/efter-fall identiska och oförändrad beräkningskod. 36 signaltester och 589 motorprov godkända."
             }
           ],
-          "note": "Verifierad del på bfdb33b. B som helhet och leverans C väntar på tomdata-rättning och omgranskning."
+          "note": "Leverans B godkänd på 3294e8f, enbart syntetiskt. Konto och utförande återstår i C; ingen historisk körning godkänd."
         },
         {
           "id": "MOM-B05",
           "title": "Granska prefix-/framtidsprov och godkänn exakt signalrevision",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "engine/traderlab/momentum_signal.py",
@@ -288,9 +304,13 @@
             {
               "file": "engine/tests/test_momentum_signal.py",
               "detail": "Rättning av P2 från granskningen av bfdb33b: signals() på tom ram och tomt prefix ger exakt COLUMNS med UTC-index och samma typer; latest_decision ger dokumenterat KeyError. 36 syntetiska tester; tre nya fäller bfdb33b."
+            },
+            {
+              "file": "docs/momentum-B-granskning-3294e8f.md",
+              "detail": "Codex slutgodkänner exakt B-revision 3294e8f: P2 stängt, stabilt tomschema, 17 före/efter-fall identiska och oförändrad beräkningskod. 36 signaltester och 589 motorprov godkända."
             }
           ],
-          "note": "P2 rättad på claude/momentum-b; väntar på Codex omgranskning av exakt revision. Ingen C före slutgodkänd B."
+          "note": "Leverans B godkänd på 3294e8f, enbart syntetiskt. Konto och utförande återstår i C; ingen historisk körning godkänd."
         }
       ]
     },

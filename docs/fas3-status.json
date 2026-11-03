@@ -92,6 +92,10 @@
             {
               "file": "docs/momentum-B-granskning-bfdb33b.md",
               "detail": "H-0017:s B-del granskad på bfdb33b, enbart syntetiskt. Signalberäkningar verifierade men tomdata-API behöver rättas före C. Inget ekonomiskt resultat eller pilotgodkännande."
+            },
+            {
+              "file": "docs/momentum-B-granskning-3294e8f.md",
+              "detail": "H-0017:s rena signalmodul B godkänd på 3294e8f, enbart syntetiskt. Ledger, verklig data och ekonomisk utvärdering återstår; inget pilotgodkännande."
             }
           ],
           "note": "H-0017 är separat förregistrerad och metodgranskad. Implementation och historisk utvärdering återstår. H-0013 REJECT och H-0016 oförändrade; ingen kandidat har READY_FOR_PAPER."

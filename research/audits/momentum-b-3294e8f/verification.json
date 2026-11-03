@@ -1,0 +1,30 @@
+{
+  "reviewed_revision": "3294e8f992818e9f988077eafb2e6ef110be86f0",
+  "previous_signal_revision": "bfdb33b8c083ec65af2da8eecabc30de1f1a1b3f",
+  "synthetic_only": true,
+  "source_sha256": {
+    "before": "007225ad760d27dd93a8720e06efec4e5ec56cf367c733e3d904f1cd5ceb84ab",
+    "after": "a288de6450b71d06ccb53e3b88384a0475b111aeb7e4ce8c77dd49f6de2c3746"
+  },
+  "unchanged_calculation_ast": true,
+  "identical_nonempty_cases": 17,
+  "typed_empty_cases": 2,
+  "schema": {
+    "decision_time": "datetime64[ns, UTC]",
+    "earliest_fill": "datetime64[ns, UTC]",
+    "close": "float64",
+    "s7": "float64",
+    "s14": "float64",
+    "s28": "float64",
+    "s": "float64",
+    "vol": "float64",
+    "cap": "float64",
+    "w_target": "float64",
+    "available": "bool",
+    "reason": "object",
+    "version": "object"
+  },
+  "documented_empty_lookup_error": true,
+  "nonempty_incomplete_day_preserved": true,
+  "old_defect_reproduced": true
+}
