@@ -4,7 +4,7 @@
 
 Metodgranskning · Kontrollerad 2026-11-03 · Granskad kodversion `f43c1e7`.
 
-Inledande metodgranskning klar som underlag: Git/status och sparad diagnos verifierade. Kontraktsutkast 0.1 och leverans A till Claude förberedda. Metodkontraktet är inte godkänt eller förregistrerat; inga nya signaler, historiska körningar eller driftkontroller genomförda. H-0013 REJECT och H-0016 oförändrade.
+Inledande metodgranskning klar som underlag: Git/status och sparad diagnos verifierade. Kontraktsutkast 0.1 och leverans A till Claude förberedda. Metodkontraktet är inte godkänt eller förregistrerat; inga nya signaler, historiska körningar eller driftkontroller genomförda. H-0013 REJECT och H-0016 oförändrade. Claude har lämnat A1-protokollutkast och orakel (docs/momentum-protokoll-A1.md) för granskning; inget id registrerat.
 
 ## Uppdateringsregler
 
@@ -28,10 +28,16 @@ Inledande metodgranskning klar som underlag: Git/status och sparad diagnos verif
 - [ ] **MOM-A03** Färdigställ eventordning, konto, intrastapel-risk och marginalmodell **Pågår.**
   - Underlag: [docs/momentum-metodgranskning-20261103.md](momentum-metodgranskning-20261103.md) — Inledande granskning på f43c1e7. Git och diagnos verifierade; M01–M08 kräver exakt metodkontrakt och omgranskning före frysning.
   - Underlag: [docs/momentum-implementationskontrakt-utkast.md](momentum-implementationskontrakt-utkast.md) — Utkast 0.1 till Claude. Kvarstående A-blockerare framgår; inte godkänt som fryst protokoll.
+  - Underlag: [docs/momentum-protokoll-A1.md](momentum-protokoll-A1.md) — A1-utkast till Codex: eventordning A/B med klassificering, ledger och storlek, avgränsad korsmarginal, intrastapel-bound även för legacy-stop, jämförelsematris, metodtabell D01–D16. Inte registrerat eller godkänt.
+  - Underlag: [docs/momentum-a1-orakel.json](momentum-a1-orakel.json) — Handräknade fall O1–O12 (syntetiska tal), omräknade av scripts/momentum-a1-oracles.py --check. Verifierar formler, inte motorkod.
+  - A1 lämnad för Codex granskning; förblir in_progress tills exakt revision godkänts.
 - [ ] **MOM-A04** Lås exakta jämförelser, försöksräkning, DSR och beslutskriterier **Pågår.**
   - Underlag: [docs/momentum-metodgranskning-20261103.md](momentum-metodgranskning-20261103.md) — Inledande granskning på f43c1e7. Git och diagnos verifierade; M01–M08 kräver exakt metodkontrakt och omgranskning före frysning.
   - Underlag: [docs/momentum-implementationskontrakt-utkast.md](momentum-implementationskontrakt-utkast.md) — Utkast 0.1 till Claude. Kvarstående A-blockerare framgår; inte godkänt som fryst protokoll.
+  - Underlag: [docs/momentum-protokoll-A1.md](momentum-protokoll-A1.md) — §11–§14: jämförelsematris, sex kriterier i scenario A och B, N-regel (17 → t 2,754268270633685 om H-0017 är ledigt vid A2), DSR med N=17 och N_sok=1 213 som diagnostik.
+  - A1 lämnad för Codex granskning; N och t-krav låses först i A2.
 - [ ] **MOM-A05** Förregistrera ett nytt ledigt id och låt Codex granska leverans A före implementation
+  - Väntar på Codex godkännande av exakt A1-revision. Ingen registerrad lagd.
 
 ## B. Ren signalmodul och tidskontrakt
 

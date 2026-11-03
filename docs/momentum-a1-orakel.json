@@ -1,0 +1,162 @@
+{
+ "O1_avgift_w05": {
+  "q": 499.6003197442046,
+  "cost": 79.93605115907275,
+  "C": 49960.03197442047,
+  "E_after": 99920.06394884092,
+  "weight_after": 0.5
+ },
+ "O2_avgift_w1": {
+  "q": 998.4025559105431,
+  "cost": 159.7444089456869,
+  "C": -2.9274360713316128e-12,
+  "E_after": 99840.25559105432,
+  "weight_after": 1.0,
+  "naiv_q1000_vikt": 1.001602564102564
+ },
+ "O3_basis": {
+  "q": 500.8514474606832,
+  "cost": 80.13623159370931,
+  "C": 49834.71902233797,
+  "E_after": 99669.43804467595,
+  "weight_after": 0.5,
+  "basisresultat": -250.4257237303416
+ },
+ "O4_partial": {
+  "E_fore_kop": 104916.06714628298,
+  "vikt_fore_kop": 0.5238095238095238,
+  "kop": {
+   "q": 572.1997616972686,
+   "cost": 12.777501783739266,
+   "C": 41961.31585779969,
+   "E_after": 104903.28964449924,
+   "weight_after": 0.6000000000000001
+  },
+  "E_fore_salj": 102042.2908360129,
+  "vikt_fore_salj": 0.588785046728972,
+  "salj": {
+   "q": 388.61504229772873,
+   "cost": 30.842232859122703,
+   "C": 61206.869161892246,
+   "E_after": 102011.44860315375,
+   "weight_after": 0.40000000000000013
+  }
+ },
+ "O5_funding_samma_grans": {
+  "inträde_A": {
+   "funding": 0.0,
+   "E": 99920.06394884092
+  },
+  "inträde_B": {
+   "funding": 4.996003197442047,
+   "E": 99915.06794564349
+  },
+  "utgång_A": {
+   "funding": 4.996003197442047,
+   "E": 99835.13189448441
+  },
+  "utgång_B": {
+   "funding": 0.0,
+   "E": 99840.12789768184
+  }
+ },
+ "O6_dagsreset": {
+  "E_close_D": 97900.0,
+  "dagsavkastning_D": -0.02100000000000002,
+  "dagsstopp": true,
+  "vikt_vid_beslut": 0.48927477017364657,
+  "normal_avsikt_strykt": true,
+  "day_start_D1": 97900.0,
+  "A": {
+   "funding": 4.75,
+   "kostnad": 76.08,
+   "E_efter": 97469.17,
+   "dag_D1_hittills": -0.004400715015321799
+  },
+  "B": {
+   "funding": 0.0,
+   "kostnad": 76.08,
+   "E_efter": 97473.92
+  }
+ },
+ "O7_intrastapel_main": {
+  "E_open": 100000,
+  "E_high": 106000,
+  "E_low": 97500,
+  "E_close": 100500,
+  "bound_peak": 106000,
+  "bound_dd": -0.08018867924528306,
+  "close_dd": -0.042857142857142816
+ },
+ "O8_legacy_stop": {
+  "inom_stapel": {
+   "E_mark_open": 99910.0,
+   "E_mark_high": 100900,
+   "E_mark_low_om_öppen": 93250.0,
+   "E_efter_stop": 95363.2,
+   "stopkostnad": 136.79999999999998,
+   "bound_trough": 93250.0
+  },
+  "gap": {
+   "E_mark_open": 94510.0,
+   "E_efter_fyllning": 94464.64,
+   "kostnad": 135.36,
+   "bound_trough": 94464.64
+  }
+ },
+ "O9_main_mot_new_mix": {
+  "main": {
+   "q": 299.8560690868383,
+   "cost": 47.97697105389413,
+   "C": 69966.41612026226,
+   "E_after": 99952.0230289461,
+   "weight_after": 0.3
+  },
+  "mom7_delkonto": {
+   "q": 299.56862118549293,
+   "cost": 47.93097938967887,
+   "C": 3328.540235394365,
+   "E_after": 33285.40235394366,
+   "weight_after": 0.8999999999999999
+  },
+  "upp_110": {
+   "main_vikt": 0.32038834951456313,
+   "main_band": true,
+   "mom7_vikt": 0.908256880733945,
+   "mom7_band": false
+  },
+  "ned_97_7": {
+   "main_dag": -0.006900000000000128,
+   "mom7_dag": -0.02070000000000005,
+   "main_dagsstopp": false,
+   "mom7_dagsstopp": true
+  }
+ },
+ "O10_horisont": {
+  "startkapital": 100000.0,
+  "dagar": 1096,
+  "terminal_E": 97979.136,
+  "terminal_kostnad": 60.864,
+  "E_fore_terminal": 98000
+ },
+ "O11_likvidation": {
+  "legacy_short_w-1": {
+   "q": -998.4025559105431,
+   "cost": 159.7444089456869,
+   "C": 199680.51118210863,
+   "E_after": 99840.25559105432,
+   "weight_after": -1.0,
+   "mark_mmr_0_05": 190.47619047619045,
+   "mark_mmr_0_005": 199.00497512437812
+  },
+  "main_long_w1": {
+   "C": -2.9274360713316128e-12,
+   "mark_mmr_0_05": 3.08644207267973e-15,
+   "efter_betald_funding_500": 0.5271578947368453
+  }
+ },
+ "O12_mal": {
+  "w": 0.11111111111111112,
+  "lika_pris_signal": 0
+ }
+}
