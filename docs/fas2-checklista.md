@@ -1,10 +1,10 @@
 # Fas 2 – Utvecklingsplan
 
-**38 av 40 uppgifter verifierade · 8 arbetsområden.**
+**39 av 40 uppgifter verifierade · 8 arbetsområden.**
 
 H-0013 · Kontrollerad 2026-11-03 · Granskad kodversion `9471e51`.
 
-A1/A2/A3 och riktig H-0013 verifierade. Avbrott av aktiv process provat i riktig kö; 1H-katalogens behörighetsfel rättat med uttryckligt ja. H-0013 ca59d441 genomförd efter separat godkännande, försök 1, 516 s, ett resultat. Oberoende omräkning bekräftar alla fem fallna krav och REJECT; appens strikta läsare rapporterar inga saknade delar. Slutprovet oläst. En worker b44d3ce, tom kö. Stable-publicering och slutligt Fas 2-godkännande återstår. H-0013 REJECT registrerat i 82bd03f efter granskning 5ce848e. Releaseanteckningar och manuell testkanalshandoff förberedda; F2-804/805 pågår, inget publicerat.
+A1/A2/A3 och riktig H-0013 verifierade. Avbrott av aktiv process provat i riktig kö; 1H-katalogens behörighetsfel rättat med uttryckligt ja. H-0013 ca59d441 genomförd efter separat godkännande, försök 1, 516 s, ett resultat. Oberoende omräkning bekräftar alla fem fallna krav och REJECT; appens strikta läsare rapporterar inga saknade delar. Slutprovet oläst. En worker b44d3ce, tom kö. H-0013 REJECT registrerat i 82bd03f efter granskning 5ce848e. Stable 0.1.23 från 72107ed publicerad efter Edwins ja och approve (#83), verifierad i installerad app tillsammans med testkanal 0.1.21 och uppdateringsprov till 0.1.22; F2-804 klar. F2-805 underlag dokumenterat, inväntar Edwins slutgodkännande och granskning.
 
 ## Uppdateringsregler
 
@@ -173,7 +173,7 @@ A1/A2/A3 och riktig H-0013 verifierade. Avbrott av aktiv process provat i riktig
 
 ## 8. Sluttest och godkännande
 
-3/5 verifierade.
+4/5 verifierade.
 
 - [x] **F2-801** Kör relevanta Python-, frontend-, Rust- och databaskontroller
   - Underlag: [docs/fas2-sluttest-granskning-80.md](fas2-sluttest-granskning-80.md) — 4e85f4e (kod 144ab88): klockrättning oberoende godkänd. fmt, clippy, 44 Rust-enhetstester + 4 integrationstester och 20 egna upprepningar passerar; 1 nätverkstest ignorerat. App-/Rust-CI gröna, Windows pågår. Övrig app-/motorkod oförändrad.
@@ -196,10 +196,12 @@ A1/A2/A3 och riktig H-0013 verifierade. Avbrott av aktiv process provat i riktig
   - Underlag: [docs/fas2-a2-utfall-20261103.md](fas2-a2-utfall-20261103.md) — 9471e51: rättad auth-feltext verifierad i installerad Mac-kopia i ljust/mörkt tema. Zip d9b3670a…ed87, signatur och ny privat backup verifierade. Korrekt inloggning i nya kopian, fysiskt nätprov och utloggning återstår.
   - Underlag: [docs/fas2-a2-utfall-20261103.md](fas2-a2-utfall-20261103.md) — A2 slutförd i 9471e51 (kod mergad som 915cf44): felaktig/riktig inloggning, riktig listläsning, manuellt nätfel/återhämtning med bevarad session och explicit utloggning verifierade. Teman kontrollerade, System återställt. Exakt nätlatens ej uppmätt; ingen installerad Windows-verifiering.
   - A2 godkänd inom dokumenterad avgränsning. Appen lämnad utloggad. Känd mörk priskarta i ljust tema är oförändrad Stable-begränsning. Riktig köexekvering/H-0013 och Stable-publicering återstår.
-- [ ] **F2-804** Publicera granskad Stable och verifiera installerad kodversion samt uppdaterad checklista **Pågår.**
+- [x] **F2-804** Publicera granskad Stable och verifiera installerad kodversion samt uppdaterad checklista
   - Underlag: [docs/fas2-release-overlamning-20261103.md](fas2-release-overlamning-20261103.md) — Releaseanteckningar och konkret testkanalshandoff förberedda. App/Rust-källkod oförändrad mot installerad 9471e51. Ingen release startad eller publicerad; projektets release-skill kräver att människan startar workflow.
-  - Inväntar Edwins start av test-workflow och verifiering, sedan separat Stable-beslut, publicering och installerat prov. Ingen ny version publicerad.
+  - Underlag: [docs/fas2-release-verifiering-20261103.md](fas2-release-verifiering-20261103.md) — Edwin startade test 0.1.21 (41658461455) och 0.1.22 (41681950148) samt Stable 0.1.23 (41683850552) och skrev approve i #83. Alla på 72107ed; taggar, manifest, filhashar och minisign-signaturer verifierade. Testappen 0.1.21 kontrollerad (Fas 1, Marknad, Papper, H-0013 REJECT med kurvor, affärer och spårbarhet) och uppdaterad i appen till 0.1.22. Installerad Stable uppdaterad 0.1.20 → 0.1.23 i appen: Status v0.1.23 (72107ed) kanal Stable, Info.plist 0.1.23, codesign OK, H-0013-resultatet visas.
+  - Stable 0.1.23 publicerad efter Edwins ja och approve, verifierad installerad. Begränsningar: inget manuellt Windowsprov, Gatekeeper ej prövat, +ändrad-märkning i releasebyggen.
 - [ ] **F2-805** Dokumentera Fas 2-godkännande och fatta separat beslut om eventuellt slutprov; ingen automatisk paper- eller liveaktivering **Pågår.**
   - Underlag: [docs/fas2-h0013-granskning-20261103.md](fas2-h0013-granskning-20261103.md) — Riktig H-0013 ca59d441 genomförd efter uttryckligt ja, försök 1, 516 s, exakt ett resultat. Arkiv/data/revision spårbara, 200 permutationer/81 spelböcker, oberoende omräkning av kriterier och kurva PASS; alla fem krav faller → REJECT. Installerad app visar verkligt resultat, strict reader missing=[]; en worker och tom slot efteråt. Inget slutprov.
   - Underlag: [docs/fas2-release-overlamning-20261103.md](fas2-release-overlamning-20261103.md) — H-0013 REJECT registrerat i egen commit 82bd03f efter granskning 5ce848e. Slutprov ska inte öppnas. Samlat godkännande inväntar verifierad release; inga strategier är READY_FOR_PAPER.
-  - Forskningsbeslutet är REJECT enligt förregistrerade kriterier; H-0013 går inte vidare till slutprov. Samlat Fas 2-godkännande inväntar release och verifierad installerad Stable. Ingen paper/live-aktivering.
+  - Underlag: [docs/fas2-release-verifiering-20261103.md](fas2-release-verifiering-20261103.md) — Slutgodkännandeunderlag: H-0013 REJECT, inget slutprov, inget READY_FOR_PAPER, ingen paper/live. Leveransen släppt och verifierad i Stable 0.1.23. Begränsningar redovisade (Windows manuellt, driftlarm, Gatekeeper, +ändrad, ljust tema, Universe publicerad).
+  - Underlaget är dokumenterat. Bockas av först när Edwin har godkänt slutgodkännandet och Codex har granskat. Ingen paper/live-aktivering.

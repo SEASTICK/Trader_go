@@ -635,14 +635,18 @@
         {
           "id": "F2-804",
           "title": "Publicera granskad Stable och verifiera installerad kodversion samt uppdaterad checklista",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "docs/fas2-release-overlamning-20261103.md",
               "detail": "Releaseanteckningar och konkret testkanalshandoff förberedda. App/Rust-källkod oförändrad mot installerad 9471e51. Ingen release startad eller publicerad; projektets release-skill kräver att människan startar workflow."
+            },
+            {
+              "file": "docs/fas2-release-verifiering-20261103.md",
+              "detail": "Edwin startade test 0.1.21 (41658461455) och 0.1.22 (41681950148) samt Stable 0.1.23 (41683850552) och skrev approve i #83. Alla på 72107ed; taggar, manifest, filhashar och minisign-signaturer verifierade. Testappen 0.1.21 kontrollerad (Fas 1, Marknad, Papper, H-0013 REJECT med kurvor, affärer och spårbarhet) och uppdaterad i appen till 0.1.22. Installerad Stable uppdaterad 0.1.20 → 0.1.23 i appen: Status v0.1.23 (72107ed) kanal Stable, Info.plist 0.1.23, codesign OK, H-0013-resultatet visas."
             }
           ],
-          "note": "Inväntar Edwins start av test-workflow och verifiering, sedan separat Stable-beslut, publicering och installerat prov. Ingen ny version publicerad."
+          "note": "Stable 0.1.23 publicerad efter Edwins ja och approve, verifierad installerad. Begränsningar: inget manuellt Windowsprov, Gatekeeper ej prövat, +ändrad-märkning i releasebyggen."
         },
         {
           "id": "F2-805",
@@ -656,12 +660,16 @@
             {
               "file": "docs/fas2-release-overlamning-20261103.md",
               "detail": "H-0013 REJECT registrerat i egen commit 82bd03f efter granskning 5ce848e. Slutprov ska inte öppnas. Samlat godkännande inväntar verifierad release; inga strategier är READY_FOR_PAPER."
+            },
+            {
+              "file": "docs/fas2-release-verifiering-20261103.md",
+              "detail": "Slutgodkännandeunderlag: H-0013 REJECT, inget slutprov, inget READY_FOR_PAPER, ingen paper/live. Leveransen släppt och verifierad i Stable 0.1.23. Begränsningar redovisade (Windows manuellt, driftlarm, Gatekeeper, +ändrad, ljust tema, Universe publicerad)."
             }
           ],
-          "note": "Forskningsbeslutet är REJECT enligt förregistrerade kriterier; H-0013 går inte vidare till slutprov. Samlat Fas 2-godkännande inväntar release och verifierad installerad Stable. Ingen paper/live-aktivering."
+          "note": "Underlaget är dokumenterat. Bockas av först när Edwin har godkänt slutgodkännandet och Codex har granskat. Ingen paper/live-aktivering."
         }
       ]
     }
   ],
-  "reviewed_scope": "A1/A2/A3 och riktig H-0013 verifierade. Avbrott av aktiv process provat i riktig kö; 1H-katalogens behörighetsfel rättat med uttryckligt ja. H-0013 ca59d441 genomförd efter separat godkännande, försök 1, 516 s, ett resultat. Oberoende omräkning bekräftar alla fem fallna krav och REJECT; appens strikta läsare rapporterar inga saknade delar. Slutprovet oläst. En worker b44d3ce, tom kö. Stable-publicering och slutligt Fas 2-godkännande återstår. H-0013 REJECT registrerat i 82bd03f efter granskning 5ce848e. Releaseanteckningar och manuell testkanalshandoff förberedda; F2-804/805 pågår, inget publicerat."
+  "reviewed_scope": "A1/A2/A3 och riktig H-0013 verifierade. Avbrott av aktiv process provat i riktig kö; 1H-katalogens behörighetsfel rättat med uttryckligt ja. H-0013 ca59d441 genomförd efter separat godkännande, försök 1, 516 s, ett resultat. Oberoende omräkning bekräftar alla fem fallna krav och REJECT; appens strikta läsare rapporterar inga saknade delar. Slutprovet oläst. En worker b44d3ce, tom kö. H-0013 REJECT registrerat i 82bd03f efter granskning 5ce848e. Stable 0.1.23 från 72107ed publicerad efter Edwins ja och approve (#83), verifierad i installerad app tillsammans med testkanal 0.1.21 och uppdateringsprov till 0.1.22; F2-804 klar. F2-805 underlag dokumenterat, inväntar Edwins slutgodkännande och granskning."
 }
