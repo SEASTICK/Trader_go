@@ -1,0 +1,366 @@
+{
+  "schema_version": 1,
+  "title": "Efterföljare till H-0013 – granskning och implementation",
+  "hypothesis": "Ej registrerad – id kontrolleras i leverans A",
+  "updated": "2026-11-03",
+  "reviewed_revision": "f43c1e7",
+  "reviewed_scope": "Inledande metodgranskning klar som underlag: Git/status och sparad diagnos verifierade. Kontraktsutkast 0.1 och leverans A till Claude förberedda. Metodkontraktet är inte godkänt eller förregistrerat; inga nya signaler, historiska körningar eller driftkontroller genomförda. H-0013 REJECT och H-0016 oförändrade.",
+  "groups": [
+    {
+      "id": "A",
+      "title": "A. Metodkontrakt och förregistrering",
+      "tasks": [
+        {
+          "id": "MOM-A01",
+          "title": "Kontrollera Git-läge, projektinstruktioner, tidigare beslut och separat hypotesidentitet",
+          "status": "done",
+          "evidence": [
+            {
+              "file": "docs/momentum-metodgranskning-20261103.md",
+              "detail": "Inledande granskning på f43c1e7. Git och diagnos verifierade; M01–M08 kräver exakt metodkontrakt och omgranskning före frysning."
+            }
+          ],
+          "note": ""
+        },
+        {
+          "id": "MOM-A02",
+          "title": "Reproducera den sparade H-0013-diagnosen utan nytt marknadstest",
+          "status": "done",
+          "evidence": [
+            {
+              "file": "docs/momentum-metodgranskning-20261103.md",
+              "detail": "Inledande granskning på f43c1e7. Git och diagnos verifierade; M01–M08 kräver exakt metodkontrakt och omgranskning före frysning."
+            }
+          ],
+          "note": ""
+        },
+        {
+          "id": "MOM-A03",
+          "title": "Färdigställ eventordning, konto, intrastapel-risk och marginalmodell",
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "docs/momentum-metodgranskning-20261103.md",
+              "detail": "Inledande granskning på f43c1e7. Git och diagnos verifierade; M01–M08 kräver exakt metodkontrakt och omgranskning före frysning."
+            },
+            {
+              "file": "docs/momentum-implementationskontrakt-utkast.md",
+              "detail": "Utkast 0.1 till Claude. Kvarstående A-blockerare framgår; inte godkänt som fryst protokoll."
+            }
+          ],
+          "note": ""
+        },
+        {
+          "id": "MOM-A04",
+          "title": "Lås exakta jämförelser, försöksräkning, DSR och beslutskriterier",
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "docs/momentum-metodgranskning-20261103.md",
+              "detail": "Inledande granskning på f43c1e7. Git och diagnos verifierade; M01–M08 kräver exakt metodkontrakt och omgranskning före frysning."
+            },
+            {
+              "file": "docs/momentum-implementationskontrakt-utkast.md",
+              "detail": "Utkast 0.1 till Claude. Kvarstående A-blockerare framgår; inte godkänt som fryst protokoll."
+            }
+          ],
+          "note": ""
+        },
+        {
+          "id": "MOM-A05",
+          "title": "Förregistrera ett nytt ledigt id och låt Codex granska leverans A före implementation",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "title": "B. Ren signalmodul och tidskontrakt",
+      "tasks": [
+        {
+          "id": "MOM-B01",
+          "title": "Implementera fasta momentumsignaler för 7, 14 och 28 kompletta UTC-dagar",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-B02",
+          "title": "Implementera 60 dagsavkastningar, ddof=1 och annualisering sqrt(365)",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-B03",
+          "title": "Versionera lika vikt, 10 % målrisk och beteende vid otillräcklig eller ogiltig data",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-B04",
+          "title": "Verifiera dagsstängning, första beslut och nästa öppning med syntetiska gränsfall",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-B05",
+          "title": "Granska prefix-/framtidsprov och godkänn exakt signalrevision",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "title": "C. Utförande och nettobaserad risk",
+      "tasks": [
+        {
+          "id": "MOM-C01",
+          "title": "Implementera enhetsledger med partial fills, markvärdering och kostnad exakt en gång",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-C02",
+          "title": "Implementera handelsband, avsikter och riskprioritet utan dold ombalansering",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-C03",
+          "title": "Implementera funding, dagsreset och första/sista event enligt låst kontrakt",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-C04",
+          "title": "Implementera 2 % dagsstopp, 15 % permanent stopp och konservativ 20 %-riskkontroll",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-C05",
+          "title": "Verifiera gap, basis, likvidation och riskordning med handräknade prov och kodgranskning",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "title": "D. Utvärderare och jämförelser",
+      "tasks": [
+        {
+          "id": "MOM-D01",
+          "title": "Implementera de förregistrerade kontrollkontona på gemensam horisont och kapitalbas",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-D02",
+          "title": "Verifiera 50/50- och 1/3-blandningar, bruttoexponering och oberoende risklås",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-D03",
+          "title": "Implementera 2,5× kostnader, fundingstress, fördröjning och låst ordningskänslighet",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-D04",
+          "title": "Verifiera statistik, osäkerhet, DSR och sex booleska kriterier från fullständiga serier",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-D05",
+          "title": "Godkänn utvärderingsrevisionen efter oberoende avstämning utan verklig historikkörning",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "title": "E. Registrerad körväg och dataskydd",
+      "tasks": [
+        {
+          "id": "MOM-E01",
+          "title": "Verifiera frysta utvecklingsarkiv och separat kompletterande mark-/marginalunderlag",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-E02",
+          "title": "Avvisa skyddad data innan läsning och beräkning i samtliga ingångar",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-E03",
+          "title": "Skapa separat strikt jobb- och resultatkontrakt med behörigheter och registerkoppling",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-E04",
+          "title": "Verifiera lease, fencing, avbrott, återförsök och bevarade försöksresultat",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-E05",
+          "title": "Granska eventuell ny migration och kompatibilitet med befintlig kö och app",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "title": "F. Infrastruktur och driftsättningsunderlag",
+      "tasks": [
+        {
+          "id": "MOM-F01",
+          "title": "Kontrollera aktuellt serverpaket, exakt en worker, köläge och tjänsteanvändare läsande",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-F02",
+          "title": "Bygg reproducerbart revisionsmärkt paket och verifiera varje fils kontrollsumma",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-F03",
+          "title": "Förbered backup, verifierad återställning och säker migrations-/återgångsordning",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-F04",
+          "title": "Genomför endast uttryckligen godkänd driftsättning och eventuell migration",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-F05",
+          "title": "Omverifiera worker, revision, lås, behörigheter och insamling efter ändringen",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "G",
+      "title": "G. Godkänd historisk utvärdering",
+      "tasks": [
+        {
+          "id": "MOM-G01",
+          "title": "Dokumentera Edwins uttryckliga beslut om den exakta registrerade körningen",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-G02",
+          "title": "Verifiera kod/data/konfiguration och att inga otillåtna jobb eller arkiv används",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-G03",
+          "title": "Genomför den låsta körningen och dess förregistrerade kontroller utan parameterändring",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-G04",
+          "title": "Spara även fel och avbrott, med delresultat där kontraktet kräver det",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-G05",
+          "title": "Verifiera ett spårbart resultat och tom aktiv slot utan sen eller dubbel publicering",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    },
+    {
+      "id": "H",
+      "title": "H. Oberoende resultatgranskning och beslut",
+      "tasks": [
+        {
+          "id": "MOM-H01",
+          "title": "Räkna om netto, kapital, affärer, kostnader och riskmått från sparade fullständiga serier",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-H02",
+          "title": "Kontrollera kriterier, jämförelser, försöksräkning och kvarstående modellbegränsningar",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-H03",
+          "title": "Registrera granskat REJECT eller MORE_RESEARCH utan att ändra gamla registerrader",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-H04",
+          "title": "Dokumentera separat slutprovsbeslut endast vid granskat MORE_RESEARCH",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        },
+        {
+          "id": "MOM-H05",
+          "title": "Överlämna till fortsatt forskning eller senare READY_FOR_PAPER utan automatisk paper/live-start",
+          "status": "todo",
+          "evidence": [],
+          "note": ""
+        }
+      ]
+    }
+  ]
+}

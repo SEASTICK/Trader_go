@@ -25,3 +25,9 @@ Läs `CLAUDE.md` och relevanta projektinstruktioner före ändringar.
 - Följ docs/h0016-status.json och docs/h0016-checklista.md efter relevanta ändringar eller verifieringar; bocka bara av granskat och verifierat arbete med underlag.
 - Regenerera med `python3 scripts/render-h0016-checklist.py` och kontrollera med `--check`. Chatvyn är en ögonblicksbild.
 - Förregistrerade regler i research/h0016-protokoll.md ändras inte för att rädda ett resultat. Skilj dokumenterat kontrakt från implementation, körning och resultat. H-0013 förblir REJECT.
+
+## Momentummodellen efter H-0013
+
+- Separat statuskälla: docs/momentum-status.json. Generera docs/momentum-checklista.md med scripts/render-momentum-checklist.py och kontrollera med --check efter relevant ändring/verifiering.
+- Läs metodgranskning och kontraktsutkast innan leverans A. Utkast är inte ett godkännande eller en registrering. Behåll H-0013 REJECT och H-0016:s separata protokoll oförändrade.
+- Claude implementerar; Codex granskar exakt revision och statusunderlag. Leverans B börjar först efter granskat A-kontrakt. Ingen körning/drift/publicering genom enbart metodplanen.

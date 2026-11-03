@@ -68,6 +68,10 @@
             {
               "file": "docs/h0013-efterfoljare-forskningsplan-20261103.md",
               "detail": "Nätbaserad primärkällereview och ett samlat förslag: fast momentumensemble med volatilitetsstyrd risk och kostnadsband. Endast plan; inget nytt id, ingen implementation, historisk körning eller godkänd kandidat."
+            },
+            {
+              "file": "docs/momentum-metodgranskning-20261103.md",
+              "detail": "Codex första metodgranskning: separat statuskälla och kontraktsutkast till Claude; metodblockerare före förregistrering. Ingen ny godkänd kandidat eller historisk körning."
             }
           ],
           "note": "Pågående strategiforskning. H-0016 är förregistrerad men oprövad; den forskningsbaserade H-0013-efterföljaren är ett separat planförslag. H-0013 behåller REJECT. Inget av detta ger READY_FOR_PAPER."
