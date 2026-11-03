@@ -462,9 +462,13 @@
             {
               "file": "docs/fas2-research-lab-granskning-77.md",
               "detail": "677752f (kod a883094): Platt kapital och noll-drawdown nu visuellt verifierade i ljust/mörkt tema med ändlig SVG. Jämförelsekurvor saknas fortfarande i payload och uppgiften förblir öppen."
+            },
+            {
+              "file": "app/src/features/research-engine/h0013.dom.test.tsx",
+              "detail": "e42c534 (gren fas2-jamforelsekurvor): jämförelsekurvor för H-0013 och de fem jämförelserna levereras i resultatet (curves.comparisons, samma staplar, högst 1 500 punkter, källa och SHA-256 per kurva) och visas i Research Lab med val av jämförelse och källtabell; äldre resultat utan kurvor och kurvor med fel längd, ogiltiga värden eller fel slutvärde visas som saknade. Tolkningar J1–J7. Python 541 och frontend 105 tester samt bygge passerar; avsiktliga fel i kurvläsningen fångas. Den driftsatta workern dee88eb levererar inte kurvorna. Endast syntetisk data."
             }
           ],
-          "note": "PR #77 kodmässigt godkänd på 677752f; merge kräver grön CI. Bara lokal syntetisk verifiering, ingen riktig köning eller installerad app/publicering."
+          "note": "Kurvorna levereras och visas i e42c534. Väntar på Codex granskning; kräver ny driftsättning efter beslut för att riktiga resultat ska innehålla dem."
         },
         {
           "id": "F2-705",
