@@ -76,6 +76,10 @@
             {
               "file": "docs/momentum-a1-granskning-cb335ee.md",
               "detail": "Momentummodellens A1 har granskats på cb335ee, men kontraktsfynd blockerar förregistrering. Ingen ny kandidat godkänd och ingen pilot startad."
+            },
+            {
+              "file": "docs/momentum-a1-granskning-979fb30.md",
+              "detail": "A1 revision 2 på 979fb30 omgranskad utan historikkörning. Två kontraktsluckor återstår före förregistrering; ingen godkänd kandidat eller startad pilot."
             }
           ],
           "note": "Pågående strategiforskning. H-0016 är förregistrerad men oprövad; den forskningsbaserade H-0013-efterföljaren är ett separat planförslag. H-0013 behåller REJECT. Inget av detta ger READY_FOR_PAPER."

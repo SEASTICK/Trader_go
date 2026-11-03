@@ -1,0 +1,35 @@
+{
+  "reviewed_revision": "979fb30f483b856d9210be3591101cd0fb3b3b98",
+  "synthetic_only": true,
+  "corrected_oracle_outcomes_checked": [
+    "O14 gap directions",
+    "O5b phases",
+    "O16 +/-30s"
+  ],
+  "gap_stop_before_funding": {
+    "stop_at": "2022-01-02T00:00:00+00:00",
+    "funding_at": "2022-01-02T00:00:30+00:00",
+    "cash_after_gap_stop": "94464.6400",
+    "q_at_funding": "0",
+    "actual_payment_both_legacy_orders": "0.0000",
+    "literal_L2_payment": "8.4600",
+    "if_funding_exactly_at_opening": {
+      "A_payment": "8.4600",
+      "B_payment": "0"
+    }
+  },
+  "liquidation_following_days": {
+    "equity": [
+      "100000",
+      "0",
+      "0",
+      "0"
+    ],
+    "returns_under_unqualified_ratio": [
+      "-1",
+      "undefined_0_over_0",
+      "undefined_0_over_0"
+    ],
+    "needs_explicit_absorbing_zero_convention": true
+  }
+}

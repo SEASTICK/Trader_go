@@ -37,6 +37,7 @@ Fas 3-plan efter godkänd Fas 2. Edwin vill prioritera en bättre strategi med p
   - Underlag: [docs/h0013-efterfoljare-forskningsplan-20261103.md](h0013-efterfoljare-forskningsplan-20261103.md) — Nätbaserad primärkällereview och ett samlat förslag: fast momentumensemble med volatilitetsstyrd risk och kostnadsband. Endast plan; inget nytt id, ingen implementation, historisk körning eller godkänd kandidat.
   - Underlag: [docs/momentum-metodgranskning-20261103.md](momentum-metodgranskning-20261103.md) — Codex första metodgranskning: separat statuskälla och kontraktsutkast till Claude; metodblockerare före förregistrering. Ingen ny godkänd kandidat eller historisk körning.
   - Underlag: [docs/momentum-a1-granskning-cb335ee.md](momentum-a1-granskning-cb335ee.md) — Momentummodellens A1 har granskats på cb335ee, men kontraktsfynd blockerar förregistrering. Ingen ny kandidat godkänd och ingen pilot startad.
+  - Underlag: [docs/momentum-a1-granskning-979fb30.md](momentum-a1-granskning-979fb30.md) — A1 revision 2 på 979fb30 omgranskad utan historikkörning. Två kontraktsluckor återstår före förregistrering; ingen godkänd kandidat eller startad pilot.
   - Pågående strategiforskning. H-0016 är förregistrerad men oprövad; den forskningsbaserade H-0013-efterföljaren är ett separat planförslag. H-0013 behåller REJECT. Inget av detta ger READY_FOR_PAPER.
 - [ ] **F3-202** Verifiera dokumenterat slutprov och READY_FOR_PAPER innan riktigt framåttest får starta
 - [ ] **F3-203** Frys strategi eller väljare, kodrevision, parametrar och kostnadsmodell
