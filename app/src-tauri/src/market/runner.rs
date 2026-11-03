@@ -26,6 +26,10 @@ pub fn now_ms() -> i64 {
         .unwrap_or(0)
 }
 
+/// Väggklockan som insamlingen räknar med (millisekunder sedan 1970, UTC). I appen är det alltid `now_ms`;
+/// tester kan ge en egen klocka så att utfallet inte beror på dagens datum.
+pub type Clock = Arc<dyn Fn() -> i64 + Send + std::marker::Sync>;
+
 #[derive(Debug, Clone)]
 pub struct Timing {
     pub backoff_base: Duration,
@@ -114,6 +118,7 @@ pub struct Runner {
     on_bar: Box<dyn Fn(&BarEvent) + Send>,
     stop: Arc<AtomicBool>,
     last_publish: Option<Instant>,
+    clock: Clock,
 }
 
 impl Runner {
@@ -144,7 +149,19 @@ impl Runner {
             on_bar: Box::new(|_| {}),
             stop,
             last_publish: None,
+            clock: Arc::new(now_ms),
         }
+    }
+
+    /// Byter väggklocka. Bara för tester; appen använder den verkliga tiden.
+    #[cfg(test)]
+    pub fn with_clock(mut self, clock: Clock) -> Self {
+        self.clock = clock;
+        self
+    }
+
+    fn now(&self) -> i64 {
+        (self.clock)()
     }
 
     /// Diagrammen lyssnar här i stället för att öppna egna anslutningar.
@@ -191,7 +208,7 @@ impl Runner {
             s.confirmed_gaps = confirmed;
             s.corrections = corrections;
             s.live_open_time = live;
-            s.updated_at = now_ms();
+            s.updated_at = self.now();
             s.clone()
         };
         if force
@@ -215,13 +232,15 @@ impl Runner {
 
     /// REST-ikappkörning och luckfyllnad. Returnerar luckor som finns kvar.
     fn catch_up(&mut self) -> Result<Vec<(i64, i64)>, SyncError> {
+        let now = self.now();
         let rep = self
             .sync
-            .backfill(self.src.as_ref(), &mut self.store, now_ms())?;
+            .backfill(self.src.as_ref(), &mut self.store, now)?;
         self.status.lock().unwrap().rejected += rep.rejected as u64;
+        let now = self.now();
         let gaps = self
             .sync
-            .fill_gaps(self.src.as_ref(), &mut self.store, now_ms())?;
+            .fill_gaps(self.src.as_ref(), &mut self.store, now)?;
         self.emit_bar("resync", None);
         Ok(gaps)
     }
@@ -338,7 +357,7 @@ impl Runner {
             match ws.read() {
                 Ok(Message::Text(text)) => {
                     last_msg = Instant::now();
-                    let received = now_ms();
+                    let received = self.now();
                     match self.src.parse_stream(&text) {
                         Ok(StreamMsg::Kline {
                             bar,
@@ -479,7 +498,7 @@ impl Runner {
             if closed_is_behind(
                 last_closed,
                 self.sync.step,
-                now_ms(),
+                self.now(),
                 self.timing.close_grace.as_millis() as i64,
             ) {
                 match self.catch_up() {
@@ -487,7 +506,7 @@ impl Runner {
                         if !closed_is_behind(
                             self.store.range(&self.sync.key).ok().and_then(|r| r.1),
                             self.sync.step,
-                            now_ms(),
+                            self.now(),
                             self.timing.close_grace.as_millis() as i64,
                         ) =>
                     {
@@ -687,6 +706,8 @@ mod tests {
             ..Timing::default()
         };
         let fake_bars = Arc::new(src);
+        // Fast testklocka, oberoende av dagens datum: en minut in i stapel 4 (stapel 0–3 stängda).
+        let clock = Arc::new(std::sync::atomic::AtomicI64::new(T0 + 4 * STEP + 60_000));
         // Börsen får stapel 4 och 5 medan anslutningen är nere.
         let runner_src: Box<dyn Source> = Box::new(ArcSource(fake_bars.clone()));
         let bars_seen = Arc::new(Mutex::new(Vec::<(&'static str, Option<i64>)>::new()));
@@ -705,7 +726,11 @@ mod tests {
                 .lock()
                 .unwrap()
                 .push((e.kind, e.bar.map(|b| b.open_time)))
-        }));
+        }))
+        .with_clock({
+            let clock = clock.clone();
+            Arc::new(move || clock.load(Ordering::SeqCst))
+        });
         let probe = status.clone();
         let handle = std::thread::spawn(move || runner.run());
 
@@ -728,6 +753,8 @@ mod tests {
             b.push(test_bar(T0 + 4 * STEP, STEP));
             b.push(test_bar(T0 + 5 * STEP, STEP));
         }
+        // Medan anslutningen är nere går tiden fram till en minut efter att stapel 5 stängt.
+        clock.store(T0 + 6 * STEP + 60_000, Ordering::SeqCst);
         go_tx.send(()).unwrap();
         assert!(
             wait_for(&|s| s.reconnects >= 1
@@ -745,6 +772,11 @@ mod tests {
             *pongs.lock().unwrap(),
             1,
             "ping answered with the same payload"
+        );
+        assert_eq!(
+            probe.lock().unwrap().updated_at,
+            T0 + 6 * STEP + 60_000,
+            "the runner reads the injected clock, not the wall clock"
         );
         stop.store(true, Ordering::SeqCst);
         handle.join().unwrap();
