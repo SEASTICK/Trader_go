@@ -1,10 +1,10 @@
 # Fas 2 – Utvecklingsplan
 
-**29 av 40 uppgifter verifierade · 8 arbetsområden.**
+**30 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-H-0013 · Kontrollerad 2026-11-02 · Granskad kodversion `dee88eb65196b17879b2fc22c0b7521ad37501c3`.
+H-0013 · Kontrollerad 2026-11-03 · Granskad kodversion `e0c8dc8`.
 
-PR #74 mergad som dee88eb, Engine check grön. Eget slutpaketbygge är byteidentiskt med levererat paket och verifierar 186 filer. Granskad runtimekod oförändrad. F2-605 väntar på utförd drift; inget uppladdat, migrerat, driftsatt eller kört mot riktig data i kontrollen.
+F2-605 driftutfall godkänt 2026-11-03: worker dee88eb och 0005 kontrollerade, backupunderlag redovisat och SQL-grants bekräftade i Edwins skärmbild (true/false/false). 30/40 verifierade. Ingen H-0013-körning startad; medlemssession, appflöde och moln-JWT-samtidighet ingår inte i denna kontroll.
 
 ## Uppdateringsregler
 
@@ -99,41 +99,41 @@ PR #74 mergad som dee88eb, Engine check grön. Eget slutpaketbygge är byteident
 
 - [x] **F2-501** Jämför med köp-och-behåll, varje kandidat ensam och en likaviktad blandning
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov.
-  - PR #72 mergad som d25f444, utvärderingskod oförändrad mot godkänd a5e8fc3. Bara syntetisk verifiering; full riktig forskningskörning och driftsättning återstår.
+  - PR #72 mergad, kod verifierad syntetiskt och nu del av driftsatt worker dee88eb. Ingen full H-0013-forskningskörning är startad.
 - [x] **F2-502** Verifiera kostnadsstress, funding och riskmodell för H-0013
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov.
-  - PR #72 mergad som d25f444, utvärderingskod oförändrad mot godkänd a5e8fc3. Bara syntetisk verifiering; full riktig forskningskörning och driftsättning återstår.
+  - PR #72 mergad, kod verifierad syntetiskt och nu del av driftsatt worker dee88eb. Ingen full H-0013-forskningskörning är startad.
 - [x] **F2-503** Kör förregistrerad permutation och slumpkontroll med fullständig försöksredovisning
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov.
-  - PR #72 mergad som d25f444, utvärderingskod oförändrad mot godkänd a5e8fc3. Bara syntetisk verifiering; full riktig forskningskörning och driftsättning återstår.
+  - PR #72 mergad, kod verifierad syntetiskt och nu del av driftsatt worker dee88eb. Ingen full H-0013-forskningskörning är startad.
 - [x] **F2-504** Redovisa osäkerhet, 81 spelböcker, regimresultat och resultat utan bästa året
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov.
-  - PR #72 mergad som d25f444, utvärderingskod oförändrad mot godkänd a5e8fc3. Bara syntetisk verifiering; full riktig forskningskörning och driftsättning återstår.
+  - PR #72 mergad, kod verifierad syntetiskt och nu del av driftsatt worker dee88eb. Ingen full H-0013-forskningskörning är startad.
 - [x] **F2-505** Bedöm alla fem förregistrerade kriterier och spara även negativa eller avbrutna försök
   - Underlag: [docs/fas2-utvardering-granskning-72.md](fas2-utvardering-granskning-72.md) — a5e8fc3 (kod ab97a0a): oberoende omgranskning godkänd. 478 Python-testfall inklusive 70 utvärderingstestfall passerar. Direkt slutprovsskydd, kapitalviktade riskmått, omsättning och bevarade delresultat vid avbrott verifierade med egna reproduktionsprov.
-  - PR #72 mergad som d25f444, utvärderingskod oförändrad mot godkänd a5e8fc3. Bara syntetisk verifiering; full riktig forskningskörning och driftsättning återstår.
+  - PR #72 mergad, kod verifierad syntetiskt och nu del av driftsatt worker dee88eb. Ingen full H-0013-forskningskörning är startad.
 
 ## 6. Supabase och DigitalOcean
 
-4/5 verifierade.
+5/5 verifierade.
 
 - [x] **F2-601** Skapa ett separat strikt kökontrakt för H-0013 med autentisering och RLS
   - Underlag: [docs/fas2-drift-granskning-74.md](fas2-drift-granskning-74.md) — e0c41ca (kod d01dccd): kökontrakt återverifierat efter ny kontroll under advisory lock. Båda ordningarna för köning/återgång passerar i lokal PostgreSQL; kö- och rättighetstester passerar.
-  - Kodmässigt verifierat lokalt. Faktisk migration och Supabase-/driftkontroller återstår i F2-605.
+  - 0005 är aktiv och rena kontraktsprov samt anon-nekanden verifierade på servern. Authenticated-grants och riktigt medlemstest är fortfarande skilda kontroller; se driftutfallsgranskning.
 - [x] **F2-602** Anslut H-0013 till samma enda worker med lease och skydd mot dubbla resultat
   - Underlag: [docs/fas2-drift-granskning-74.md](fas2-drift-granskning-74.md) — eb15650: utbrutet workerlås och revisionslogg återverifierade med riktiga processer. 532 Python-tester och lokal PostgreSQL-samtidighet passerar; en reservation/publicering och fencing verifierade.
-  - PR #74 mergad som dee88eb, lås och revisionslogg lokalt verifierade. Ingen ny worker driftsatt i denna kontroll.
+  - Worker dee88eb verifierad på dropleten 2026-11-03: exakt en worker, PID 24061, lås och revision stämmer, 0 omstarter.
 - [x] **F2-603** Begränsa dataläsningen till verifierade frysta arkiv innan några filer öppnas
   - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — a852aa3 (kod cd9701d): Exakta manifestnamn före arkivläsning, SHA256 och CHECKSUM samt stapel-/fundinghash verifierade på syntetiska 120 arkiv; 2019/2025 öppnas inte.
   - Arkivkontrollen är oförändrad i 2160c6e och fortsatt verifierad på syntetiska arkiv. PR #73 kodmässigt godkänd på 445178d; ingen riktig datakörning eller driftsättning.
 - [x] **F2-604** Testa avbrott, timeout, återförsök och återhämtning efter workeromstart
   - Underlag: [docs/fas2-ko-granskning-73.md](fas2-ko-granskning-73.md) — 445178d (kod 2160c6e): oberoende omgranskning godkänd. 521 Python-tester, 8 riktiga signal-/processtester och båda PGlite-kösviterna passerar. Tidigare SIGTERM-felprov sparar nu försöket; felaktiga SQL-kriterier och beslut avvisas utan ändrad lease.
   - PR #73 mergad som d6f2eae, med godkänd kod 445178d. Lokalt verifierad. Faktiska Supabase-/driftkontroller återstår i F2-605.
-- [ ] **F2-605** Driftsätt verifierad kod med loggar, resursgränser och dokumenterad återgång **Pågår.**
+- [x] **F2-605** Driftsätt verifierad kod med loggar, resursgränser och dokumenterad återgång
   - Underlag: [docs/fas2-drift-granskning-74.md](fas2-drift-granskning-74.md) — e0c41ca: godkänt underlag efter omgranskning, 538 Python-tester och lokala SQL-/samtidighetstester passerar. Paket SHA256 11dd7a0faabd24f8939ec2c64ea3d59b0d2a33787f0c710e3833d702e7b7378b; 186 filer verifierar.
   - Underlag: [docs/fas2-drift-granskning-74.md](fas2-drift-granskning-74.md) — Slutpaket dee88eb: Engine check grön, 651 788 byte och SHA256 62c7d8e482ef6a1755d670f74a7631c221469e61259a09b285f32627936c8575. Eget bygge byteidentiskt; 186 filer verifierar.
-  - Underlag: [docs/fas2-driftsattning-utfall-20261102.md](fas2-driftsattning-utfall-20261102.md) — Driftsatt enligt steg 1–8: paket dee88eb (SHA-256 62c7d8e4…8575) verifierat på servern, kontrollerat stopp, install.sh, start med revision=dee88eb, check-single-worker.sh godkänd (en worker, lås, paket, revision), egen export före ändring, 0005 applicerad av Edwin i SQL Editor efter ett misslyckat första försök; PostgREST ser funktionerna, kontraktet och anon-nekanden verifierade från servern, 0 H-0013-körningar, marknadsinsamling felfri på ny release. Ej verifierat: authenticated-rättighet med riktig session, leverantörernas backupdatum, larm.
-  - Driftsatt 2026-11-02/03 och verifierat från servern. Väntar på Codex granskning av utfallet; ingen H-0013-körning har startats.
+  - Underlag: [docs/fas2-driftutfall-granskning-76.md](fas2-driftutfall-granskning-76.md) — 2026-11-03: oberoende drift-/kontraktskontroller och privat export verifierade. Edwin redovisar DO veckobackup från 1 dag sedan och Supabase-backup 2026-11-03 06:47:12 UTC; skärmbild visar auth_enqueue=true, auth_result_ok=false, auth_finish=false.
+  - Driftsättning godkänd inom dokumenterad avgränsning. Riktigt medlemstest, appens E2E och JWT-samtidighet är inte verifierade av grantkontrollen. Inget H-0013-jobb startat.
 
 ## 7. Visa Fas 2 i Research Lab
 
