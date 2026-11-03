@@ -29,3 +29,14 @@ Uteslut manifestfilen vid generering, verifiera samtliga 23 innehållsfiler och 
 A1 och Mac-paketets tekniska kontroller är godkända. **PR #81 behöver kompletteras för manifestfyndet innan A2 startas.** F2-803 förblir `todo`. Efter rättningen: bevara Codex checklistestatus och förbered A2 med Stable avslutad och aktuell verifierad backup. Separat appkopia med samma identifierare delar lokala data.
 
 Ingen app startades eller installerades, ingen server ändrades, ingen release publicerades och ingen forskningskörning startades. Slutprovsarkiven öppnades inte. Ingen strategi är godkänd för papper/live.
+
+
+## Omgranskning av manifesträttningen – 2026-11-03
+
+Granskad head `6ff6b5e0249099419ad4fad99f39e255e2c4b68c`. **P2 rättad.** Egen ny kontroll av den befintliga backupen bekräftar 23 manifestposter utan självpost, samtliga med korrekt SHA-256, och 24 filer totalt inklusive manifestet. Manifestets egen hash är `f86865d51192e8867e94ca4dfdb4572edbafa2eb15b64f08024259c28a46fec4`, samma som dokumentationen. De 23 innehållsfilerna matchar fortfarande sina tidigare verifierade kontrollsummor.
+
+Egen read-only/immutable-integritetskontroll omfattar nu **alla tio SQLite-filer** och ger `ok` för samtliga. Det tidigare antalet nio i denna granskning berodde på att Codex filfilter bara tog `.db` och `.sqlite`, och därför missade WebKits `localstorage.sqlite3`. Det var en begränsning i den tidigare kontrollen, inte en nytillkommen eller ändrad backupfil. Historiken ovan behålls, men korrekt total är tio SQLite-filer.
+
+Planen redovisar rättningen och generering av nya manifest utan självpost. **PR #81 är godkänd för merge som A1-/A2-förberedelse på `6ff6b5e`.** Inga öppna fynd återstår från denna granskning. Vid en eventuell återställning bör även destinationens återställda filer verifieras mot backupen; en kontroll i backupmappen ensam bevisar backupens integritet, inte att återkopieringen lyckats.
+
+F2-801 förblir verifierad, F2-803 förblir `todo` eftersom A2 inte är utfört. Status **36/40**. Nästa steg är A2 enligt planen med aktuell backup och Stable avslutad. Ingen riktig köning, publicering eller slutprovsåtkomst omfattas. Ingen app startades eller installerades och inga backupfiler ändrades av omgranskningen.
