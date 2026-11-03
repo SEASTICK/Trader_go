@@ -89,8 +89,41 @@ export type H0013View =
       finalPlaybook: [string, string][] | null;
       permutation: { p: number | null; n: number | null; k: number | null } | null;
       deflated: { standard: number | null; playbooks: number | null } | null;
-      tRequiredNow: number | null; equity: { t: string[]; equity: number[] } | null;
+      tRequiredNow: number | null; equity: { t: string[]; equity: number[] } | null; comparisonCurves: ComparisonCurves | null;
       trace: { label: string; value: string }[]; trades: Dict[] | null; tradeIssues: string[]; warnings: string[]; missing: string[] };
+
+export type ComparisonCurve = { key: string; label: string; data: number[] | null; source: string; sha: string | null;
+  bars: number | null; problem: string | null };
+export type ComparisonCurves = { t: string[]; points: number | null; bars: number | null; curves: ComparisonCurve[] };
+export const CURVE_KEYS = ["h0013", ...Object.keys(COMPARISONS)];
+const curveLabel = (k: string) => (k === "h0013" ? "H-0013" : COMPARISONS[k]);
+
+/** Jämförelsekurvorna (docs/fas2-jamforelsekurvor-tolkningar.md). null för ett äldre resultat utan kurvor. En kurva
+ *  med fel längd, ogiltiga värden eller ett slutvärde som inte stämmer med nyckeltalen visas inte; den blir saknad. */
+export function readComparisonCurves(raw: unknown, totals: Record<string, number | null>): ComparisonCurves | null {
+  if (!isDict(raw) || !Array.isArray(raw.t) || raw.t.length < 2 || !raw.t.every(x => typeof x === "string")) return null;
+  const t = raw.t as string[];
+  const series = isDict(raw.series) ? raw.series : {};
+  const sources = isDict(raw.sources) ? raw.sources : {};
+  const curves = CURVE_KEYS.map(key => {
+    const src = isDict(sources[key]) ? sources[key] as Dict : {};
+    const values = series[key];
+    let problem: string | null = null;
+    if (!Array.isArray(values)) problem = "Kurvan saknas i resultatet.";
+    else if (values.length !== t.length) problem = "Kurvan har andra tidpunkter än H-0013 och visas inte.";
+    else if (!values.every(v => typeof v === "number" && Number.isFinite(v))) problem = "Kurvan innehåller ogiltiga värden och visas inte.";
+    else {
+      const total = totals[key];
+      const last = values[values.length - 1] as number;
+      if (total !== null && total !== undefined && Math.abs(last - (1 + total)) > 1e-6 * Math.max(1, Math.abs(1 + total))) {
+        problem = "Kurvans slutvärde stämmer inte med nyckeltalen och visas inte.";
+      }
+    }
+    return { key, label: curveLabel(key), data: problem ? null : (values as number[]), problem,
+      source: str(src.source) ?? "Saknas", sha: str(src.returns_sha256), bars: num(src.bars) };
+  });
+  return { t, points: num(raw.points), bars: num(raw.bars), curves };
+}
 
 /** Affärsloggen: null när den saknas eller inte är en lista. Ogiltiga rader och avvikelse mot nyckeltalens
  *  antal redovisas; de döljs inte och inget fylls i. */
@@ -159,6 +192,11 @@ export function readResult(payload: unknown): H0013View {
     && curves.equity.every(v => typeof v === "number" && Number.isFinite(v))
     ? { t: curves.t.map(String), equity: curves.equity as number[] } : null;
   if (!equity) missing.push("Kapitalkurva");
+  const totals: Record<string, number | null> = { h0013: main!.total_return,
+    ...Object.fromEntries(comparisons.map(([k, sm]) => [k, sm ? sm.total_return : null])) };
+  const comparisonCurves = readComparisonCurves(curves.comparisons, totals);
+  if (!comparisonCurves) missing.push("Jämförelsekurvor");
+  else comparisonCurves.curves.filter(c => !c.data).forEach(c => missing.push(`Kurva: ${c.label}`));
   const tradeLog = readTrades(payload.trades, main!.trades);
   if (tradeLog.trades === null) missing.push("Affärslogg");
   else if (tradeLog.issues.length) missing.push("Fullständig affärslogg");
@@ -179,7 +217,7 @@ export function readResult(payload: unknown): H0013View {
     comparisons, regimes, windows, finalPlaybook,
     permutation: perm ? { p: num(perm.p_value), n: num(perm.n), k: num(perm.at_least_as_high) } : null,
     deflated: dsr ? { standard: num(dsr.default_variance), playbooks: num(dsr.playbook_variance) } : null,
-    tRequiredNow: num(inner.t_required_now), equity, trace,
+    tRequiredNow: num(inner.t_required_now), equity, comparisonCurves, trace,
     trades: tradeLog.trades, tradeIssues: tradeLog.issues,
     warnings: (Array.isArray(payload.warnings) ? payload.warnings : []).filter((w): w is string => typeof w === "string"),
     missing,

@@ -110,10 +110,11 @@ def result_payload(job: dict, result: dict, data: dict, manifest_sha: str) -> di
     return clean({
         "mode": "registered", "hypothesis_id": HYPOTHESIS, "evaluation_version": fas2_eval.EVALUATION_VERSION,
         "status": "completed", "decision": result["decision"], "criteria": result["criteria"],
-        "stats": main, "curves": {"t": result["curves"]["t"], "equity": eq},
+        "stats": main, "curves": {"t": result["curves"]["t"], "equity": eq,
+                                  "comparisons": result.get("comparison_curves")},
         "dataset_sha256": DATASET, "manifest_sha256": manifest_sha, "data": data, "holdout_loaded": False,
         "attempt": job.get("attempts"), "run_id": job.get("id"), "revision": revision(),
-        "result": {k: v for k, v in result.items() if k not in ("curves", "trades_out")},
+        "result": {k: v for k, v in result.items() if k not in ("curves", "trades_out", "comparison_curves")},
         "trades": trades,
         "warnings": ["Historisk forskning på utvecklingsperioden 2020–2024; slutprovet har inte lästs",
                      "Beslutet förs in i research/registry.md först efter granskning",

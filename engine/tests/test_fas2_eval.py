@@ -535,3 +535,42 @@ def test_aborted_record_never_overwrites_an_existing_file(repo, monkeypatch):
     with pytest.raises(FileExistsError):
         fas2_eval.run(repo)
     assert first.read_text() == before
+
+
+# Jämförelsekurvor (F2-704, docs/fas2-jamforelsekurvor-tolkningar.md)
+
+def test_comparison_curves_share_the_h0013_bars_and_end_at_each_total_return(forced, dev):
+    cc = forced["comparison_curves"]
+    names = {"h0013", "buy_and_hold", EMA, BB, "equal_weight_mix", "risk_filter"}
+    assert set(cc["series"]) == set(cc["sources"]) == names
+    assert all(len(v) == len(cc["t"]) == cc["points"] for v in cc["series"].values())
+    assert cc["points"] <= fas2_eval.CURVE_POINTS and cc["bars"] >= cc["points"]
+    assert cc["t"][-1] == forced["curves"]["t"][-1], "the last bar is always included"
+    assert cc["series"]["h0013"][-1] == pytest.approx(1 + forced["h0013"]["total_return"], rel=1e-7)
+    for name in names - {"h0013"}:
+        assert cc["series"][name][-1] == pytest.approx(1 + forced["comparisons"][name]["total_return"], rel=1e-7)
+        assert cc["sources"][name]["bars"] == cc["bars"]
+    assert all(v > 0 for s in cc["series"].values() for v in s)
+
+
+def test_comparison_curve_hashes_can_be_recomputed_from_the_same_data(dev):
+    bars, funding = dev
+    wf = fas2.walk_forward(bars, funding)
+    bh = fas2_eval.curve(bars, funding, fas2_eval.buy_and_hold())
+    cc = fas2_eval.comparison_curves(wf.returns, {"buy_and_hold": bh["returns"]})
+    again = fas2_eval.comparison_curves(fas2.walk_forward(bars, funding).returns,
+                                        {"buy_and_hold": fas2_eval.curve(bars, funding, fas2_eval.buy_and_hold())["returns"]})
+    assert cc == again
+    assert cc["sources"]["buy_and_hold"]["returns_sha256"] == fas2_eval._returns_sha256(bh["returns"])
+    changed = bh["returns"].copy(); changed.iloc[10] += 1e-9
+    assert fas2_eval._returns_sha256(changed) != cc["sources"]["buy_and_hold"]["returns_sha256"]
+
+
+def test_comparison_curves_downsample_with_the_same_index_and_refuse_other_bars():
+    idx = pd.date_range("2022-01-01", periods=4001, freq="4h", tz="UTC")
+    a = pd.Series(0.001, index=idx); b = pd.Series(-0.0005, index=idx)
+    cc = fas2_eval.comparison_curves(a, {"buy_and_hold": b}, points=1500)
+    assert cc["points"] <= 1501 and cc["t"][0] == idx[0].isoformat() and cc["t"][-1] == idx[-1].isoformat()
+    assert cc["series"]["h0013"][-1] == pytest.approx(1.001 ** 4001, rel=1e-6)
+    with pytest.raises(AssertionError, match="samma staplar"):
+        fas2_eval.comparison_curves(a, {"buy_and_hold": b.iloc[1:]})

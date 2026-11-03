@@ -6,9 +6,9 @@ import { createRoot, Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { chartDomain, LineChart } from "../../components/Charts";
 import type { ResearchApi, Run } from "./api";
-import { readResult, readTrades } from "./h0013";
+import { readComparisonCurves, readResult, readTrades } from "./h0013";
 import H0013Panel, { H0013Result, RETRY_MS } from "./H0013Panel";
-import { payload, run } from "./h0013.fixtures";
+import { comparisonCurves, payload, run } from "./h0013.fixtures";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 let host: HTMLDivElement; let root: Root;
@@ -133,5 +133,50 @@ describe("Affärsloggen", () => {
     expect(v.missing).not.toContain("Affärslogg"); expect(v.tradeIssues).toEqual([]);
     await render(<H0013Result view={v} />);
     expect(text()).toContain("Affärsloggen är tom; nyckeltalen anger också 0 affärer");
+  });
+});
+
+describe("Jämförelsekurvor", () => {
+  it("visas på samma staplar med källor, och byte av jämförelse ritar om utan NaN", async () => {
+    const v = readResult(payload());
+    expect(v.ok).toBe(true); if (!v.ok) return;
+    expect(v.missing).toEqual([]);
+    await render(<H0013Result view={v} />);
+    expect(text()).toContain("Jämförelsekurvor på samma staplar"); expect(text()).toContain("3 punkter av 6570 staplar");
+    expect(text()).toContain("fas2_eval.buy_and_hold"); expect(text()).toContain("b".repeat(64));
+    const tab = [...host.querySelectorAll("button")].find(b => b.textContent === "Likaviktad blandning")!;
+    await act(async () => { tab.click(); }); await flush();
+    expect(text()).toContain("Likaviktad blandning");
+    for (const d of paths()) expect(d).not.toMatch(/NaN|Infinity/);
+  });
+  it("ett äldre resultat utan kurvor visas med kurvorna som saknade och nyckeltalen kvar", async () => {
+    const old = payload(); delete (old.curves as Record<string, unknown>).comparisons;
+    const v = readResult(old);
+    expect(v.ok).toBe(true); if (!v.ok) return;
+    expect(v.comparisonCurves).toBeNull(); expect(v.missing).toEqual(["Jämförelsekurvor"]);
+    await render(<H0013Result view={v} />);
+    expect(text()).toContain("Jämförelsekurvorna saknas i resultatet"); expect(text()).toContain("Köp och behåll");
+    expect(text()).toContain("HISTORIK · H-0013");
+  });
+  it.each([
+    ["saknad kurva", { series: { ...comparisonCurves().series, risk_filter: undefined } }, "Kurvan saknas i resultatet."],
+    ["fel längd", { series: { ...comparisonCurves().series, risk_filter: [1, 1.12] } }, "andra tidpunkter"],
+    ["ogiltigt värde", { series: { ...comparisonCurves().series, risk_filter: [1, null, 1.12] } }, "ogiltiga värden"],
+    ["slutvärde mot nyckeltal", { series: { ...comparisonCurves().series, risk_filter: [1, 1, 1.5] } }, "stämmer inte med nyckeltalen"],
+  ])("%s visas som saknad, inte ritad", async (_n, over, problem) => {
+    const v = readResult(payload({ curves: { ...payload().curves, comparisons: comparisonCurves(JSON.parse(JSON.stringify(over))) } }));
+    expect(v.ok).toBe(true); if (!v.ok) return;
+    const bad = v.comparisonCurves!.curves.find(c => c.key === "risk_filter")!;
+    expect(bad.data).toBeNull(); expect(bad.problem).toContain(problem.replace(".", ""));
+    expect(v.missing).toEqual(["Kurva: Riskfilter (EMA, platt i ned/hög vol)"]);
+    await render(<H0013Result view={v} />);
+    const tab = [...host.querySelectorAll("button")].find(b => b.textContent?.startsWith("Riskfilter"))!;
+    await act(async () => { tab.click(); }); await flush();
+    expect(text()).toContain(problem.replace(".", ""));
+  });
+  it("utan giltig tidsaxel räknas alla kurvor som saknade", () => {
+    expect(readComparisonCurves({ t: ["x"], series: {} }, {})).toBeNull();
+    expect(readComparisonCurves({ t: "nope" }, {})).toBeNull();
+    expect(readComparisonCurves(undefined, {})).toBeNull();
   });
 });

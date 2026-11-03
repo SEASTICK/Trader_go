@@ -1,8 +1,9 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
+import { Segmented } from "../../components/ui";
 import { LineChart } from "../../components/Charts";
 import { StatusDot } from "../../components/ui";
 import type { ResearchApi, Run } from "./api";
-import { COMPARISONS, CRITERIA, describeRun, drawdown, enqueueBlocker, H0013View, isH0013, PROTOCOL, readResult, STATUS } from "./h0013";
+import { ComparisonCurves, COMPARISONS, CRITERIA, describeRun, drawdown, enqueueBlocker, H0013View, isH0013, PROTOCOL, readResult, STATUS } from "./h0013";
 import { number } from "./ResultViews";
 
 const message = (e: unknown) => e instanceof Error ? e.message : "Ett oväntat fel inträffade.";
@@ -184,7 +185,8 @@ export function H0013Result({ view }: { view: H0013View }) {
       <thead><tr><th>Kurva</th><th>Netto</th><th>Sharpe</th><th>Max nedgång</th><th>Affärer</th></tr></thead><tbody>
       <tr><td><b>H-0013</b></td><td>{pct(v.main.total_return)}</td><td>{number(v.main.sharpe)}</td><td>{pct(v.main.max_drawdown)}</td><td>{number(v.main.trades)}</td></tr>
       {v.comparisons.map(([k, s]) => <tr key={k}><td>{COMPARISONS[k]}</td>{s ? <><td>{pct(s.total_return)}</td><td>{number(s.sharpe)}</td><td>{pct(s.max_drawdown)}</td><td>{number(s.trades)}</td></> : <td colSpan={4}>Saknas i resultatet</td>}</tr>)}
-    </tbody></table></div><p className="muted">Resultatet innehåller jämförelsernas nyckeltal men inte deras kurvor; därför ritas bara H-0013:s kurva.</p></div>
+    </tbody></table></div></div>
+    <ComparisonCurvesCard curves={v.comparisonCurves} />
     <div className="card pad"><h2>Kapitalutveckling</h2>{v.equity
       ? <><LineChart watermark={null} labels={v.equity.t.map(t => t.slice(0, 10))} series={[{ name: "H-0013 (start 100 000)", data: v.equity.equity.map(e => e * PROTOCOL.capital), cls: "s1" }]} />
           <h3>Drawdown</h3><LineChart watermark={null} labels={v.equity.t.map(t => t.slice(0, 10))} series={[{ name: "Drawdown (%)", data: drawdown(v.equity.equity).map(x => x * 100), cls: "s2" }]} /></>
@@ -211,4 +213,27 @@ export function H0013Result({ view }: { view: H0013View }) {
       {v.missing.length > 0 && <p role="note">Saknas i resultatet: {v.missing.join(", ")}.</p>}
       <ul>{v.warnings.map(w => <li key={w}>{w}</li>)}</ul></div>
   </>;
+}
+
+export function ComparisonCurvesCard({ curves }: { curves: ComparisonCurves | null }) {
+  const options = Object.values(COMPARISONS);
+  const [chosen, setChosen] = useState(options[0]);
+  if (!curves) return <div className="card pad"><h2>Jämförelsekurvor</h2>
+    <p>Jämförelsekurvorna saknas i resultatet. Resultat från den driftsatta workern före denna version innehåller bara jämförelsernas nyckeltal.</p></div>;
+  const own = curves.curves.find(c => c.key === "h0013")!;
+  const other = curves.curves.find(c => c.label === chosen)!;
+  const labels = curves.t.map(t => t.slice(0, 10));
+  return <div className="card pad"><h2>Jämförelsekurvor på samma staplar</h2>
+    <p className="muted">Kapital med start 100 000. {curves.points ?? "?"} punkter av {curves.bars ?? "?"} staplar, samma urval för alla kurvor.</p>
+    <Segmented value={chosen} options={options} onChange={setChosen} />
+    {own.data && other.data
+      ? <LineChart watermark={null} labels={labels} series={[{ name: "H-0013", data: own.data.map(x => x * PROTOCOL.capital), cls: "s1" },
+          { name: other.label, data: other.data.map(x => x * PROTOCOL.capital), cls: "s2" }]} />
+      : <p role="note">{!own.data ? `H-0013: ${own.problem}` : `${other.label}: ${other.problem}`}</p>}
+    <details><summary>Källor och kontrollsummor</summary><div className="research-table"><table>
+      <thead><tr><th>Kurva</th><th>Källa</th><th>Staplar</th><th>SHA-256 för avkastningen</th></tr></thead><tbody>
+      {curves.curves.map(c => <tr key={c.key}><td>{c.label}{c.problem && <small role="note">{c.problem}</small>}</td><td><code>{c.source}</code></td>
+        <td>{c.bars ?? "Saknas"}</td><td><code className="research-hash">{c.sha ?? "Saknas"}</code></td></tr>)}
+    </tbody></table></div></details>
+  </div>;
 }
