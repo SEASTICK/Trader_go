@@ -88,6 +88,10 @@
             {
               "file": "docs/momentum-a2-granskning-db7f83b.md",
               "detail": "H-0017 är förregistrerad och A2 godkänd på db7f83b. Endast signalimplementation med syntetiska tester får nu börja; inget historiskt resultat eller pilotgodkännande finns."
+            },
+            {
+              "file": "docs/momentum-B-granskning-bfdb33b.md",
+              "detail": "H-0017:s B-del granskad på bfdb33b, enbart syntetiskt. Signalberäkningar verifierade men tomdata-API behöver rättas före C. Inget ekonomiskt resultat eller pilotgodkännande."
             }
           ],
           "note": "H-0017 är separat förregistrerad och metodgranskad. Implementation och historisk utvärdering återstår. H-0013 REJECT och H-0016 oförändrade; ingen kandidat har READY_FOR_PAPER."

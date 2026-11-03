@@ -3,8 +3,8 @@
   "title": "Efterföljare till H-0013 – granskning och implementation",
   "hypothesis": "H-0017 – riskstyrd tidsseriemomentum på BTCUSDT",
   "updated": "2026-11-03",
-  "reviewed_revision": "db7f83b56e79f8a76b5e0d297be4503170070c0f",
-  "reviewed_scope": "A2 på db7f83b godkänd: H-0017 committad, exakt en ny registerrad, oförändrade godkända metodregler och giltiga länkar/källhashar. Registreringsspärr, N=17, t=2,754268270633685 och N_sok=1 213 verifierade; 36 tester och orakel/audits passerar. Leverans A klar; endast ren signalmodul med syntetiska tester får nu påbörjas i B. Ingen datakvalitet, motor, historisk körning, drift eller lönsamhet verifierad.",
+  "reviewed_revision": "bfdb33b8c083ec65af2da8eecabc30de1f1a1b3f",
+  "reviewed_scope": "Leverans B på bfdb33b granskad: B01/B02/B04 verifierade med 32 signaltester, 585 motorprov och egna syntetiska beräkningar/prefix-/framtids-/felprov. Ett P2-fynd i signals(empty) blockerar B03/B05 och leverans C; 8/40 klara. A2 och fryst protokoll/register oförändrade. Ingen marknadshistorik, H-0017-körning eller drift.",
   "groups": [
     {
       "id": "A",
@@ -167,7 +167,7 @@
         {
           "id": "MOM-B01",
           "title": "Implementera fasta momentumsignaler för 7, 14 och 28 kompletta UTC-dagar",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "engine/traderlab/momentum_signal.py",
@@ -180,14 +180,18 @@
             {
               "file": "docs/momentum-signal-B.md",
               "detail": "API, tidsregler, otillgänglighet, verifiering och begränsningar för leverans B."
+            },
+            {
+              "file": "docs/momentum-B-granskning-bfdb33b.md",
+              "detail": "Codex granskning av exakt bfdb33b: egna syntetiska avstämningar och tre fångade mutanter; ett P2-fynd för tom signalindata. 32 signaltester och 585 motorprov godkända."
             }
           ],
-          "note": "Implementerad på claude/momentum-b; väntar på Codex granskning av exakt revision. Leverans C börjar inte före godkännande."
+          "note": "Verifierad del på bfdb33b. B som helhet och leverans C väntar på tomdata-rättning och omgranskning."
         },
         {
           "id": "MOM-B02",
           "title": "Implementera 60 dagsavkastningar, ddof=1 och annualisering sqrt(365)",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "engine/traderlab/momentum_signal.py",
@@ -200,9 +204,13 @@
             {
               "file": "docs/momentum-signal-B.md",
               "detail": "API, tidsregler, otillgänglighet, verifiering och begränsningar för leverans B."
+            },
+            {
+              "file": "docs/momentum-B-granskning-bfdb33b.md",
+              "detail": "Codex granskning av exakt bfdb33b: egna syntetiska avstämningar och tre fångade mutanter; ett P2-fynd för tom signalindata. 32 signaltester och 585 motorprov godkända."
             }
           ],
-          "note": "Implementerad på claude/momentum-b; väntar på Codex granskning av exakt revision. Leverans C börjar inte före godkännande."
+          "note": "Verifierad del på bfdb33b. B som helhet och leverans C väntar på tomdata-rättning och omgranskning."
         },
         {
           "id": "MOM-B03",
@@ -220,14 +228,18 @@
             {
               "file": "docs/momentum-signal-B.md",
               "detail": "API, tidsregler, otillgänglighet, verifiering och begränsningar för leverans B."
+            },
+            {
+              "file": "docs/momentum-B-granskning-bfdb33b.md",
+              "detail": "Codex granskning av exakt bfdb33b: egna syntetiska avstämningar och tre fångade mutanter; ett P2-fynd för tom signalindata. 32 signaltester och 585 motorprov godkända."
             }
           ],
-          "note": "Implementerad på claude/momentum-b; väntar på Codex granskning av exakt revision. Leverans C börjar inte före godkännande."
+          "note": "P2 i signals(empty) återstår enligt granskningen av bfdb33b. Ingen C före slutgodkänd B-revision."
         },
         {
           "id": "MOM-B04",
           "title": "Verifiera dagsstängning, första beslut och nästa öppning med syntetiska gränsfall",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "engine/traderlab/momentum_signal.py",
@@ -240,9 +252,13 @@
             {
               "file": "docs/momentum-signal-B.md",
               "detail": "API, tidsregler, otillgänglighet, verifiering och begränsningar för leverans B."
+            },
+            {
+              "file": "docs/momentum-B-granskning-bfdb33b.md",
+              "detail": "Codex granskning av exakt bfdb33b: egna syntetiska avstämningar och tre fångade mutanter; ett P2-fynd för tom signalindata. 32 signaltester och 585 motorprov godkända."
             }
           ],
-          "note": "Implementerad på claude/momentum-b; väntar på Codex granskning av exakt revision. Leverans C börjar inte före godkännande."
+          "note": "Verifierad del på bfdb33b. B som helhet och leverans C väntar på tomdata-rättning och omgranskning."
         },
         {
           "id": "MOM-B05",
@@ -260,9 +276,13 @@
             {
               "file": "docs/momentum-signal-B.md",
               "detail": "API, tidsregler, otillgänglighet, verifiering och begränsningar för leverans B."
+            },
+            {
+              "file": "docs/momentum-B-granskning-bfdb33b.md",
+              "detail": "Codex granskning av exakt bfdb33b: egna syntetiska avstämningar och tre fångade mutanter; ett P2-fynd för tom signalindata. 32 signaltester och 585 motorprov godkända."
             }
           ],
-          "note": "Implementerad på claude/momentum-b; väntar på Codex granskning av exakt revision. Leverans C börjar inte före godkännande."
+          "note": "P2 i signals(empty) återstår enligt granskningen av bfdb33b. Ingen C före slutgodkänd B-revision."
         }
       ]
     },

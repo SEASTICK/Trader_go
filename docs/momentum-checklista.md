@@ -1,10 +1,10 @@
 # Efterföljare till H-0013 – Arbetsplan
 
-**5 av 40 uppgifter verifierade · 8 arbetsområden.**
+**8 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-Metodgranskning · Kontrollerad 2026-11-03 · Granskad kodversion `db7f83b56e79f8a76b5e0d297be4503170070c0f`.
+Metodgranskning · Kontrollerad 2026-11-03 · Granskad kodversion `bfdb33b8c083ec65af2da8eecabc30de1f1a1b3f`.
 
-A2 på db7f83b godkänd: H-0017 committad, exakt en ny registerrad, oförändrade godkända metodregler och giltiga länkar/källhashar. Registreringsspärr, N=17, t=2,754268270633685 och N_sok=1 213 verifierade; 36 tester och orakel/audits passerar. Leverans A klar; endast ren signalmodul med syntetiska tester får nu påbörjas i B. Ingen datakvalitet, motor, historisk körning, drift eller lönsamhet verifierad.
+Leverans B på bfdb33b granskad: B01/B02/B04 verifierade med 32 signaltester, 585 motorprov och egna syntetiska beräkningar/prefix-/framtids-/felprov. Ett P2-fynd i signals(empty) blockerar B03/B05 och leverans C; 8/40 klara. A2 och fryst protokoll/register oförändrade. Ingen marknadshistorik, H-0017-körning eller drift.
 
 ## Uppdateringsregler
 
@@ -59,33 +59,38 @@ A2 på db7f83b godkänd: H-0017 committad, exakt en ny registerrad, oförändrad
 
 ## B. Ren signalmodul och tidskontrakt
 
-0/5 verifierade.
+3/5 verifierade.
 
-- [ ] **MOM-B01** Implementera fasta momentumsignaler för 7, 14 och 28 kompletta UTC-dagar **Pågår.**
+- [x] **MOM-B01** Implementera fasta momentumsignaler för 7, 14 och 28 kompletta UTC-dagar
   - Underlag: [engine/traderlab/momentum_signal.py](../engine/traderlab/momentum_signal.py) — mom-signal/1.0.0: ren funktion av stängda 4H-staplar, endast close läses; uttrycklig otillgänglighet med orsak.
   - Underlag: [engine/tests/test_momentum_signal.py](../engine/tests/test_momentum_signal.py) — 32 syntetiska tester godkända; 14 riktade felprov fångade (docs/momentum-signal-B.md). Horisonter i kalenderdagar, lika pris ger 0, handräknade s = 0, 1/3, 2/3, 1.
   - Underlag: [docs/momentum-signal-B.md](momentum-signal-B.md) — API, tidsregler, otillgänglighet, verifiering och begränsningar för leverans B.
-  - Implementerad på claude/momentum-b; väntar på Codex granskning av exakt revision. Leverans C börjar inte före godkännande.
-- [ ] **MOM-B02** Implementera 60 dagsavkastningar, ddof=1 och annualisering sqrt(365) **Pågår.**
+  - Underlag: [docs/momentum-B-granskning-bfdb33b.md](momentum-B-granskning-bfdb33b.md) — Codex granskning av exakt bfdb33b: egna syntetiska avstämningar och tre fångade mutanter; ett P2-fynd för tom signalindata. 32 signaltester och 585 motorprov godkända.
+  - Verifierad del på bfdb33b. B som helhet och leverans C väntar på tomdata-rättning och omgranskning.
+- [x] **MOM-B02** Implementera 60 dagsavkastningar, ddof=1 och annualisering sqrt(365)
   - Underlag: [engine/traderlab/momentum_signal.py](../engine/traderlab/momentum_signal.py) — mom-signal/1.0.0: ren funktion av stängda 4H-staplar, endast close läses; uttrycklig otillgänglighet med orsak.
   - Underlag: [engine/tests/test_momentum_signal.py](../engine/tests/test_momentum_signal.py) — 32 syntetiska tester godkända; 14 riktade felprov fångade (docs/momentum-signal-B.md). 60 enkla avkastningar/61 stängningar, ddof=1, sqrt(365); avgränsat mot ddof=0, 59/61, log, prisstd, sqrt(252).
   - Underlag: [docs/momentum-signal-B.md](momentum-signal-B.md) — API, tidsregler, otillgänglighet, verifiering och begränsningar för leverans B.
-  - Implementerad på claude/momentum-b; väntar på Codex granskning av exakt revision. Leverans C börjar inte före godkännande.
+  - Underlag: [docs/momentum-B-granskning-bfdb33b.md](momentum-B-granskning-bfdb33b.md) — Codex granskning av exakt bfdb33b: egna syntetiska avstämningar och tre fångade mutanter; ett P2-fynd för tom signalindata. 32 signaltester och 585 motorprov godkända.
+  - Verifierad del på bfdb33b. B som helhet och leverans C väntar på tomdata-rättning och omgranskning.
 - [ ] **MOM-B03** Versionera lika vikt, 10 % målrisk och beteende vid otillräcklig eller ogiltig data **Pågår.**
   - Underlag: [engine/traderlab/momentum_signal.py](../engine/traderlab/momentum_signal.py) — mom-signal/1.0.0: ren funktion av stängda 4H-staplar, endast close läses; uttrycklig otillgänglighet med orsak.
   - Underlag: [engine/tests/test_momentum_signal.py](../engine/tests/test_momentum_signal.py) — 32 syntetiska tester godkända; 14 riktade felprov fångade (docs/momentum-signal-B.md). VERSION mom-signal/1.0.0, lika vikt, 10 % målrisk, cap och w_target; warmup, incomplete_day, missing_day, invalid_vol.
   - Underlag: [docs/momentum-signal-B.md](momentum-signal-B.md) — API, tidsregler, otillgänglighet, verifiering och begränsningar för leverans B.
-  - Implementerad på claude/momentum-b; väntar på Codex granskning av exakt revision. Leverans C börjar inte före godkännande.
-- [ ] **MOM-B04** Verifiera dagsstängning, första beslut och nästa öppning med syntetiska gränsfall **Pågår.**
+  - Underlag: [docs/momentum-B-granskning-bfdb33b.md](momentum-B-granskning-bfdb33b.md) — Codex granskning av exakt bfdb33b: egna syntetiska avstämningar och tre fångade mutanter; ett P2-fynd för tom signalindata. 32 signaltester och 585 motorprov godkända.
+  - P2 i signals(empty) återstår enligt granskningen av bfdb33b. Ingen C före slutgodkänd B-revision.
+- [x] **MOM-B04** Verifiera dagsstängning, första beslut och nästa öppning med syntetiska gränsfall
   - Underlag: [engine/traderlab/momentum_signal.py](../engine/traderlab/momentum_signal.py) — mom-signal/1.0.0: ren funktion av stängda 4H-staplar, endast close läses; uttrycklig otillgänglighet med orsak.
   - Underlag: [engine/tests/test_momentum_signal.py](../engine/tests/test_momentum_signal.py) — 32 syntetiska tester godkända; 14 riktade felprov fångade (docs/momentum-signal-B.md). decision_time = earliest_fill = D+1 00:00, bara 20-stapelns close, pågående sista dag, latest_decision vid D 20:00 ger D−1.
   - Underlag: [docs/momentum-signal-B.md](momentum-signal-B.md) — API, tidsregler, otillgänglighet, verifiering och begränsningar för leverans B.
-  - Implementerad på claude/momentum-b; väntar på Codex granskning av exakt revision. Leverans C börjar inte före godkännande.
+  - Underlag: [docs/momentum-B-granskning-bfdb33b.md](momentum-B-granskning-bfdb33b.md) — Codex granskning av exakt bfdb33b: egna syntetiska avstämningar och tre fångade mutanter; ett P2-fynd för tom signalindata. 32 signaltester och 585 motorprov godkända.
+  - Verifierad del på bfdb33b. B som helhet och leverans C väntar på tomdata-rättning och omgranskning.
 - [ ] **MOM-B05** Granska prefix-/framtidsprov och godkänn exakt signalrevision **Pågår.**
   - Underlag: [engine/traderlab/momentum_signal.py](../engine/traderlab/momentum_signal.py) — mom-signal/1.0.0: ren funktion av stängda 4H-staplar, endast close läses; uttrycklig otillgänglighet med orsak.
   - Underlag: [engine/tests/test_momentum_signal.py](../engine/tests/test_momentum_signal.py) — 32 syntetiska tester godkända; 14 riktade felprov fångade (docs/momentum-signal-B.md). Prefixprov vid hel- och halvdag, ändrade framtida priser och open/high/low ändrar inga kända beslut.
   - Underlag: [docs/momentum-signal-B.md](momentum-signal-B.md) — API, tidsregler, otillgänglighet, verifiering och begränsningar för leverans B.
-  - Implementerad på claude/momentum-b; väntar på Codex granskning av exakt revision. Leverans C börjar inte före godkännande.
+  - Underlag: [docs/momentum-B-granskning-bfdb33b.md](momentum-B-granskning-bfdb33b.md) — Codex granskning av exakt bfdb33b: egna syntetiska avstämningar och tre fångade mutanter; ett P2-fynd för tom signalindata. 32 signaltester och 585 motorprov godkända.
+  - P2 i signals(empty) återstår enligt granskningen av bfdb33b. Ingen C före slutgodkänd B-revision.
 
 ## C. Utförande och nettobaserad risk
 

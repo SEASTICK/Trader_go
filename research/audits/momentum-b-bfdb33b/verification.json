@@ -1,0 +1,32 @@
+{
+  "reviewed_revision": "bfdb33b8c083ec65af2da8eecabc30de1f1a1b3f",
+  "synthetic_only": true,
+  "source_sha256": "007225ad760d27dd93a8720e06efec4e5ec56cf367c733e3d904f1cd5ceb84ab",
+  "independent_daily_decisions": 91,
+  "prefix_cuts": [
+    366,
+    367,
+    481,
+    504,
+    707,
+    905
+  ],
+  "future_perturbation_passed": true,
+  "gap_recovery_day_offset": 61,
+  "caught_in_memory_mutations": [
+    "decision_time",
+    "ddof",
+    "incomplete_day"
+  ],
+  "B_P2_empty_input": {
+    "validation_accepted": true,
+    "daily_shape": [
+      0,
+      2
+    ],
+    "signals_error": {
+      "type": "KeyError",
+      "message": "\"['close', 's7', 's14', 's28', 's', 'vol', 'cap', 'w_target', 'available', 'reason'] not in index\""
+    }
+  }
+}
