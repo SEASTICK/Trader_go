@@ -4,7 +4,7 @@ Granskad PR-head: `f36a3eea9bb1fd887aa02a50ebccc5a4d6f97c93`, kod `62cc4bb`, gre
 
 Bara isolerad PR-kopia, syntetiska payloads och lokal webbläsarvy med stubbat API har använts. Ingen riktig inloggning, Supabase-köning, H-0013-körning, serverändring, slutprovsläsning eller publicering gjordes.
 
-## Fynd före merge
+## Ursprungliga fynd före rättning
 
 ### P2 – platta kapitalkurvor och noll-drawdown blir tomma diagram
 
@@ -44,3 +44,18 @@ Skilj en verifierad tom lista från saknad eller ogiltig lista. Visa Affärslogg
 F2-701 och F2-702 är lokalt kodmässigt verifierade. F2-703 lämnas in_progress för felåterhämtningen, F2-704 för grafen och jämförelsekurvorna, F2-705 för korrekt hantering av saknad affärslogg. Gemensam status: **32/40 verifierade**.
 
 **PR #77 är inte godkänd för merge ännu.** Nästa kontroll är rättade tre fynd med interaktiva och renderade regressioner, fortsatt bara syntetiska data. Ingen riktig H-0013-körning ska startas för att testa vyn. Inga strategiresultat är godkända för papper/live.
+
+
+## Omgranskning av rättningarna – 2026-11-03
+
+Granskad PR-head: `677752f593899a6a7e65b999940180dff5da6e98`, kod `a883094`, merge av granskningsunderlaget `f79c68d`. De tre tidigare fynden ovan är historik och är nu rättade.
+
+- **Platta diagram rättade:** den delade grafen ger konstant serie ett ändligt intervall och skyddar även x-skalan för en datapunkt. Den varierande domänen använder samma formel som förut. Eget lokalt Chrome-prov med equity [1,1,1] visar nu horisontella linjer för kapital och drawdown, utan NaN/Infinity i SVG, i både ljust och mörkt tema. Renderingsregressionerna täcker också stigande kapital med noll-drawdown och vanlig varierande kurva.
+- **Felåterhämtning rättad:** payloadfel har egen status och rensas inte av lyckad listpoll. Automatisk återhämtning efter 15 sekunder och en manuell knapp finns. Eget oförändrat syntetiskt API-prov, där bara första payload-anropet misslyckas, ger nu polls=6, payloadCalls=2 och visat HISTORIK-resultat utan köning. DOM-tester verifierar även manuell knapp, sent svar efter körningsbyte och utloggning under hämtning.
+- **Saknad affärslogg rättad:** läsaren skiljer null/saknad/feltypad logg från en tom lista och redovisar oläsbara rader samt avvikande rapporterat antal. Eget prov med stats.trades=4 utan trades-fält visar Affärsloggen saknas och tar upp loggen bland saknade delar. Inget påhittat antal 0 visas. Regressioner täcker blandad logg och en verifierat tom lista med rapporterat 0.
+- Exakt PR-kopia: **98 frontendtestfall passerar**, inklusive **13 nya DOM-/effekttester**; produktionsbygget lyckas. Det exakt versionslåsta happy-dom är en utvecklingsdependency. Inget nytt nätanrop eller beroende läggs i appens produktionsflöde. Testutskriften har icke-blockerande React-varningar om duplicerade x-tick-nycklar för mycket korta syntetiska serier; de är inte NaN-felet och hindrar inte testutfallet. Vites tidigare storleksvarning finns kvar.
+- App check är grön på granskad head; Windows check var fortfarande IN_PROGRESS vid senaste kontrollen. Alla erforderliga CI-kontroller ska vara gröna före merge. Ingen installerad Mac- eller Windows-app och ingen riktig Auth-/kösession har provats i omgranskningen.
+
+**PR #77 är kodmässigt godkänd för merge på 677752f, förutsatt grön CI och bevarad granskad kod.** F2-703 och F2-705 är nu kodmässigt verifierade; F2-704 står kvar som in_progress eftersom jämförelsekurvorna ännu saknas i resultatpaketet. Gemensam status: **34/40 verifierade**.
+
+Nästa leverans är jämförelsekurvor med spårbara källor och kompatibel läsning av äldre resultat, i en separat PR med syntetiska tester. Rätta inte frysta resultat eller protokollet för detta. Appens verkliga E2E och installerade Mac-test återstår senare. Ingen riktig H-0013-körning, slutprovsåtkomst, publicering eller driftsättning har gjorts här. Detta godkänner inga strategier för papper/live.
