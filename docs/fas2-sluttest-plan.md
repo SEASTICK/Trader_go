@@ -98,7 +98,19 @@ Granskningskopian har samma program-id som Stable och delar därför all lokal d
   `market/market-data.sqlite` och de fem `backups/tradergo-pre-update-*.db`) togs med `sqlite3 .backup` medan Stable
   kördes, och `pragma integrity_check` ger `ok` för alla. Övriga filer kopierades med `rsync -a`.
 - `Library/WebKit/com.seastick.tradergo` (webbvyns lagring) och `Saved Application State`.
-- `MANIFEST.sha256` med 24 filer.
+- 24 filer totalt: 23 innehållsfiler och `MANIFEST.sha256`. Manifestet listar bara de 23 innehållsfilerna, inte
+  sig självt.
+
+**Rättning av manifestet (Codex P2 i `docs/fas2-a1-granskning-81.md`):**
+- Det första manifestet listade även sig självt. Posten kunde aldrig stämma, så en full kontroll gav alltid fel.
+- Det gamla manifestet hade 24 poster och SHA-256 `9d5c0f53…08f4`. En kopia sparades utanför backupen innan det byttes.
+- Före bytet jämfördes de 23 innehållsfilerna mot sina gamla poster. Alla var identiska.
+- Det nya manifestet är skrivet från samma 23 rader, utan självposten. Inga innehållsfiler ändrades.
+- `shasum -a 256 -c MANIFEST.sha256` ger OK för alla 23.
+- Nya manifestets SHA-256 är `f86865d51192e8867e94ca4dfdb4572edbafa2eb15b64f08024259c28a46fec4`. Den står bara här, inte i manifestet.
+- Alla tio SQLite-filer ger `pragma integrity_check` = `ok`. De öppnades skrivskyddade (`mode=ro&immutable=1`), och inga rader lästes.
+  - de sju i `app-support`;
+  - WebKits `pcm.db`, `observations.db` och `localstorage.sqlite3`.
 
 `app/src-tauri/src/db.rs` och tauri-konfigurationen är oförändrade mellan Stable (`1f2b6b1`) och `6c16638`. Kopian
 kör alltså inga nya migrationer på den delade databasen. Den enda Rust-ändringen gäller testklockan i
@@ -108,14 +120,16 @@ kör alltså inga nya migrationer på den delade databasen. Den enda Rust-ändri
 1. Avsluta båda apparna.
 2. Flytta den nuvarande mappen åt sidan.
 3. Kopiera `app-support/` tillbaka till `~/Library/Application Support/com.seastick.tradergo`.
-4. Kontrollera mot `MANIFEST.sha256`.
+4. Kontrollera med `shasum -a 256 -c MANIFEST.sha256` i backupmappen (23 poster).
 5. Starta Stable.
 
 Ingenting raderas.
 
 **Före A2:**
 1. Avsluta Stable, så att två instanser inte skriver till samma databas samtidigt.
-2. Ta en ny säkerhetskopia på samma sätt om det har gått tid sedan den förra.
+2. Ta en ny säkerhetskopia på samma sätt om det har gått tid sedan den förra. Manifestet genereras utan sig självt:
+   `find . -type f ! -name MANIFEST.sha256 -print0 | sort -z | xargs -0 shasum -a 256 > MANIFEST.sha256`.
+   Verifiera sedan med `shasum -a 256 -c`.
 3. Packa upp zip-filen till `~/Applications/TraderGO granskning.app`. Kontrollera först SHA-256 och
    `codesign --verify`.
 
