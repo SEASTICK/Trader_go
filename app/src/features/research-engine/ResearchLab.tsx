@@ -3,7 +3,10 @@ import { Page, Segmented } from "../../components/ui";
 import { ResearchApi, Result, Run } from "./api";
 import "./research.css";
 import { Chart, number } from "./ResultViews";
+import { isH0013 } from "./h0013";
 const RegisteredResults = lazy(() => import("./RegisteredResults"));
+const H0013Panel = lazy(() => import("./H0013Panel"));
+const VIEWS = ["Registrerade resultat", "Fas 2 · H-0013", "Utforskning"] as const;
 
 const NAMES: Record<string, string> = { ema_adx_trend: "EMA / ADX-trend", donchian_breakout: "Donchian-utbrott",
   bb_rsi_reversion: "Bollinger / RSI", squeeze_breakout: "Squeeze-utbrott" };
@@ -13,7 +16,7 @@ const message = (e: unknown) => e instanceof Error ? e.message : "Ett oväntat f
 export default function ResearchLab() {
   const [registeredHypothesis, setRegisteredHypothesis] = useState<string | null>(null);
   const registeredKey = useRef<string | null>(null);
-  const [view, setView] = useState<"Registrerade resultat" | "Utforskning">("Registrerade resultat");
+  const [view, setView] = useState<typeof VIEWS[number]>("Registrerade resultat");
   const api = useRef(new ResearchApi()).current;
   const [connected, setConnected] = useState(false);
   const [email, setEmail] = useState(""); const [password, setPassword] = useState("");
@@ -34,7 +37,7 @@ export default function ResearchLab() {
     const poll = async () => {
       if (polling) return;
       polling = true;
-      try { const next = await api.runs(); if (active) { setRuns(next); setConnectionError(""); } }
+      try { const next = (await api.runs()).filter(r => !isH0013(r)); if (active) { setRuns(next); setConnectionError(""); } }
       catch (e) { if (active) setConnectionError(message(e)); }
       finally { polling = false; }
     };
@@ -64,13 +67,13 @@ export default function ResearchLab() {
       requestKey.current ??= crypto.randomUUID();
       const id = await api.enqueue({ request_key: requestKey.current, strategy, market, interval,
         period_start: start + "T00:00:00Z", period_end: end + "T00:00:00Z", params: parsed });
-      setSelected(id); setRuns(await api.runs()); requestKey.current = null;
+      setSelected(id); setRuns((await api.runs()).filter(r => !isH0013(r))); requestKey.current = null;
     } catch (e) { setError(message(e)); }
     finally { setBusy(false); }
   }
   async function cancel(id: string) {
     setBusy(true); setError("");
-    try { await api.cancel(id); setRuns(await api.runs()); }
+    try { await api.cancel(id); setRuns((await api.runs()).filter(r => !isH0013(r))); }
     catch (e) { setError(message(e)); }
     finally { setBusy(false); }
   }
@@ -80,22 +83,25 @@ export default function ResearchLab() {
     try {
       registeredKey.current ??= crypto.randomUUID();
       const id=await api.enqueueRegistered(registeredHypothesis,registeredKey.current);
-      setSelected(id);setRuns(await api.runs());setRegisteredHypothesis(null);
+      setSelected(id);setRuns((await api.runs()).filter(r => !isH0013(r)));setRegisteredHypothesis(null);
     } catch(e) {setError(message(e));}
     finally {setBusy(false);}
   }
-  return <Page title="Research Lab" sub="Registrerad forskning och historisk utforskning. Inga riktiga order."
-    actions={connected && <button className="btn" onClick={() => { api.signOut(); setConnected(false); setRuns([]); setSelected(""); setResult(null); setError(""); }}>Logga ut</button>}>
-    <Segmented value={view} options={["Registrerade resultat", "Utforskning"]} onChange={setView} />
-    {view === "Registrerade resultat" ? <Suspense fallback={<p>Läser registrerade resultat…</p>}><RegisteredResults onReproduce={id => {setRegisteredHypothesis(id);registeredKey.current=null;setView("Utforskning");}} /></Suspense> : <>
-    {error && <div className="card pad" role="alert">{error}</div>}
-    {connected && connectionError && <div className="card pad" role="alert">{connectionError}</div>}
-    {!connected ? <form className="card pad research-form" onSubmit={login}>
+  const loginForm = <form className="card pad research-form" onSubmit={login}>
       <h2>Logga in</h2><p className="muted">Endast godkända projektmedlemmar. Sessionen sparas bara medan Research Lab är öppet.</p>
       <label>E-post<input type="email" autoComplete="username" value={email} onChange={e => setEmail(e.target.value)} required /></label>
       <label>Lösenord<input type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} required /></label>
       <button className="btn accent" disabled={busy}>{busy ? "Loggar in…" : "Logga in"}</button>
-    </form> : <>
+      {error && <p role="alert">{error}</p>}
+    </form>;
+  return <Page title="Research Lab" sub="Registrerad forskning och historisk utforskning. Inga riktiga order."
+    actions={connected && <button className="btn" onClick={() => { api.signOut(); setConnected(false); setRuns([]); setSelected(""); setResult(null); setError(""); }}>Logga ut</button>}>
+    <Segmented value={view} options={[...VIEWS]} onChange={setView} />
+    {view === "Registrerade resultat" ? <Suspense fallback={<p>Läser registrerade resultat…</p>}><RegisteredResults onReproduce={id => {setRegisteredHypothesis(id);registeredKey.current=null;setView("Utforskning");}} /></Suspense>
+    : view === "Fas 2 · H-0013" ? <Suspense fallback={<p>Läser H-0013…</p>}><H0013Panel api={api} connected={connected} login={loginForm} /></Suspense> : <>
+    {connected && error && <div className="card pad" role="alert">{error}</div>}
+    {connected && connectionError && <div className="card pad" role="alert">{connectionError}</div>}
+    {!connected ? loginForm : <>
       {registeredHypothesis && <div className="card pad"><h2>Registrerad reproduktion · {registeredHypothesis}</h2><p>Frysta testfönster 2022–2024, samma femårsdataset och parametrar. Beslutet förblir REJECT. Ingen ny optimering eller åtkomst till slutprovet.</p><button className="btn accent" disabled={busy} onClick={() => void reproduce()}>Köa registrerad reproduktion</button> <button className="btn" disabled={busy} onClick={() => setRegisteredHypothesis(null)}>Stäng förberedelsen</button></div>}
       <form className="card pad research-form" onSubmit={enqueue}>
         <h2>Ny utforskning</h2><p className="muted">UTFORSKNING · BTC/USDT · avgift 10, spread 2 och slippage 5 bps (spread räknas som halva per sida) · startkapital 100 000.

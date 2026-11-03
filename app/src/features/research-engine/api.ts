@@ -2,7 +2,7 @@ export const PROJECT_URL = "https://klspebwvipfzvqbdexxh.supabase.co";
 // Offentlig nyckel. Behörigheten kommer från Auth + RLS, aldrig från denna nyckel.
 const PUBLIC_KEY = "sb_publishable_GXXtPcCrdBxp06w9qg8HHw_Qo2VE_JM";
 type Session = { access_token: string; refresh_token: string; expires_in: number };
-export type Run = { id: string; kind: string; strategy: string; market: string; interval: string;
+export type Run = { id: string; kind: string; hypothesis_id?: string | null; attempts?: number; strategy: string; market: string; interval: string;
   status: "queued" | "running" | "done" | "failed" | "cancelled"; progress: number; error: string | null;
   created_at: string; period_start: string; period_end: string; params: Record<string, number> };
 type Curve = { t: string[]; equity: number[]; drawdown: number[] };
@@ -36,7 +36,11 @@ export class ResearchApi {
       if (!response.ok) {
         if (response.status === 401 || response.status === 403) throw new Error("Inloggningen eller behörigheten kunde inte verifieras.");
         if (response.status === 404) throw new Error("Research-tjänsten är inte färdiginstallerad.");
-        if (response.status === 400) throw new Error("Begäran nekades. Kontrollera parametrar, period och att kön inte är full.");
+        if (response.status === 400) {
+          // Databasens egna, svenska avvisningar (till exempel "Kön är full") visas; inga hemligheter finns i dem.
+          const detail = await response.json().then((b: { message?: unknown }) => typeof b?.message === "string" ? b.message : "").catch(() => "");
+          throw new Error(detail ? `Begäran nekades: ${detail}` : "Begäran nekades. Kontrollera parametrar, period och att kön inte är full.");
+        }
         throw new Error(`Servern svarade med fel (${response.status}).`);
       }
       const text = await response.text();
@@ -74,7 +78,18 @@ export class ResearchApi {
   }
   signOut() { this.generation++; this.session = null; this.expiresAt = 0; }
   async runs(): Promise<Run[]> {
-    return await this.request("/rest/v1/runs?kind=in.(exploration,registered)&select=id,kind,strategy,market,interval,status,progress,error,created_at,period_start,period_end,params&order=created_at.desc&limit=100") as Run[];
+    return await this.request("/rest/v1/runs?kind=in.(exploration,registered)&select=id,kind,hypothesis_id,attempts,strategy,market,interval,status,progress,error,created_at,period_start,period_end,params&order=created_at.desc&limit=100") as Run[];
+  }
+  async h0013Runs(): Promise<Run[]> {
+    return await this.request("/rest/v1/runs?hypothesis_id=eq.H-0013&select=id,kind,hypothesis_id,attempts,strategy,market,interval,status,progress,error,created_at,period_start,period_end,params&order=created_at.desc&limit=20") as Run[];
+  }
+  /** Den fasta H-0013-körningen. Allt utom nyckeln är låst i databasen (0005). */
+  async enqueueH0013(requestKey: string): Promise<string> {
+    return await this.request("/rest/v1/rpc/research_enqueue_h0013", "POST", { p_request_key: requestKey }) as string;
+  }
+  async payload(id: string): Promise<unknown | null> {
+    const rows = await this.request(`/rest/v1/run_results?select=payload&run_id=eq.${encodeURIComponent(id)}&limit=1`) as { payload: unknown }[];
+    return rows[0]?.payload ?? null;
   }
   async enqueue(request: Record<string, unknown>): Promise<string> {
     return await this.request("/rest/v1/rpc/research_enqueue", "POST", { p_request: request }) as string;
