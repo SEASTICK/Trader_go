@@ -1,10 +1,10 @@
 # Fas 2 – Utvecklingsplan
 
-**36 av 40 uppgifter verifierade · 8 arbetsområden.**
+**37 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-H-0013 · Kontrollerad 2026-11-03 · Granskad kodversion `08a8966`.
+H-0013 · Kontrollerad 2026-11-03 · Granskad kodversion `9471e51`.
 
-PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Python-/118 frontendtester och bygge passerar, CI grön. Egna slutprovs-/tidsaxel-/punktgränsprov samt syntetiskt motor–workerpaket–frontendläsarprov passerar. Kodmässigt godkänd för merge. Ingen riktig körning, driftsättning eller publicering. Slutpaket b44d3ce oberoende ombyggt med identisk SHA256 och 186 verifierade filer; PR #79-plan granskad på 8d85c10. Ingen ny driftsättning utförd. PR #79 driftutfall omgranskat på 784d439: serverns b44d3ce, en worker PID 30868/0 omstarter, tom kö, 0 H-0013, lyckad insamling och privat exporthash verifierade läsande. Driftredovisningen godkänd; app-/sluttest återstår. PR #80 granskad på 4e85f4e: Rust-klockrättning kodmässigt godkänd; fmt, clippy, 44+4 tester och 20 egna upprepningar passerar. Windows-CI pågår. F2-801 fortsatt in_progress; nytt Mac-bygge och installerat sluttest återstår. PR #81 granskad på 66d59bb: A1 godkänd, CI på identiskt träd grön, kö/samtidighet/Universe/paket omkörda. Mac-hash/signatur verifierade utan start. Backupens 23 innehållsfiler och 9 SQLite-integriteter godkända; felaktig manifest-självpost (P2) ska rättas före A2. PR #81 omgranskad på 6ff6b5e: manifestets självpost rättad, alla 23 innehållsfiler och 10 SQLite-integriteter oberoende verifierade. Tidigare antal 9 berodde på missad .sqlite3-fil. PR godkänd som förberedelse, A2 ännu inte utfört. A2 övertaget i installerad Mac-kopia: oavsiktligt versionsbyte upptäckt, kopian återställd till 6c16638 med ny verifierad privat backup. System-tema återställt och H-0013-inloggning förberedd. Inloggning/nätprov/utloggning återstår. A2: installerad app har nu verifierad riktig läsande medlemssession och befintlig körningslista. Nätprov, felaktig inloggning och utloggning återstår. A2 fann missvisande feltext vid nekad inloggning; avgränsad API-rättning regressionstestad med 123 frontendtester + bygge. Nytt Mac-prov återstår och Wi-Fi-provet är inte godkänt. PR #82 rättning 9471e51 verifierad i installerad Mac-app (båda teman), App-CI grön. Felaktig inloggning rättad; ny medlemssession/nätprov/utloggning återstår.
+A2 verifierad i installerad Mac-granskningskopia, rättning 9471e51 mergad som 915cf44. 123 frontendtester, bygge och App-CI passerar. Nekad inloggning har begriplig feltext, riktig medlemssession och explicit utloggning verifierade. Edwin observerade nätfel och återhämtning; Codex verifierade kvarvarande session och borttaget fel efteråt. Exakt latens ej uppmätt. Inga jobb köade, ingen publicering eller serverändring; F2-802/804/805 återstår.
 
 ## Uppdateringsregler
 
@@ -163,7 +163,7 @@ PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Pyt
 
 ## 8. Sluttest och godkännande
 
-1/5 verifierade.
+2/5 verifierade.
 
 - [x] **F2-801** Kör relevanta Python-, frontend-, Rust- och databaskontroller
   - Underlag: [docs/fas2-sluttest-granskning-80.md](fas2-sluttest-granskning-80.md) — 4e85f4e (kod 144ab88): klockrättning oberoende godkänd. fmt, clippy, 44 Rust-enhetstester + 4 integrationstester och 20 egna upprepningar passerar; 1 nätverkstest ignorerat. App-/Rust-CI gröna, Windows pågår. Övrig app-/motorkod oförändrad.
@@ -171,13 +171,14 @@ PR #78 omgranskad på 08a8966 (kod fec2e51): samtliga tre fynd rättade. 553 Pyt
   - Underlag: [docs/fas2-a2-utfall-20261103.md](fas2-a2-utfall-20261103.md) — A2-rättning: auth-400 får egen svensk feltext utan ändring av köavvisningar. 123 frontendtester och appbygge passerar; motor/Rust/server oförändrade.
   - A1 verifierad. Installerad app, inloggat flöde, riktig H-0013 och Stable återstår.
 - [ ] **F2-802** Verifiera hela flödet från app till worker och sparat H-0013-resultat
-- [ ] **F2-803** Kontrollera Mac, anslutningsfel och att befintliga Fas 1-funktioner fungerar **Pågår.**
+- [x] **F2-803** Kontrollera Mac, anslutningsfel och att befintliga Fas 1-funktioner fungerar
   - Underlag: [docs/fas2-a1-granskning-81.md](fas2-a1-granskning-81.md) — 66d59bb: Mac-zip df0436dc…3cfc/signatur verifierade utan start. Backupens 23 innehållsfiler matchar och nio SQLite-integriteter är ok; manifestets felaktiga självpost behöver rättas (P2).
   - Underlag: [docs/fas2-a1-granskning-81.md](fas2-a1-granskning-81.md) — 6ff6b5e: manifestfynd rättat och omgranskat. 23 giltiga poster, 24 filer totalt, manifesthash f86865d5…fec4 och 10 SQLite-integriteter verifierade. A2 ej utfört.
   - Underlag: [docs/fas2-a2-utfall-20261103.md](fas2-a2-utfall-20261103.md) — 2026-11-03: installerat bygge 6c16638 startat, separat kopia återställd efter versionsbyte, Stable oförändrad. Ny privat backup med 23 innehållsfiler/10 SQLite verifierad; System-tema och utloggad H-0013-vy verifierade. Medlemssession och nätprov återstår.
   - Underlag: [docs/fas2-a2-utfall-20261103.md](fas2-a2-utfall-20261103.md) — Installerad 6c16638: riktig medlemssession verifierad, H-0013 visar inget resultat/inga körningar, befintlig utforsknings-/reproduktionslista läses. Ingen köknapp använd. Felaktig inloggning, nätprov och utloggning återstår.
   - Underlag: [docs/fas2-a2-utfall-20261103.md](fas2-a2-utfall-20261103.md) — Installerat 6c16638 visar missvisande köfel vid nekad inloggning. Rättning och 123 gröna frontendtester klara, men nytt installerat prov återstår. Wi-Fi-prov gav inget observerat fel och sessionen var därefter borta; fel/5-sekundersåterhämtning ej verifierade.
   - Underlag: [docs/fas2-a2-utfall-20261103.md](fas2-a2-utfall-20261103.md) — 9471e51: rättad auth-feltext verifierad i installerad Mac-kopia i ljust/mörkt tema. Zip d9b3670a…ed87, signatur och ny privat backup verifierade. Korrekt inloggning i nya kopian, fysiskt nätprov och utloggning återstår.
-  - A2 pågår. Nekad inloggning är nu begriplig och verifierad i 9471e51. Invändta riktig inloggning i nya kopian; därefter återstår observerat nätavbrott/återhämtning och utloggning.
+  - Underlag: [docs/fas2-a2-utfall-20261103.md](fas2-a2-utfall-20261103.md) — A2 slutförd i 9471e51 (kod mergad som 915cf44): felaktig/riktig inloggning, riktig listläsning, manuellt nätfel/återhämtning med bevarad session och explicit utloggning verifierade. Teman kontrollerade, System återställt. Exakt nätlatens ej uppmätt; ingen installerad Windows-verifiering.
+  - A2 godkänd inom dokumenterad avgränsning. Appen lämnad utloggad. Känd mörk priskarta i ljust tema är oförändrad Stable-begränsning. Riktig köexekvering/H-0013 och Stable-publicering återstår.
 - [ ] **F2-804** Publicera granskad Stable och verifiera installerad kodversion samt uppdaterad checklista
 - [ ] **F2-805** Dokumentera Fas 2-godkännande och fatta separat beslut om eventuellt slutprov; ingen automatisk paper- eller liveaktivering
