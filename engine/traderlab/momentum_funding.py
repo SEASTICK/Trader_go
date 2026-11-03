@@ -12,7 +12,8 @@ mark_close (stapelns close, känd vid stapelns slut) finns bara som märkt konfi
 
 Fundingstress (§12): bara faktiskt betalda positiva belopp dubblas; mottagna belopp lämnas oförändrade.
 
-Varje händelse bokförs högst en gång per konto och scenario (FundingState). Ett återanrop med samma event-id avvisas
+Fasen måste passa eventets exakta tid: funding_A och funding_B bara exakt på en 4H-gräns, funding_interior bara strikt
+mellan två gränser. Varje händelse bokförs högst en gång per konto och scenario (FundingState). Ett återanrop med samma event-id avvisas
 utan ändring, även om första bokföringen var ett nollbelopp på ett platt konto.
 
 Inga toleranser, avrundningar eller fördelningar över stapeln. Fel ger FundingError utan ändrat konto eller tillstånd.
@@ -91,12 +92,28 @@ class FundingEvent:
         if M <= 0:
             raise FundingError(f"M_ref måste vara > 0, fick {M}.")
         object.__setattr__(self, "M_ref", M)
+        if not isinstance(self.M_ref_source, str):
+            raise FundingError(f"Källan för M_ref måste vara en sträng, fick {self.M_ref_source!r}.")
         expected = {MARK_OPEN: bar_open(self.time), MARK_CLOSE: bar_open(self.time) + BAR}.get(self.M_ref_source)
         if expected is None:
             raise FundingError(f"Okänd källa för M_ref: {self.M_ref_source!r}.")
         if self.M_ref_time != expected:
             raise FundingError(f"M_ref_time {self.M_ref_time} stämmer inte med {self.M_ref_source} för event vid "
                                f"{self.time} (väntat {expected}).")
+
+
+def _processed_ids(ids) -> frozenset:
+    """Behandlade event-id: en uttrycklig samling (set, frozenset, list, tuple) av hela, icke-tomma strängar.
+
+    En ensam sträng eller bytes tolkas aldrig som en samling tecken; då kunde ett återställt id tappas och samma event
+    bokföras igen.
+    """
+    if not isinstance(ids, (set, frozenset, list, tuple)):
+        raise FundingError(f"processed måste vara set, frozenset, list eller tuple av event-id, fick {type(ids).__name__}.")
+    for eid in ids:
+        if not isinstance(eid, str) or not eid:
+            raise FundingError(f"Varje behandlat event-id måste vara en icke-tom sträng, fick {eid!r}.")
+    return frozenset(ids)
 
 
 @dataclass(frozen=True)
@@ -111,7 +128,7 @@ class FundingState:
             v = getattr(self, name)
             if not isinstance(v, str) or not v:
                 raise FundingError(f"{name} måste vara en icke-tom sträng, fick {v!r}.")
-        object.__setattr__(self, "processed", frozenset(self.processed))
+        object.__setattr__(self, "processed", _processed_ids(self.processed))
 
 
 @dataclass(frozen=True)
@@ -148,6 +165,12 @@ def apply_funding(acct: Account, state: FundingState, event: FundingEvent, phase
         raise FundingError("Fel typ för konfiguration.")
     if phase not in PHASES:
         raise FundingError(f"Okänd fas {phase!r}; tillåtna {PHASES}.")
+    simultaneous = event.time == bar_open(event.time)       # exakt 4H-gräns, millisekundprecision, ingen tolerans
+    if phase in ("funding_A", "funding_B") and not simultaneous:
+        raise FundingError(f"{phase} gäller bara händelser exakt på en 4H-gräns; {event.time} är en mellanhändelse.")
+    if phase == "funding_interior" and simultaneous:
+        raise FundingError(f"funding_interior gäller bara tider strikt mellan öppning och close; {event.time} är en "
+                           "4H-gräns och följer A/B.")
     if event.M_ref_source != config.price_model:
         raise FundingError(f"Eventets källa {event.M_ref_source} matchar inte konfigurationen {config.price_model}.")
     if event.event_id in state.processed:

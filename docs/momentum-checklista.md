@@ -119,7 +119,8 @@ C2 på 1d9359f granskad: 129 funding-/ledgerprov och 718 motorprov godkända; 40
   - Underlag: [engine/tests/test_momentum_funding.py](../engine/tests/test_momentum_funding.py) — 47 syntetiska tester mot O5, O5b, O16, O17 och Decimal; 15 riktade felprov fångade.
   - Underlag: [docs/momentum-funding-C2.md](momentum-funding-C2.md) — API, regler, ledgerkomplettering, fel, verifiering och gränser för C2.
   - Underlag: [docs/momentum-C2-granskning-1d9359f.md](momentum-C2-granskning-1d9359f.md) — Codex granskar exakt 1d9359f: C01:s funding_net/avstämning verifierad; C2-01/C2-02 i funding-API återstår. 129 riktade prov/718 motorprov och oberoende Decimal-kontroller passerar.
-  - C2 inte slutgodkänd: rätta fas/tid och validering av behandlade id enligt granskningen. Dagsreset och första/sista event återstår också.
+  - Underlag: [engine/tests/test_momentum_funding.py](../engine/tests/test_momentum_funding.py) — Rättning av C2-01/C2-02 från granskningen av 1d9359f: fas mot exakt eventtid, validerad processed-samling och strängkälla. 88 fundingtester; 27 nya fäller 1d9359f; 20 riktade felprov fångade.
+  - Fundingdelen rättad efter granskningen av 1d9359f; väntar på omgranskning. Dagsreset och första/sista event återstår.
 - [ ] **MOM-C04** Implementera 2 % dagsstopp, 15 % permanent stopp och konservativ 20 %-riskkontroll
 - [ ] **MOM-C05** Verifiera gap, basis, likvidation och riskordning med handräknade prov och kodgranskning **Pågår.**
   - Underlag: [engine/tests/test_momentum_ledger.py](../engine/tests/test_momentum_ledger.py) — 40 syntetiska tester mot orakel O1–O4, O11, O14, O15 och handräkning; 14 riktade felprov fångade.

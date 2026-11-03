@@ -181,8 +181,8 @@ def test_funding_then_partial_reversal_hold_and_close_reconcile_with_decimal():
     for i, step in enumerate(steps):
         if step[0] == "fund":
             q_before = D(acct.q)
-            acct, state, r = F.apply_funding(acct, state, ev(f"e{i}", T + pd.Timedelta(hours=4 * i), step[1], step[2]),
-                                             "funding_interior")
+            t = T + pd.Timedelta(hours=4 * i, minutes=30)           # mellanhändelse efter stapelns fyllning
+            acct, state, r = F.apply_funding(acct, state, ev(f"e{i}", t, step[1], step[2]), "funding_interior")
             pay = q_before * D(repr(step[2])) * D(repr(step[1]))
             ledger_C -= pay
             assert math.isclose(r.C_before - r.C_after, float(pay), rel_tol=1e-12, abs_tol=1e-9)
@@ -228,7 +228,7 @@ def test_invalid_events_are_rejected(kwargs, match):
 def test_millisecond_times_are_kept_exactly():
     t = T + pd.Timedelta(milliseconds=4)
     e = ev("ms", t)
-    _, _, r = F.apply_funding(pos(50_000, 500, 100, 100_000), st(), e, "funding_A")
+    _, _, r = F.apply_funding(pos(50_000, 500, 100, 100_000), st(), e, "funding_interior")
     assert r.time == t and r.M_ref_time == T
 
 
@@ -272,3 +272,72 @@ def test_reconciliation_includes_funding_net():
     acct = L.Account(C=795.0, q=2, deposit=1000, avg_price=100, funding_net=5.0)
     assert acct.reconciliation_gap() == 0
     assert L.Account(C=795.0, q=2, deposit=1000, avg_price=100).reconciliation_gap() == -5.0
+
+
+# Regressioner för Codex granskning av 1d9359f (C2-01, C2-02 och feltyp för källan).
+
+PHASE_TIMES = {
+    "exakt_gräns": (T, {"funding_A", "funding_B"}),
+    "plus_1ms": (T + pd.Timedelta(milliseconds=1), {"funding_interior"}),
+    "minus_1ms": (T - pd.Timedelta(milliseconds=1), {"funding_interior"}),
+    "plus_30s": (T + pd.Timedelta(seconds=30), {"funding_interior"}),
+    "minus_30s": (T - pd.Timedelta(seconds=30), {"funding_interior"}),
+}
+
+
+@pytest.mark.parametrize("case", PHASE_TIMES)
+@pytest.mark.parametrize("phase", F.PHASES)
+def test_phase_must_match_exact_event_time(case, phase):
+    t, allowed = PHASE_TIMES[case]
+    acct, state = pos(50_000, 500, 100, 100_000), st()
+    if phase in allowed:
+        new, state2, r = F.apply_funding(acct, state, ev("p", t), phase)
+        assert r.phase == phase and close(r.payment, 5.0) and r.time == t
+    else:
+        before = (dataclasses.replace(acct), state)
+        with pytest.raises(F.FundingError, match="4H-gräns|mellanhändelse"):
+            F.apply_funding(acct, state, ev("p", t), phase)
+        assert (acct, state) == before
+
+
+@pytest.mark.parametrize("bad", ["f1", b"f1", None, 7, {"f1": 1}, iter(["f1"])])
+def test_processed_must_be_an_explicit_collection(bad):
+    with pytest.raises(F.FundingError, match="processed"):
+        F.FundingState("main", "A", processed=bad)
+    with pytest.raises(F.FundingError, match="processed"):
+        dataclasses.replace(st(), processed=bad)
+
+
+@pytest.mark.parametrize("element", [7, True, None, "", b"f1", 1.5])
+def test_processed_elements_must_be_nonempty_strings(element):
+    with pytest.raises(F.FundingError, match="event-id"):
+        F.FundingState("main", "A", processed={"f1", element} if element is not None else ["f1", None])
+    with pytest.raises(F.FundingError, match="event-id"):
+        dataclasses.replace(st(), processed=["f1", element])
+
+
+@pytest.mark.parametrize("ids", [set(), frozenset(), [], (), {"f1", "event-2024"}, ["f1", "event-2024"],
+                                 ("f1", "event-2024"), frozenset({"f1", "event-2024"})])
+def test_valid_collections_keep_whole_ids(ids):
+    state = F.FundingState("main", "A", processed=ids)
+    assert state.processed == frozenset(ids) and all(isinstance(i, str) for i in state.processed)
+    assert "f" not in state.processed and "1" not in state.processed
+
+
+def test_restored_processed_id_rejects_second_booking_without_change():
+    acct = pos(50_000, 500, 100, 100_000)
+    once, _, r = F.apply_funding(acct, st(), ev("f1", T), "funding_A")
+    assert once.C == 49_995 and once.funding_net == 5
+    restored = F.FundingState("main", "A", processed=["f1"])        # t.ex. återläst från en lista
+    with pytest.raises(F.FundingError, match="redan bokfört"):
+        F.apply_funding(once, restored, ev("f1", T), "funding_A")
+    with pytest.raises(F.FundingError, match="processed"):
+        F.FundingState("main", "A", processed="f1")                 # Codex reproduktion avvisas nu
+    other, _, r2 = F.apply_funding(once, F.FundingState("main", "B", processed=[]), ev("f1", T), "funding_B")
+    assert close(r2.payment, 5.0) and other.funding_net == 10       # separat scenario fungerar som tidigare
+
+
+@pytest.mark.parametrize("source", [["mark_open"], ("mark_open",), {"mark_open": 1}, 3, None])
+def test_non_string_price_source_is_funding_error(source):
+    with pytest.raises(F.FundingError, match="Källan"):
+        F.FundingEvent("x", T, R, 100.0, source, T)

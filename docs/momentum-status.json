@@ -385,9 +385,13 @@
             {
               "file": "docs/momentum-C2-granskning-1d9359f.md",
               "detail": "Codex granskar exakt 1d9359f: C01:s funding_net/avstämning verifierad; C2-01/C2-02 i funding-API återstår. 129 riktade prov/718 motorprov och oberoende Decimal-kontroller passerar."
+            },
+            {
+              "file": "engine/tests/test_momentum_funding.py",
+              "detail": "Rättning av C2-01/C2-02 från granskningen av 1d9359f: fas mot exakt eventtid, validerad processed-samling och strängkälla. 88 fundingtester; 27 nya fäller 1d9359f; 20 riktade felprov fångade."
             }
           ],
-          "note": "C2 inte slutgodkänd: rätta fas/tid och validering av behandlade id enligt granskningen. Dagsreset och första/sista event återstår också."
+          "note": "Fundingdelen rättad efter granskningen av 1d9359f; väntar på omgranskning. Dagsreset och första/sista event återstår."
         },
         {
           "id": "MOM-C04",
