@@ -1,0 +1,41 @@
+{
+  "reviewed_revision": "d77e3535dc9588bc8454c04112223c594fbbd7ff",
+  "synthetic_only": true,
+  "reference_decision_cases": 400,
+  "source_sha256": {
+    "ledger": "717b5d39cac8d03663a39d060968da753c7d16e948bdf5166f7cf32a27a83655",
+    "risk": "bf244ff71257a2d07b45a98b0146f046bcc051b5fcf72a0d1130cb5f10917dd8"
+  },
+  "C3_01_liquidated_terminal": [
+    {
+      "already_liquidated": false,
+      "intent": "terminal",
+      "E_decision": null,
+      "fill_error": "LedgerError",
+      "terminated": true
+    },
+    {
+      "already_liquidated": true,
+      "intent": "terminal",
+      "E_decision": null,
+      "fill_error": "LedgerError",
+      "terminated": true
+    }
+  ],
+  "C3_02_signal_contract": [
+    {
+      "input_available": "False",
+      "input_version": "mom-signal/1.0.0",
+      "parsed_available": true,
+      "intent": "normal",
+      "filled_q": 499.6003197442046
+    },
+    {
+      "input_available": true,
+      "input_version": "mom-signal/999",
+      "parsed_available": true,
+      "intent": "normal",
+      "filled_q": 499.6003197442046
+    }
+  ]
+}

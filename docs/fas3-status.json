@@ -112,6 +112,10 @@
             {
               "file": "docs/momentum-C2-granskning-fcf5cb4.md",
               "detail": "H-0017:s C2-funding godkänd på fcf5cb4 med enbart syntetiska data. Risk-/eventintegration och ekonomisk utvärdering återstår; ingen kandidat eller pilot godkänd."
+            },
+            {
+              "file": "docs/momentum-C3-granskning-d77e353.md",
+              "detail": "H-0017 C3 granskad på d77e353, syntetiskt. Två kontrakts-/tillståndsfynd återstår; ingen historisk utvärdering eller pilot godkänd."
             }
           ],
           "note": "H-0017 är separat förregistrerad och metodgranskad. Implementation och historisk utvärdering återstår. H-0013 REJECT och H-0016 oförändrade; ingen kandidat har READY_FOR_PAPER."

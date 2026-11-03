@@ -2,9 +2,9 @@
 
 **11 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-Metodgranskning · Kontrollerad 2026-11-03 · Granskad kodversion `fcf5cb4a42f76b6151a8fe66f0c87f9617e95430`.
+Metodgranskning · Kontrollerad 2026-11-03 · Granskad kodversion `d77e3535dc9588bc8454c04112223c594fbbd7ff`.
 
-C2 godkänd på fcf5cb4: C2-01/C2-02 och källfeltyp rättade. 170 riktade prov, 759 motorprov, 400 egna Decimal-/före-efterfall och 250 C1-fall passerar. C01 oförändrad; C03/C05 fortsatt in_progress. 11/40. Nästa avgränsade C3: avsikter, band och riskstatus, endast syntetiskt.
+C3 på d77e353 granskad: 267 riktade prov/820 motorprov samt 400 egna syntetiska beslutsfall passerar. Två P2-fynd blockerar C3: terminalavsikt efter likvidation och otillräcklig signalkontraktsvalidering. B/C1/C2 oförändrade. C02–C05 fortsatt in_progress; 11/40. Ingen historik eller drift.
 
 ## Uppdateringsregler
 
@@ -117,7 +117,8 @@ C2 godkänd på fcf5cb4: C2-01/C2-02 och källfeltyp rättade. 170 riktade prov,
   - Underlag: [engine/traderlab/momentum_risk.py](../engine/traderlab/momentum_risk.py) — mom-risk/1.0.0: rena tillståndsövergångar vid 4H-gränser, band 2 pp, dagsbeslut i §7:s ordning, sammanslagning terminal > permanent > dag > cap/platt > normal, dagsreset och lock_day.
   - Underlag: [engine/tests/test_momentum_risk.py](../engine/tests/test_momentum_risk.py) — 61 syntetiska tester mot O6, O14, O15 och handräkning med exakta float-gränser; 17 av 19 riktade felprov fångade, två bevisat ekvivalenta.
   - Underlag: [docs/momentum-risk-C3.md](momentum-risk-C3.md) — API, tillståndsövergångar, gräns mot eventloop, fel, verifiering och gränser för C3.
-  - C3: band, avsikter och riskprioritet som rena funktioner på claude/momentum-c3; väntar på Codex granskning. Integration i eventloop återstår.
+  - Underlag: [docs/momentum-C3-granskning-d77e353.md](momentum-C3-granskning-d77e353.md) — Codex granskar exakt d77e353: 267 riktade prov/820 motorprov och 400 egna beslutsfall passerar; C3-01 terminal efter likvidation och C3-02 signalkontrakt behöver rättas före godkännande.
+  - C3:s rena band-/avsiktsbeslut verifierade för giltiga fall; signalkontraktsfynd C3-02 blockerar godkännande. Eventintegration återstår.
 - [ ] **MOM-C03** Implementera funding, dagsreset och första/sista event enligt låst kontrakt **Pågår.**
   - Underlag: [engine/traderlab/momentum_funding.py](../engine/traderlab/momentum_funding.py) — mom-funding/1.0.0: exakta fundingevent, betalning q × M_ref × ränta, mark_open-regel, stress bara på betalda belopp, dubbelbokningsskydd per konto och scenario.
   - Underlag: [engine/tests/test_momentum_funding.py](../engine/tests/test_momentum_funding.py) — 47 syntetiska tester mot O5, O5b, O16, O17 och Decimal; 15 riktade felprov fångade.
@@ -127,12 +128,14 @@ C2 godkänd på fcf5cb4: C2-01/C2-02 och källfeltyp rättade. 170 riktade prov,
   - Underlag: [docs/momentum-C2-granskning-fcf5cb4.md](momentum-C2-granskning-fcf5cb4.md) — Codex godkänner fundingdelen på exakt fcf5cb4; fas-/tidsvakt, processed-validering och källfeltyp verifierade. 170 riktade prov/759 motorprov samt oberoende Decimal-/regressionsaudit passerar.
   - Underlag: [engine/traderlab/momentum_risk.py](../engine/traderlab/momentum_risk.py) — mom-risk/1.0.0: rena tillståndsövergångar vid 4H-gränser, band 2 pp, dagsbeslut i §7:s ordning, sammanslagning terminal > permanent > dag > cap/platt > normal, dagsreset och lock_day.
   - Underlag: [engine/tests/test_momentum_risk.py](../engine/tests/test_momentum_risk.py) — 61 syntetiska tester mot O6, O14, O15 och handräkning med exakta float-gränser; 17 av 19 riktade felprov fångade, två bevisat ekvivalenta.
-  - Funding (C2, godkänd) och dagsreset (C3, väntar på granskning) finns; första/sista event i eventloopen återstår.
+  - Underlag: [docs/momentum-C3-granskning-d77e353.md](momentum-C3-granskning-d77e353.md) — Codex granskar exakt d77e353: 267 riktade prov/820 motorprov och 400 egna beslutsfall passerar; C3-01 terminal efter likvidation och C3-02 signalkontrakt behöver rättas före godkännande.
+  - Funding C2 godkänd; C3:s reset prövad syntetiskt. Terminal efter likvidation C3-01 behöver rättas; första/sista event i full loop återstår.
 - [ ] **MOM-C04** Implementera 2 % dagsstopp, 15 % permanent stopp och konservativ 20 %-riskkontroll **Pågår.**
   - Underlag: [engine/traderlab/momentum_risk.py](../engine/traderlab/momentum_risk.py) — mom-risk/1.0.0: rena tillståndsövergångar vid 4H-gränser, band 2 pp, dagsbeslut i §7:s ordning, sammanslagning terminal > permanent > dag > cap/platt > normal, dagsreset och lock_day.
   - Underlag: [engine/tests/test_momentum_risk.py](../engine/tests/test_momentum_risk.py) — 61 syntetiska tester mot O6, O14, O15 och handräkning med exakta float-gränser; 17 av 19 riktade felprov fångade, två bevisat ekvivalenta.
   - Underlag: [docs/momentum-risk-C3.md](momentum-risk-C3.md) — API, tillståndsövergångar, gräns mot eventloop, fel, verifiering och gränser för C3.
-  - C3: dagsstopp 2 % och permanent stopp 15 % som riskstatus; konservativ 20 %-kontroll och intrastapel-bound återstår.
+  - Underlag: [docs/momentum-C3-granskning-d77e353.md](momentum-C3-granskning-d77e353.md) — Codex granskar exakt d77e353: 267 riktade prov/820 motorprov och 400 egna beslutsfall passerar; C3-01 terminal efter likvidation och C3-02 signalkontrakt behöver rättas före godkännande.
+  - C3:s dags-/permanentstopp prövade syntetiskt; C3 som helhet inte godkänd. Konservativ intrastapel-bound och eventintegration återstår.
 - [ ] **MOM-C05** Verifiera gap, basis, likvidation och riskordning med handräknade prov och kodgranskning **Pågår.**
   - Underlag: [engine/tests/test_momentum_ledger.py](../engine/tests/test_momentum_ledger.py) — 40 syntetiska tester mot orakel O1–O4, O11, O14, O15 och handräkning; 14 riktade felprov fångade.
   - Underlag: [docs/momentum-C1-granskning-6eba8d6.md](momentum-C1-granskning-6eba8d6.md) — Codex granskar exakt 6eba8d6. Orakel/Decimal stämmer för normala fall, men C1-01 och C1-02 behöver numerisk/API-rättning och regressioner före godkännande. 40 ledgerprov, 629 motorprov godkända.
@@ -140,7 +143,8 @@ C2 godkänd på fcf5cb4: C2-01/C2-02 och källfeltyp rättade. 170 riktade prov,
   - Underlag: [docs/momentum-C1-granskning-6f43505.md](momentum-C1-granskning-6f43505.md) — Codex godkänner exakt C1-revision 6f43505 efter rättade numeriska vakter, 82 ledgerprov/671 motorprov och oberoende Decimal-/före-efterkontroller. Likvidation/riskordning ännu inte verifierade.
   - Underlag: [engine/traderlab/momentum_risk.py](../engine/traderlab/momentum_risk.py) — mom-risk/1.0.0: rena tillståndsövergångar vid 4H-gränser, band 2 pp, dagsbeslut i §7:s ordning, sammanslagning terminal > permanent > dag > cap/platt > normal, dagsreset och lock_day.
   - Underlag: [engine/tests/test_momentum_risk.py](../engine/tests/test_momentum_risk.py) — 61 syntetiska tester mot O6, O14, O15 och handräkning med exakta float-gränser; 17 av 19 riktade felprov fångade, två bevisat ekvivalenta.
-  - C3: riskordning och gap-komposition med C1 prövade syntetiskt; marginal, likvidation och intrastapel återstår.
+  - Underlag: [docs/momentum-C3-granskning-d77e353.md](momentum-C3-granskning-d77e353.md) — Codex granskar exakt d77e353: 267 riktade prov/820 motorprov och 400 egna beslutsfall passerar; C3-01 terminal efter likvidation och C3-02 signalkontrakt behöver rättas före godkännande.
+  - C3:s riskordning/gap-komposition prövade; C3-01/C3-02 återstår. Marginal, likvidationsbokföring och intrastapel kvarstår.
 
 ## D. Utvärderare och jämförelser
 
