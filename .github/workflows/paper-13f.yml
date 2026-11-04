@@ -1,0 +1,55 @@
+# Papper framåt för 13F-observationen (engine/traderlab/paper13f.py): varje vardagskväll efter börsens stängning
+# hämtas nya 13F-redovisningar och kurser, och papperportföljen på 100 000 USD uppdateras. Inga riktiga order.
+# Tillståndet committas till main (research/paper/ och app/data/paper13f.json), så appen och Universe ser det.
+name: Paper 13F
+
+on:
+  schedule:
+    - cron: "37 22 * * 1-5"
+  workflow_dispatch:
+
+concurrency:
+  group: paper-13f
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      SEC_CONTACT: philipsjoqvist20@gmail.com
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q -r engine/requirements.txt
+      - name: Hämta cache
+        uses: actions/cache/restore@v4
+        with:
+          path: data/raw
+          key: paper-13f-${{ github.run_id }}
+          restore-keys: |
+            paper-13f-
+            research-13f-
+      - name: Uppdatera papperportföljen
+        working-directory: engine
+        run: python -m traderlab.paper13f --start 2026-11-05 | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Spara cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: data/raw
+          key: paper-13f-${{ github.run_id }}
+      - name: Committa tillståndet
+        run: |
+          git config user.name "tradergo-research-bot"
+          git config user.email "tradergo-research-bot@users.noreply.github.com"
+          git add research/paper/13f-observation.json app/data/paper13f.json
+          git diff --cached --quiet && { echo "Inga ändringar."; exit 0; }
+          git commit -m "Papper 13F: uppdatering $(date -u +%F)"
+          for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin HEAD:main && exit 0; sleep 10; done
+          exit 1

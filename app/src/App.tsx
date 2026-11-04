@@ -6,6 +6,7 @@ import Overview from "./pages/Overview";
 import Research from "./pages/Research";
 import Status from "./pages/Status";
 import Market from "./pages/Market";
+import Investors, { unseenFilings } from "./pages/Investors";
 import ResearchLab from "./features/research-engine/ResearchLab";
 import { UpdateDialog } from "./features/updates/UpdateDialog";
 import { useUpdater } from "./features/updates/useUpdater";
@@ -18,6 +19,7 @@ const NAV = [
   { id: "Översikt", icon: "home" },
   { id: "Marknad", icon: "candles" },
   { id: "Research", icon: "flask" },
+  { id: "Investerare", icon: "list" },
   { id: "Research Lab", icon: "lab" },
   { id: "Status", icon: "info" },
 ] as const;
@@ -69,6 +71,7 @@ export default function App() {
           {ALL_NAV.map((n) => (
             <button key={n.id} className={page === n.id ? "nav on" : "nav"} onClick={() => setPage(n.id)}>
               <Icon name={n.icon} /> {n.id}
+              {n.id === "Investerare" && page !== "Investerare" && unseenFilings() > 0 && <span className="nav-badge" aria-label="nya redovisningar">{unseenFilings()}</span>}
             </button>
           ))}
         </nav>
@@ -112,6 +115,7 @@ export default function App() {
         {page === "Översikt" && <Overview go={(p) => setPage(p)} />}
         {page === "Marknad" && <Market />}
         {page === "Research" && <Research />}
+        {page === "Investerare" && <Investors />}
         {page === "Research Lab" && <ResearchLab />}
         {page === "Status" && <Status updater={updater} />}
         {page === "Papper" && <Page title="Papper" sub="Bara papper. Ingen riktig order läggs."><div className="card pad desk"><Paper /></div></Page>}

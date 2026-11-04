@@ -1,0 +1,14 @@
+{
+ "kind": "observation",
+ "note": "Papper, inga riktiga pengar. Observation, inte ett godkänt test.",
+ "rules": "research/13f-protokoll.md",
+ "start": "2026-11-05",
+ "start_capital": 100000.0,
+ "updated_at": null,
+ "managers": ["Berkshire Hathaway", "Baupost Group", "Pershing Square", "Akre Capital", "Markel Group", "Himalaya Capital", "Appaloosa", "Third Point", "ValueAct", "Duquesne Family Office"],
+ "value": 100000.0,
+ "spy_value": 100000.0,
+ "holdings": [],
+ "history": [],
+ "events": []
+}

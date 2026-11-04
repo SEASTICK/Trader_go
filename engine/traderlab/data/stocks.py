@@ -34,9 +34,13 @@ def stooq_symbol(ticker: str) -> str:
     return ticker.lower().replace("/", "-").replace(".", "-")
 
 
-def load_prices(ticker: str, data_dir: Path, opener=None) -> pd.DataFrame | None:
-    """Dagsstaplar (open, high, low, close, volume) i UTC, eller None om källan inte har aktien."""
+def load_prices(ticker: str, data_dir: Path, opener=None, max_age_hours: float | None = None) -> pd.DataFrame | None:
+    """Dagsstaplar (open, high, low, close, volume) i UTC, eller None om källan inte har aktien.
+
+    max_age_hours: hämta om filen om den är äldre (för papper framåt, där nya dagar tillkommer)."""
     path = data_dir / "raw" / "stooq" / f"{stooq_symbol(ticker)}.csv"
+    if path.exists() and max_age_hours is not None and time.time() - path.stat().st_mtime > max_age_hours * 3600:
+        path.unlink()
     if not path.exists():
         url = STOOQ.format(sym=stooq_symbol(ticker))
         raw = _open(urllib.request.Request(url, headers={"User-Agent": "TraderGo research"}), opener)

@@ -1,0 +1,40 @@
+import json
+
+import numpy as np
+import pandas as pd
+import pytest
+
+from traderlab import paper13f
+from traderlab.data import ftd, sec13f, stocks
+
+
+@pytest.fixture
+def world(tmp_path, monkeypatch):
+    days = pd.bdate_range("2026-10-01", "2026-11-30", tz="UTC")
+    px = {"AAA": np.linspace(100, 120, len(days)), "BBB": np.linspace(50, 40, len(days)), "SPY": np.linspace(400, 410, len(days))}
+    frames = {t: pd.DataFrame({"open": v, "high": v, "low": v, "close": v}, index=days) for t, v in px.items()}
+    monkeypatch.setattr(stocks, "load_prices", lambda t, d, opener=None, max_age_hours=None: frames.get(t))
+    monkeypatch.setattr(ftd, "load_map", lambda d: {"c1": "AAA", "c2": "BBB"})
+    filings = {1067983: [sec13f.Filing(1067983, "a1", "2026-08-14", ""), sec13f.Filing(1067983, "a2", "2026-11-14", "")]}
+    rows = {"a1": {"c1": {"name": "A", "value": 100.0, "shares": 1}},
+            "a2": {"c2": {"name": "B", "value": 100.0, "shares": 1}}}
+    monkeypatch.setattr(sec13f, "list_filings", lambda cik, d, opener=None, refresh=False: filings.get(cik, []))
+    monkeypatch.setattr(sec13f, "holdings", lambda f, d, opener=None: rows[f.accession])
+    return tmp_path
+
+
+def test_starts_with_100k_and_switches_after_new_filing(world):
+    s = paper13f.update(world, "2026-11-02")
+    assert s["history"][0]["value"] == pytest.approx(100_000 * (1 - 0.001))   # köp vid öppning, 10 bp
+    assert [e["manager"] for e in s["events"]] == ["Berkshire Hathaway"]
+    assert s["events"][0]["day"] == "2026-11-16"            # nästa handelsdag efter lördagen 14/11
+    assert [h["ticker"] for h in s["holdings"]] == ["BBB"]
+    assert (world / "app/data/paper13f.json").exists()
+    on_disk = json.loads((world / "research/paper/13f-observation.json").read_text())
+    assert on_disk["kind"] == "observation"
+
+
+def test_rerun_is_deterministic(world):
+    a = paper13f.update(world, "2026-11-02")
+    b = paper13f.update(world, "2026-11-02")
+    assert a["history"] == b["history"] and a["holdings"] == b["holdings"]

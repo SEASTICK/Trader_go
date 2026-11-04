@@ -35,7 +35,7 @@ export function chartDomain(values: number[]): [number, number] {
   return [lo, max + pad];
 }
 
-export function LineChart({ series, labels, height = 280, watermark = "SIMULERAD DATA" }: { series: Series[]; labels: string[]; height?: number; watermark?: string | null }) {
+export function LineChart({ series, labels, height = 280, watermark = null }: { series: Series[]; labels: string[]; height?: number; watermark?: string | null }) {
   const [ref, width] = useWidth<HTMLDivElement>();
   const [hover, setHover] = useState<number | null>(null);
   const padL = 8, padR = 52, padT = 12, padB = 26;
