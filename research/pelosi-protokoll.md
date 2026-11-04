@@ -33,6 +33,8 @@ De tolkas så här, bestämt efter att ha sett texten men innan något resultat 
 - En rad utan tagg är en aktie, om inte beskrivningen nämner optioner.
 - Ett optionsköp utan angiven typ räknas som köpoption, om ordet "put" inte förekommer.
 - Inskannade redovisningar utan text räknas som otolkade och ingår i datakravet.
+- Redovisningar som bara gäller fastigheter (ingen ticker alls) har inga aktieaffärer och räknas varken som
+  tolkade eller otolkade.
 
 ## H-0017: beslutskriterier (spår A)
 

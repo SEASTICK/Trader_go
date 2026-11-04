@@ -75,3 +75,11 @@ def test_weights_equal_and_spy_when_empty():
     w = copypelosi.build_weights(ev, opens)
     assert w.loc[pd.Timestamp("2021-01-05", tz="UTC"), "GOOGL"] == 1.0
     assert w.iloc[-1]["SPY"] == 1.0 and w.iloc[-1]["GOOGL"] == 0.0
+
+
+def test_no_space_before_date_and_real_estate_only():
+    t = "sPAmazon.com, Inc. (AMZN) [sT] P07/27/2018 07/27/2018 $500,001 - $1,000,000"
+    assert [(x.ticker, x.kind, x.traded) for x in house.parse(t)] == [("AMZN", "buy", "2018-07-27")]
+    estate = "JT1600 Atlas Peak Road - Real EstateInvestmentS 12/30/2016 12/30/2016 $500,001 - $1,000,000 Napa/Napa, CA"
+    assert house.parse(estate) == [] and not house.has_securities(estate)
+    assert house.has_securities(t)

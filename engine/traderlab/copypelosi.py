@@ -60,11 +60,12 @@ def run(hypothesis_id: str, repo: Path, data_dir: Path | None = None) -> dict:
     reg = require_registered(hypothesis_id, repo)
     data_dir = data_dir or repo / "data"
     reps = [r for y in range(2013, 2025) for r in house.reports(y, data_dir) if START <= r.filed < END]
-    events, unparsed = [], []
+    events, unparsed, no_securities = [], [], []
     for r in reps:
-        trades = house.parse(house.pdf_text(r, data_dir))
+        text = house.pdf_text(r, data_dir)
+        trades = house.parse(text)
         if not trades:
-            unparsed.append(r.doc_id)
+            (no_securities if text.strip() and not house.has_securities(text) else unparsed).append(r.doc_id)
             continue
         events.append((pd.Timestamp(r.filed, tz="UTC"), trades))
     events.sort(key=lambda e: e[0])
@@ -97,13 +98,14 @@ def run(hypothesis_id: str, repo: Path, data_dir: Path | None = None) -> dict:
     spy_eq = (1 + spy_ret[keep]).cumprod()
     buys = [t for _, tr in events for t in tr if t.kind == "buy"]
     priced_share = sum(1 for t in buys if t.ticker in panel.columns) / max(len(buys), 1)
-    parsed_share = len(events) / max(len(reps), 1)
+    parsed_share = len(events) / max(len(reps) - len(no_securities), 1)
     t_req = stats.t_krav(reg.attempts)
     out = {
         "hypothesis_id": hypothesis_id, "registry_commit": reg.registry_commit,
         "run_at": datetime.now(timezone.utc).isoformat(timespec="seconds"), "phase": "pelosi", "track": "A",
         "period": [str(eq.index[0].date()), str(eq.index[-1].date())],
         "reports": len(reps), "reports_parsed": len(events), "reports_unparsed": unparsed,
+        "reports_without_securities": no_securities,
         "buys": len(buys), "sells": sum(1 for _, tr in events for t in tr if t.kind == "sell"),
         "tickers": tickers, "tickers_without_prices": missing,
         "parsed_share": parsed_share, "priced_buy_share": priced_share,
@@ -137,14 +139,19 @@ def main() -> None:
     if a.data_only:
         data_dir = a.repo / "data"
         reps = [r for y in range(2013, 2025) for r in house.reports(y, data_dir) if START <= r.filed < END]
-        parsed = [(r, house.parse(house.pdf_text(r, data_dir))) for r in reps]
+        texts = {r.doc_id: house.pdf_text(r, data_dir) for r in reps}
+        parsed = [(r, house.parse(texts[r.doc_id])) for r in reps]
         ok = [p for p in parsed if p[1]]
+        nosec = [r for r, tr in parsed if not tr and texts[r.doc_id].strip() and not house.has_securities(texts[r.doc_id])]
+        print(f"utan värdepapper (t.ex. fastigheter): {len(nosec)}; tolkade av de med värdepapper: "
+              f"{len(ok) / max(len(reps) - len(nosec), 1):.0%}")
         buys = [t for _, tr in ok for t in tr if t.kind == "buy"]
         print(f"redovisningar {len(reps)}, tolkade {len(ok)} ({len(ok) / max(len(reps), 1):.0%}), köp {len(buys)}, "
               f"sälj {sum(1 for _, tr in ok for t in tr if t.kind == 'sell')}, aktier {len({t.ticker for t in buys})}")
-        print("otolkade:", [r.doc_id for r, tr in parsed if not tr][:30])
+        rest = [p for p in parsed if not p[1] and p[0] not in nosec]
+        print("otolkade:", [r.doc_id for r, _ in rest][:30])
         # Utdrag ur några otolkade (offentlig text), för att förbättra tolkningen. Inga resultat räknas.
-        for r, _ in [p for p in parsed if not p[1]][:4]:
+        for r, _ in rest[:4]:
             text = house.pdf_text(r, data_dir)
             print(f"--- {r.doc_id} ({r.filed}), {len(text)} tecken ---")
             print(text[:1800])

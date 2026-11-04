@@ -83,7 +83,7 @@ def pdf_text(report: Report, data_dir: Path, opener=None) -> str:
 
 # Nyare format: "Alphabet Inc. - Class A (GOOGL) [ST] P 12/30/2020" (med radbrytningar och ägarkod emellan).
 # Äldre format (2014–2015): "alcoa Inc. (aa)s 10/23/2014" utan typtagg och med trasig versalisering i PDF-texten.
-ROW = re.compile(r"\(([A-Za-z][A-Za-z0-9.\-]{0,6})\)\s*(?:\[([A-Za-z]{2})\])?\s*(S\s*\(partial\)|P|S|E)\s+(\d{1,2}/\d{1,2}/\d{4})",
+ROW = re.compile(r"\(([A-Za-z][A-Za-z0-9.\-]{0,6})\)\s*(?:\[([A-Za-z]{2})\])?\s*(S\s*\(partial\)|P|S|E)\s*(\d{1,2}/\d{1,2}/\d{4})",
                  re.S | re.I)
 
 
@@ -122,3 +122,9 @@ def parse(text: str) -> list[Trade]:
         elif typ == "S":
             out.append(Trade(ticker, "sell", "ST", when))
     return out
+
+
+def has_securities(text: str) -> bool:
+    """Om redovisningen alls nämner värdepapper (en ticker inom parentes). Redovisningar som bara gäller fastigheter
+    har inga aktieaffärer och räknas inte som otolkade."""
+    return re.search(r"\(([A-Za-z][A-Za-z0-9.\-]{0,6})\)", re.sub(r"\s+", " ", text)) is not None
