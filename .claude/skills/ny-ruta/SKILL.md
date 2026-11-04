@@ -20,18 +20,20 @@ Lägg en rad i `experiments.json`:
 - `grupp`: en av `krypto`, `terminer`, `aktier`, `makro`, `baslinje`. Kategori efter marknad.
 - `tidsram`: `1h`, `4h`, `1d` eller `1 mån`.
 
-Kör `npm --prefix app test` och `npm --prefix app run build`. Nya rutor visar påhittade siffror märkta `SIM`.
+Kör `npm --prefix app test` och `npm --prefix app run build`. En ruta visas i Research först när den har ett riktigt
+resultat i `app/data/results.json`. Appen visar aldrig påhittade siffror. Lägg därför till rutan när hypotesen är
+registrerad, inte som en lös idé (idéer hör hemma i `docs/vagen-till-avkastning.md`).
 
-## Från påhittat till riktigt
+## Från idé till ruta
 
-En ruta får bara riktiga siffror efter, i ordning:
+En ruta syns först efter, i ordning:
 
 1. **Data** hämtad och kontrollerad (`hamta-data`).
 2. **Hypotesen registrerad och committad** i `research/registry.md` innan något körs (`ny-hypotes`).
 3. **Backtest** med kostnader, gallring och reglerna i `CLAUDE.md`.
 4. **Granskning** (`granska-backtest`) och beslut: `REJECT`, `MORE_RESEARCH` eller `READY_FOR_PAPER`.
 
-Först då ersätts de simulerade värdena för rutan och `SIM` tas bort just där.
+Sedan exporteras resultatet (`traderlab.batch.export_to_app`) och rutan syns med riktiga siffror.
 
 ## Sålla bland rutor
 

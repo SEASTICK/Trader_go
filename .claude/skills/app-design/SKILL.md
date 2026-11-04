@@ -1,6 +1,6 @@
 ---
 name: app-design
-description: Använd när något i Trader_go-appen (app/src) ska byggas eller ändras visuellt, till exempel en ny sida, ett kort, ett diagram eller en text i gränssnittet. Håller färger, komponenter och språk enhetliga och påhittad data märkt.
+description: Använd när något i Trader_go-appen (app/src) ska byggas eller ändras visuellt, till exempel en ny sida, ett kort, ett diagram eller en text i gränssnittet. Håller färger, komponenter och språk enhetliga och visar bara riktig data.
 ---
 
 # Design i Trader_go-appen
@@ -9,7 +9,8 @@ Stilen bygger på Vinstly Desktop (sidomeny, vita rundade kort, grön primärfä
 
 ## Grundregler
 
-1. **Påhittad data märks alltid.** Använd `SimChip` (`SIMULERAD DATA`), `SIM` på rutor och vattenstämpeln i `LineChart`. Inga procent får se verkliga ut innan de kommer från ett granskat test.
+1. **Bara riktig data.** Appen visar inga påhittade siffror. Resultat kommer från motorn (`app/data/results.json`,
+   märkta `HISTORIK`), priser från insamlingen. Saknas data visas en tom vy med förklaring, aldrig en ersättning.
 2. **Ingen prognos, inget löfte.** Säg "resultat i test", aldrig "förväntad avkastning".
 3. **Svenska, enkelt och utan facktermer** i gränssnittet. Förklara t-värde med "över/under kravet".
 4. **Inga externa resurser.** CSP är strikt (`default-src 'self'`). Typsnittet Inter ligger lokalt. Inga CDN:er eller bilder utifrån.
@@ -30,7 +31,6 @@ Ljust och mörkt tema definieras båda. Kontrollera alltid båda.
 | `Page` | `components/ui.tsx` | Sidrubrik, undertext, knappar till höger |
 | `Segmented` | `components/ui.tsx` | Flikar och filter |
 | `StatusDot` | `components/ui.tsx` | Status: Idé, Pågår, REJECT, READY_FOR_PAPER |
-| `SimChip` | `components/ui.tsx` | Märkning av påhittad data |
 | `LineChart`, `Sparkline` | `components/Charts.tsx` | Kurvor, med hover och vattenstämpel |
 | `Icon` | `components/icons.tsx` | Enkla linjeikoner |
 

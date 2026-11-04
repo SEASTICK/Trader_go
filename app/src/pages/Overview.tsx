@@ -1,5 +1,3 @@
-import experiments from "../../data/experiments.json";
-import results from "../../data/results.json";
 import { CandleChart } from "../components/CandleChart";
 import { Page } from "../components/ui";
 import { tKrav } from "../lib/stats";
@@ -19,8 +17,6 @@ export default function Overview({ go }: { go: (p: "Research" | "Marknad") => vo
   const väntar = attempts - beslut.length;
   // Närmast målet: avgjorda hypoteser med högst t i förhållande till sitt eget krav.
   const nära = groupRegistry(reg).filter((h) => h.t !== null && h.krav).sort((a, b) => (b.t! / b.krav!) - (a.t! / a.krav!)).slice(0, 3);
-  const testadeRutor = new Set(Object.keys(results as Record<string, unknown>));
-  const idéer = (experiments as { id: string; grupp: string }[]).filter((e) => e.grupp !== "baslinje" && !testadeRutor.has(e.id)).length;
   const title = attempts === 0 ? "Inga hypoteser testade än" : `${attempts} ${attempts === 1 ? "hypotes" : "hypoteser"} registrerade`;
   const sub = attempts === 0
     ? "Varje idé registreras innan den testas. Det är normalt att de flesta blir REJECT."
@@ -36,7 +32,7 @@ export default function Overview({ go }: { go: (p: "Research" | "Marknad") => vo
         <div className="card kpi"><span className="k">Testade</span><b>{beslut.length}</b><span className="muted">{rejects} REJECT · {vidare} vidare</span></div>
         <div className="card kpi"><span className="k">Registrerade försök</span><b>{attempts}</b><span className="muted">Alla försök räknas, även övergivna</span></div>
         <div className="card kpi"><span className="k">Krav på t-värde</span><b>{tKrav(attempts).toFixed(1).replace(".", ",")}</b><span className="muted">Stiger med antal försök</span></div>
-        <div className="card kpi"><span className="k">Idéer i kö</span><b>{idéer}</b><span className="muted">Inte testade än</span></div>
+        <div className="card kpi"><span className="k">Gått vidare</span><b>{vidare}</b><span className="muted">Till slutprov eller papper</span></div>
       </div>
 
       {nära.length > 0 && (

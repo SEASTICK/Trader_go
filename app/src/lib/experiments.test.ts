@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { compute, fromResult, klararMål, type Experiment, type RealResult } from "./experiments";
+import { fromResult, klararMål, type Experiment, type RealResult } from "./experiments";
 
 const exp: Experiment = { id: "E-01", spår: "S-01", namn: "BTC 4h", strategi: "Trend", grupp: "krypto", marknad: "Bitcoin", tidsram: "4h", riktning: "Long/short" };
 
@@ -28,9 +28,6 @@ describe("fromResult", () => {
     expect(c.position).toEqual({ läge: "Short", storlek: 50 });
   });
 
-  it("påhittade rutor är alltid SIM", () => {
-    expect(compute(exp).källa).toBe("SIM");
-  });
 });
 
 describe("klararMål", () => {

@@ -3,11 +3,11 @@ import experiments from "../../data/experiments.json";
 import results from "../../data/results.json";
 import { Sparkline } from "../components/Charts";
 import { Page, Segmented } from "../components/ui";
-import { MÅL, compute, fromResult, kravFör, målFör, num, pct, type Computed, type Experiment, type RealResult } from "../lib/experiments";
+import { MÅL, fromResult, kravFör, målFör, num, pct, type Computed, type Experiment, type RealResult } from "../lib/experiments";
 import ExperimentDetail from "./ExperimentDetail";
 import Hypotheses from "./Hypotheses";
 
-const VIEWS = ["Resultat", "Hypoteser", "Idéer"] as const;
+const VIEWS = ["Resultat", "Hypoteser"] as const;
 type View = (typeof VIEWS)[number];
 const SORTS = ["Standard", "Avkastning", "t-värde"] as const;
 type Sort = (typeof SORTS)[number];
@@ -51,11 +51,9 @@ export default function Research() {
   const real = useMemo(() => Object.fromEntries(
     Object.entries(results as unknown as Record<string, RealResult>).filter(([, r]) => r && r.source === "HISTORIK"),
   ), []);
-  // B-01 (köp-och-behåll) är jämförelsen i varje test, inte en egen idé.
-  const all = useMemo(() => (experiments as Experiment[]).filter((e) => e.grupp !== "baslinje")
-    .map((e) => (real[e.id] ? fromResult(e, real[e.id]) : compute(e))), [real]);
-  const tested = all.filter((c) => c.källa === "HISTORIK");
-  const ideas = all.filter((c) => c.källa !== "HISTORIK");
+  // Bara rutor med ett riktigt resultat visas. Nya idéer läggs till när de registrerats och körts (skillen ny-ruta).
+  const all = useMemo(() => (experiments as Experiment[]).filter((e) => real[e.id]).map((e) => fromResult(e, real[e.id])), [real]);
+  const tested = all;
   const krav = kravFör(all.length);
   const sorted = useMemo(() => {
     const a = [...tested];
@@ -68,23 +66,10 @@ export default function Research() {
   if (selected) return <ExperimentDetail c={selected} krav={krav} total={all.length} onBack={() => setOpen(null)} />;
 
   const sub = view === "Resultat" ? `${tested.length} idéer testade på riktig historik, grupperade efter mål.`
-    : view === "Hypoteser" ? "Varje idé skrivs ned med krav innan den testas. Alla försök räknas."
-    : `${ideas.length} idéer som inte är testade än. De visar inga siffror förrän de registrerats och körts.`;
+    : "Varje idé skrivs ned med krav innan den testas. Alla försök räknas.";
   return (
     <Page title="Research" sub={sub} actions={<Segmented value={view} options={[...VIEWS]} onChange={setView} />}>
       {view === "Hypoteser" && <Hypotheses />}
-
-      {view === "Idéer" && (
-        <section className="card">
-          <div className="idea-row head"><span>Id</span><span>Idé</span><span>Strategi</span><span>Marknad</span><span>Tid</span></div>
-          {ideas.map((c) => (
-            <button type="button" key={c.exp.id} className="idea-row hyp-row" onClick={() => setOpen(c.exp.id)}>
-              <b>{c.exp.id}</b><span>{c.exp.namn}</span><span className="muted">{c.exp.strategi}</span><span>{c.exp.marknad}</span><span>{c.exp.tidsram}</span>
-            </button>
-          ))}
-          <p className="footnote" style={{ padding: "12px 20px 16px" }}>En idé blir en ruta med siffror först när hypotesen är registrerad i Git och körd (skillen <code>ny-hypotes</code>).</p>
-        </section>
-      )}
 
       {view === "Resultat" && (
         <>
