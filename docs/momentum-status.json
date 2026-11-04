@@ -2,9 +2,9 @@
   "schema_version": 1,
   "title": "Efterföljare till H-0013 – granskning och implementation",
   "hypothesis": "H-0017 – riskstyrd tidsseriemomentum på BTCUSDT",
-  "updated": "2026-11-03",
-  "reviewed_revision": "d77e3535dc9588bc8454c04112223c594fbbd7ff",
-  "reviewed_scope": "C3 på d77e353 granskad: 267 riktade prov/820 motorprov samt 400 egna syntetiska beslutsfall passerar. Två P2-fynd blockerar C3: terminalavsikt efter likvidation och otillräcklig signalkontraktsvalidering. B/C1/C2 oförändrade. C02–C05 fortsatt in_progress; 11/40. Ingen historik eller drift.",
+  "updated": "2026-11-04",
+  "reviewed_revision": "8c19618d431ad59c22fbbcf43171ab5f38b7b13f",
+  "reviewed_scope": "C3 godkänd på 8c19618: C3-01/C3-02 stängda. 307 riktade prov, 860 motorprov och 400 egna referens-/oförändrade före-efterbeslut passerar. C02 done för granskad avsikts-/bandmodul; C03/C04/C05 fortsatt in_progress. 12/40. Nästa C4 marginal/absorberande likvidation, endast syntetiskt.",
   "groups": [
     {
       "id": "A",
@@ -361,7 +361,7 @@
         {
           "id": "MOM-C02",
           "title": "Implementera handelsband, avsikter och riskprioritet utan dold ombalansering",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "engine/traderlab/momentum_risk.py",
@@ -382,9 +382,13 @@
             {
               "file": "engine/tests/test_momentum_risk.py",
               "detail": "Rättning av C3-01/C3-02 från granskningen av d77e353: ingen terminalavsikt för likviderat konto, strikt validering av signalens available, version och tider. 101 risktester; 38 nya fäller d77e353; 22 av 24 riktade felprov fångade, två bevisat ekvivalenta."
+            },
+            {
+              "file": "docs/momentum-C3-granskning-8c19618.md",
+              "detail": "Codex godkänner exakt C3-revision 8c19618 efter rättad likviderad terminal och strikt signalkontrakt. 307 riktade prov/860 motorprov samt 400 egna oförändrade referensbeslut passerar. Full event-/marginal-/intrastapelintegration återstår."
             }
           ],
-          "note": "C3:s rena band-/avsiktsbeslut verifierade för giltiga fall; signalkontraktsfynd C3-02 blockerar godkännande. Eventintegration återstår."
+          "note": "Komponentgodkänd på exakt 8c19618: band, avsikter och prioritet inklusive C1-komposition. Full eventordning verifieras under C03/C05; ompröva vid ändrad riskmodul."
         },
         {
           "id": "MOM-C03",
@@ -426,9 +430,13 @@
             {
               "file": "docs/momentum-C3-granskning-d77e353.md",
               "detail": "Codex granskar exakt d77e353: 267 riktade prov/820 motorprov och 400 egna beslutsfall passerar; C3-01 terminal efter likvidation och C3-02 signalkontrakt behöver rättas före godkännande."
+            },
+            {
+              "file": "docs/momentum-C3-granskning-8c19618.md",
+              "detail": "Codex godkänner exakt C3-revision 8c19618 efter rättad likviderad terminal och strikt signalkontrakt. 307 riktade prov/860 motorprov samt 400 egna oförändrade referensbeslut passerar. Full event-/marginal-/intrastapelintegration återstår."
             }
           ],
-          "note": "Funding C2 godkänd; C3:s reset prövad syntetiskt. Terminal efter likvidation C3-01 behöver rättas; första/sista event i full loop återstår."
+          "note": "Funding C2 och ren dagsreset C3 godkända; första/sista event och full funding-/marginalintegration återstår."
         },
         {
           "id": "MOM-C04",
@@ -454,9 +462,13 @@
             {
               "file": "engine/tests/test_momentum_risk.py",
               "detail": "Rättning av C3-01/C3-02 från granskningen av d77e353: ingen terminalavsikt för likviderat konto, strikt validering av signalens available, version och tider. 101 risktester; 38 nya fäller d77e353; 22 av 24 riktade felprov fångade, två bevisat ekvivalenta."
+            },
+            {
+              "file": "docs/momentum-C3-granskning-8c19618.md",
+              "detail": "Codex godkänner exakt C3-revision 8c19618 efter rättad likviderad terminal och strikt signalkontrakt. 307 riktade prov/860 motorprov samt 400 egna oförändrade referensbeslut passerar. Full event-/marginal-/intrastapelintegration återstår."
             }
           ],
-          "note": "C3:s dags-/permanentstopp prövade syntetiskt; C3 som helhet inte godkänd. Konservativ intrastapel-bound och eventintegration återstår."
+          "note": "C3:s rena dags-/permanentstopp godkända på 8c19618. Konservativ intrastapel-bound och eventintegration återstår."
         },
         {
           "id": "MOM-C05",
@@ -490,9 +502,13 @@
             {
               "file": "docs/momentum-C3-granskning-d77e353.md",
               "detail": "Codex granskar exakt d77e353: 267 riktade prov/820 motorprov och 400 egna beslutsfall passerar; C3-01 terminal efter likvidation och C3-02 signalkontrakt behöver rättas före godkännande."
+            },
+            {
+              "file": "docs/momentum-C3-granskning-8c19618.md",
+              "detail": "Codex godkänner exakt C3-revision 8c19618 efter rättad likviderad terminal och strikt signalkontrakt. 307 riktade prov/860 motorprov samt 400 egna oförändrade referensbeslut passerar. Full event-/marginal-/intrastapelintegration återstår."
             }
           ],
-          "note": "C3:s riskordning/gap-komposition prövade; C3-01/C3-02 återstår. Marginal, likvidationsbokföring och intrastapel kvarstår."
+          "note": "C3:s riskordning och terminal efter dokumenterad likvidation godkända; marginal-/likvidationsbokföring och intrastapelintegration återstår i C4 och senare delar."
         }
       ]
     },

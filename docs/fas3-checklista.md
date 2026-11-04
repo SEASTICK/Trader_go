@@ -2,7 +2,7 @@
 
 **0 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-Planering · Kontrollerad 2026-11-03 · Granskad kodversion `72107ed`.
+Planering · Kontrollerad 2026-11-04 · Granskad kodversion `72107ed`.
 
 Fas 3-plan efter godkänd Fas 2. Edwin vill prioritera en bättre strategi med positivt netto och cirka 20 % maximal nedgång. H-0013:s sparade urval är diagnostiserat utan nytt backtest; H-0016 förregistreras som fast squeeze med separat risklager. Ingen implementation eller riktig körning ännu. Ingen kandidat har READY_FOR_PAPER; papperspiloten väntar.
 
@@ -47,6 +47,7 @@ Fas 3-plan efter godkänd Fas 2. Edwin vill prioritera en bättre strategi med p
   - Underlag: [docs/momentum-C2-granskning-1d9359f.md](momentum-C2-granskning-1d9359f.md) — H-0017:s C2-funding granskad på 1d9359f med syntetiska tal. Ledger kompletterad och omverifierad; funding-API har två kvarstående valideringsfynd. Ingen ekonomisk utvärdering eller pilot godkänd.
   - Underlag: [docs/momentum-C2-granskning-fcf5cb4.md](momentum-C2-granskning-fcf5cb4.md) — H-0017:s C2-funding godkänd på fcf5cb4 med enbart syntetiska data. Risk-/eventintegration och ekonomisk utvärdering återstår; ingen kandidat eller pilot godkänd.
   - Underlag: [docs/momentum-C3-granskning-d77e353.md](momentum-C3-granskning-d77e353.md) — H-0017 C3 granskad på d77e353, syntetiskt. Två kontrakts-/tillståndsfynd återstår; ingen historisk utvärdering eller pilot godkänd.
+  - Underlag: [docs/momentum-C3-granskning-8c19618.md](momentum-C3-granskning-8c19618.md) — H-0017:s rena C3-risk-/avsiktsmodul godkänd på 8c19618 med syntetiska data. Marginal, eventintegration, verklig data och ekonomiska resultat återstår; ingen pilot godkänd.
   - H-0017 är separat förregistrerad och metodgranskad. Implementation och historisk utvärdering återstår. H-0013 REJECT och H-0016 oförändrade; ingen kandidat har READY_FOR_PAPER.
 - [ ] **F3-202** Verifiera dokumenterat slutprov och READY_FOR_PAPER innan riktigt framåttest får starta
 - [ ] **F3-203** Frys strategi eller väljare, kodrevision, parametrar och kostnadsmodell

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "title": "Fas 3 – Live Paper Trading",
   "hypothesis": "Ingen strategi godkänd för pilot ännu",
-  "updated": "2026-11-03",
+  "updated": "2026-11-04",
   "reviewed_revision": "72107ed",
   "note": "Planering kan börja. Framåttest kräver godkänd och fryst strategi; H-0013 förblir REJECT.",
   "reviewed_scope": "Fas 3-plan efter godkänd Fas 2. Edwin vill prioritera en bättre strategi med positivt netto och cirka 20 % maximal nedgång. H-0013:s sparade urval är diagnostiserat utan nytt backtest; H-0016 förregistreras som fast squeeze med separat risklager. Ingen implementation eller riktig körning ännu. Ingen kandidat har READY_FOR_PAPER; papperspiloten väntar.",
@@ -116,6 +116,10 @@
             {
               "file": "docs/momentum-C3-granskning-d77e353.md",
               "detail": "H-0017 C3 granskad på d77e353, syntetiskt. Två kontrakts-/tillståndsfynd återstår; ingen historisk utvärdering eller pilot godkänd."
+            },
+            {
+              "file": "docs/momentum-C3-granskning-8c19618.md",
+              "detail": "H-0017:s rena C3-risk-/avsiktsmodul godkänd på 8c19618 med syntetiska data. Marginal, eventintegration, verklig data och ekonomiska resultat återstår; ingen pilot godkänd."
             }
           ],
           "note": "H-0017 är separat förregistrerad och metodgranskad. Implementation och historisk utvärdering återstår. H-0013 REJECT och H-0016 oförändrade; ingen kandidat har READY_FOR_PAPER."

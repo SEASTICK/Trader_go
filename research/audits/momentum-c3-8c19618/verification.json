@@ -1,0 +1,15 @@
+{
+  "reviewed_revision": "8c19618d431ad59c22fbbcf43171ab5f38b7b13f",
+  "synthetic_only": true,
+  "reference_decision_cases": 400,
+  "valid_before_after_identical_cases": 400,
+  "liquidated_terminal_cases": 4,
+  "live_terminal_cost": 80.0,
+  "invalid_signal_contract_checks": 39,
+  "python_numpy_bool_compatibility": true,
+  "source_sha256": {
+    "ledger": "717b5d39cac8d03663a39d060968da753c7d16e948bdf5166f7cf32a27a83655",
+    "risk": "a14e2bed85231881e33001956f32be346530128d2e8b123b120617afd1a92cb5",
+    "signal": "a288de6450b71d06ccb53e3b88384a0475b111aeb7e4ce8c77dd49f6de2c3746"
+  }
+}
