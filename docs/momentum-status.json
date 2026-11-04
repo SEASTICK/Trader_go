@@ -3,8 +3,8 @@
   "title": "Efterföljare till H-0013 – granskning och implementation",
   "hypothesis": "H-0017 – riskstyrd tidsseriemomentum på BTCUSDT",
   "updated": "2026-11-04",
-  "reviewed_revision": "9174b9c4f1543cefa6793a33d4eb7b853e0a368d",
-  "reviewed_scope": "C4-06 P2 stängt på exakt 9174b9c mot 6530ca2. Endast 13 felmeddelandeformateringar och två importer ändrade i funding/risk; C2/C3 åter godkända inom tidigare komponentgränser. Åtta ursprungliga läckor reproducerade på basen, 44 kontrollerade avvisningar utan ändrade indata, 400 fundingutfall och 400 riskbeslut identiska med 4241d0e. 402 momentumtester, 955 motorprov, A1, 16 tidigare audits och ny audit passerar. C02 done; C03/C04/C05 fortsatt in_progress för full integration/intrastapel-bound. Endast syntetiskt; nästa del väntar på Edwins beslut. 12/40.",
+  "reviewed_revision": "b131ff47a03f9d49f6e9df0ebd172a4bea0b6fcf",
+  "reviewed_scope": "C5 EJ GODKÄND på exakt b131ff4 mot cd25ac8. C5-01 P1: adverse-underlag ersätter kronologisk fundingledger vid träff; C5-02 P1: start-/konto-/riskstateinvarianter otillräckliga; C5-03 P2: RunLog accepterar dubbla och främmande resultat. 464 momentumtester, 1017 motorprov, A1, 17 tidigare audits och ny revisionslåst C5-audit passerar inklusive reproducerade fynd. C03/C04/C05 in_progress; oförändrade A/B/C01/C02 behåller komponentgodkännande. Bound återstår. Endast syntetiskt; ingen nästa C-del godkänd. 12/40.",
   "groups": [
     {
       "id": "A",
@@ -526,9 +526,17 @@
             {
               "file": "docs/momentum-event-C5.md",
               "detail": "API, fasordning, invarianter, identiteter, horisont, verifiering och avgränsningar för C5."
+            },
+            {
+              "file": "docs/momentum-C5-granskning-b131ff4.md",
+              "detail": "C5 EJ GODKÄND på b131ff4: C5-01 P1 i intrastapel-fundingledger, C5-02 P1 i start-/konto-/riskstate och C5-03 P2 i loggkomposition. Normal A/B, reset och sekventiell horisont verifierade; full integration inte godkänd."
+            },
+            {
+              "file": "research/audits/momentum-c5-b131ff4/review.py",
+              "detail": "Revisionslåst oberoende git-show-audit: 24 Decimal-inträde/exitfall, två O6, två terminalfall, sex tidsfall, fyra intrastapelfall, 6576 syntetiska staplar/1096 dagar, sju kontrollerade fel och tre reproducerade C5-fynd. Fem egna mutationer fångade. --check jämför verification.json."
             }
           ],
-          "note": "C5: eventordning, funding i A/B och mellanhändelser, dagsreset och första/sista event integrerade syntetiskt; väntar på Codex granskning."
+          "note": "C5 EJ GODKÄND på b131ff4: C5-01 P1 i intrastapel-fundingledger, C5-02 P1 i start-/konto-/riskstate och C5-03 P2 i loggkomposition. Normal A/B, reset och sekventiell horisont verifierade; full integration inte godkänd."
         },
         {
           "id": "MOM-C04",
@@ -590,9 +598,17 @@
             {
               "file": "docs/momentum-event-C5.md",
               "detail": "API, fasordning, invarianter, identiteter, horisont, verifiering och avgränsningar för C5."
+            },
+            {
+              "file": "docs/momentum-C5-granskning-b131ff4.md",
+              "detail": "C5 EJ GODKÄND på b131ff4: främmande riskstate kan ta bort permanent stopp (C5-02 P1); intrastapelkomposition/logg har C5-01/C5-03. Oförändrad C3-komponent behåller godkännande. §10.2-bound återstår."
+            },
+            {
+              "file": "research/audits/momentum-c5-b131ff4/review.py",
+              "detail": "Revisionslåst oberoende git-show-audit: 24 Decimal-inträde/exitfall, två O6, två terminalfall, sex tidsfall, fyra intrastapelfall, 6576 syntetiska staplar/1096 dagar, sju kontrollerade fel och tre reproducerade C5-fynd. Fem egna mutationer fångade. --check jämför verification.json."
             }
           ],
-          "note": "C5: integrerade close-/riskprov i eventordningen; konservativ intrastapel-bound (§10.2) återstår i nästa del."
+          "note": "C5 EJ GODKÄND på b131ff4: främmande riskstate kan ta bort permanent stopp (C5-02 P1); intrastapelkomposition/logg har C5-01/C5-03. Oförändrad C3-komponent behåller godkännande. §10.2-bound återstår."
         },
         {
           "id": "MOM-C05",
@@ -686,9 +702,17 @@
             {
               "file": "docs/momentum-event-C5.md",
               "detail": "API, fasordning, invarianter, identiteter, horisont, verifiering och avgränsningar för C5."
+            },
+            {
+              "file": "docs/momentum-C5-granskning-b131ff4.md",
+              "detail": "C5 EJ GODKÄND på b131ff4: C5-01/C5-02 P1 och C5-03 P2 reproducerade oberoende. 24 Decimal-kompositioner, O6/terminal, gap/intrastapel och full syntetisk horisont verifierade inom dokumenterade gränser; integration/bound återstår."
+            },
+            {
+              "file": "research/audits/momentum-c5-b131ff4/review.py",
+              "detail": "Revisionslåst oberoende git-show-audit: 24 Decimal-inträde/exitfall, två O6, två terminalfall, sex tidsfall, fyra intrastapelfall, 6576 syntetiska staplar/1096 dagar, sju kontrollerade fel och tre reproducerade C5-fynd. Fem egna mutationer fångade. --check jämför verification.json."
             }
           ],
-          "note": "C5: kompositionsprov för gap, basis, likvidation och riskordning; väntar på Codex granskning. Bound återstår."
+          "note": "C5 EJ GODKÄND på b131ff4: C5-01/C5-02 P1 och C5-03 P2 reproducerade oberoende. 24 Decimal-kompositioner, O6/terminal, gap/intrastapel och full syntetisk horisont verifierade inom dokumenterade gränser; integration/bound återstår."
         }
       ]
     },

@@ -2,9 +2,9 @@
 
 **12 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-Metodgranskning · Kontrollerad 2026-11-04 · Granskad kodversion `9174b9c4f1543cefa6793a33d4eb7b853e0a368d`.
+Metodgranskning · Kontrollerad 2026-11-04 · Granskad kodversion `b131ff47a03f9d49f6e9df0ebd172a4bea0b6fcf`.
 
-C4-06 P2 stängt på exakt 9174b9c mot 6530ca2. Endast 13 felmeddelandeformateringar och två importer ändrade i funding/risk; C2/C3 åter godkända inom tidigare komponentgränser. Åtta ursprungliga läckor reproducerade på basen, 44 kontrollerade avvisningar utan ändrade indata, 400 fundingutfall och 400 riskbeslut identiska med 4241d0e. 402 momentumtester, 955 motorprov, A1, 16 tidigare audits och ny audit passerar. C02 done; C03/C04/C05 fortsatt in_progress för full integration/intrastapel-bound. Endast syntetiskt; nästa del väntar på Edwins beslut. 12/40.
+C5 EJ GODKÄND på exakt b131ff4 mot cd25ac8. C5-01 P1: adverse-underlag ersätter kronologisk fundingledger vid träff; C5-02 P1: start-/konto-/riskstateinvarianter otillräckliga; C5-03 P2: RunLog accepterar dubbla och främmande resultat. 464 momentumtester, 1017 motorprov, A1, 17 tidigare audits och ny revisionslåst C5-audit passerar inklusive reproducerade fynd. C03/C04/C05 in_progress; oförändrade A/B/C01/C02 behåller komponentgodkännande. Bound återstår. Endast syntetiskt; ingen nästa C-del godkänd. 12/40.
 
 ## Uppdateringsregler
 
@@ -155,7 +155,9 @@ C4-06 P2 stängt på exakt 9174b9c mot 6530ca2. Endast 13 felmeddelandeformateri
   - Underlag: [engine/traderlab/momentum_event.py](../engine/traderlab/momentum_event.py) — mom-event/1.0.0: eventkomposition för ett huvudmodellskonto enligt §8.1–§8.4 med första/sista event, §10.1-closepunkter och §4-dagsögonblick; återanvänder godkända moduler.
   - Underlag: [engine/tests/test_momentum_event.py](../engine/tests/test_momentum_event.py) — 62 syntetiska tester mot O3, O5/O5b, O6, O10, O11/O18-snitt, O14–O16 och Decimal; 16 riktade felprov fångade.
   - Underlag: [docs/momentum-event-C5.md](momentum-event-C5.md) — API, fasordning, invarianter, identiteter, horisont, verifiering och avgränsningar för C5.
-  - C5: eventordning, funding i A/B och mellanhändelser, dagsreset och första/sista event integrerade syntetiskt; väntar på Codex granskning.
+  - Underlag: [docs/momentum-C5-granskning-b131ff4.md](momentum-C5-granskning-b131ff4.md) — C5 EJ GODKÄND på b131ff4: C5-01 P1 i intrastapel-fundingledger, C5-02 P1 i start-/konto-/riskstate och C5-03 P2 i loggkomposition. Normal A/B, reset och sekventiell horisont verifierade; full integration inte godkänd.
+  - Underlag: [research/audits/momentum-c5-b131ff4/review.py](../research/audits/momentum-c5-b131ff4/review.py) — Revisionslåst oberoende git-show-audit: 24 Decimal-inträde/exitfall, två O6, två terminalfall, sex tidsfall, fyra intrastapelfall, 6576 syntetiska staplar/1096 dagar, sju kontrollerade fel och tre reproducerade C5-fynd. Fem egna mutationer fångade. --check jämför verification.json.
+  - C5 EJ GODKÄND på b131ff4: C5-01 P1 i intrastapel-fundingledger, C5-02 P1 i start-/konto-/riskstate och C5-03 P2 i loggkomposition. Normal A/B, reset och sekventiell horisont verifierade; full integration inte godkänd.
 - [ ] **MOM-C04** Implementera 2 % dagsstopp, 15 % permanent stopp och konservativ 20 %-riskkontroll **Pågår.**
   - Underlag: [engine/traderlab/momentum_risk.py](../engine/traderlab/momentum_risk.py) — mom-risk/1.0.0: rena tillståndsövergångar vid 4H-gränser, band 2 pp, dagsbeslut i §7:s ordning, sammanslagning terminal > permanent > dag > cap/platt > normal, dagsreset och lock_day.
   - Underlag: [engine/tests/test_momentum_risk.py](../engine/tests/test_momentum_risk.py) — 61 syntetiska tester mot O6, O14, O15 och handräkning med exakta float-gränser; 17 av 19 riktade felprov fångade, två bevisat ekvivalenta.
@@ -171,7 +173,9 @@ C4-06 P2 stängt på exakt 9174b9c mot 6530ca2. Endast 13 felmeddelandeformateri
   - Underlag: [engine/traderlab/momentum_event.py](../engine/traderlab/momentum_event.py) — mom-event/1.0.0: eventkomposition för ett huvudmodellskonto enligt §8.1–§8.4 med första/sista event, §10.1-closepunkter och §4-dagsögonblick; återanvänder godkända moduler.
   - Underlag: [engine/tests/test_momentum_event.py](../engine/tests/test_momentum_event.py) — 62 syntetiska tester mot O3, O5/O5b, O6, O10, O11/O18-snitt, O14–O16 och Decimal; 16 riktade felprov fångade.
   - Underlag: [docs/momentum-event-C5.md](momentum-event-C5.md) — API, fasordning, invarianter, identiteter, horisont, verifiering och avgränsningar för C5.
-  - C5: integrerade close-/riskprov i eventordningen; konservativ intrastapel-bound (§10.2) återstår i nästa del.
+  - Underlag: [docs/momentum-C5-granskning-b131ff4.md](momentum-C5-granskning-b131ff4.md) — C5 EJ GODKÄND på b131ff4: främmande riskstate kan ta bort permanent stopp (C5-02 P1); intrastapelkomposition/logg har C5-01/C5-03. Oförändrad C3-komponent behåller godkännande. §10.2-bound återstår.
+  - Underlag: [research/audits/momentum-c5-b131ff4/review.py](../research/audits/momentum-c5-b131ff4/review.py) — Revisionslåst oberoende git-show-audit: 24 Decimal-inträde/exitfall, två O6, två terminalfall, sex tidsfall, fyra intrastapelfall, 6576 syntetiska staplar/1096 dagar, sju kontrollerade fel och tre reproducerade C5-fynd. Fem egna mutationer fångade. --check jämför verification.json.
+  - C5 EJ GODKÄND på b131ff4: främmande riskstate kan ta bort permanent stopp (C5-02 P1); intrastapelkomposition/logg har C5-01/C5-03. Oförändrad C3-komponent behåller godkännande. §10.2-bound återstår.
 - [ ] **MOM-C05** Verifiera gap, basis, likvidation och riskordning med handräknade prov och kodgranskning **Pågår.**
   - Underlag: [engine/tests/test_momentum_ledger.py](../engine/tests/test_momentum_ledger.py) — 40 syntetiska tester mot orakel O1–O4, O11, O14, O15 och handräkning; 14 riktade felprov fångade.
   - Underlag: [docs/momentum-C1-granskning-6eba8d6.md](momentum-C1-granskning-6eba8d6.md) — Codex granskar exakt 6eba8d6. Orakel/Decimal stämmer för normala fall, men C1-01 och C1-02 behöver numerisk/API-rättning och regressioner före godkännande. 40 ledgerprov, 629 motorprov godkända.
@@ -195,7 +199,9 @@ C4-06 P2 stängt på exakt 9174b9c mot 6530ca2. Endast 13 felmeddelandeformateri
   - Underlag: [engine/traderlab/momentum_event.py](../engine/traderlab/momentum_event.py) — mom-event/1.0.0: eventkomposition för ett huvudmodellskonto enligt §8.1–§8.4 med första/sista event, §10.1-closepunkter och §4-dagsögonblick; återanvänder godkända moduler.
   - Underlag: [engine/tests/test_momentum_event.py](../engine/tests/test_momentum_event.py) — 62 syntetiska tester mot O3, O5/O5b, O6, O10, O11/O18-snitt, O14–O16 och Decimal; 16 riktade felprov fångade.
   - Underlag: [docs/momentum-event-C5.md](momentum-event-C5.md) — API, fasordning, invarianter, identiteter, horisont, verifiering och avgränsningar för C5.
-  - C5: kompositionsprov för gap, basis, likvidation och riskordning; väntar på Codex granskning. Bound återstår.
+  - Underlag: [docs/momentum-C5-granskning-b131ff4.md](momentum-C5-granskning-b131ff4.md) — C5 EJ GODKÄND på b131ff4: C5-01/C5-02 P1 och C5-03 P2 reproducerade oberoende. 24 Decimal-kompositioner, O6/terminal, gap/intrastapel och full syntetisk horisont verifierade inom dokumenterade gränser; integration/bound återstår.
+  - Underlag: [research/audits/momentum-c5-b131ff4/review.py](../research/audits/momentum-c5-b131ff4/review.py) — Revisionslåst oberoende git-show-audit: 24 Decimal-inträde/exitfall, två O6, två terminalfall, sex tidsfall, fyra intrastapelfall, 6576 syntetiska staplar/1096 dagar, sju kontrollerade fel och tre reproducerade C5-fynd. Fem egna mutationer fångade. --check jämför verification.json.
+  - C5 EJ GODKÄND på b131ff4: C5-01/C5-02 P1 och C5-03 P2 reproducerade oberoende. 24 Decimal-kompositioner, O6/terminal, gap/intrastapel och full syntetisk horisont verifierade inom dokumenterade gränser; integration/bound återstår.
 
 ## D. Utvärderare och jämförelser
 

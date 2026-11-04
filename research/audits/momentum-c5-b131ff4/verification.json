@@ -1,0 +1,135 @@
+{
+  "revision": "b131ff47a03f9d49f6e9df0ebd172a4bea0b6fcf",
+  "base": "cd25ac80f087079b9632a845cc81b63ae9c649b4",
+  "changed_files": [
+    "docs/momentum-checklista.md",
+    "docs/momentum-event-C5.md",
+    "docs/momentum-status.json",
+    "engine/tests/test_momentum_event.py",
+    "engine/traderlab/momentum_event.py"
+  ],
+  "source_sha256": {
+    "engine/traderlab/momentum_ledger.py": "c043e39515a06a28f615bc93bc6a3d01cf74395328d77d8210f0c7f412808c02",
+    "engine/traderlab/momentum_signal.py": "a288de6450b71d06ccb53e3b88384a0475b111aeb7e4ce8c77dd49f6de2c3746",
+    "engine/traderlab/momentum_funding.py": "60cb1011f22cf471a7e2d6e66a7d24093a5d4068309f50622eab37c91a72aebc",
+    "engine/traderlab/momentum_risk.py": "694a6eb117be293714542de645d04b4b0f4c30320faba80ee2e2287d462b5bd2",
+    "engine/traderlab/momentum_margin.py": "957f91a373b8cb21b548be6977fb4181a0c7c836d79e719ebfadb81fe4909e12",
+    "engine/traderlab/momentum_event.py": "611ecc30252b1452e8be297498f892f888484c30e0e8d6f2d2dbf90ef1aab593",
+    "research/h0017-protokoll.md": "e15197c7d17c815eb89845909d7719e825607e4e49cc856b603af7549acc827d",
+    "research/registry.md": "6362325f1991e185d02d46756b62f4c43925cafa5fdfeae228df0ee46fccc127",
+    "docs/claude-uppdrag-momentum-C5.md": "68abc99fd1a1aa00e7701aa5c30ef2d7e3cd5e766a101a8b27732b2c97749ba1",
+    "docs/momentum-a1-orakel.json": "887d08ad9bc10e3319b608c9703214db7519441614021944086dea1eae7cce3b",
+    "engine/tests/test_momentum_event.py": "19eca872e467a90ecbc78ae2803b4a49fb33e274764c4f702ca059d0a7d293c6",
+    "docs/momentum-status.json": "1be05ece9e569573cc62c41f8cbff328a82b704b3d3baa9a0e593431b3230c57"
+  },
+  "decimal_entry_exit_cases": 24,
+  "terminal_cases": [
+    {
+      "order": "A",
+      "equity": 97975.336
+    },
+    {
+      "order": "B",
+      "equity": 97979.136
+    }
+  ],
+  "timing_cases": 6,
+  "controlled_rejections": 7,
+  "O6": [
+    {
+      "order": "A",
+      "cash": 97469.17
+    },
+    {
+      "order": "B",
+      "cash": 97473.92
+    }
+  ],
+  "interior_cases": [
+    {
+      "mmr": 0.05,
+      "credit_first": false,
+      "hit": true,
+      "booked": [
+        "debit"
+      ],
+      "funding_net": 1280.0,
+      "absorbed": 1
+    },
+    {
+      "mmr": 0.05,
+      "credit_first": true,
+      "hit": true,
+      "booked": [
+        "debit"
+      ],
+      "funding_net": 1280.0,
+      "absorbed": 1
+    },
+    {
+      "mmr": 0.005,
+      "credit_first": false,
+      "hit": false,
+      "booked": [
+        "debit",
+        "credit"
+      ],
+      "funding_net": 0.0,
+      "absorbed": 0
+    },
+    {
+      "mmr": 0.005,
+      "credit_first": true,
+      "hit": false,
+      "booked": [
+        "credit",
+        "debit"
+      ],
+      "funding_net": 0.0,
+      "absorbed": 0
+    }
+  ],
+  "horizon": {
+    "bars": 6576,
+    "close_points": 6577,
+    "days": 1096
+  },
+  "C5-01": {
+    "early_credit_discarded": true,
+    "separate_adverse_basis_required": true
+  },
+  "C5-02": {
+    "invalid_initial_states": [
+      {
+        "case": "double_capital",
+        "C": 200000.0,
+        "q": 0.0,
+        "liquidated": false
+      },
+      {
+        "case": "prestart_position",
+        "C": 50000.0,
+        "q": 500.0,
+        "liquidated": false
+      },
+      {
+        "case": "unexplained_zero",
+        "C": 0.0,
+        "q": 0.0,
+        "liquidated": false
+      }
+    ],
+    "foreign_risk_unlock_q": 499.6003197442046
+  },
+  "C5-03": {
+    "duplicate_day_ends": 2,
+    "foreign_trace_accepted": true
+  },
+  "independent_mutations": {
+    "A_funding_removed": "caught: AssertionError",
+    "B_on_old_q": "caught: AssertionError",
+    "reset_from_future_open": "caught: AssertionError",
+    "start_point_removed": "caught: AssertionError",
+    "terminal_point_removed": "caught: AssertionError"
+  }
+}
