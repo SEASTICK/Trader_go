@@ -43,10 +43,28 @@ class LedgerError(ValueError):
     """Ogiltig indata eller ingen konsekvent lösning. Ingen tyst klippning."""
 
 
+def _show(v) -> str:
+    """repr för felmeddelanden som aldrig själv kastar; mycket stora heltal kan inte alltid skrivas som text."""
+    try:
+        return repr(v)
+    except (ValueError, OverflowError):
+        return f"<{type(v).__name__} som inte kan visas som text>"
+
+
 def _num(name: str, v) -> float:
-    """Ändligt reellt tal (även numpy-skalär) som Python-float, så att alla typer räknas lika. Bool avvisas."""
-    if not isinstance(v, numbers.Real) or isinstance(v, bool) or not math.isfinite(v):
-        raise LedgerError(f"{name} måste vara ett ändligt tal, fick {v!r}.")
+    """Ändligt reellt tal (även numpy-skalär) som Python-float, så att alla typer räknas lika. Bool avvisas.
+
+    Ett reellt tal som inte kan bli en ändlig float (till exempel heltalet 10**400) avvisas med LedgerError; bara
+    OverflowError från ändlighetsprövningens implicita konvertering fångas.
+    """
+    if not isinstance(v, numbers.Real) or isinstance(v, bool):
+        raise LedgerError(f"{name} måste vara ett ändligt tal, fick {_show(v)}.")
+    try:
+        finite = math.isfinite(v)
+    except OverflowError:
+        finite = False
+    if not finite:
+        raise LedgerError(f"{name} måste vara ett ändligt tal, fick {_show(v)}.")
     return float(v)
 
 

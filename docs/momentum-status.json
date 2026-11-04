@@ -370,9 +370,13 @@
             {
               "file": "docs/momentum-C4-granskning-d7d2434.md",
               "detail": "Återöppnad efter C4-05 på d7d2434: befintligt kontrakt om kontrollerade LedgerError bryts av stora heltal i _num. Normala avstämningar och 200 identiska normalfyllningar återverifierade; full integration kvar under C05."
+            },
+            {
+              "file": "engine/traderlab/momentum_ledger.py",
+              "detail": "Rättning av C4-05: _num avvisar reella tal som inte kan bli ändliga flyttal med LedgerError, och felmeddelanden formateras säkert (_show). Regressioner i engine/tests/test_momentum_margin.py; 82 ledgertester oförändrade och godkända."
             }
           ],
-          "note": "Återöppnad efter C4-05 på d7d2434: befintligt kontrakt om kontrollerade LedgerError bryts av stora heltal i _num. Normala avstämningar och 200 identiska normalfyllningar återverifierade; full integration kvar under C05."
+          "note": "C4-05 rättad på claude/momentum-c4; väntar på Codex omgranskning av exakt revision."
         },
         {
           "id": "MOM-C02",
@@ -594,6 +598,10 @@
             {
               "file": "docs/momentum-C4-granskning-d7d2434.md",
               "detail": "C4 ej godkänd på exakt d7d2434. Exakta C4-01–C4-03-reproduktioner stängda, men C4-04/C4-05 P2 kvarstår. Normala marginal-/resetfall och avgränsad komposition återverifierade syntetiskt; full event-/riskordning återstår. Ingen senare leverans beställd."
+            },
+            {
+              "file": "engine/tests/test_momentum_margin.py",
+              "detail": "Rättning av C4-04/C4-05 från omgranskningen av d7d2434: säkra felmeddelanden för heltal som inte kan skrivas som text och LedgerError för reella tal som inte blir ändliga flyttal. 73 marginaltester; 7 fäller d7d2434; 22 riktade felprov fångade."
             }
           ],
           "note": "C4 ej godkänd på exakt d7d2434. Exakta C4-01–C4-03-reproduktioner stängda, men C4-04/C4-05 P2 kvarstår. Normala marginal-/resetfall och avgränsad komposition återverifierade syntetiskt; full event-/riskordning återstår. Ingen senare leverans beställd."

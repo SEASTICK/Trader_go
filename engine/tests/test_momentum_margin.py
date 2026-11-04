@@ -407,9 +407,9 @@ def test_huge_integer_rate_is_margin_error(big):
 
 def test_huge_integer_price_is_margin_error():
     acct = L.Account(C=-60_000.0, q=1000.0, deposit=40_000.0, avg_price=100.0)
-    with pytest.raises(M.MarginError, match="ändligt flyttal"):
+    with pytest.raises(M.MarginError, match="ändligt tal"):
         M.check(acct, st(), M.GAP, 10 ** 400, M.MARK_OPEN, BAR)
-    with pytest.raises(M.MarginError, match="ändligt flyttal"):
+    with pytest.raises(M.MarginError, match="ändligt tal"):
         M.check_bar(acct, st(), BAR, 100, 10 ** 400, 90, 100)
 
 
@@ -417,3 +417,60 @@ def test_ordinary_integer_and_float_rates_unchanged():
     assert M.MarginState("main", "A", 0.05).mmr == 0.05 and M.MarginState("main", "A", 0.005).mmr == 0.005
     with pytest.raises(M.MarginError, match="Underhållssatsen"):
         M.MarginState("main", "A", 1)                                # vanligt heltal: giltigt tal men ingen registrerad sats
+
+
+# Regressioner för Codex omgranskning av d7d2434 (C4-04 och C4-05).
+
+HUGE = 10 ** 5000                                                    # kan inte skrivas som text med standardgränsen
+
+
+def test_huge_integer_cannot_be_repr_in_this_interpreter():
+    import sys
+    assert sys.get_int_max_str_digits() in (0, 4300)
+    if sys.get_int_max_str_digits():
+        with pytest.raises(ValueError):
+            repr(HUGE)
+
+
+@pytest.mark.parametrize("big", [HUGE, -HUGE, 10 ** 400], ids=["10^5000", "-10^5000", "10^400"])
+def test_rate_error_message_is_safe_for_any_integer(big):
+    state, acct = st(), L.Account.open(1000)
+    for call in (lambda: M.MarginState("main", "A", big), lambda: dataclasses.replace(state, mmr=big),
+                 lambda: M.threshold(acct, big)):
+        with pytest.raises(M.MarginError, match="Underhållssatsen") as err:
+            call()
+        assert str(err.value)                                        # meddelandet kan formateras
+    assert state == st() and acct == L.Account.open(1000)
+
+
+def test_other_margin_messages_are_safe_for_huge_integers():
+    acct = L.Account(C=-60_000.0, q=1000.0, deposit=40_000.0, avg_price=100.0)
+    for call in (lambda: M.check(acct, st(), M.GAP, HUGE, M.MARK_OPEN, BAR),
+                 lambda: M.check(acct, st(), M.GAP, 70.0, HUGE, BAR),
+                 lambda: M.check(acct, st(), HUGE, 70.0, M.MARK_OPEN, BAR),
+                 lambda: M.check(acct, st(), M.GAP, 70.0, M.MARK_OPEN, HUGE),
+                 lambda: M.MarginState(HUGE, "A", 0.05)):
+        with pytest.raises(M.MarginError) as err:
+            call()
+        assert str(err.value)
+
+
+@pytest.mark.parametrize("big", [10 ** 400, -(10 ** 400), HUGE], ids=["10^400", "-10^400", "10^5000"])
+def test_ledger_numeric_validation_is_ledger_error_for_huge_reals(big):
+    from fractions import Fraction
+    base = L.Account(C=800.0, q=2.0, deposit=1000.0, avg_price=100.0)
+    copy = dataclasses.replace(base)
+    for call in (lambda: L.Account(C=big), lambda: dataclasses.replace(base, C=big), lambda: L.Account.open(big),
+                 lambda: base.equity(big), lambda: L.Account(C=Fraction(big, 3)), lambda: L.solve_units(big, 0, 100, 100, 0.5),
+                 lambda: L.fill_normal(base, 0.5, big, 100)):
+        with pytest.raises(L.LedgerError) as err:
+            call()
+        assert str(err.value)
+    assert base == copy
+
+
+def test_ordinary_values_and_numpy_unchanged_after_ledger_fix():
+    import numpy as np
+    assert L.Account(C=np.int64(5), deposit=5).C == 5.0
+    assert L.Account.open(10 ** 15).C == float(10 ** 15)
+    assert M.MarginState("main", "A", np.float64(0.005)).mmr == 0.005

@@ -24,7 +24,7 @@ from dataclasses import dataclass, replace
 
 import pandas as pd
 
-from .momentum_ledger import Account, LedgerError, _num, _out
+from .momentum_ledger import Account, LedgerError, _num, _out, _show
 
 VERSION = "mom-margin/1.0.0"
 MMRS = (0.05, 0.005)
@@ -39,19 +39,16 @@ class MarginError(LedgerError):
 
 
 def _mnum(name, v) -> float:
-    """Ledgerns numeriska validering. Ett reellt tal som inte kan bli en ändlig float (till exempel 10**400) ger
-    OverflowError vid konverteringen; bara det och LedgerError från själva valideringen översätts till MarginError."""
+    """Ledgerns numeriska validering (som också avvisar reella tal som inte kan bli ändliga flyttal) som MarginError."""
     try:
         return _num(name, v)
     except LedgerError as exc:
         raise MarginError(str(exc)) from None
-    except OverflowError:
-        raise MarginError(f"{name} kan inte representeras som ett ändligt flyttal: {type(v).__name__}.") from None
 
 
 def _bar(t) -> pd.Timestamp:
     if not isinstance(t, pd.Timestamp) or t.tz is None or str(t.tz) != "UTC":
-        raise MarginError(f"bar_open måste vara en pd.Timestamp i UTC, fick {t!r}.")
+        raise MarginError(f"bar_open måste vara en pd.Timestamp i UTC, fick {_show(t)}.")
     if (t - t.floor("D")) % pd.Timedelta(hours=4) != pd.Timedelta(0):
         raise MarginError(f"bar_open ligger inte på en 4H-gräns: {t}.")
     return t
@@ -62,9 +59,9 @@ def _mmr(mmr) -> float:
     try:
         value = _mnum("mmr", mmr)
     except MarginError:
-        raise MarginError(f"Underhållssatsen måste vara exakt en av {MMRS}, fick {mmr!r}.") from None
+        raise MarginError(f"Underhållssatsen måste vara exakt en av {MMRS}, fick {_show(mmr)}.") from None
     if value not in MMRS:
-        raise MarginError(f"Underhållssatsen måste vara exakt en av {MMRS}, fick {mmr!r}.")
+        raise MarginError(f"Underhållssatsen måste vara exakt en av {MMRS}, fick {_show(mmr)}.")
     return value
 
 
@@ -114,7 +111,7 @@ class MarginState:
         for name in ("account_key", "scenario"):
             v = getattr(self, name)
             if not isinstance(v, str) or not v:
-                raise MarginError(f"{name} måste vara en icke-tom sträng, fick {v!r}.")
+                raise MarginError(f"{name} måste vara en icke-tom sträng, fick {_show(v)}.")
         object.__setattr__(self, "mmr", _mmr(self.mmr))
         if not isinstance(self.liquidated, bool) or self.liquidated != (self.record is not None):
             raise MarginError("liquidated och record måste följas åt.")
@@ -155,15 +152,15 @@ def check(acct: Account, state: MarginState, phase: str, m: float, price_source:
         raise MarginError(f"Markpriset måste vara > 0, fick {m}.")
     if phase == GAP:
         if price_source != MARK_OPEN:
-            raise MarginError(f"Gapprövning kräver mark_open, fick {price_source!r}.")
+            raise MarginError(f"Gapprövning kräver mark_open, fick {_show(price_source)}.")
     elif phase == INTRABAR:
         if acct.q == 0:
             raise MarginError("Ingen ogynnsam extrem för ett platt konto.")
         expected = MARK_LOW if acct.q > 0 else MARK_HIGH
         if price_source != expected:
-            raise MarginError(f"Ogynnsam extrem för {'long' if acct.q > 0 else 'short'} är {expected}, fick {price_source!r}.")
+            raise MarginError(f"Ogynnsam extrem för {'long' if acct.q > 0 else 'short'} är {expected}, fick {_show(price_source)}.")
     else:
-        raise MarginError(f"Okänd fas {phase!r}; tillåtna {GAP!r} och {INTRABAR!r}.")
+        raise MarginError(f"Okänd fas {_show(phase)}; tillåtna {GAP!r} och {INTRABAR!r}.")
     E = _out("E", acct.C + acct.q * m)
     if acct.q == 0 and E <= 0:
         raise MarginError(f"Platt konto med E = {E} utan likvidation: oförklarat nollkonto, inte ett likvidationsbevis.")

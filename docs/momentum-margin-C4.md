@@ -3,7 +3,10 @@
 Datum 2026-11-04. Rättad efter [Codex granskning av 0773f76](momentum-C4-granskning-0773f76.md): trösklarnas
 nämnare kontrolleras före division (C4-01) och sats och kontotyp valideras före konvertering och fältåtkomst (C4-02).
 Efter [omgranskningen av c312dfa](momentum-C4-granskning-c312dfa.md): ett reellt tal som inte kan bli en ändlig float,
-till exempel heltalet 10**400, ger MarginError i stället för OverflowError (C4-03).
+till exempel heltalet 10**400, ger MarginError i stället för OverflowError (C4-03). Efter
+[omgranskningen av d7d2434](momentum-C4-granskning-d7d2434.md): felmeddelanden formateras säkert även för heltal som
+inte kan skrivas som text, som 10**5000 (C4-04), och ledgerns gemensamma `_num` avvisar reella tal som inte kan bli
+ändliga flyttal med LedgerError (C4-05). Vakten från C4-03 ligger därför i ledgern.
 Underlag: [research/h0017-protokoll.md](../research/h0017-protokoll.md) §4, §6, §8.1–§8.4, §9, D21
 och [uppdraget](claude-uppdrag-momentum-C4.md). Implementation för Codex granskning, inte godkänd. Endast syntetiska
 konton och prispunkter; ingen marknadshistorik har lästs och ingen H-0017-körning har startats. Protokoll, register,
@@ -58,7 +61,12 @@ Intrastapel-drawdown-bound (§10.2) är en separat leverans och inget handelssto
 
 ## Verifiering
 
-- [engine/tests/test_momentum_margin.py](../engine/tests/test_momentum_margin.py): 64 tester, alla godkända. Fyra
+- [engine/tests/test_momentum_margin.py](../engine/tests/test_momentum_margin.py): 73 tester, alla godkända. Nio
+  regressioner för C4-04/C4-05: att 10**5000 inte kan skrivas som text i denna tolk; ±10**5000 och 10**400 som sats vid
+  konstruktion, replace och `threshold` med läsbart felmeddelande och oförändrade indata; övriga marginalmeddelanden med
+  10**5000 som pris, källa, fas, stapeltid och nyckel; ledgerns `Account`, `replace`, `Account.open`, `equity`,
+  `Fraction`, `solve_units` och `fill_normal` med ±10**400 och 10**5000 som ger LedgerError med oförändrat konto; vanliga
+  värden och numpy oförändrade. 7 av testerna fäller d7d2434. Fyra
   regressioner för C4-03: ±10**400 som sats vid konstruktion, replace och `threshold` med oförändrade indata, 10**400 som
   pris i `check` och `check_bar`, och vanliga satser oförändrade. 3 av dem fäller c312dfa. Tidigare: De 14 nya
   regressionerna för granskningen: nämnaröverflow i short-tröskeln vid båda satserna (Codex exakta värden) med
@@ -81,9 +89,11 @@ Intrastapel-drawdown-bound (§10.2) är en separat leverans och inget handelssto
     inom stapeln efter betald och före mottagen funding, där omvänd ordning skulle dölja träffen, och ingen
     återupplivning av en senare kredit. C3:s likvidationsväg med terminal. O18: likviderat delkonto står på noll
     medan ett separat överlevande konto handlar vidare. Tidigare modulers utfall med standardvärdet 0.
-- Alla momentumtester (signal, ledger, funding, risk, marginal): 371 godkända.
+- Alla momentumtester (signal, ledger, funding, risk, marginal): 380 godkända.
 - Riktade felprov efter rättningarna: de 16 ursprungliga, 3 för C4-01/C4-02 (nämnare utan kontroll, sats utan
-  typkontroll, kontotyp okontrollerad) och 1 för C4-03 (OverflowError fångas inte). Alla 20 fångas.
+  typkontroll, kontotyp okontrollerad) och 3 för C4-04/C4-05 (ledgern fångar inte overflow, ledgern visar repr
+  osäkert, satsmeddelande med repr). Alla 22 fångas. Mutanten för C4-03 i marginalmodulen är ersatt eftersom vakten
+  flyttat till ledgern. C1:s och C2:s felprov ger samma utfall mot den rättade ledgern.
 - Riktade felprov i första leveransen: 16 avsiktliga fel i marginalmodulen, ledgern och kompositionstestet. Alla fångades: villkor åt fel
   håll, strikt `<`, epsilon, fel extrem för short och för long, fel sats, tyst klippt negativt E, dubbel nollställning,
   gammal prövning accepterad, tappad justering, raderade kostnad/funding, justering saknas i avstämningen, justering
@@ -100,9 +110,13 @@ Funding- och riskmodulerna är byte-identiska mot sina godkända revisioner; MOM
 
 ## Observation till granskaren
 
-Ledgerns gemensamma `_num` (C1, godkänd) kastar fortfarande OverflowError för ett heltal som 10**400 i till exempel
-`Account(C=10**400)`. C4-03 är rättad i marginalmodulens egen validering utan att ändra den godkända ledgern; om samma
-kontrakt ska gälla ledgern är det en separat C1-ändring som skulle återöppna MOM-C01.
+Ledgerns `_num` är rättad (C4-05), och eftersom funding (C2) och risk (C3) använder den för sina numeriska fält ger
+till exempel en ränta på 10**400 nu FundingError. Samma `repr`-mönster som i C4-04 finns dock kvar i felmeddelanden i
+de godkända modulerna `momentum_funding.py` (nio ställen, bland annat event_id, källa och fas) och `momentum_risk.py`
+(fyra ställen: tider, available och version), där ett heltal som 10**5000 i ett sådant fält skulle ge ValueError i
+stället för FundingError/RiskError. Jag har inte ändrat dem, eftersom de ligger utanför C4:s ändringsyta och en
+ändring skulle återöppna godkända punkter. Rättningen är mekanisk (samma `_show` som ledgern) om granskaren vill att
+den görs.
 
 ## Utanför C4
 
