@@ -13,9 +13,11 @@ En stapel b med öppning T behandlas i ett anrop av process_bar, i protokollets 
      kontraktsöppning P med mark_open som värderingspris (E_trade); scenario B: samtidig funding på q efter fyllning
      (E_post).
   §8.3 inom stapeln: marginalprövning vid mark_low med C efter betald och före mottagen funding från stapelns
-     mellanhändelser. Utan träff bokförs mellanhändelserna kronologiskt på q_open. Vid träff bokförs bara de betalda
-     (de som ingick i prövningsunderlaget), kontot nollställs via C4 och de mottagna hoppas över som absorberade; en
-     kredit kan därmed varken rädda prövningen eller återuppliva kontot. Träffens tid inom stapeln är okänd.
+     mellanhändelser. Utan träff bokförs mellanhändelserna kronologiskt på q_open. Vid träff är träfftiden okänd och
+     ingen ordning mot de exakta fundingtiderna påstås (Edwins beslut 2026-11-04, docs/momentum-C5-01-edwins-beslut.md):
+     ingen av stapelns mellanhändelser bokförs i ledgern; var och en redovisas som olöst med exakt tid och belopp, och
+     nollställningen tar hela kontot efter öppningen. Prövningsunderlaget (C4:s post) hålls skilt från ledgern; en
+     kredit kan varken rädda prövningen eller återuppliva kontot, och ingen betalning räknas två gånger.
 
 Horisont (§4): första öppning 2022-01-01 00:00 med 100 000 och q = 0; terminal vid öppningen 2024-12-31 20:00, där
 C3:s terminalavsikt stänger allt efter gap, A-funding och marginalprövning. Därefter avvisas fler staplar. Inga
@@ -25,11 +27,15 @@ Kapitalpunkter (§10.1): start, close för staplarna 2022-01-01 00 till 2024-12-
 2024-12-31 20. Dagliga E_end (§4): E_close för dagens 20-stapel, känt vid nästa 00:00 före gap, funding och handel;
 sista dagen är terminalt kapital. Ingen statistik, inga drawdownmått, ingen intrastapel-bound (§10.2) här.
 
-Allt är oföränderligt; fel ger EventError utan att något tillstånd ändras.
+Allt är oföränderligt; fel ger EventError utan att något tillstånd ändras. EngineState, BarResult och RunLog skapas
+bara av EngineState.start, EngineState.restore, process_bar och RunLog.begin/add; dataclasses.replace och direkt
+konstruktion avvisas, så att ett tillstånd inte kan sättas ihop av delar från olika konton eller förlopp.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass, field, replace
+import contextvars
+from contextlib import contextmanager
+from dataclasses import dataclass, replace
 
 import pandas as pd
 
@@ -49,6 +55,27 @@ INITIAL = 100_000.0
 ORDERS = ("A", "B")
 COSTS = (ledger.COST_NORMAL, ledger.COST_STRESS)
 UNKNOWN_TIME = "okänd inom stapeln"
+# Fundingkategorier i spåret: varje event i en stapel får exakt en.
+BOOKED = ("funding_A", "funding_B", "funding_interior")
+ABSORBED = "funding_absorbed"        # efter känd likvidation (gappunkt eller tidigare stapel): ingen effekt
+UNRESOLVED = "funding_unresolved"    # i en stapel med intrastapelträff: ordning mot träffen okänd, ej bokförd
+
+_ISSUING = contextvars.ContextVar("mom_event_issuing", default=False)
+
+
+@contextmanager
+def _issuing():
+    token = _ISSUING.set(True)
+    try:
+        yield
+    finally:
+        _ISSUING.reset(token)
+
+
+def _require_issued(what: str) -> None:
+    if not _ISSUING.get():
+        raise EventError(f"{what} skapas bara av modulens egna vägar (start, restore, process_bar, RunLog); "
+                         "replace eller direkt konstruktion avvisas.")
 
 
 class EventError(LedgerError):
@@ -147,6 +174,11 @@ class Trace:
 
 @dataclass(frozen=True)
 class EngineState:
+    """Tillståndet för ett konto i ett scenario före stapeln next_bar.
+
+    Skapas bara via start (det låsta startläget), restore (en uttryckligen återställd mitt-i-horisonten-punkt för
+    syntetiska prov) eller process_bar. Varje konstruktion prövar invarianterna nedan; replace avvisas.
+    """
     scenario: Scenario
     account: Account
     risk_state: risk.RiskState
@@ -157,51 +189,93 @@ class EngineState:
     terminated: bool = False
 
     def __post_init__(self) -> None:
-        s = self.scenario
-        if not isinstance(s, Scenario) or not isinstance(self.account, Account):
+        s, a, rs, ms = self.scenario, self.account, self.risk_state, self.margin_state
+        if not isinstance(s, Scenario) or not isinstance(a, Account):
             raise EventError("Fel typ för scenario eller konto.")
-        if not isinstance(self.risk_state, risk.RiskState) or not isinstance(self.funding_state, fund.FundingState) \
-                or not isinstance(self.margin_state, margin.MarginState):
+        if not isinstance(rs, risk.RiskState) or not isinstance(self.funding_state, fund.FundingState) \
+                or not isinstance(ms, margin.MarginState):
             raise EventError("Fel typ för risk-, funding- eller marginaltillstånd.")
         if (self.funding_state.account_key, self.funding_state.scenario) != (s.account_key, s.label) or \
-                (self.margin_state.account_key, self.margin_state.scenario) != (s.account_key, s.label):
+                (ms.account_key, ms.scenario) != (s.account_key, s.label):
             raise EventError("Funding- och marginaltillstånd hör inte till detta konto och scenario.")
-        if self.margin_state.mmr != s.mmr:
+        if ms.mmr != s.mmr:
             raise EventError("Marginaltillståndets sats matchar inte scenariot.")
         _bar_time("next_bar", self.next_bar)
-        if not isinstance(self.terminated, bool) or self.terminated != self.risk_state.terminated:
+        if not isinstance(self.terminated, bool) or self.terminated != rs.terminated:
             raise EventError("terminated måste följa riskmodulens terminalstatus.")
-        if not self.terminated and self.risk_state.next_boundary != self.next_bar:
+        if not self.terminated and rs.next_boundary != self.next_bar:
             raise EventError("Riskmodulens nästa gräns matchar inte nästa stapel.")
-        if self.margin_state.liquidated != self.risk_state.liquidated and self.risk_state.started:
+        if ms.liquidated != rs.liquidated and rs.started:
             # Riskmodulen får veta om likvidationen först vid nästa close; tillåt bara den ordningen.
-            if not (self.margin_state.liquidated and not self.risk_state.liquidated):
+            if not (ms.liquidated and not rs.liquidated):
                 raise EventError("Likvidationsflaggorna i risk- och marginaltillstånd är inkonsekventa.")
-        if self.margin_state.liquidated and (self.account.C != 0 or self.account.q != 0):
+        if ms.liquidated and (a.C != 0 or a.q != 0 or a.avg_price != 0):
             raise EventError("Ett likviderat konto måste ha C = q = 0.")
-        if self.account.q < 0:
+        if a.q < 0:
             raise EventError("Huvudmodellen är long eller platt; q < 0 är ogiltigt.")
-        if self.risk_state.started:
+        if not rs.started and (self.prev_mark_close is not None or self.next_bar != START or a != Account.open(INITIAL)
+                               or rs != risk.RiskState.start(INITIAL, START) or self.funding_state.processed
+                               or ms.liquidated):
+            raise EventError("Ett ostartat tillstånd måste vara exakt startläget: 100 000, q = 0, orörd bokföring, "
+                             "START och inget föregående close.")
+        if a.deposit != rs.initial:
+            raise EventError(f"Kontots insättning {a.deposit} är inte riskmodulens startkapital {rs.initial}; "
+                             "konto och riskstate hör inte ihop (inga tillskott, D21).")
+        gap = a.reconciliation_gap()
+        if abs(gap) > margin.RECONCILE_TOL * max(1.0, abs(a.deposit), abs(a.C), abs(a.q * a.avg_price)):
+            raise EventError(f"Kontot stämmer inte av mot sin bokföring (gap {gap}).")
+        if rs.started:
             if self.prev_mark_close is None:
                 raise EventError("prev_mark_close krävs efter första stapeln.")
-            object.__setattr__(self, "prev_mark_close", _enum("prev_mark_close", self.prev_mark_close))
-        elif self.prev_mark_close is not None or self.next_bar != START:
-            raise EventError("Ett ostartat tillstånd börjar vid START utan föregående close.")
+            pm = _enum("prev_mark_close", self.prev_mark_close)
+            if pm <= 0:
+                raise EventError(f"prev_mark_close måste vara > 0, fick {pm}.")
+            object.__setattr__(self, "prev_mark_close", pm)
+            if not ms.liquidated:
+                if a.equity(pm) <= 0:
+                    raise EventError("Levande konto med E <= 0 utan likvidation: oförklarat nollkonto (D21).")
+                last_day = (self.next_bar - BAR).floor("D")
+                if a.q != 0 and (rs.permanent or (rs.lock_day is not None and rs.lock_day == last_day)):
+                    raise EventError("Riskstatet har permanent stopp eller dagslås men kontot har position; "
+                                     "konto och risklås hör inte ihop.")
+        _require_issued("EngineState")
 
     @classmethod
     def start(cls, scenario: Scenario) -> "EngineState":
         if not isinstance(scenario, Scenario):
             raise EventError("scenario måste vara Scenario.")
-        return cls(scenario=scenario, account=Account.open(INITIAL),
-                   risk_state=risk.RiskState.start(INITIAL, START),
-                   funding_state=fund.FundingState(scenario.account_key, scenario.label),
-                   margin_state=margin.MarginState(scenario.account_key, scenario.label, scenario.mmr),
-                   next_bar=START)
+        with _issuing():
+            return cls(scenario=scenario, account=Account.open(INITIAL),
+                       risk_state=risk.RiskState.start(INITIAL, START),
+                       funding_state=fund.FundingState(scenario.account_key, scenario.label),
+                       margin_state=margin.MarginState(scenario.account_key, scenario.label, scenario.mmr),
+                       next_bar=START)
+
+    @classmethod
+    def restore(cls, scenario: Scenario, account: Account, risk_state: risk.RiskState,
+                funding_state: fund.FundingState, margin_state: margin.MarginState, next_bar: pd.Timestamp,
+                prev_mark_close: float) -> "EngineState":
+        """Uttrycklig återställning mitt i horisonten för syntetiska prov, efter minst en behandlad stapel.
+
+        Anroparen intygar att delarna kommer från samma förlopp; modulen prövar det som går att pröva: samma konto
+        och scenario, insättning = riskmodulens startkapital, avstämd bokföring, levande konto med E > 0 vid
+        föregående close, inget risklås med öppen position, likviderat konto platt och noll. Ingen terminal. Ett
+        återställt förlopp kan inte börja en RunLog (som kräver startläget).
+        """
+        if not isinstance(risk_state, risk.RiskState) or not risk_state.started or risk_state.terminated:
+            raise EventError("restore kräver ett startat, icke-terminalt riskstate; startläget fås via start.")
+        if not isinstance(next_bar, pd.Timestamp) or not START < next_bar <= TERMINAL:
+            raise EventError(f"restore kräver START < next_bar <= TERMINAL, fick {_show(next_bar)}.")
+        with _issuing():
+            return cls(scenario=scenario, account=account, risk_state=risk_state, funding_state=funding_state,
+                       margin_state=margin_state, next_bar=next_bar, prev_mark_close=prev_mark_close)
 
 
 @dataclass(frozen=True)
 class BarResult:
+    prev_state: EngineState      # tillståndet som stapeln behandlades från
     state: EngineState
+    bar_open: pd.Timestamp
     trace: tuple                 # ordnade Trace-poster
     close_point: tuple | None    # (källstapel, tid känd, E_close) för föregående stapel, None för första
     day_end: tuple | None        # (dag, E_end, likviderad) vid 00:00-gränser
@@ -209,7 +283,12 @@ class BarResult:
     step_record: risk.StepRecord
     simultaneous: int
     interior_booked: int
-    absorbed: int                 # event som inte bokfördes på grund av likvidation (samtidiga och mellan)
+    absorbed: int                # event utan effekt efter känd likvidation (gappunkt eller tidigare)
+    unresolved: tuple = ()       # (event_id, tid, belopp, i prövningsunderlaget) vid intrastapelträff, ej bokförda
+    margin_basis: tuple | None = None   # (C, E, MM, mark_low) för intrastapelprövningen när positionen fanns
+
+    def __post_init__(self) -> None:
+        _require_issued("BarResult")
 
 
 def _validate_events(bar: Bar, events) -> tuple[list, list]:
@@ -288,9 +367,18 @@ def process_bar(state: EngineState, bar: Bar, events=(), signal: risk.SignalInpu
 
     # §8.1 steg 2–6: öppningen T.
     booked = absorbed = 0
+    unresolved: list[tuple] = []
+    margin_basis = None
+
+    def absorb(evts, why):
+        nonlocal absorbed
+        for e in evts:
+            absorbed += 1
+            trace.append(_trace(state, ABSORBED, acct, time=e.time, bar_open=T, event_id=e.event_id, reason=why))
+
     if liquidated:
-        absorbed += len(simultaneous) + len(interior)
         trace.append(_trace(state, "absorbed", acct, time=T, bar_open=T, reason="likviderat konto: inga event, ingen avsikt"))
+        absorb(simultaneous + interior, "likviderat i tidigare stapel")
     else:
         trace.append(_trace(state, "gap", acct, bar.mark_open, time=T, bar_open=T, source="mark_open"))
         if s.order == "A":
@@ -305,9 +393,7 @@ def process_bar(state: EngineState, bar: Bar, events=(), signal: risk.SignalInpu
             trace.append(_trace(state, "liquidation", acct, time=T, bar_open=T, M=bar.mark_open, source="mark_open",
                                 reason=f"E {lr.E_before} <= MM {lr.MM} vid gappunkten; avsikt {intent.kind if intent else None} struken",
                                 risk_status="likviderad"))
-            if s.order == "B":
-                absorbed += len(simultaneous)
-            absorbed += len(interior)
+            absorb((simultaneous if s.order == "B" else []) + interior, "efter likvidation vid gappunkten")
         else:
             if intent is not None:
                 acct, f = risk.fill_intent(acct, intent, bar.contract_open, bar.mark_open, s.cost)
@@ -326,31 +412,46 @@ def process_bar(state: EngineState, bar: Bar, events=(), signal: risk.SignalInpu
                 trace.append(_trace(state, "after_funding_B", acct, bar.mark_open, time=T, bar_open=T,
                                     source="mark_open"))
 
-            # §8.3: mellanhändelser och intrastapelmarginal.
-            paid = [e for e in interior if acct.q * e.M_ref * e.rate > 0]
+            # §8.3: mellanhändelser och intrastapelmarginal. Beloppen tas från C2 på en kladdkopia i tidsordning.
+            records, scratch, scratch_fs = [], acct, fs
+            for e in interior:
+                scratch, scratch_fs, fr = fund.apply_funding(scratch, scratch_fs, e, "funding_interior")
+                records.append(fr)
+            ichk = None
             if acct.q != 0:
-                basis, basis_fs = acct, fs
-                for e in paid:
-                    basis, basis_fs, _ = fund.apply_funding(basis, basis_fs, e, "funding_interior")
+                basis, basis_fs = acct, fs                           # C efter betald, före mottagen (§8.3)
+                for e, fr in zip(interior, records):
+                    if fr.payment > 0:
+                        basis, basis_fs, _ = fund.apply_funding(basis, basis_fs, e, "funding_interior")
                 ichk = margin.check_bar(basis, ms, T, bar.mark_open, bar.mark_high, bar.mark_low, bar.mark_close)
-            else:
-                ichk = None
+                margin_basis = (basis.C, ichk.E, ichk.MM, ichk.m)
+                trace.append(_trace(state, "margin_basis", basis, ichk.m, time=UNKNOWN_TIME, bar_open=T,
+                                    source=ichk.price_source,
+                                    reason=f"prövningsunderlag, ej ledger: E {ichk.E} {'<=' if ichk.hit else '>'} MM {ichk.MM}"))
             if ichk is not None and ichk.hit:
-                for e in paid:                                   # samma betalningar som prövningen, bokförda en gång
-                    acct, fs, fr = fund.apply_funding(acct, fs, e, "funding_interior")
-                    booked += 1
-                    trace.append(_trace(state, "funding_interior", acct, bar.mark_open, time=e.time, bar_open=T,
-                                        source="mark_open", funding=fr.payment, event_id=e.event_id))
-                if acct != ichk.account:
-                    raise EventError("Intern inkonsekvens: bokfört konto skiljer sig från marginalens prövningsunderlag.")
-                acct, ms, lr = margin.liquidate(acct, ms, ichk)
+                # Edwins beslut (C5-01): ingen mellanhändelse bokförs; C4 nollställer prövningsunderlaget och
+                # ledgerns justering är C4:s justering minus de betalningar som bara fanns i underlaget.
+                basis_after, ms, lr = margin.liquidate(ichk.account, ms, ichk)
+                in_basis = _out("underlagsfunding", ichk.account.funding_net - acct.funding_net)
+                delta = _out("justering", lr.adjustment_delta - in_basis)
+                acct = replace(acct, C=0.0, q=0.0, avg_price=0.0,
+                               liquidation_adjustment=_out("liquidation_adjustment", acct.liquidation_adjustment + delta))
+                gap = acct.reconciliation_gap()
+                if abs(gap) > margin.RECONCILE_TOL * max(1.0, abs(lr.C_old), abs(lr.q_old * lr.avg_price_old)) or \
+                        (basis_after.C, basis_after.q) != (acct.C, acct.q):
+                    raise EventError(f"Intern inkonsekvens vid nollställning inom stapeln (avstämningsgap {gap}).")
                 liquidated = True
-                absorbed += len(interior) - len(paid)
+                for e, fr in zip(interior, records):
+                    unresolved.append((e.event_id, e.time, fr.payment, fr.payment > 0))
+                    trace.append(_trace(state, UNRESOLVED, acct, time=e.time, bar_open=T, funding=fr.payment,
+                                        event_id=e.event_id, source="mark_open",
+                                        reason="olöst: ordning mot likvidationen okänd, ej bokförd; "
+                                               + ("i prövningsunderlaget" if fr.payment > 0 else "ej i prövningsunderlaget")))
                 trace.append(_trace(state, "liquidation", acct, time=UNKNOWN_TIME, bar_open=T, M=bar.mark_low,
-                                    source="mark_low", reason=f"E {lr.E_before} <= MM {lr.MM} inom stapeln",
-                                    risk_status="likviderad"))
+                                    source="mark_low", reason=f"E {lr.E_before} <= MM {lr.MM} inom stapeln; "
+                                    f"{len(unresolved)} mellanhändelser olösta", risk_status="likviderad"))
             else:
-                for e in interior:
+                for e in interior:                                   # kronologiskt på q_open (§8.3, D18)
                     acct, fs, fr = fund.apply_funding(acct, fs, e, "funding_interior")
                     booked += 1
                     trace.append(_trace(state, "funding_interior", acct, bar.mark_open, time=e.time, bar_open=T,
@@ -360,36 +461,62 @@ def process_bar(state: EngineState, bar: Bar, events=(), signal: risk.SignalInpu
     terminal_point = (T, acct.C + acct.q * bar.mark_close if not liquidated else 0.0) if terminated else None
     if terminated and not liquidated and acct.q != 0:
         raise EventError("Intern inkonsekvens: positionen är inte stängd vid terminal.")
-    new_state = EngineState(scenario=s, account=acct, risk_state=rs, funding_state=fs, margin_state=ms,
-                            next_bar=T + BAR, prev_mark_close=bar.mark_close, terminated=terminated)
-    return BarResult(state=new_state, trace=tuple(trace), close_point=close_point, day_end=day_end,
-                     terminal_point=terminal_point, step_record=rec, simultaneous=len(simultaneous),
-                     interior_booked=booked, absorbed=absorbed)
+    with _issuing():
+        new_state = EngineState(scenario=s, account=acct, risk_state=rs, funding_state=fs, margin_state=ms,
+                                next_bar=T + BAR, prev_mark_close=bar.mark_close, terminated=terminated)
+        return BarResult(prev_state=state, state=new_state, bar_open=T, trace=tuple(trace), close_point=close_point,
+                         day_end=day_end, terminal_point=terminal_point, step_record=rec,
+                         simultaneous=len(simultaneous), interior_booked=booked, absorbed=absorbed,
+                         unresolved=tuple(unresolved), margin_basis=margin_basis)
 
 
 @dataclass(frozen=True)
 class RunLog:
-    """Samlade punkter från en följd av process_bar: §10.1-closepunkter och §4-dagsögonblick, ingen statistik.
+    """Samlade punkter från en obruten följd av process_bar för ett konto i ett scenario: §10.1-closepunkter och
+    §4-dagsögonblick, ingen statistik.
 
-    close_points börjar med startpunkten (None, START, 100 000). day_base är E_end för dagen före start och är ingen
-    avkastningsdag; day_ends innehåller testdagarna (1 096 för en hel horisont), den sista med terminalt kapital.
+    Börjar bara från startläget (RunLog.begin) och tar bara emot resultatet som behandlades från loggens senaste
+    tillstånd (samma konto, scenario och förlopp, nästa stapel); dubbla, hoppade, bakåtriktade, främmande och
+    post-terminala resultat avvisas. close_points börjar med startpunkten (None, START, 100 000). day_base är E_end
+    för dagen före start och är ingen avkastningsdag; day_ends innehåller testdagarna (1 096 för en hel horisont), den
+    sista med terminalt kapital.
     """
+    state: EngineState                          # senaste tillståndet i förloppet
     close_points: tuple = ()                    # (källstapel, tid känd, E)
     day_base: tuple = ()                        # (2021-12-31, 100 000)
     day_ends: tuple = ()                        # (dag, E_end, likviderad)
     trace: tuple = ()
 
+    def __post_init__(self) -> None:
+        _require_issued("RunLog")
+
     @classmethod
-    def begin(cls) -> "RunLog":
-        return cls(close_points=((None, START, INITIAL),), day_base=(START - pd.Timedelta(days=1), INITIAL))
+    def begin(cls, state: EngineState) -> "RunLog":
+        if not isinstance(state, EngineState) or state != EngineState.start(state.scenario):
+            raise EventError("En RunLog börjar bara från startläget EngineState.start(scenario).")
+        with _issuing():
+            return cls(state=state, close_points=((None, START, INITIAL),),
+                       day_base=(START - pd.Timedelta(days=1), INITIAL))
+
+    @property
+    def terminated(self) -> bool:
+        return self.state.terminated
 
     def add(self, result: BarResult) -> "RunLog":
         if not isinstance(result, BarResult):
             raise EventError("add kräver ett BarResult.")
+        if self.state.terminated:
+            raise EventError("Loggen är redan avslutad vid terminal; inga fler resultat.")
+        if result.prev_state != self.state:
+            raise EventError(f"Resultatet för {result.bar_open} ({result.state.scenario.account_key}/"
+                             f"{result.state.scenario.label}) följer inte loggens senaste tillstånd vid "
+                             f"{self.state.next_bar} ({self.state.scenario.account_key}/{self.state.scenario.label}): "
+                             "dubblett, lucka, bakåtsteg eller främmande förlopp.")
         cps = self.close_points + ((result.close_point,) if result.close_point else ())
         days = self.day_ends + ((result.day_end,) if result.day_end else ())
         if result.terminal_point is not None:
             T, E = result.terminal_point
             cps += ((T, T, E),)
             days += ((T.floor("D"), E, result.state.margin_state.liquidated),)
-        return replace(self, close_points=cps, day_ends=days, trace=self.trace + result.trace)
+        with _issuing():
+            return replace(self, state=result.state, close_points=cps, day_ends=days, trace=self.trace + result.trace)

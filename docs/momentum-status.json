@@ -534,6 +534,10 @@
             {
               "file": "research/audits/momentum-c5-b131ff4/review.py",
               "detail": "Revisionslåst oberoende git-show-audit: 24 Decimal-inträde/exitfall, två O6, två terminalfall, sex tidsfall, fyra intrastapelfall, 6576 syntetiska staplar/1096 dagar, sju kontrollerade fel och tre reproducerade C5-fynd. Fem egna mutationer fångade. --check jämför verification.json."
+            },
+            {
+              "file": "docs/momentum-C5-01-edwins-beslut.md",
+              "detail": "Rättning av C5-01–C5-03 från granskningen av b131ff4, för Codex omgranskning, inte godkänd: Edwins beslut 2026-11-04 att ingen mellanhändelse i en stapel med intrastapelträff bokförs (olöst, exakt tid och belopp; underlag skilt från ledger); varje event med exakt en fundingkategori."
             }
           ],
           "note": "C5 EJ GODKÄND på b131ff4: C5-01 P1 i intrastapel-fundingledger, C5-02 P1 i start-/konto-/riskstate och C5-03 P2 i loggkomposition. Normal A/B, reset och sekventiell horisont verifierade; full integration inte godkänd."
@@ -606,6 +610,10 @@
             {
               "file": "research/audits/momentum-c5-b131ff4/review.py",
               "detail": "Revisionslåst oberoende git-show-audit: 24 Decimal-inträde/exitfall, två O6, två terminalfall, sex tidsfall, fyra intrastapelfall, 6576 syntetiska staplar/1096 dagar, sju kontrollerade fel och tre reproducerade C5-fynd. Fem egna mutationer fångade. --check jämför verification.json."
+            },
+            {
+              "file": "engine/traderlab/momentum_event.py",
+              "detail": "Rättning av C5-02 från granskningen av b131ff4, för Codex omgranskning, inte godkänd: EngineState skapas bara via start/restore/process_bar; insättning = riskmodulens startkapital, avstämd bokföring, inget risklås med position, inget oförklarat nollkonto, exakt startläge. §10.2-bounden ingår fortfarande inte."
             }
           ],
           "note": "C5 EJ GODKÄND på b131ff4: främmande riskstate kan ta bort permanent stopp (C5-02 P1); intrastapelkomposition/logg har C5-01/C5-03. Oförändrad C3-komponent behåller godkännande. §10.2-bound återstår."
@@ -710,6 +718,10 @@
             {
               "file": "research/audits/momentum-c5-b131ff4/review.py",
               "detail": "Revisionslåst oberoende git-show-audit: 24 Decimal-inträde/exitfall, två O6, två terminalfall, sex tidsfall, fyra intrastapelfall, 6576 syntetiska staplar/1096 dagar, sju kontrollerade fel och tre reproducerade C5-fynd. Fem egna mutationer fångade. --check jämför verification.json."
+            },
+            {
+              "file": "engine/tests/test_momentum_event.py",
+              "detail": "Rättning av C5-01–C5-03 från granskningen av b131ff4, för Codex omgranskning, inte godkänd: 101 eventtester (Decimal-facit för olösta event i A/B × båda mmr × teckenordning × med/utan samtidig funding), RunLog bunden till förloppet; 31 av 31 riktade felprov fångade."
             }
           ],
           "note": "C5 EJ GODKÄND på b131ff4: C5-01/C5-02 P1 och C5-03 P2 reproducerade oberoende. 24 Decimal-kompositioner, O6/terminal, gap/intrastapel och full syntetisk horisont verifierade inom dokumenterade gränser; integration/bound återstår."

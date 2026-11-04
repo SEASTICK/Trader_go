@@ -3,6 +3,7 @@
 Facit från docs/momentum-a1-orakel.json och handräkning/Decimal, aldrig från eventfunktionen. Tillstånd nära en viss
 tid byggs med dokumenterade invarianter (EngineState valideras vid konstruktion); det är ingen ny strategistart.
 """
+import copy
 import dataclasses
 import json
 import math
@@ -61,9 +62,8 @@ def restore(scenario, acct, T, prev_mark, *, peak=100_000.0, day_start=100_000.0
         rec_acct = L.Account(C=-1.0, q=1.0, deposit=0.0, avg_price=1.0)   # syntetiskt underlag för tillståndet
         chk = M.check(rec_acct, ms, M.GAP, 1.0, M.MARK_OPEN, T - H)
         _, ms, _ = M.liquidate(rec_acct, ms, chk)
-    return V.EngineState(scenario=scenario, account=acct, risk_state=rs,
-                         funding_state=F.FundingState(scenario.account_key, scenario.label), margin_state=ms,
-                         next_bar=T, prev_mark_close=prev_mark)
+    return V.EngineState.restore(scenario, acct, rs, F.FundingState(scenario.account_key, scenario.label), ms, T,
+                                 prev_mark)
 
 
 def phases(result):
@@ -100,12 +100,12 @@ def test_O5_entry_and_exit_with_simultaneous_funding(order):
     entry_trade = next(t for t in first.trace if t.phase == "after_trade")
     assert close(entry_trade.E, o5b["E_trade"]) and close(entry_trade.q * 100 / entry_trade.E, 0.5)
     if order == "A":
-        assert phases(first) == ["decision", "gap", "funding_A", "after_trade"]
+        assert phases(first) == ["decision", "gap", "funding_A", "after_trade", "margin_basis"]
         assert next(t for t in first.trace if t.phase == "funding_A").funding == 0
         assert close(state.account.equity(100), o["utgång_A"]["E"])
         assert next(t for t in exit_bar.trace if t.phase == "funding_A").funding == pytest.approx(o["utgång_A"]["funding"])
     else:
-        assert phases(first) == ["decision", "gap", "after_trade", "funding_B", "after_funding_B"]
+        assert phases(first) == ["decision", "gap", "after_trade", "funding_B", "after_funding_B", "margin_basis"]
         post = next(t for t in first.trace if t.phase == "after_funding_B")
         assert close(post.E, o5b["E_post"]) and close(post.q * 100 / post.E, o5b["vikt_after_funding_B"])
         exit_funding = next(t for t in exit_bar.trace if t.phase == "funding_B").funding
@@ -170,7 +170,7 @@ def test_permanent_stop_survives_resets_over_several_days():
 @pytest.mark.parametrize("order", ["A", "B"])
 def test_O10_terminal_close_and_no_further_steps(order):
     o = ORACLE["O10_horisont"]
-    acct = L.Account(C=60_000.0, q=400.0, deposit=98_000.0, avg_price=95.0)
+    acct = L.Account(C=60_000.0, q=400.0, deposit=100_000.0, realized=-2_000.0, avg_price=95.0)
     st = restore(sc(order), acct, V.TERMINAL, 95.0, peak=110_000.0, day_start=98_000.0)
     events = [ev("t0", V.TERMINAL, 0.0001, 95.0), ev("t1", V.TERMINAL + pd.Timedelta(seconds=30), 0.0001, 95.0)]
     r = V.process_bar(st, bar(V.TERMINAL, P=95.1, mo=95.0), events)
@@ -201,7 +201,8 @@ def test_no_funding_or_bars_before_start_or_from_2025():
 
 
 def test_full_synthetic_horizon_has_1096_days_and_no_2025_decision():
-    state, log = V.EngineState.start(sc("A")), V.RunLog.begin()
+    state = V.EngineState.start(sc("A"))
+    log = V.RunLog.begin(state)
     T = T0
     n = 0
     while True:
@@ -310,7 +311,7 @@ def test_event_in_wrong_bar_is_rejected():
 
 def _risky(order="A", mmr=0.05, T=pd.Timestamp("2023-04-10", tz="UTC")):
     """E(70) = 10 000 med peak och dagskapital 10 100: inget dags- eller permanent stopp vid closen."""
-    acct = L.Account(C=-60_000.0, q=1000.0, deposit=40_000.0, avg_price=100.0)
+    acct = L.Account(C=-60_000.0, q=1000.0, deposit=10_000.0, realized=30_000.0, avg_price=100.0)
     return restore(sc(order, mmr), acct, T, 70.0, peak=10_100.0, day_start=10_100.0, initial=10_000.0), T
 
 
@@ -345,34 +346,88 @@ def test_gap_check_uses_both_rates(mmr):
         assert "after_trade" in phases(r)
 
 
+FUNDING_PHASES = set(V.BOOKED) | {V.ABSORBED, V.UNRESOLVED}
+
+
+def _event_categories(result):
+    return [(t.event_id, t.phase) for t in result.trace if t.phase in FUNDING_PHASES]
+
+
+# C5-01 (Edwins beslut 2026-11-04): vid intrastapelträff bokförs ingen mellanhändelse; alla redovisas som olösta.
 @pytest.mark.parametrize("mmr,hit", [(0.05, True), (0.005, False)])
 @pytest.mark.parametrize("credit_first", [False, True])
-def test_intrabar_margin_uses_paid_before_received_and_books_once(mmr, hit, credit_first):
-    st, T = _risky("A", mmr, pd.Timestamp("2023-04-10 08:00", tz="UTC"))   # ingen midnatt: ingen avsikt
-    t_pay, t_recv = T + pd.Timedelta(minutes=30), T + pd.Timedelta(hours=2)
-    if credit_first:
-        t_pay, t_recv = t_recv, t_pay
-    events = sorted([ev("pay", t_pay, 0.02, 64.0), ev("recv", t_recv, -0.02, 64.0)], key=lambda e: e.time)
+@pytest.mark.parametrize("order", ["A", "B"])
+@pytest.mark.parametrize("with_sim", [False, True])
+def test_intrabar_hit_books_no_interior_funding_and_keeps_basis_separate(mmr, hit, credit_first, order, with_sim):
+    st, T = _risky(order, mmr, pd.Timestamp("2023-04-10 08:00", tz="UTC"))   # ingen midnatt: ingen avsikt
+    rates = {"pay": "0.02", "pay2": "0.005", "recv": "-0.02", "recv2": "-0.01", "zero": "0"}
+    offsets = [30, 60, 90, 120, 150]                                 # minuter in i stapeln
+    names = ["recv", "recv2", "zero", "pay", "pay2"] if credit_first else ["pay", "pay2", "zero", "recv", "recv2"]
+    events = [ev(n, T + pd.Timedelta(minutes=m), float(rates[n]), 64.0) for n, m in zip(names, offsets)]
+    if with_sim:
+        events = [ev("sim", T, 0.0001, 64.0)] + events
     r = V.process_bar(st, bar(T, P=64.0, mo=64.0, mh=66.0, ml=63.5, mc=65.0), events)
-    assert r.step_record.intent is None and "after_trade" in phases(r)
-    # Oberoende: underlag = C efter betald (1000*64*0,02) och före mottagen, vid mark_low 63,5.
-    E_basis = D(-60_000) - D(1000) * D(64) * D("0.02") + D(1000) * D("63.5")
-    assert (E_basis <= D(repr(mmr)) * D(1000) * D("63.5")) == hit
+    # Oberoende Decimal-facit.
+    q, Mref, low = D(1000), D(64), D("63.5")
+    sim = q * Mref * D("0.0001") if with_sim else D(0)
+    amount = {n: q * Mref * D(v) for n, v in rates.items()}
+    C_open = D(-60_000) - sim                                         # samtidig funding bokförd i A före, B efter
+    C_basis = C_open - sum(v for v in amount.values() if v > 0)      # efter betald, före mottagen
+    E_low, MM = C_basis + q * low, D(repr(mmr)) * q * low
+    assert (E_low <= MM) == hit
+    assert r.margin_basis is not None and close(r.margin_basis[0], float(C_basis))
+    assert close(r.margin_basis[1], float(E_low)) and close(r.margin_basis[2], float(MM)) and r.margin_basis[3] == 63.5
+    cats = _event_categories(r)
+    assert sorted(i for i, _ in cats) == sorted(e.event_id for e in events)          # varje event exakt en gång
     acct = r.state.account
+    sim_cat = [("sim", f"funding_{order}")] if with_sim else []
     if hit:
+        assert cats == sim_cat + [(n, V.UNRESOLVED) for n in names]
+        assert [u[0] for u in r.unresolved] == names and [u[1] for u in r.unresolved] == [e.time for e in events[-5:]]
+        for eid, _, amt, in_basis in r.unresolved:
+            assert close(amt, float(amount[eid])) and in_basis == (amount[eid] > 0)
+        assert r.interior_booked == 0 and r.absorbed == 0
+        assert r.state.funding_state.processed == ({"sim"} if with_sim else frozenset())
+        assert close(acct.funding_net, float(sim)) and acct.C == 0 and acct.q == 0 and acct.avg_price == 0
+        assert close(acct.liquidation_adjustment, float(-C_open - q * D(100)))                   # hela kontot efter öppningen
+        assert acct.reconciliation_gap() == pytest.approx(0, abs=1e-8)
+        rec = r.state.margin_state.record
+        assert rec.phase == M.INTRABAR and close(rec.E_before, float(E_low)) and close(rec.C_old, float(C_basis))
         liq = next(t for t in r.trace if t.phase == "liquidation")
         assert liq.time == V.UNKNOWN_TIME and liq.source == "mark_low"
-        assert r.state.funding_state.processed == {"pay"} and r.absorbed == 1 and r.interior_booked == 1
-        assert close(acct.funding_net, 1000 * 64 * 0.02) and acct.C == 0 and acct.q == 0
-        assert acct.reconciliation_gap() == pytest.approx(0, abs=1e-8)
+        assert all(t.time == e.time for t, e in zip([t for t in r.trace if t.phase == V.UNRESOLVED], events[-5:]))
+        # Absorberande noll i följande staplar: inga nya fundingposter, ingen återupplivning.
+        state = r.state
+        for k in range(1, 5):
+            Tk = T + k * H
+            rr = V.process_bar(state, bar(Tk, P=70.0), [ev(f"n{k}", Tk + pd.Timedelta(hours=1), -0.05, 70.0)],
+                               sig(Tk, 1.0, 1.0) if Tk == Tk.floor("D") else None)
+            assert rr.state.account == acct and rr.close_point[2] == 0.0 and _event_categories(rr) == [(f"n{k}", V.ABSORBED)]
+            state = rr.state
     else:
-        assert r.state.funding_state.processed == {"pay", "recv"} and acct.funding_net == pytest.approx(0, abs=1e-9)
-        booked = [t.event_id for t in r.trace if t.phase == "funding_interior"]
-        assert booked == [e.event_id for e in events]
+        assert cats == sim_cat + [(n, "funding_interior") for n in names] and r.unresolved == ()
+        assert r.interior_booked == 5 and r.state.funding_state.processed == {e.event_id for e in events}
+        assert close(acct.funding_net, float(sim + sum(amount.values())))
+        assert close(acct.C, float(C_open - sum(amount.values())))
+        Cs = [t.C for t in r.trace if t.phase == "funding_interior"]
+        exp, run = [], C_open
+        for n in names:
+            run -= amount[n]
+            exp.append(float(run))
+        assert all(close(a, b) for a, b in zip(Cs, exp))                  # kronologiskt, en post i taget
+
+
+def test_gap_liquidation_lists_each_absorbed_event_once():
+    st, T = _risky("B")
+    events = [ev("b", T, 0.0001, 55.0), ev("i1", T + pd.Timedelta(hours=1), 0.01, 55.0),
+              ev("i2", T + pd.Timedelta(hours=2), -0.01, 55.0)]
+    r = V.process_bar(st, bar(T, P=55.0, mo=55.0, mh=60.0, ml=50.0, mc=58.0), events, sig(T, 1.0, 1.0))
+    assert _event_categories(r) == [("b", V.ABSORBED), ("i1", V.ABSORBED), ("i2", V.ABSORBED)]
+    assert r.absorbed == 3 and r.unresolved == () and r.margin_basis is None
 
 
 def test_liquidated_account_through_midnight_and_terminal_has_no_intent():
-    zero = L.Account(C=0.0, q=0.0, deposit=0.0)
+    zero = L.Account(C=0.0, q=0.0, deposit=100_000.0, liquidation_adjustment=-100_000.0)
     st = restore(sc(), zero, V.TERMINAL - 2 * H, 50.0, liquidated=True)
     for T in (V.TERMINAL - 2 * H, V.TERMINAL - H, V.TERMINAL):
         r = V.process_bar(st, bar(T, P=50.0), [ev(f"l{T.hour}", T + pd.Timedelta(hours=1), 0.01, 50.0)])
@@ -407,6 +462,165 @@ def test_mismatched_states_are_rejected():
         dataclasses.replace(good, next_bar=T0 + H)
     with pytest.raises(V.EventError, match="likviderat"):
         restore(s, L.Account(C=5.0, deposit=5.0), T0 + H, 100.0, liquidated=True)
+
+
+# C5-02: tillståndet kan inte sättas ihop av främmande delar eller avvika från startläget.
+
+@pytest.mark.parametrize("acct", [L.Account.open(200_000), L.Account(C=50_000.0, q=500.0, deposit=100_000.0, avg_price=100.0),
+                                  L.Account(C=0.0)], ids=["kapital_200k", "position_fore_start", "nollkonto"])
+def test_unstarted_state_must_be_exact_start(acct):
+    good = V.EngineState.start(sc())
+    with pytest.raises(V.EventError):
+        dataclasses.replace(good, account=acct)
+    with pytest.raises(V.EventError):
+        V.EngineState(scenario=sc(), account=acct, risk_state=good.risk_state, funding_state=good.funding_state,
+                      margin_state=good.margin_state, next_bar=T0)
+
+
+@pytest.mark.parametrize("acct", [L.Account.open(200_000), L.Account(C=50_000.0, q=500.0, deposit=100_000.0, avg_price=100.0),
+                                  L.Account(C=0.0), L.Account(C=100_000.0, deposit=100_000.0, realized=5.0, costs=5.0)],
+                         ids=["kapital_200k", "position_fore_start", "nollkonto", "rord_bokforing"])
+def test_start_invariant_itself_rejects_non_start_accounts(acct):
+    # Invariantlagret bakom grinden (start/process_bar): även en intern väg kan inte skapa ett avvikande startläge.
+    good = V.EngineState.start(sc())
+    with V._issuing(), pytest.raises(V.EventError, match="startläget"):
+        V.EngineState(scenario=sc(), account=acct, risk_state=good.risk_state, funding_state=good.funding_state,
+                      margin_state=good.margin_state, next_bar=T0)
+
+
+def test_direct_construction_and_replace_are_rejected_even_when_valid():
+    good = V.EngineState.start(sc())
+    with pytest.raises(V.EventError, match="skapas bara"):
+        V.EngineState(scenario=good.scenario, account=good.account, risk_state=good.risk_state,
+                      funding_state=good.funding_state, margin_state=good.margin_state, next_bar=T0)
+    with pytest.raises(V.EventError, match="skapas bara"):
+        dataclasses.replace(good)
+    r = V.process_bar(good, bar(T0), (), sig(T0, 1.0, 0.5))
+    with pytest.raises(V.EventError, match="skapas bara"):
+        dataclasses.replace(r, absorbed=0)
+    assert copy.deepcopy(good) == good                                   # oförändrad kopia av samma tillstånd
+
+
+def test_foreign_risk_lock_cannot_be_swapped_in():
+    T = pd.Timestamp("2023-05-02", tz="UTC")
+    locked = restore(sc("A", key="locked"), L.Account.open(100_000), T, 100.0, permanent=True)
+    other = restore(sc("B", key="other"), L.Account.open(100_000), T, 100.0)
+    with pytest.raises(V.EventError, match="skapas bara"):
+        dataclasses.replace(locked, risk_state=other.risk_state)
+    r = V.process_bar(locked, bar(T), (), sig(T, 1.0, 0.5))           # riktiga låset gäller: ingen köp
+    assert r.state.account.q == 0 and r.step_record.intent is None
+
+
+def _rs(T, **kw):
+    base = dict(initial=100_000.0, peak=100_000.0, day_start=100_000.0, next_boundary=T, started=True)
+    return R.RiskState(**(base | kw))
+
+
+@pytest.mark.parametrize("case", ["insattning", "ej_avstamt", "nollkonto_levande", "negativt_levande", "permanent_med_q",
+                                  "lock_med_q", "likviderad_med_C", "ostartat_risk", "terminal", "vid_start",
+                                  "efter_terminal", "prev_noll", "fel_nyckel"])
+def test_restore_rejects_inconsistent_states(case):
+    T = pd.Timestamp("2023-05-02 08:00", tz="UTC")
+    s = sc()
+    acct, rs, fs = L.Account(C=50_000.0, q=500.0, deposit=100_000.0, avg_price=100.0), _rs(T), F.FundingState("main", s.label)
+    ms, nb, pm = M.MarginState("main", s.label, s.mmr), T, 100.0
+    if case == "insattning":
+        acct = L.Account(C=50_000.0, q=500.0, deposit=90_000.0, realized=10_000.0, avg_price=100.0)
+    elif case == "ej_avstamt":
+        acct = L.Account(C=50_001.0, q=500.0, deposit=100_000.0, avg_price=100.0)
+    elif case == "nollkonto_levande":
+        acct = L.Account(C=0.0, deposit=100_000.0, realized=-100_000.0)
+    elif case == "negativt_levande":
+        pm = 90.0
+        acct = L.Account(C=-50_000.0, q=500.0, deposit=100_000.0, avg_price=300.0)
+    elif case == "permanent_med_q":
+        rs = _rs(T, permanent=True, permanent_time=T - H)
+    elif case == "lock_med_q":
+        rs = _rs(T, lock_day=T.floor("D"))
+    elif case == "likviderad_med_C":
+        rec_acct = L.Account(C=-1.0, q=1.0, deposit=0.0, avg_price=1.0)
+        _, ms, _ = M.liquidate(rec_acct, ms, M.check(rec_acct, ms, M.GAP, 1.0, M.MARK_OPEN, T - H))
+        acct = L.Account(C=5.0, deposit=100_000.0, realized=-99_995.0)
+    elif case == "ostartat_risk":
+        rs = R.RiskState.start(100_000.0, T)
+    elif case == "terminal":
+        rs = _rs(T, terminated=True)
+    elif case == "vid_start":
+        nb = T0
+        rs = _rs(T0)
+    elif case == "efter_terminal":
+        nb = V.TERMINAL + H
+    elif case == "prev_noll":
+        pm = 0.0
+    elif case == "fel_nyckel":
+        fs = F.FundingState("annan", s.label)
+    snapshot = (acct, rs, fs, ms)
+    with pytest.raises(V.EventError) as err:
+        V.EngineState.restore(s, acct, rs, fs, ms, nb, pm)
+    assert str(err.value) and (acct, rs, fs, ms) == snapshot
+
+
+def test_valid_restores_near_terminal_and_mid_horizon_are_independent():
+    a = restore(sc("A"), L.Account(C=50_000.0, q=500.0, deposit=100_000.0, avg_price=100.0), V.TERMINAL, 100.0)
+    b = restore(sc("B"), L.Account(C=50_000.0, q=500.0, deposit=100_000.0, avg_price=100.0),
+                pd.Timestamp("2023-05-02 08:00", tz="UTC"), 100.0)
+    ra = V.process_bar(a, bar(V.TERMINAL))
+    rb = V.process_bar(b, bar(b.next_bar))
+    assert ra.state.terminated and ra.state.account.q == 0 and rb.state.account.q == 500 and not rb.state.terminated
+
+
+# C5-03: loggen tar bara emot nästa resultat i samma förlopp.
+
+def _first_results():
+    st = V.EngineState.start(sc())
+    r0 = V.process_bar(st, bar(T0), (), sig(T0, 1.0, 0.5))
+    r1 = V.process_bar(r0.state, bar(T0 + H))
+    return st, r0, r1
+
+
+def test_runlog_rejects_duplicates_gaps_backsteps_and_foreign_results():
+    st, r0, r1 = _first_results()
+    log = V.RunLog.begin(st).add(r0)
+    with pytest.raises(V.EventError, match="följer inte"):
+        log.add(r0)                                                    # dubblett
+    with pytest.raises(V.EventError, match="följer inte"):
+        V.RunLog.begin(st).add(r1)                                     # lucka
+    log2 = log.add(r1)
+    with pytest.raises(V.EventError, match="följer inte"):
+        log2.add(r0)                                                   # bakåtsteg
+    foreign = V.process_bar(V.EngineState.start(sc("B", key="foreign")), bar(T0), (), sig(T0, 1.0, 0.5))
+    with pytest.raises(V.EventError, match="följer inte"):
+        V.RunLog.begin(st).add(foreign)
+    other_prices = V.process_bar(r0.state, bar(T0 + H, P=101.0))      # annat andra steg från samma r0
+    assert log.add(other_prices).state == other_prices.state           # giltigt som nästa steg efter r0
+    with pytest.raises(V.EventError, match="följer inte"):
+        log2.add(other_prices)
+    assert len(log2.close_points) == 2 and log2.day_ends == ()          # start + close för T0-stapeln
+
+
+def test_runlog_begins_only_at_start_and_stops_at_terminal():
+    restored = restore(sc(), L.Account.open(100_000), V.TERMINAL - H, 100.0)
+    with pytest.raises(V.EventError, match="startläget"):
+        V.RunLog.begin(restored)
+    with pytest.raises(V.EventError, match="skapas bara"):
+        V.RunLog(state=V.EngineState.start(sc()))
+    with pytest.raises(V.EventError, match="skapas bara"):
+        dataclasses.replace(V.RunLog.begin(V.EngineState.start(sc())), close_points=())
+
+
+def test_runlog_after_terminal_is_closed():
+    state = V.EngineState.start(sc("A"))
+    log = V.RunLog.begin(state)
+    T, last = T0, None
+    while True:
+        r = V.process_bar(state, bar(T), (), sig(T, 1.0, 0.5) if T == T.floor("D") else None)
+        log, state, last = log.add(r), r.state, r
+        if state.terminated:
+            break
+        T += H
+    assert log.terminated and len(log.day_ends) == 1096 and len(log.close_points) == 6577
+    with pytest.raises(V.EventError, match="avslutad"):
+        log.add(last)
 
 
 def _prefix_run(highs):
@@ -488,7 +702,7 @@ def test_invalid_scenarios(kw):
 def test_inputs_are_not_modified():
     st = V.EngineState.start(sc())
     b, events, s = bar(T0), [ev("f0", T0, 0.0001, 100.0)], sig(T0, 1.0, 0.5)
-    copies = (dataclasses.replace(st), dataclasses.replace(b), list(events), dataclasses.replace(s))
+    copies = (copy.deepcopy(st), dataclasses.replace(b), list(events), dataclasses.replace(s))
     V.process_bar(st, b, events, s)
     assert (st, b, events, s) == copies
 
