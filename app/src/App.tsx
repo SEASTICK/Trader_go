@@ -4,7 +4,6 @@ import { Page, Segmented } from "./components/ui";
 import { isDesktop, Paper } from "./desktop";
 import Overview from "./pages/Overview";
 import Research from "./pages/Research";
-import Hypotheses from "./pages/Hypotheses";
 import Status from "./pages/Status";
 import Market from "./pages/Market";
 import ResearchLab from "./features/research-engine/ResearchLab";
@@ -20,7 +19,6 @@ const NAV = [
   { id: "Marknad", icon: "candles" },
   { id: "Research", icon: "flask" },
   { id: "Research Lab", icon: "lab" },
-  { id: "Hypoteser", icon: "list" },
   { id: "Status", icon: "info" },
 ] as const;
 // Bara i datorprogrammet; webbversionen har ingen Tauri-brygga.
@@ -115,7 +113,6 @@ export default function App() {
         {page === "Marknad" && <Market />}
         {page === "Research" && <Research />}
         {page === "Research Lab" && <ResearchLab />}
-        {page === "Hypoteser" && <Hypotheses />}
         {page === "Status" && <Status updater={updater} />}
         {page === "Papper" && <Page title="Papper" sub="Bara papper. Ingen riktig order läggs."><div className="card pad desk"><Paper /></div></Page>}
         </div>
