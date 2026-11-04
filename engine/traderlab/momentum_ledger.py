@@ -16,8 +16,9 @@ Reduce-only (D17): en riskavsikt fyller lösarens q* bara om |q*| <= |q_old| och
 q_old utan affär och kostnad, och fyllningen märks risk_reduce_only_hold. w = 0 ger alltid full stängning.
 
 Redovisning: genomsnittligt inträdespris och realiserat resultat följer partialminskning och vändning utan fiktiva
-avslut. Identitet: C = C0 + realized - costs - funding_net - q * avg_price (avg_price = 0 när platt). funding_net
-bokförs av momentum_funding (leverans C2) och är 0 för konton utan funding, så C1:s identitet är oförändrad där.
+avslut. Identitet: C = C0 + realized - costs - funding_net + liquidation_adjustment - q * avg_price (avg_price = 0
+när platt). funding_net bokförs av momentum_funding (C2) och liquidation_adjustment av momentum_margin (C4); båda är 0
+för konton utan funding eller likvidation, så C1:s identitet är oförändrad där.
 Kapitalledgern C/q är källan.
 
 Inga avrundningar, ingen klippning, inget epsilonkapital. Felaktig indata ger LedgerError. Kontots fält valideras
@@ -88,10 +89,11 @@ class Account:
     realized: float = 0.0          # summerat realiserat resultat före kostnader
     costs: float = 0.0             # summerade handelskostnader
     funding_net: float = 0.0       # netto betald funding (positiv = betald), skild från kostnader och realiserat
+    liquidation_adjustment: float = 0.0  # modellens nollställning vid likvidation (C4), signerad, skild från handel
 
     def __post_init__(self) -> None:
         # Bara ändlighet; inga teckenregler (negativ C, short och förluster är giltiga).
-        for f in ("C", "q", "deposit", "avg_price", "realized", "costs", "funding_net"):
+        for f in ("C", "q", "deposit", "avg_price", "realized", "costs", "funding_net", "liquidation_adjustment"):
             object.__setattr__(self, f, _num(f, getattr(self, f)))
 
     @classmethod
@@ -114,9 +116,9 @@ class Account:
         return _out("vikt", self.q * float(M) / E)
 
     def reconciliation_gap(self) -> float:
-        """C minus C0 + realized - costs - funding_net - q * avg_price. Ska vara 0 inom flyttalstolerans."""
+        """C minus C0 + realized - costs - funding_net + liquidation_adjustment - q * avg_price. Ska vara 0."""
         return _out("avstämningsgap", self.C - (self.deposit + self.realized - self.costs - self.funding_net
-                                                 - self.q * self.avg_price))
+                                                 + self.liquidation_adjustment - self.q * self.avg_price))
 
 
 @dataclass(frozen=True)

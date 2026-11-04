@@ -321,7 +321,7 @@
         {
           "id": "MOM-C01",
           "title": "Implementera enhetsledger med partial fills, markvärdering och kostnad exakt en gång",
-          "status": "done",
+          "status": "in_progress",
           "evidence": [
             {
               "file": "engine/traderlab/momentum_ledger.py",
@@ -354,9 +354,13 @@
             {
               "file": "docs/momentum-C2-granskning-1d9359f.md",
               "detail": "Codex granskar exakt 1d9359f: C01:s funding_net/avstämning verifierad; C2-01/C2-02 i funding-API återstår. 129 riktade prov/718 motorprov och oberoende Decimal-kontroller passerar."
+            },
+            {
+              "file": "engine/traderlab/momentum_ledger.py",
+              "detail": "Kompletterad i C4: Account.liquidation_adjustment och avstämning C = C0 + realized − costs − funding_net + liquidation_adjustment − q × avg_price; tidigare 82 ledgertester oförändrade och godkända."
             }
           ],
-          "note": "Ledger kompletterad och omgranskad på 1d9359f. Två kvarstående funding-API-fynd berör C03; ny ledgerändring kräver omprövning."
+          "note": "Återöppnad i C4 eftersom Account och avstämningsidentiteten kompletterats; väntar på Codex granskning av exakt revision."
         },
         {
           "id": "MOM-C02",
@@ -386,6 +390,10 @@
             {
               "file": "docs/momentum-C3-granskning-8c19618.md",
               "detail": "Codex godkänner exakt C3-revision 8c19618 efter rättad likviderad terminal och strikt signalkontrakt. 307 riktade prov/860 motorprov samt 400 egna oförändrade referensbeslut passerar. Full event-/marginal-/intrastapelintegration återstår."
+            },
+            {
+              "file": "engine/tests/test_momentum_margin.py",
+              "detail": "C4-kompatibilitet: riskmodulen oförändrad; 101 risktester passerar med den kompletterade ledgern och nollkontot följer C3:s likvidationsväg inklusive terminal."
             }
           ],
           "note": "Komponentgodkänd på exakt 8c19618: band, avsikter och prioritet inklusive C1-komposition. Full eventordning verifieras under C03/C05; ompröva vid ändrad riskmodul."
@@ -506,9 +514,21 @@
             {
               "file": "docs/momentum-C3-granskning-8c19618.md",
               "detail": "Codex godkänner exakt C3-revision 8c19618 efter rättad likviderad terminal och strikt signalkontrakt. 307 riktade prov/860 motorprov samt 400 egna oförändrade referensbeslut passerar. Full event-/marginal-/intrastapelintegration återstår."
+            },
+            {
+              "file": "engine/traderlab/momentum_margin.py",
+              "detail": "mom-margin/1.0.0: direktvillkor E <= mmr|q|m, gap och ogynnsam extrem, atomisk absorberande nollställning via liquidation_adjustment."
+            },
+            {
+              "file": "engine/tests/test_momentum_margin.py",
+              "detail": "46 syntetiska tester mot O11, O18 och Decimal; 16 riktade felprov fångade."
+            },
+            {
+              "file": "docs/momentum-margin-C4.md",
+              "detail": "API, bokföringsidentiteter, tillstånd, gräns mot eventloop, verifiering och påverkan för C4."
             }
           ],
-          "note": "C3:s riskordning och terminal efter dokumenterad likvidation godkända; marginal-/likvidationsbokföring och intrastapelintegration återstår i C4 och senare delar."
+          "note": "C4: marginal och absorberande likvidation syntetiskt prövade; väntar på granskning. Intrastapel-bound och eventloop återstår."
         }
       ]
     },
