@@ -1,0 +1,441 @@
+{
+  "revision": "c0da8510f8e932b56bac9e56d4033bc46906009e",
+  "base": "adad84cbf386982517d985552c5d334251afc5fd",
+  "changed_files": [
+    "docs/momentum-D1-mutationer.json",
+    "docs/momentum-checklista.md",
+    "docs/momentum-control-D1.md",
+    "docs/momentum-status.json",
+    "engine/tests/test_momentum_control.py",
+    "scripts/momentum-d1-mutations.py"
+  ],
+  "protected_unchanged": true,
+  "sha256": {
+    "engine/traderlab/stats.py": "4cfffdd0bc58034688349c2a9fbbd69c7e6ca3988fde41f378619411d4b31a19",
+    "engine/traderlab/momentum_ledger.py": "c043e39515a06a28f615bc93bc6a3d01cf74395328d77d8210f0c7f412808c02",
+    "engine/traderlab/momentum_signal.py": "a288de6450b71d06ccb53e3b88384a0475b111aeb7e4ce8c77dd49f6de2c3746",
+    "engine/traderlab/momentum_funding.py": "60cb1011f22cf471a7e2d6e66a7d24093a5d4068309f50622eab37c91a72aebc",
+    "engine/traderlab/momentum_risk.py": "694a6eb117be293714542de645d04b4b0f4c30320faba80ee2e2287d462b5bd2",
+    "engine/traderlab/momentum_margin.py": "957f91a373b8cb21b548be6977fb4181a0c7c836d79e719ebfadb81fe4909e12",
+    "engine/traderlab/momentum_event.py": "118378b3c669e3c7f5ddd128650cd98aab838ceda71c2aab86dca5e16fea6eb4",
+    "engine/traderlab/momentum_control.py": "7c33a82ffafdf6dd1190a76b19af77350421cdd0a5706bb811c5b88c338f049a",
+    "research/h0017-protokoll.md": "e15197c7d17c815eb89845909d7719e825607e4e49cc856b603af7549acc827d",
+    "research/registry.md": "6362325f1991e185d02d46756b62f4c43925cafa5fdfeae228df0ee46fccc127",
+    "docs/claude-uppdrag-momentum-D1.md": "e783189072b2bb48b6a6ef070df8b02cf8118e3281ac02a60a4e232c04cfd1f9",
+    "docs/momentum-a1-orakel.json": "887d08ad9bc10e3319b608c9703214db7519441614021944086dea1eae7cce3b",
+    "docs/momentum-control-D1.md": "a198fe10269f9af31b36b77ffdc5cb47def5449be5820b87c96f5044ea16f8d0",
+    "docs/momentum-status.json": "851fd165e2c126db6fd5cefde92362f52c802e0657e73f89a73c0393cfed67ac",
+    "engine/tests/test_momentum_control.py": "3701463b9870f7a38b295563401f8c35ce376afa5cc2e95c5352e9db0869b786",
+    "engine/tests/test_momentum_control_integration.py": "f6f3db3e1f6ab394a9f285a6e3a070542efda341fc436534c40210c337c63e1d",
+    "scripts/momentum-d1-mutations.py": "d9fa1eefcd9cb5870c5a25e581b8766e0d6fa79f9f9dfc7faf1ec36fd0b8650f",
+    "docs/momentum-D1-mutationer.json": "d781c4d80aba8711abf2ab27d27a93bc3d7349d827f6ab6620b02b09abaf2372"
+  },
+  "decimal_signal_comparisons": 3288,
+  "signal_combinations": 8,
+  "cap_below_one_days": 1096,
+  "full_histories": [
+    {
+      "component": "mom7",
+      "bars": 6576,
+      "close_points": 6577,
+      "days": 1096,
+      "q_entry_decimal": "998.4025559105431309904153354632587859424920127795527156549520766773163",
+      "E_terminal_decimal": "99680.51118210862619808306709265175718849840255591054313099041533546326"
+    },
+    {
+      "component": "mom14",
+      "bars": 6576,
+      "close_points": 6577,
+      "days": 1096,
+      "q_entry_decimal": "998.4025559105431309904153354632587859424920127795527156549520766773163",
+      "E_terminal_decimal": "99680.51118210862619808306709265175718849840255591054313099041533546326"
+    },
+    {
+      "component": "mom28",
+      "bars": 6576,
+      "close_points": 6577,
+      "days": 1096,
+      "q_entry_decimal": "998.4025559105431309904153354632587859424920127795527156549520766773163",
+      "E_terminal_decimal": "99680.51118210862619808306709265175718849840255591054313099041533546326"
+    }
+  ],
+  "changing_position_reference": {
+    "bars": 6576,
+    "close_points": 6577,
+    "days": 1096,
+    "terminal_decimal": "99743.28789328882602658394444290106389108270837405977315323540506967150",
+    "reference_states": [
+      [
+        "49960.03197442046362909672262190247801758593125499600319744204636290967",
+        "499.6003197442046362909672262190247801758593125499600319744204636290967"
+      ],
+      [
+        "19950.55135751584217504060450582132865998645281574305769451522224929488",
+        "798.0220543006336870016241802328531463994581126297223077806088899717969"
+      ],
+      [
+        "39864.33062051522841992194968022475833453883775507113311361210855648515",
+        "597.9649593077284262988292452033713750180825663260669967041816283472772"
+      ],
+      [
+        "99565.15215779883450159706152132935641634420117706566206455760233067731",
+        "0"
+      ],
+      [
+        "0E-65",
+        "994.0610239396848492571591605564033188532767689403520573538099274228965"
+      ]
+    ]
+  },
+  "D1-01_adapter_rejected_invalid_fields": {
+    "s": "rejected",
+    "available": "rejected",
+    "earliest_fill": "rejected",
+    "decision_time": "rejected",
+    "s14": "rejected",
+    "vol": "rejected"
+  },
+  "D1-02_2025_reached_signal_calculation": [],
+  "O9": "cap_breach; band false is not hold",
+  "mutation_harness": {
+    "baseline": "65 passed",
+    "selftest": "MILJÖFEL (FileNotFoundError) som väntat",
+    "all_31_catches_replayed": [
+      {
+        "mutation": "main-s i stället för s_h",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 64 deselected",
+        "första_fel": "tests.test_momentum_control::test_component_signals_match_independent_computation",
+        "orsak": "ControlError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "växla 7/14",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 64 deselected",
+        "första_fel": "tests.test_momentum_control::test_component_signals_match_independent_computation",
+        "orsak": "AssertionError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "framtida close",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 64 deselected",
+        "första_fel": "tests.test_momentum_control::test_component_signals_match_independent_computation",
+        "orsak": "AssertionError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "cap = 1 alltid",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 64 deselected",
+        "första_fel": "tests.test_momentum_control::test_component_signals_match_independent_computation",
+        "orsak": "ControlError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "komponentens band avstängt",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 63 deselected",
+        "första_fel": "tests.test_momentum_control::test_O9_component_full_capital_vs_main",
+        "orsak": "AssertionError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "komponentens dagsstopp avstängt",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 63 deselected",
+        "första_fel": "tests.test_momentum_control::test_O9_component_full_capital_vs_main",
+        "orsak": "AssertionError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "komponentens permanenta stopp avstängt",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 63 deselected",
+        "första_fel": "tests.test_momentum_control_integration::test_day_and_permanent_stop_exact_float_boundaries",
+        "orsak": "AssertionError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "A på nya q",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 63 deselected",
+        "första_fel": "tests.test_momentum_control_integration::test_O5_O16_component_entry_decrease_exit[A]",
+        "orsak": "AssertionError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "B på gamla q",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 1 passed, 63 deselected",
+        "första_fel": "tests.test_momentum_control_integration::test_O5_O16_component_entry_decrease_exit[B]",
+        "orsak": "AssertionError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "normal återupplivad efter riskexit",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 64 deselected",
+        "första_fel": "tests.test_momentum_control_integration::test_O6_component_day_stop_with_normal_intent_and_reset",
+        "orsak": "AssertionError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "köp efter permanent stopp",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 64 deselected",
+        "första_fel": "tests.test_momentum_control_integration::test_public_component_run_permanent_stop_holds_over_days_and_other_account_unaffected",
+        "orsak": "AssertionError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "startpunkt tappad",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 63 deselected",
+        "första_fel": "tests.test_momentum_control::test_full_horizon_per_component",
+        "orsak": "AssertionError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "sista close/terminalpunkt tappad",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 63 deselected",
+        "första_fel": "tests.test_momentum_control::test_full_horizon_per_component",
+        "orsak": "AssertionError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "terminalkostnad tappad",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 63 deselected",
+        "första_fel": "tests.test_momentum_control::test_O2_full_capital_entry",
+        "orsak": "AssertionError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "kort horisont godtas",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 55 deselected",
+        "första_fel": "tests.test_momentum_control::test_invalid_market_is_rejected_before_any_computation[lucka]",
+        "orsak": "Failed",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "otillgänglig signal godtas som platt",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 64 deselected",
+        "första_fel": "tests.test_momentum_control::test_invalid_signal_day_via_constant_window_is_rejected",
+        "orsak": "EventError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "adapterns earliest_fill okontrollerad",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 2 passed, 57 deselected",
+        "första_fel": "tests.test_momentum_control_integration::test_adapter_rejects_inconsistent_source_rows[earliest_fill]",
+        "orsak": "Failed",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "adapterns koherens okontrollerad",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 57 deselected",
+        "första_fel": "tests.test_momentum_control_integration::test_adapter_rejects_inconsistent_source_rows[s_main]",
+        "orsak": "Failed",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "adapterns cap/vol okontrollerad",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 5 passed, 57 deselected",
+        "första_fel": "tests.test_momentum_control_integration::test_adapter_rejects_inconsistent_source_rows[vol_nan]",
+        "orsak": "Failed",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "strikt bool available okontrollerad",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 13 passed, 50 deselected",
+        "första_fel": "tests.test_momentum_control_integration::test_direct_construction_is_validated[available_int]",
+        "orsak": "Failed",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "underlaget återvalideras inte",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 64 deselected",
+        "första_fel": "tests.test_momentum_control_integration::test_market_owns_a_copy_and_detects_later_mutation",
+        "orsak": "Failed",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "underlaget kopieras inte",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 64 deselected",
+        "första_fel": "tests.test_momentum_control_integration::test_market_owns_a_copy_and_detects_later_mutation",
+        "orsak": "ControlError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "2025-data i tabeller godtas",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 2 passed, 55 deselected",
+        "första_fel": "tests.test_momentum_control::test_invalid_market_is_rejected_before_any_computation[2025_mark]",
+        "orsak": "AssertionError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "2025-funding godtas",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 3 passed, 55 deselected",
+        "första_fel": "tests.test_momentum_control::test_invalid_market_is_rejected_before_any_computation[2025_funding]",
+        "orsak": "Failed",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "legacy-identitet saknas",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 63 deselected",
+        "första_fel": "tests.test_momentum_control::test_full_horizon_per_component",
+        "orsak": "AssertionError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "pre-start räknas inte",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 64 deselected",
+        "första_fel": "tests.test_momentum_control::test_funding_ids_are_booked_independently_per_account_and_pre_start_counted",
+        "orsak": "AssertionError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "delat förlopp och state mellan konton (peak, lås, funding-id)",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 64 deselected",
+        "första_fel": "tests.test_momentum_control::test_components_differ_from_each_other_and_are_isolated",
+        "orsak": "AssertionError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "delad kontoidentitet mellan konton",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 63 deselected",
+        "första_fel": "tests.test_momentum_control::test_full_horizon_per_component",
+        "orsak": "AssertionError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "peakreset vid årsskifte",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 64 deselected",
+        "första_fel": "tests.test_momentum_control_integration::test_permanent_stop_across_new_year_uses_unbroken_peak",
+        "orsak": "AssertionError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "adapterns dubblettkontroll av",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 64 deselected",
+        "första_fel": "tests.test_momentum_control_integration::test_adapter_huge_cap_and_duplicate_days_are_controlled",
+        "orsak": "AssertionError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      },
+      {
+        "mutation": "adapterns numerik efter aritmetik",
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed, 64 deselected",
+        "första_fel": "tests.test_momentum_control_integration::test_adapter_huge_cap_and_duplicate_days_are_controlled",
+        "orsak": "OverflowError",
+        "typ": "failure",
+        "körda_prov": "riktade"
+      }
+    ],
+    "fallback_actual_pytest": {
+      "passing_target": {
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed",
+        "första_fel": "tests.test_momentum_control::test_component_signals_match_independent_computation",
+        "orsak": "ControlError",
+        "typ": "failure",
+        "körda_prov": "hela D1-sviten"
+      },
+      "empty_target": {
+        "utfall": "FÅNGAD",
+        "pytest": "1 failed",
+        "första_fel": "tests.test_momentum_control::test_component_signals_match_independent_computation",
+        "orsak": "ControlError",
+        "typ": "failure",
+        "körda_prov": "hela D1-sviten"
+      }
+    },
+    "noop_full_suite": {
+      "utfall": "MISSAD",
+      "pytest": "65 passed",
+      "körda_prov": "hela D1-sviten"
+    },
+    "setup_only_faults_without_behavior_mutation": {
+      "FileNotFoundError": {
+        "utfall": "MILJÖFEL",
+        "pytest": "1 error",
+        "första_fel": "tests.test_momentum_control::test_component_signals_match_independent_computation",
+        "orsak": "FileNotFoundError",
+        "typ": "error",
+        "körda_prov": "hela D1-sviten"
+      },
+      "RuntimeError": {
+        "utfall": "FÅNGAD",
+        "pytest": "1 error",
+        "första_fel": "tests.test_momentum_control::test_component_signals_match_independent_computation",
+        "orsak": "RuntimeError",
+        "typ": "error",
+        "körda_prov": "hela D1-sviten"
+      },
+      "AssertionError": {
+        "utfall": "FÅNGAD",
+        "pytest": "1 error",
+        "första_fel": "tests.test_momentum_control::test_component_signals_match_independent_computation",
+        "orsak": "AssertionError",
+        "typ": "error",
+        "körda_prov": "hela D1-sviten"
+      }
+    },
+    "year_expected_decimal": "2023-01-03 04:00:00+00:00",
+    "shared_state_mutant": "all components reuse mom7 RunLog and final state; caught by differing paths",
+    "D1-06": "actual replay equals saved rows without elapsed seconds",
+    "D1-08": "RuntimeError and AssertionError in setup falsely classified FÅNGAD"
+  },
+  "D1-05_adapter_huge_cap": "ControlError",
+  "adapter_duplicate_rows": "ControlError",
+  "decision": "EJ GODKÄND"
+}

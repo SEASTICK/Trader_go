@@ -3,8 +3,8 @@
   "title": "Efterföljare till H-0013 – granskning och implementation",
   "hypothesis": "H-0017 – riskstyrd tidsseriemomentum på BTCUSDT",
   "updated": "2026-11-04",
-  "reviewed_revision": "aa2c8669680b017d9d9a98e46d1f9a0cb1a4fb9d",
-  "reviewed_scope": "D1 revision 3 EJ GODKÄND på exakt aa2c866 mot ab79f2a, endast syntetiskt. D1-05 stängt; D1-01/D1-02 fortsatt åtgärdade. Oberoende varierande Decimal-förlopp och årsskiftesfacit verifierade. D1-03 kvarstår för faktisk delat-state-mutation (D1-07 P2). D1-04 P2 kvarstår för runtime-setupfel som FÅNGAD. D1-06 P2: --check fallerar på flyktiga körtider trots identiskt utfall 30/0/1/0 och grön 65-provsbaslinje. 605 momentumtester, 1 158 motortester och 25 revisionsaudits passerar; alla 30 sparade fångster omprövade individuellt. A/B/C:s avgränsade godkännanden består; MOM-D01 in_progress. Ingen historik, registrering, drift eller paper/live; inget nytt uppdrag.",
+  "reviewed_revision": "c0da8510f8e932b56bac9e56d4033bc46906009e",
+  "reviewed_scope": "D1 revision 4 EJ GODKÄND på exakt c0da851 mot adad84c, endast syntetiskt. D1-06 och D1-07 stängda; D1-03:s återstående state-/förloppsmutation verifierad. D1-01/D1-02/D1-05 fortsatt stängda. FileNotFoundError vid setup ger nu MILJÖFEL, men D1-04:s bredare setupgaranti kvarstår som D1-08 P2: RuntimeError/AssertionError i autouse-fixtur blir FÅNGAD även utan beteendemutation. 605 momentumtester och 1 158 motortester, 26 revisionsaudits och mutationsskriptets --check passerar (31/0/1/0). Alla fyra checklistor passerar. A/B/C:s avgränsade godkännanden består; MOM-D01 in_progress. Ingen historik, registrering, drift eller paper/live; inget nytt uppdrag.",
   "groups": [
     {
       "id": "A",
@@ -884,9 +884,17 @@
             {
               "file": "scripts/momentum-d1-mutations.py",
               "detail": "Rättning av D1-04/D1-06/D1-07 från granskningen av aa2c866, för Codex omgranskning, inte godkänd: orsaksklassning ur JUnit-XML med miljöfelssjälvtest, körtider utanför --check, verklig mutant för delat förlopp/state, riktade prov med full svit före MISSAD. 31 fångade, 0 missade, 1 ekvivalent."
+            },
+            {
+              "file": "docs/momentum-D1-granskning-c0da851.md",
+              "detail": "Codex granskar exakt c0da851 mot adad84c: EJ GODKÄND. D1-06/D1-07 stängda och D1-03:s state-/förloppsmutation verifierad. D1-04:s FileNotFoundError rättat; D1-08 P2 reproducerar setup-RuntimeError/AssertionError som FÅNGAD utan beteendemutation. 605 momentumtester/1 158 motorprov passerar."
+            },
+            {
+              "file": "research/audits/momentum-d1-c0da851/verification.json",
+              "detail": "Revisionslåst git-show-audit: källhashar och skyddad diff; 3 288 Decimal-signaljämförelser, tre fulla referensförlopp och varierande ledger över 6 576 staplar/6 577 closepunkter/1 096 dagar. Alla 31 fångster omprövade; verklig fallback från passerande/tomt riktat urval och neutral överlevare efter 65 prov. Egen setupinjektion: FileNotFoundError ger MILJÖFEL, RuntimeError/AssertionError felaktigt FÅNGAD utan beteendemutation (D1-08). Ny audit --check PASS; totalt 26 av 26 momentum-audits PASS. Mutationsskriptets --check PASS 31/0/1/0 med grön 65-provsbaslinje; alla fyra checklistor PASS."
             }
           ],
-          "note": "D1 revision 3 EJ GODKÄND på aa2c866. D1-05 stängt; D1-01/D1-02 fortsatt åtgärdade. D1-03:s oberoende belopps- och årsskiftesfacit verifierade, men faktisk stateisoleringsmutation saknas (D1-07). D1-04:s setup-/miljöklassning och D1-06:s tidsberoende --check återstår. MOM-D01 kan inte bli done av D1 ensam. buy_and_hold, legacy, no_vol, blandningar och komponent-bound återstår; D1-Q01/Q02 är inte avgjorda här."
+          "note": "D1 revision 4 EJ GODKÄND på c0da851. D1-01/D1-02/D1-05 fortsatt stängda; D1-03/D1-06/D1-07 verifierade och stängda inom D1. D1-04:s konkreta FileNotFoundError rättat, men setupklassning kvarstår som D1-08 P2. MOM-D01 kan inte bli done av D1 ensam. buy_and_hold, legacy, no_vol, blandningar och komponent-bound återstår; D1-Q01/Q02 är inte avgjorda här."
         },
         {
           "id": "MOM-D02",
