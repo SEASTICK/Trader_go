@@ -852,6 +852,10 @@
             {
               "file": "research/audits/momentum-d1-6e6730c/verification.json",
               "detail": "SHA-256, oförändrade skyddade källor, 3 288 signaljämförelser och tre förlopp med 6 576 staplar/6 577 closepunkter/1 096 dagar vardera."
+            },
+            {
+              "file": "scripts/momentum-d1-mutations.py",
+              "detail": "Rättning av D1-01–D1-03 från granskningen av 6e6730c, för Codex omgranskning, inte godkänd: validerad ComponentSignal med earliest_fill, låst Market med fingeravtryck, komponentintegrerade O5/O16/O6/O14/likvidations-/gränsprov, reproducerbar felprovsmatris (26 fångade, 0 missade, 1 ekvivalent, 2 ej tillämpliga). 62 D1-tester/1 155 motortester."
             }
           ],
           "note": "D1 är inte godkänd och kan inte ensam slutföra MOM-D01. Rättning och kompletterande obligatoriska syntetiska prov krävs; buy_and_hold, legacy, no_vol, blandningar och komponent-bound återstår. D1-Q01/Q02 är inte avgjorda här."

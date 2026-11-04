@@ -1,0 +1,162 @@
+{
+  "leverans": "H-0017 D1",
+  "modul": "mom-control/1.0.0",
+  "prov": [
+    "tests/test_momentum_control.py",
+    "tests/test_momentum_control_integration.py"
+  ],
+  "felprov": [
+    {
+      "fel": "main-s i stället för s_h",
+      "fil": "momentum_control.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "växla 7/14",
+      "fil": "momentum_control.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "framtida close",
+      "fil": "momentum_signal.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "cap = 1 alltid",
+      "fil": "momentum_control.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "komponentens band avstängt",
+      "fil": "momentum_risk.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "komponentens dagsstopp avstängt",
+      "fil": "momentum_risk.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "komponentens permanenta stopp avstängt",
+      "fil": "momentum_risk.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "A på nya q",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "B på gamla q",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "normal återupplivad efter riskexit",
+      "fil": "momentum_risk.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "köp efter permanent stopp",
+      "fil": "momentum_risk.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "startpunkt tappad",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "sista close/terminalpunkt tappad",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "terminalkostnad tappad",
+      "fil": "momentum_ledger.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "kort horisont godtas",
+      "fil": "momentum_control.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "otillgänglig signal godtas som platt",
+      "fil": "momentum_control.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "adapterns earliest_fill okontrollerad",
+      "fil": "momentum_control.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "adapterns koherens okontrollerad",
+      "fil": "momentum_control.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "adapterns cap/vol okontrollerad",
+      "fil": "momentum_control.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "strikt bool available okontrollerad",
+      "fil": "momentum_control.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "underlaget återvalideras inte",
+      "fil": "momentum_control.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "underlaget kopieras inte",
+      "fil": "momentum_control.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "2025-data i tabeller godtas",
+      "fil": "momentum_control.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "2025-funding godtas",
+      "fil": "momentum_control.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "legacy-identitet saknas",
+      "fil": "momentum_control.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "pre-start räknas inte",
+      "fil": "momentum_control.py",
+      "utfall": "FÅNGAD"
+    },
+    {
+      "fel": "observationsdagar i stället för kalenderdagar",
+      "fil": "momentum_signal.py",
+      "utfall": "EKVIVALENT",
+      "motivering": "Market kräver exakt 4H-raster från 2021-11-01 till terminal, så varje kalenderdag är komplett. Den h:te föregående observationen är då exakt h kalenderdagar bak, och mutationen ger identiska signaler på varje giltigt D1-underlag. Skillnaden prövas i signalmodulens egna B-prov med ofullständiga dagar."
+    },
+    {
+      "fel": "delat risk-/fundingstate mellan konton",
+      "fil": null,
+      "utfall": "EJ_TILLÄMPLIG",
+      "motivering": "Varje konto skapas med egen EngineState.start(Scenario(nyckel, ...)); eventlagrets grind förhindrar att state sätts ihop av delar (C5-02). Det finns ingen delad referens att mutera i kompositionen."
+    },
+    {
+      "fel": "reset vid årsskifte",
+      "fil": null,
+      "utfall": "EJ_TILLÄMPLIG",
+      "motivering": "Ingen kod i signal, risk eller kontroll gör reset per år eller halvår; en sådan reset skulle vara ny kod, inte en mutation av befintlig. Fullhorisontsprovet visar obruten serie över båda årsskiftena."
+    }
+  ],
+  "fångade": 26,
+  "missade": 0,
+  "ekvivalenta": 1,
+  "ej_tillämpliga": 2
+}

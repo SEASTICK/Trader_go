@@ -52,6 +52,50 @@ inte hold. Testet följer protokollet och C3. Codex avgör om uppdragstexten avs
 - **Hela verifieringen:** 566 momentumtester och 1 119 motortester passerar, liksom A1-oraklet, 22 av 22
   momentum-audits och alla fyra checklistor.
 
+## Rättning D1-01–D1-03 (revision 2)
+
+Underlag: [Codex granskning av 6e6730c](momentum-D1-granskning-6e6730c.md). Codex bekräftade O9-tolkningen (capbrott
+vid 0,908 > 0,9).
+
+- **D1-01:** `ComponentSignal` bär nu `earliest_fill`, och varje konstruktion, även direkt, prövar källradens
+  konsekvens:
+  - dag vid 00:00 UTC och decision_time = earliest_fill = dagen + 1;
+  - strikt bool `available` och exakta versioner;
+  - delsignaler i {0, 1} och s_main = deras medel;
+  - ändlig vol > 0 och cap = min(1, 0,10/vol);
+  - s_used = komponentens delsignal och w_target = s_used × cap;
+  - otillgänglig rad har bara NaN.
+
+  Codex sex motexempel och sju ogiltiga direktkonstruktioner avvisas, bland annat strängen "False", en sen
+  earliest_fill, decision_time på källdagen, s14 = 0,25 i mom7, NaN-vol, 10**5000 och fel adapterversion.
+- **D1-02:** `Market` tar egna djupkopior av tabellerna och sparar ett fingeravtryck av innehållet. `run_component`
+  och `run_controls` kontrollerar fingeravtrycket före körning, och `run_controls` även efter. Ändringar i
+  anroparens tabell efter konstruktionen påverkar inte underlaget, och ändringar i den interna kopian avvisas med
+  `ControlError`. Signalberäkningen får en egen kopia.
+- **D1-03:** [test_momentum_control_integration.py](../engine/tests/test_momentum_control_integration.py) innehåller:
+  - **O5/O5b/O16 genom komponentkompositionen**, från publik start i A och B. Inträdet sker vid första öppningen.
+    Minskningen sker nästa midnatt med P = 100,5 ≠ M (ett capbrott, eftersom w 0,5 överstiger cap 0,3). Utgången
+    följer dagen efter. Fundingevent ligger exakt vid T, T + 1 ms, T + 30 s, T − 30 s och T − 1 ms. Fasordningen,
+    E_trade/E_post och varje belopp räknas med §6-formlerna i Decimal.
+  - **Terminalordning** i en full publik komponentkörning med funding vid terminal och terminal + 30 s.
+  - **Exakta floatgränser (FIXTUR):** 2 pp-band, capbrott inom band, −2 % och −15 %, med närmaste representerbara
+    värden på båda sidor.
+  - **Publikt flerdygnsförlopp:** permanent stopp utan nya köp, där ett annat konto på samma priser saknar lås.
+  - **Integrerade O6 och O14** (O14 vid båda kostnaderna), samt en O15-analog. O15 självt har s = 1/3; analogen
+    visar ett köpbeslut som efter gap blir en försäljning.
+  - **Komponentlikvidation** i A/B × båda mmr: gap med negativt prövningskapital och intrastapelträff med olösta
+    event. Därtill absorberande noll från likvidation genom midnatt till terminal med oförändrad
+    liquidation_adjustment.
+  - **Scenarier:** alla åtta etiketter, med identiska L1/L2-spår efter normalisering.
+  - **Indatafel:** dubbletter och 10**5000.
+- **Reproducerbar felprovsmatris:** [scripts/momentum-d1-mutations.py](../scripts/momentum-d1-mutations.py) inför
+  varje fel i en temporär kopia av engine/ och kör D1-proven. Resultatet sparas i
+  [docs/momentum-D1-mutationer.json](momentum-D1-mutationer.json), och `--check` kör om och jämför. Utfallet är 26
+  fångade, 0 missade, 1 bevisat ekvivalent (observationsdagar, eftersom Market kräver fullständigt raster) och 2 ej
+  tillämpliga, med motivering i filen.
+- **Verifiering:** 62 D1-tester, 602 momentumtester och 1 155 motortester passerar. A1-oraklet, 23 av 23
+  momentum-audits och alla fyra checklistor passerar. Ingen godkänd modul är ändrad.
+
 ## Inte i D1
 
 - buy_and_hold, ema_legacy och bb_legacy samt no_vol.

@@ -86,18 +86,39 @@ def test_component_signals_match_independent_computation(mkt):
 
 def test_signal_input_is_zero_or_cap_never_main_mean():
     o12 = ORACLE["O12_mal"]
-    cs = K.ComponentSignal("mom7", pd.Timestamp("2021-12-31", tz="UTC"), T0, True, 2 / 3, 1.0, 1.0, 0.0, 0.6,
-                           1 / 6, 1.0, 1 / 6)
+    cs = make_sig(pd.Timestamp("2021-12-31", tz="UTC"), (1, 1, 0), 1 / 6)
     si = cs.to_input()
-    assert si.s == 1.0 and si.w_target == 1 / 6 and si.version == S.VERSION
+    assert si.s == 1.0 and si.w_target == 1 / 6 and si.version == S.VERSION and cs.s_main == 2 / 3
     assert o12["w"] == pytest.approx((2 / 3) * (1 / 6)) and si.w_target != o12["w"]           # inte O12:s medelvärde
 
 
 # O2 och O9 genom publik start.
 
+def vol_for(cap):
+    """En vol där min(1, 0,10 / vol) ligger så nära cap som float tillåter (exakt när det går)."""
+    if cap == 1.0:
+        return 0.05
+    v0 = 0.1 / cap
+    best, v_up, v_dn = v0, v0, v0
+    for _ in range(2000):
+        for v in (v_up, v_dn):
+            if min(1.0, 0.1 / v) == cap:
+                return v
+        v_up, v_dn = math.nextafter(v_up, math.inf), math.nextafter(v_dn, 0.0)
+    return best
+
+
+def make_sig(day, subs, cap, comp="mom7"):
+    s7, s14, s28 = (float(x) for x in subs)
+    used = {"mom7": s7, "mom14": s14, "mom28": s28}[comp]
+    vol = vol_for(cap)
+    cap = min(1.0, 0.1 / vol)                                          # konsekvent cap = min(1, 0,10/vol)
+    return K.ComponentSignal(comp, day, day + pd.Timedelta(days=1), day + pd.Timedelta(days=1), True,
+                             (s7 + s14 + s28) / 3, s7, s14, s28, vol, cap, used, used * cap)
+
+
 def _sig(day, s_used, cap, comp="mom7"):
-    return K.ComponentSignal(comp, day, day + pd.Timedelta(days=1), True, s_used, s_used, 0.0, 0.0, 0.1 / cap if cap < 1 else 0.05,
-                             cap, s_used, s_used * cap)
+    return make_sig(day, (s_used, 0.0, 0.0) if comp == "mom7" else (0.0, s_used, 0.0), cap, comp)
 
 
 def test_O2_full_capital_entry():

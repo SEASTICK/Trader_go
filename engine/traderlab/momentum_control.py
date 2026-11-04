@@ -22,6 +22,7 @@ import math
 import numbers
 from dataclasses import dataclass
 
+import numpy as np
 import pandas as pd
 
 from . import momentum_event as ev
@@ -49,12 +50,28 @@ def _component(name) -> str:
     return name
 
 
+def _real(name, v) -> float:
+    if not isinstance(v, numbers.Real) or isinstance(v, (bool, np.bool_)):
+        raise ControlError(f"{name} måste vara ett reellt tal, fick {_show(v)}.")
+    try:
+        return float(v)
+    except (OverflowError, ValueError):
+        raise ControlError(f"{name} kan inte representeras som float: {_show(v)}.") from None
+
+
 @dataclass(frozen=True)
 class ComponentSignal:
-    """Beslutet för dag D för en komponent, med källraden ur B bevarad och transformationen märkt."""
+    """Beslutet för dag D för en komponent, med källraden ur B bevarad och transformationen märkt.
+
+    Konstruktionen prövar att raden är en konsekvent signals()-rad: dag vid 00:00 UTC, decision_time = earliest_fill
+    = dag + 1, strikt bool available, exakta versioner; tillgänglig rad har delsignaler i {0, 1}, s_main = deras
+    medel, ändlig vol > 0, cap = min(1, 0,10 / vol), s_used = komponentens delsignal och w_target = s_used × cap;
+    otillgänglig rad har bara NaN.
+    """
     component: str
     day: pd.Timestamp
     decision_time: pd.Timestamp
+    earliest_fill: pd.Timestamp
     available: bool
     s_main: float                 # källans medelvärde (main), bara proveniens
     s7: float
@@ -67,6 +84,37 @@ class ComponentSignal:
     source_version: str = sigmod.VERSION
     adapter_version: str = VERSION
 
+    def __post_init__(self) -> None:
+        comp = _component(self.component)
+        d = self.day
+        if not isinstance(d, pd.Timestamp) or d.tz is None or str(d.tz) != "UTC" or d != d.floor("D"):
+            raise ControlError(f"Signaldagen måste vara 00:00 UTC, fick {_show(d)}.")
+        for name in ("decision_time", "earliest_fill"):
+            t = getattr(self, name)
+            if not isinstance(t, pd.Timestamp) or t.tz is None or str(t.tz) != "UTC" or t != d + pd.Timedelta(days=1):
+                raise ControlError(f"{name} måste vara dagen + 1 (00:00 UTC), fick {_show(t)} för {d.date()}.")
+        if not isinstance(self.available, (bool, np.bool_)):
+            raise ControlError(f"available måste vara bool, fick {_show(self.available)}.")
+        object.__setattr__(self, "available", bool(self.available))
+        if self.source_version != sigmod.VERSION or self.adapter_version != VERSION:
+            raise ControlError(f"Versionerna måste vara {sigmod.VERSION} och {VERSION}.")
+        names = ("s_main", "s7", "s14", "s28", "vol", "cap", "s_used", "w_target")
+        vals = {n: _real(n, getattr(self, n)) for n in names}
+        for n, v in vals.items():
+            object.__setattr__(self, n, v)
+        if not self.available:
+            if not all(math.isnan(v) for v in vals.values()):
+                raise ControlError(f"Otillgänglig signal {d.date()} får bara ha NaN-värden.")
+            return
+        subs = (vals["s7"], vals["s14"], vals["s28"])
+        vol = vals["vol"]
+        if any(x not in (0.0, 1.0) for x in subs) or vals["s_main"] != sum(subs) / 3:
+            raise ControlError(f"{comp} {d.date()}: delsignaler {subs} och medel {vals['s_main']} är inkonsekventa.")
+        if not (math.isfinite(vol) and vol > 0) or vals["cap"] != min(1.0, sigmod.TARGET_VOL / vol):
+            raise ControlError(f"{comp} {d.date()}: vol {vol} och cap {vals['cap']} följer inte cap = min(1, 0,10/vol).")
+        if vals["s_used"] != vals[COMPONENTS[comp]] or vals["w_target"] != vals["s_used"] * vals["cap"]:
+            raise ControlError(f"{comp} {d.date()}: s_used/w_target följer inte komponentens delsignal och cap.")
+
     def to_input(self) -> risk.SignalInput:
         return risk.SignalInput(day=self.day, decision_time=self.decision_time, available=self.available,
                                 s=self.s_used, cap=self.cap, w_target=self.w_target, version=self.source_version)
@@ -77,19 +125,18 @@ def component_signals(sig: pd.DataFrame, component: str) -> dict:
     component = _component(component)
     if not isinstance(sig, pd.DataFrame) or list(sig.columns) != sigmod.COLUMNS:
         raise ControlError("component_signals kräver en tabell ur momentum_signal.signals() med exakt dess kolumner.")
-    if (sig["version"] != sigmod.VERSION).any():
-        raise ControlError(f"Signalversionen måste vara {sigmod.VERSION}.")
     key = COMPONENTS[component]
     out = {}
     for day, row in sig.iterrows():
-        avail = bool(row["available"])
-        s_used = float(row[key]) if avail else math.nan
-        if avail and s_used not in (0.0, 1.0):
-            raise ControlError(f"{component} {day.date()}: delsignalen {key} = {s_used} är inte 0 eller 1.")
-        out[day] = ComponentSignal(component=component, day=day, decision_time=row["decision_time"], available=avail,
-                                   s_main=float(row["s"]), s7=float(row["s7"]), s14=float(row["s14"]),
-                                   s28=float(row["s28"]), vol=float(row["vol"]), cap=float(row["cap"]), s_used=s_used,
-                                   w_target=s_used * float(row["cap"]) if avail else math.nan)
+        avail = row["available"]
+        if row["version"] != sigmod.VERSION:
+            raise ControlError(f"Signalversionen måste vara {sigmod.VERSION}, fick {_show(row['version'])}.")
+        used = row[key] if isinstance(avail, (bool, np.bool_)) and avail else math.nan
+        w = used * row["cap"] if isinstance(avail, (bool, np.bool_)) and avail else math.nan
+        out[day] = ComponentSignal(component=component, day=day, decision_time=row["decision_time"],
+                                   earliest_fill=row["earliest_fill"], available=avail, s_main=row["s"],
+                                   s7=row["s7"], s14=row["s14"], s28=row["s28"], vol=row["vol"], cap=row["cap"],
+                                   s_used=used, w_target=w)
     return out
 
 
@@ -104,6 +151,13 @@ class Market:
     def __post_init__(self) -> None:
         if self.synthetic is not True:
             raise ControlError("Endast syntetiskt underlag accepteras i D1.")
+        for name in ("contract", "mark"):
+            if not isinstance(getattr(self, name), pd.DataFrame):
+                raise ControlError(f"{name} måste vara en tabell.")
+            object.__setattr__(self, name, getattr(self, name).copy(deep=True))   # egen kopia, inte anroparens
+        if not isinstance(self.funding, (tuple, list)):
+            raise ControlError("funding måste vara en tuple eller lista av FundingEvent.")
+        object.__setattr__(self, "funding", tuple(self.funding))
         for name, df, cols in (("contract", self.contract, ("open", "close")), ("mark", self.mark, MARK_COLUMNS)):
             if not isinstance(df, pd.DataFrame) or not set(cols) <= set(df.columns):
                 raise ControlError(f"{name} måste vara en tabell med kolumnerna {cols}.")
@@ -138,6 +192,17 @@ class Market:
             if last is not None and e.time < last:
                 raise ControlError("Fundingevent måste vara sorterade efter tid.")
             last = e.time
+        object.__setattr__(self, "_fingerprint", self._digest())
+
+    def _digest(self) -> tuple:
+        h = lambda df: (tuple(df.columns), int(pd.util.hash_pandas_object(df, index=True).sum() % (2 ** 63)), len(df))
+        return (h(self.contract), h(self.mark), tuple((e.event_id, e.time, e.rate, e.M_ref) for e in self.funding))
+
+    def verified(self) -> "Market":
+        """Underlaget är oförändrat sedan valideringen; annars ControlError (ingen beräkning på ändrade data)."""
+        if self._digest() != self._fingerprint:
+            raise ControlError("Marknadsunderlaget har ändrats efter valideringen; skapa ett nytt Market.")
+        return self
 
 
 @dataclass(frozen=True)
@@ -160,12 +225,13 @@ def run_component(market: Market, component: str, order: str, mmr: float, legacy
     """Ett komponentkonto med 100 000 genom hela testhorisonten i ett scenario."""
     if not isinstance(market, Market):
         raise ControlError("run_component kräver ett Market.")
+    market = market.verified()
     component = _component(component)
     if not isinstance(legacy_order, str) or legacy_order not in LEGACY_ORDERS:
         raise ControlError(f"Legacy-ordning måste vara L1 eller L2, fick {_show(legacy_order)}.")
     scenario = ev.Scenario(f"{component}/{legacy_order}", order, mmr, cost)
     try:
-        table = sigmod.signals(market.contract[["close"]])
+        table = sigmod.signals(market.contract[["close"]].copy())
     except ValueError as exc:
         raise ControlError(f"Signalunderlaget är ogiltigt: {exc}") from None
     sigs = component_signals(table, component)
@@ -206,4 +272,9 @@ def run_component(market: Market, component: str, order: str, mmr: float, legacy
 def run_controls(market: Market, order: str, mmr: float, legacy_order: str = "L1",
                  cost: float = ledger.COST_NORMAL) -> dict:
     """mom7, mom14 och mom28 i samma scenario och på samma underlag; samma som tre separata run_component."""
-    return {k: run_component(market, k, order, mmr, legacy_order, cost) for k in COMPONENTS}
+    if not isinstance(market, Market):
+        raise ControlError("run_controls kräver ett Market.")
+    market.verified()
+    out = {k: run_component(market, k, order, mmr, legacy_order, cost) for k in COMPONENTS}
+    market.verified()                                       # samma underlag för alla tre
+    return out
