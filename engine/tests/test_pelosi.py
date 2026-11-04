@@ -28,6 +28,19 @@ def test_parse_follows_protocol():
     assert tr[0].traded == "2020-12-30"
 
 
+OLD = ("TrANSAcTIONSIDOwnerAssetTransaction TypeDate Notification DateAmount sPalcoa Inc. (aa)s 10/23/2014 10/23/2014 "
+       "$15,001 - $50,000 FIlINg sTaTus: NewsPsunEdison, Inc. (suNE)P 10/24/2014 10/24/2014 $100,001 - $250,000 "
+       "FIlINg sTaTus: New Hertz global Holdings, Inc (HTZ)P 11/5/2014 11/5/2014 $15,001 - $50,000 FIlINg sTaTus: "
+       "NewDEsCRIPTION: Purchase of 50 OptionsWalt Disney Company (DIs)P 12/10/2014 12/10/2014 $50,001 - $100,000 "
+       "FIlINg sTaTus: NewDEsCRIPTION: Purchase of 92 Puts options")
+
+
+def test_parse_old_format_without_tags_and_broken_case():
+    tr = house.parse(OLD)
+    assert [(t.ticker, t.kind, t.asset, t.traded) for t in tr] == [
+        ("AA", "sell", "ST", "2014-10-23"), ("SUNE", "buy", "ST", "2014-10-24"), ("HTZ", "buy", "OP", "2014-11-05")]
+
+
 def test_reports_filters_pelosi_ptr(tmp_path):
     xml = b"""<FinancialDisclosure>
 <Member><Last>Pelosi</Last><First>Nancy</First><FilingType>P</FilingType><FilingDate>1/5/2021</FilingDate><DocID>20017744</DocID></Member>

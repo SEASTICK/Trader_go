@@ -25,6 +25,15 @@ det först **dagen efter att redovisningen blivit offentlig**.
 | Period | Redovisningar inlämnade 2014-01-01 till 2024-12-31. Slutprov 2025-01-01 och framåt läses inte in. |
 | Datakrav | Minst 90 % av de redovisade köpen ska gå att tolka till en ticker med kurs, annars `OGILTIG` utan beslut |
 
+## Förtydligande om tolkningen (2026-11-05, före körning)
+
+Redovisningar från 2014–2015 saknar typtaggarna `[ST]`/`[OP]` och skriver optioner bara som "Purchase of N Options".
+De tolkas så här, bestämt efter att ha sett texten men innan något resultat räknats:
+
+- En rad utan tagg är en aktie, om inte beskrivningen nämner optioner.
+- Ett optionsköp utan angiven typ räknas som köpoption, om ordet "put" inte förekommer.
+- Inskannade redovisningar utan text räknas som otolkade och ingår i datakravet.
+
 ## H-0017: beslutskriterier (spår A)
 
 `MORE_RESEARCH` om **alla** gäller, annars `REJECT`:
