@@ -123,7 +123,8 @@ def bar_points(r: ev.BarResult) -> tuple[dict, ...]:
         out.append(_point(r, "liquidation", 0.0, 0.0, 0.0, ev.UNKNOWN_TIME))
     else:
         a = r.state.account
-        out.append(_point(r, "close", a.C, a.q, a.equity(b.mark_close), T, b.mark_close, "mark_close"))
+        # Faktisk close blir känd vid nästa gräns (samma tid som C5:s close_point); källstapeln står i bar_open.
+        out.append(_point(r, "close", a.C, a.q, a.equity(b.mark_close), T + ev.BAR, b.mark_close, "mark_close"))
     return tuple(out)
 
 

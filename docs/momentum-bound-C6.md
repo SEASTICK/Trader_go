@@ -73,6 +73,16 @@ utanför marginalunderlaget. Bara bounden skiljer sig. Inget stopp utlöses.
   fyra checklistor passerar. Signal-, ledger-, funding-, risk- och marginalmodulerna är oförändrade, och stats är
   oförändrad.
 
+## Rättning C6-02 (revision 2)
+
+Codex [granskning av 8e27c5f](momentum-C6-granskning-8e27c5f.md) fann att den faktiska closepunkten tidsstämplades
+vid stapelns öppning. Nu får den tiden T + 4h, när closen är känd. Det är samma tid som C5:s `close_point`, och
+källstapeln står kvar i `bar_open`. Open, trade, post och terminal har öppningstiden, och high, low och intrastapelträff
+har "okänd inom stapeln". Regressionen `test_point_times_close_known_at_next_boundary_and_match_run_log` jämför med
+RunLogs känd-tider och visar att close ligger efter stapelns mellanfunding. Den har ett felprov som fångas. Verifiering:
+33 boundtester, 540 momentumtester, 1 093 motortester, A1-oraklet och 21 av 21 momentum-audits passerar. Av 19
+felprov fångas 18; det ekvivalenta består.
+
 ## Avgränsningar
 
 Bara huvudmodellen long/platt. Ingen legacy-ATR-stop, inga O8-, L1/L2- eller shortregler och ingen 20 %-beslutsmotor

@@ -135,6 +135,27 @@ def test_interior_funding_bases_without_hit(order, credit_first, with_sim):
     assert [t.event_id for t in r.trace if t.phase == "funding_interior"] == names
 
 
+def test_point_times_close_known_at_next_boundary_and_match_run_log():
+    # C6-02: close får tiden då den är känd (nästa gräns), samma som C5:s close_point; källstapeln står i bar_open.
+    st = V.EngineState.start(sc("B"))
+    log = B.BoundLog.begin(st)
+    for k in range(4):
+        T = T0 + k * H
+        events = [ev(f"s{k}", T, 0.0001, 100.0), ev(f"i{k}", T + pd.Timedelta(hours=1, milliseconds=1), -0.0002, 100.0)]
+        r = V.process_bar(st, V.Bar(T, 100.0, 100.0, 104.0, 98.0, 100.0 + k), events, sig(T, 1.0, 0.5) if k == 0 else None)
+        log, st = log.add(r), r.state
+    known = {cp[0]: cp[1] for cp in log.run.close_points if cp[0] is not None}
+    for p in log.points[1:]:
+        if p.phase == "close":
+            assert p.time == p.bar_open + H and (p.bar_open not in known or known[p.bar_open] == p.time)
+            assert p.time > max(t.time for t in log.run.trace if t.phase == "funding_interior" and t.bar_open == p.bar_open)
+        elif p.phase in ("high", "low"):
+            assert p.time == V.UNKNOWN_TIME
+        else:
+            assert p.time == p.bar_open
+    assert sum(p.phase == "close" for p in log.points) == 4 and len(known) == 3
+
+
 def test_B_trade_and_post_differ_on_entry_with_simultaneous_funding():
     st = V.EngineState.start(sc("B"))
     r = V.process_bar(st, V.Bar(T0, 100.0, 100.0, 101.0, 99.0, 100.0), [ev("f0", T0, 0.0001, 100.0)], sig(T0, 1.0, 0.5))

@@ -674,6 +674,10 @@
             {
               "file": "research/audits/momentum-c6-8e27c5f/review.py",
               "detail": "Revisionslåst git-show-audit med verification.json/--check: O7, 32 funding-/marginalfall, två gapfall, fyra 15-stapelsförlopp, 60 ickeinterferenspar, terminal och absorberande nollor; sex egna mutationer fångade. C6-02 reproduceras."
+            },
+            {
+              "file": "engine/tests/test_momentum_bound.py",
+              "detail": "Rättning av C6-02 från granskningen av 8e27c5f, för Codex omgranskning, inte godkänd: closepunkten tidsstämplas när den är känd (T + 4h, samma som RunLog), regression med mellanfunding. 33 boundtester/1 093 motortester; 18 av 19 riktade felprov fångade, ett bevisat ekvivalent."
             }
           ],
           "note": "C5:s closebaserade dags-/permanentstopp består efter granskning av det additiva BarResult.bar på 8e27c5f. C6:s kapital-/funding-/peakberäkningar verifierade syntetiskt, men C6-02 P2 i close-punktens tidsproveniens hindrar godkännande. MOM-C04 förblir in_progress; full boolesk 20 %-prövning hör till D. Ingen historikkörning eller drift."
