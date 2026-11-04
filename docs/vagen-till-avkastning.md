@@ -31,6 +31,17 @@ Produktens faser och den bekräftade målbilden beskrivs i [färdplanen](fardpla
    → Låg omsättning (ombalansering en gång i veckan). Lägre verkliga avgifter (makers) testas först
    när en strategi klarat grind 3, aldrig för att rädda ett resultat.
 
+## Investerarspåret (från 2026-11-04)
+
+Att följa kända investerares redovisade innehav, i stället för egna signaler:
+
+- **H-0016:** tio kända investerares 13F-innehav (Berkshire m.fl.), `research/13f-protokoll.md`.
+- **H-0017:** Nancy Pelosis redovisade affärer, `research/pelosi-protokoll.md`.
+- **Papper framåt:** 100 000 USD som följer de tio investerarna från 2026-11-05, sidan Investerare i appen.
+
+Alla tre väntar på en kurskälla, se [kurskalla.md](kurskalla.md). Båda urvalen är gjorda i efterhand, eftersom
+investerarna är kända för att ha lyckats. Testen blir därför för optimistiska.
+
 ## Nästa idéer i kö (registreras en i taget, aldrig efter att ha sett resultatet)
 
 - Kombination av flera godkända, okorrelerade strategier, först när minst två klarat grind 3.
