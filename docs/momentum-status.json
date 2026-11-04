@@ -630,6 +630,10 @@
             {
               "file": "research/audits/momentum-c5-3f46aa5/review.py",
               "detail": "Revisionslåst git-show-audit: 24 Decimal-inträde/exitfall, 32 separata funding-/marginalfall, O6/terminal/tidsfall, full syntetisk horisont 6576/6577/1096, gamla motexempel och verkligt sekventiellt permanent stopp. Fem mutationer fångade; --check jämför verification.json och reproducerar kvarstående fynd."
+            },
+            {
+              "file": "docs/momentum-event-C5.md",
+              "detail": "Revision 3 för Codex omgranskning, inte godkänd: kvarstående C5-02 och C5-04 från granskningen av 3f46aa5 rättade. Ingen publik restore (privat fixturväg för syntetiska prov), låst startkapital 100 000, funding kräver historik, UTC-validering före intervalljämförelse. 105 eventtester/1 060 motortester; 34 av 34 riktade felprov fångade. §10.2-bounden ingår fortfarande inte."
             }
           ],
           "note": "C5 EJ GODKÄND på 3f46aa5: C5-01/C5-03 stängda; C5-02 P1 kvarstår via publik restore och C5-04 P2 ger TypeError för naiv återställningstid. §10.2-bound ingår inte i C5 och återstår. Nästa C-del väntar på godkänd rättning."

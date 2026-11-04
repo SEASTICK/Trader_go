@@ -1,7 +1,8 @@
 """mom-event/1.0.0 (H-0017 leverans C5) på syntetiska staplar, event och signalrader. Ingen marknadshistorik.
 
 Facit från docs/momentum-a1-orakel.json och handräkning/Decimal, aldrig från eventfunktionen. Tillstånd nära en viss
-tid byggs med dokumenterade invarianter (EngineState valideras vid konstruktion); det är ingen ny strategistart.
+tid byggs med den privata fixturvägen EngineState._fixture och dokumenterade invarianter (valideras vid konstruktion);
+det är ingen ny strategistart och ingen publik återställning.
 """
 import copy
 import dataclasses
@@ -62,8 +63,8 @@ def restore(scenario, acct, T, prev_mark, *, peak=100_000.0, day_start=100_000.0
         rec_acct = L.Account(C=-1.0, q=1.0, deposit=0.0, avg_price=1.0)   # syntetiskt underlag för tillståndet
         chk = M.check(rec_acct, ms, M.GAP, 1.0, M.MARK_OPEN, T - H)
         _, ms, _ = M.liquidate(rec_acct, ms, chk)
-    return V.EngineState.restore(scenario, acct, rs, F.FundingState(scenario.account_key, scenario.label), ms, T,
-                                 prev_mark)
+    return V.EngineState._fixture(scenario, acct, rs, F.FundingState(scenario.account_key, scenario.label), ms, T,
+                                  prev_mark)
 
 
 def phases(result):
@@ -234,35 +235,37 @@ def test_first_decision_uses_warmup_signal_and_no_position_before_start():
 def test_O14_risk_hold_and_reduction_after_gap(cost):
     o = ORACLE["O14_reduce_only"]
     T = pd.Timestamp("2023-09-05", tz="UTC")
-    acct = L.Account(C=800.0, q=2.0, deposit=1000.0, avg_price=100.0)
-    st = restore(sc(cost=cost), acct, T, 100.0, peak=1000.0, day_start=1000.0, initial=1000.0)
+    # O14 skalat 100 gånger till låst startkapital 100 000; storlekslösaren är homogen i (E, q_old).
+    acct = L.Account(C=80_000.0, q=200.0, deposit=100_000.0, avg_price=100.0)
+    st = restore(sc(cost=cost), acct, T, 100.0)
     down = V.process_bar(st, bar(T, P=90.0), (), sig(T, 1.0, 0.195))
     hold = next(t for t in down.trace if t.phase == "after_trade")
-    assert hold.reason == "risk_reduce_only_hold" and hold.cost == 0 and down.state.account.q == 2
+    assert hold.reason == "risk_reduce_only_hold" and hold.cost == 0 and down.state.account.q == 200
     up = V.process_bar(st, bar(T, P=110.0), (), sig(T, 1.0, 0.195))
     q_up = up.state.account.q
-    E = D(800) + D(2) * D(110)
+    E = D(80_000) + D(200) * D(110)
     k = D(110) * D(repr(cost))                                       # säljgren: k = M - P + cP med P = M
-    exp_q = D("0.195") * (E - 2 * k) / (D(110) - D("0.195") * k)
+    exp_q = D("0.195") * (E - 200 * k) / (D(110) - D("0.195") * k)
     assert abs(D(repr(q_up)) - exp_q) <= exp_q * D("1e-13")
     if cost == L.COST_NORMAL:
-        assert close(q_up, o["open_110"]["q"])
+        assert q_up == pytest.approx(100 * o["open_110"]["q"], rel=1e-12)
 
 
 @pytest.mark.parametrize("cost", [L.COST_NORMAL, L.COST_STRESS])
 def test_O15_normal_changes_direction_after_gap(cost):
     o = ORACLE["O15_normal_efter_gap"]
     T = pd.Timestamp("2023-09-05", tz="UTC")
-    acct = L.Account(C=800.0, q=2.0, deposit=1000.0, avg_price=100.0)
-    st = restore(sc(cost=cost), acct, T, 100.0, peak=1000.0, day_start=1000.0, initial=1000.0)
+    # O15 skalat 100 gånger till låst startkapital 100 000 (homogent i E och q_old).
+    acct = L.Account(C=80_000.0, q=200.0, deposit=100_000.0, avg_price=100.0)
+    st = restore(sc(cost=cost), acct, T, 100.0)
     r = V.process_bar(st, bar(T, P=70.0), (), sig(T, 1 / 3, 0.45))
-    assert r.step_record.intent.kind == R.NORMAL and r.state.account.q > 2
+    assert r.step_record.intent.kind == R.NORMAL and r.state.account.q > 200
     w = (1 / 3) * 0.45
-    E = D(800) + D(2) * D(70)
-    exp_q = D(repr(w)) * (E + D(70) * D(repr(cost)) * 2) / (D(70) * (1 + D(repr(w)) * D(repr(cost))))
+    E = D(80_000) + D(200) * D(70)
+    exp_q = D(repr(w)) * (E + D(70) * D(repr(cost)) * 200) / (D(70) * (1 + D(repr(w)) * D(repr(cost))))
     assert abs(D(repr(r.state.account.q)) - exp_q) <= exp_q * D("1e-13")
     if cost == L.COST_NORMAL:
-        assert r.state.account.q == pytest.approx(o["fyllning"]["q"], rel=1e-12)
+        assert r.state.account.q == pytest.approx(100 * o["fyllning"]["q"], rel=1e-12)
 
 
 def test_basis_counted_once_in_composition():
@@ -310,9 +313,9 @@ def test_event_in_wrong_bar_is_rejected():
 # O11 och O18: gap- och intrastapellikvidation, absorberande nollkonto.
 
 def _risky(order="A", mmr=0.05, T=pd.Timestamp("2023-04-10", tz="UTC")):
-    """E(70) = 10 000 med peak och dagskapital 10 100: inget dags- eller permanent stopp vid closen."""
-    acct = L.Account(C=-60_000.0, q=1000.0, deposit=10_000.0, realized=30_000.0, avg_price=100.0)
-    return restore(sc(order, mmr), acct, T, 70.0, peak=10_100.0, day_start=10_100.0, initial=10_000.0), T
+    """E(70) = 100 000 med peak och dagskapital 101 000: inget dags- eller permanent stopp vid closen."""
+    acct = L.Account(C=-600_000.0, q=10_000.0, deposit=100_000.0, realized=300_000.0, avg_price=100.0)
+    return restore(sc(order, mmr), acct, T, 70.0, peak=101_000.0, day_start=101_000.0), T
 
 
 def test_gap_liquidation_before_fill_strikes_intent_and_absorbs():
@@ -323,7 +326,7 @@ def test_gap_liquidation_before_fill_strikes_intent_and_absorbs():
     assert "struken" in liq.reason and "after_trade" not in phases(r) and "funding_B" not in phases(r)
     assert r.state.account.C == 0 and r.state.account.q == 0 and r.state.margin_state.liquidated
     rec = r.state.margin_state.record
-    assert rec.E_before == -5_000.0 and rec.capital_reset == 5_000.0 and rec.phase == M.GAP
+    assert rec.E_before == -50_000.0 and rec.capital_reset == 50_000.0 and rec.phase == M.GAP
     assert r.absorbed == 1 and r.state.funding_state.processed == frozenset()     # B-eventet absorberat
     state = r.state
     for k in range(1, 8):                                            # över midnatt: inga avsikter, ingen funding
@@ -340,7 +343,7 @@ def test_gap_liquidation_before_fill_strikes_intent_and_absorbs():
 def test_gap_check_uses_both_rates(mmr):
     st, T = _risky("A", mmr)
     r = V.process_bar(st, bar(T, P=62.0, mo=62.0, mh=63.0, ml=61.9, mc=62.5), (), sig(T, 1.0, 1.0))
-    hit = decimal_hit = (D(-60_000) + D(1000) * D(62)) <= D(repr(mmr)) * D(1000) * D(62)
+    hit = (D(-600_000) + D(10_000) * D(62)) <= D(repr(mmr)) * D(10_000) * D(62)
     assert r.state.margin_state.liquidated == hit
     if not hit:
         assert "after_trade" in phases(r)
@@ -368,10 +371,10 @@ def test_intrabar_hit_books_no_interior_funding_and_keeps_basis_separate(mmr, hi
         events = [ev("sim", T, 0.0001, 64.0)] + events
     r = V.process_bar(st, bar(T, P=64.0, mo=64.0, mh=66.0, ml=63.5, mc=65.0), events)
     # Oberoende Decimal-facit.
-    q, Mref, low = D(1000), D(64), D("63.5")
+    q, Mref, low = D(10_000), D(64), D("63.5")
     sim = q * Mref * D("0.0001") if with_sim else D(0)
     amount = {n: q * Mref * D(v) for n, v in rates.items()}
-    C_open = D(-60_000) - sim                                         # samtidig funding bokförd i A före, B efter
+    C_open = D(-600_000) - sim                                         # samtidig funding bokförd i A före, B efter
     C_basis = C_open - sum(v for v in amount.values() if v > 0)      # efter betald, före mottagen
     E_low, MM = C_basis + q * low, D(repr(mmr)) * q * low
     assert (E_low <= MM) == hit
@@ -518,8 +521,9 @@ def _rs(T, **kw):
 
 @pytest.mark.parametrize("case", ["insattning", "ej_avstamt", "nollkonto_levande", "negativt_levande", "permanent_med_q",
                                   "lock_med_q", "likviderad_med_C", "ostartat_risk", "terminal", "vid_start",
-                                  "efter_terminal", "prev_noll", "fel_nyckel"])
-def test_restore_rejects_inconsistent_states(case):
+                                  "efter_terminal", "prev_noll", "fel_nyckel", "kapitalbas_200k", "funding_utan_historik",
+                                  "naiv_tid"])
+def test_fixture_invariants_reject_inconsistent_states(case):
     T = pd.Timestamp("2023-05-02 08:00", tz="UTC")
     s = sc()
     acct, rs, fs = L.Account(C=50_000.0, q=500.0, deposit=100_000.0, avg_price=100.0), _rs(T), F.FundingState("main", s.label)
@@ -554,10 +558,37 @@ def test_restore_rejects_inconsistent_states(case):
         pm = 0.0
     elif case == "fel_nyckel":
         fs = F.FundingState("annan", s.label)
+    elif case == "kapitalbas_200k":
+        acct = L.Account(C=150_000.0, q=500.0, deposit=200_000.0, avg_price=100.0)
+        rs = _rs(T, initial=200_000.0, peak=200_000.0, day_start=200_000.0)
+    elif case == "funding_utan_historik":
+        acct = L.Account(C=49_999.0, q=500.0, deposit=100_000.0, avg_price=100.0, funding_net=1.0)
+    elif case == "naiv_tid":
+        nb = pd.Timestamp("2023-05-02 08:00")
     snapshot = (acct, rs, fs, ms)
     with pytest.raises(V.EventError) as err:
-        V.EngineState.restore(s, acct, rs, fs, ms, nb, pm)
+        V.EngineState._fixture(s, acct, rs, fs, ms, nb, pm)
     assert str(err.value) and (acct, rs, fs, ms) == snapshot
+
+
+def test_no_public_restore_path_around_risk_lock():
+    # C5-02 (granskning av 3f46aa5): ett konto som fått permanent stopp genom vanliga motorsteg kan inte förenas med
+    # ett annat kontos olåsta riskstate via någon publik väg.
+    assert not hasattr(V.EngineState, "restore")
+    def run(key, s):
+        st = V.EngineState.start(sc(key=key))
+        marks = [100.0, 300.0, 300.0, 300.0, 300.0, 220.0]
+        for k, m in enumerate(marks):
+            T = T0 + k * H
+            r = V.process_bar(st, bar(T, P=m, mo=m if k else 100.0), (), sig(T, s, 0.5) if T == T.floor("D") else None)
+            st = r.state
+        return V.process_bar(st, bar(T0 + 6 * H, P=220.0), (), sig(T0 + 6 * H, s, 0.5)).state
+    locked, free = run("locked", 1.0), run("free", 0.0)
+    assert locked.risk_state.permanent and locked.account.q == 0 and not free.risk_state.permanent
+    with pytest.raises(V.EventError, match="skapas bara"):
+        dataclasses.replace(locked, risk_state=free.risk_state)
+    nxt = V.process_bar(locked, bar(locked.next_bar, P=220.0), (), None)
+    assert nxt.state.account.q == 0                                      # riktiga låset gäller
 
 
 def test_valid_restores_near_terminal_and_mid_horizon_are_independent():

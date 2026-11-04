@@ -28,8 +28,9 @@ Kapitalpunkter (§10.1): start, close för staplarna 2022-01-01 00 till 2024-12-
 sista dagen är terminalt kapital. Ingen statistik, inga drawdownmått, ingen intrastapel-bound (§10.2) här.
 
 Allt är oföränderligt; fel ger EventError utan att något tillstånd ändras. EngineState, BarResult och RunLog skapas
-bara av EngineState.start, EngineState.restore, process_bar och RunLog.begin/add; dataclasses.replace och direkt
-konstruktion avvisas, så att ett tillstånd inte kan sättas ihop av delar från olika konton eller förlopp.
+bara av EngineState.start, process_bar och RunLog.begin/add; dataclasses.replace och direkt konstruktion avvisas, så
+att ett tillstånd inte kan sättas ihop av delar från olika konton eller förlopp. Det finns ingen publik återställning
+mitt i horisonten; den privata fixturvägen EngineState._fixture är bara för syntetiska prov och ingår inte i API:t.
 """
 from __future__ import annotations
 
@@ -74,7 +75,7 @@ def _issuing():
 
 def _require_issued(what: str) -> None:
     if not _ISSUING.get():
-        raise EventError(f"{what} skapas bara av modulens egna vägar (start, restore, process_bar, RunLog); "
+        raise EventError(f"{what} skapas bara av modulens egna vägar (start, process_bar, RunLog); "
                          "replace eller direkt konstruktion avvisas.")
 
 
@@ -176,8 +177,8 @@ class Trace:
 class EngineState:
     """Tillståndet för ett konto i ett scenario före stapeln next_bar.
 
-    Skapas bara via start (det låsta startläget), restore (en uttryckligen återställd mitt-i-horisonten-punkt för
-    syntetiska prov) eller process_bar. Varje konstruktion prövar invarianterna nedan; replace avvisas.
+    Skapas publikt bara via start (det låsta startläget) och process_bar. Varje konstruktion prövar invarianterna
+    nedan; replace och direkt konstruktion avvisas.
     """
     scenario: Scenario
     account: Account
@@ -218,9 +219,11 @@ class EngineState:
                                or ms.liquidated):
             raise EventError("Ett ostartat tillstånd måste vara exakt startläget: 100 000, q = 0, orörd bokföring, "
                              "START och inget föregående close.")
-        if a.deposit != rs.initial:
-            raise EventError(f"Kontots insättning {a.deposit} är inte riskmodulens startkapital {rs.initial}; "
-                             "konto och riskstate hör inte ihop (inga tillskott, D21).")
+        if a.deposit != INITIAL or rs.initial != INITIAL:
+            raise EventError(f"Insättning {a.deposit} och riskmodulens startkapital {rs.initial} måste båda vara det "
+                             f"låsta startkapitalet {INITIAL} (§4, inga tillskott, D21).")
+        if a.funding_net != 0 and not self.funding_state.processed:
+            raise EventError("Kontot har bokförd funding men fundingtillståndet saknar behandlade event.")
         gap = a.reconciliation_gap()
         if abs(gap) > margin.RECONCILE_TOL * max(1.0, abs(a.deposit), abs(a.C), abs(a.q * a.avg_price)):
             raise EventError(f"Kontot stämmer inte av mot sin bokföring (gap {gap}).")
@@ -252,20 +255,20 @@ class EngineState:
                        next_bar=START)
 
     @classmethod
-    def restore(cls, scenario: Scenario, account: Account, risk_state: risk.RiskState,
-                funding_state: fund.FundingState, margin_state: margin.MarginState, next_bar: pd.Timestamp,
-                prev_mark_close: float) -> "EngineState":
-        """Uttrycklig återställning mitt i horisonten för syntetiska prov, efter minst en behandlad stapel.
+    def _fixture(cls, scenario: Scenario, account: Account, risk_state: risk.RiskState,
+                 funding_state: fund.FundingState, margin_state: margin.MarginState, next_bar: pd.Timestamp,
+                 prev_mark_close: float) -> "EngineState":
+        """PRIVAT, endast syntetiska prov: ett tillstånd mitt i horisonten byggt av givna delar.
 
-        Anroparen intygar att delarna kommer från samma förlopp; modulen prövar det som går att pröva: samma konto
-        och scenario, insättning = riskmodulens startkapital, avstämd bokföring, levande konto med E > 0 vid
-        föregående close, inget risklås med öppen position, likviderat konto platt och noll. Ingen terminal. Ett
-        återställt förlopp kan inte börja en RunLog (som kräver startläget).
+        Ingen publik återställning eller delhorisont ingår i C5. Delarnas gemensamma proveniens kan inte bevisas här;
+        invarianterna ovan prövas ändå (låst kapitalbas, avstämning, levande E > 0, inget risklås med position,
+        likviderat konto platt och noll). Ett fixturtillstånd kan inte börja en RunLog.
         """
+        _bar_time("next_bar", next_bar)
         if not isinstance(risk_state, risk.RiskState) or not risk_state.started or risk_state.terminated:
-            raise EventError("restore kräver ett startat, icke-terminalt riskstate; startläget fås via start.")
-        if not isinstance(next_bar, pd.Timestamp) or not START < next_bar <= TERMINAL:
-            raise EventError(f"restore kräver START < next_bar <= TERMINAL, fick {_show(next_bar)}.")
+            raise EventError("En fixtur kräver ett startat, icke-terminalt riskstate; startläget fås via start.")
+        if not START < next_bar <= TERMINAL:
+            raise EventError(f"En fixtur kräver START < next_bar <= TERMINAL, fick {next_bar}.")
         with _issuing():
             return cls(scenario=scenario, account=account, risk_state=risk_state, funding_state=funding_state,
                        margin_state=margin_state, next_bar=next_bar, prev_mark_close=prev_mark_close)

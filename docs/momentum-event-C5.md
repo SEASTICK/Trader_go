@@ -18,7 +18,7 @@ Modul: [engine/traderlab/momentum_event.py](../engine/traderlab/momentum_event.p
 |---|---|
 | `Scenario(account_key, order, mmr, cost)` | ett komplett scenario: ordning A eller B, mmr 0,05 eller 0,005, kostnad 0,0016 eller 0,0040; `label` identifierar det i funding- och marginaltillstånd |
 | `Bar(open_time, contract_open, mark_open, mark_high, mark_low, mark_close, synthetic=True)` | syntetisk 4H-stapel med validerad mark-OHLC |
-| `EngineState` | oföränderligt: scenario, Account, RiskState, FundingState, MarginState, next_bar, prev_mark_close, terminated. Skapas bara via `start(scenario)` (exakt startläge), `restore(...)` (uttrycklig syntetisk återställning efter minst en stapel, före terminal) eller `process_bar`; `dataclasses.replace` och direkt konstruktion avvisas. Varje konstruktion prövar invarianterna nedan |
+| `EngineState` | oföränderligt: scenario, Account, RiskState, FundingState, MarginState, next_bar, prev_mark_close, terminated. Skapas publikt bara via `start(scenario)` (exakt startläge) och `process_bar`; `dataclasses.replace` och direkt konstruktion avvisas. Ingen publik återställning eller delhorisont ingår i C5. Den privata `_fixture(...)` bygger syntetiska testtillstånd mitt i horisonten och ingår inte i API:t. Varje konstruktion prövar invarianterna nedan |
 | `process_bar(state, bar, events, signal)` | behandlar stapeln vid `state.next_bar` och returnerar `BarResult` |
 | `BarResult` | föregående och nytt tillstånd, stapeltid, ordnat spår, closepunkt för föregående stapel, dagsögonblick vid 00:00, terminalpunkt, C3:s StepRecord, antal samtidiga, bokförda mellanhändelser, absorberade event, olösta event `(id, tid, belopp, i underlaget)` och marginalunderlaget `(C, E, MM, mark_low)`. Skapas bara av `process_bar` |
 | `Trace` | fas, exakt tid eller `okänd inom stapeln`, källstapel, konto, scenario, C, q, E, M, P, källa, kostnad, funding, event-id, avsikt med beslutstid och orsak, riskstatus, mmr och modul-/protokollversioner |
@@ -41,21 +41,24 @@ mellanhändelse: var och en får `funding_unresolved` med exakt tid, belopp och 
 
 ## Tillståndsinvarianter
 
-Prövas vid varje konstruktion (start, restore och process_bar):
+Prövas vid varje konstruktion (start, process_bar och den privata fixturvägen):
 
 - Funding- och marginaltillståndets (konto, scenario) är scenariots, och marginalens mmr är scenariots.
 - `next_bar` är riskmodulens nästa gräns; `terminated` följer riskmodulens terminalstatus.
 - Ostartat tillstånd är exakt startläget: `Account.open(100 000)`, `RiskState.start(100 000, START)`, inga
   behandlade event, ingen likvidation, START och inget föregående close.
-- Kontots insättning är riskmodulens startkapital (inga tillskott, D21), och bokföringen stämmer av.
+- Insättningen och riskmodulens startkapital är båda det låsta startkapitalet 100 000 (§4, inga tillskott, D21), och
+  bokföringen stämmer av. Bokförd funding kräver behandlade event i fundingtillståndet.
 - Efter likvidation är C = q = avg = 0; riskmodulen får veta det vid nästa close (bara den ordningen tillåts).
 - Startat och levande konto: `prev_mark_close` > 0 och E > 0 vid den (inget oförklarat nollkonto). Permanent stopp
   eller dagslås för den senast behandlade stapelns dag kräver q = 0.
 - q ≥ 0 (huvudmodellen är long eller platt).
 
-`restore` är en uttrycklig väg för syntetiska prov. Anroparen intygar att delarna hör till samma förlopp, och modulen
-prövar det som går att pröva enligt ovan. Delar som inte går att skilja åt, till exempel ett risktillstånd utan lås
-från ett annat platt konto, kan inte upptäckas. Ett återställt förlopp kan därför inte börja en RunLog.
+Revision 3 (C5-02 i granskningen av 3f46aa5) tar bort den publika `restore`. Ett tillstånd som får handla i motorn
+kommer därmed publikt bara från startläget och obrutna `process_bar`-steg, och risklås och bokföring följer förloppet.
+Den privata `_fixture` prövar samma invarianter men kan inte bevisa att delarna kommer från samma förlopp. Den är
+uttryckligen bara för syntetiska prov, och ett fixturtillstånd kan inte börja en RunLog. Återupptag och delhorisonter
+kräver senare ett eget förseglat format.
 
 ## Bokföringsidentiteter
 
@@ -114,9 +117,10 @@ kontot efter öppningen. Avstämningen och C = q = 0 kontrolleras mot C4:s utfal
   funding_net, liquidation_adjustment, avstämning, inga processed-id från mellanhändelserna och absorberande noll i
   fyra följande staplar. Utan träff: kronologiska C per post. `test_gap_liquidation_lists_each_absorbed_event_once`
   visar en kategori per event vid gaplikvidation.
-- **C5-02:** EngineState skapas bara via start/restore/process_bar och prövar invarianterna ovan. Proven omfattar
+- **C5-02:** EngineState skapas bara via start/process_bar (och den privata fixturvägen) och prövar invarianterna
+  ovan. Proven omfattar
   Codex fyra motexempel (200 000, position före start, nollkonto och främmande risklås via replace), ett startkonto
-  med ändrad bokföring och startinvarianten bakom grinden. Dessutom tretton felaktiga återställningar, som alla ger
+  med ändrad bokföring och startinvarianten bakom grinden. Dessutom felaktiga fixturtillstånd (tretton i revision 2), som alla ger
   kontrollerat fel utan ändrade indata, och giltiga oberoende återställningar nära terminal och mitt i horisonten.
 - **C5-03:** RunLog är bunden till sitt senaste tillstånd. Proven omfattar dubblett, lucka, bakåtsteg, främmande
   konto/scenario, ett giltigt alternativt nästa steg, begin från ett återställt tillstånd, direkt konstruktion och
@@ -126,8 +130,27 @@ kontot efter öppningen. Avstämningen och C = q = 0 kontrolleras mot C4:s utfal
   felen kördes om med mönster anpassade till den nya koden och samma avsikt; alla fångades. Startkontrollen missades
   först, eftersom grinden maskerade den, och fick ett eget prov bakom grinden. Modulen återställdes och jämfördes
   byte för byte.
-- Verifiering: 101 eventtester, 503 momentumtester och 1 052 motortester passerar. Signal-, ledger-, funding-, risk-
+- Verifiering i revision 2: 101 eventtester, 503 momentumtester och 1 056 motortester passerar. Talet 1 052 i den
+  första versionen av texten räknades innan fyra prov lades till. Signal-, ledger-, funding-, risk-
   och marginalmodulerna och deras tester är oförändrade.
+
+## Rättning C5-02 kvarstående och C5-04 (revision 3)
+
+- **C5-02:** Den publika `EngineState.restore` är borttagen och ersatt av den privata `_fixture` (testvägen ovan). Det
+  låsta startkapitalet 100 000 krävs för både insättning och riskmodulens initial. Bokförd funding kräver behandlade
+  event. Regressioner: `test_no_public_restore_path_around_risk_lock` kör Codex starkare motexempel genom vanliga
+  motorsteg. Ett konto går in, når close 300 och sedan 220 och får permanent stopp, och ett annat är platt. Det finns
+  ingen `restore`, replace avvisas och det riktiga låset gäller i nästa steg. Fixturinvarianterna avvisar dessutom
+  kapitalbas 200 000 och funding utan historik.
+- **C5-04:** Fixturvägen validerar UTC-tid och 4H-gräns före intervalljämförelsen. En naiv tid ger kontrollerat
+  EventError.
+- O14 och O15 är skalade 100 gånger och `_risky` 10 gånger till det låsta startkapitalet. Storlekslösaren är homogen i
+  (E, q_old), så O14/O15 jämförs med oraklets q × 100; alla Decimal-facit är omräknade.
+- Riktade felprov i revision 3: 18 fel (kapitalbas på två sätt, fundinghistorik och C5-04:s tidsordning tillkommer),
+  alla fångade. De 16 ursprungliga felen fångas också. Modulen återställdes och jämfördes byte för byte.
+- Verifiering i revision 3: 105 eventtester, 507 momentumtester och 1 060 motortester passerar. A1-oraklet, 19 av 19
+  momentum-audits och alla fyra checklistor passerar. Signal-, ledger-, funding-, risk- och marginalmodulerna och
+  deras tester är oförändrade.
 
 ## Avgränsningar
 
