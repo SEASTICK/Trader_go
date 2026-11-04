@@ -23,3 +23,44 @@ export function parseRegistry(md: string): Registry {
   }
   return { rows, attempts: new Set(rows.map((r) => r.id)).size, decisions };
 }
+
+/** En hypotes med alla sina rader ihopslagna: registreringen, senaste resultatet och beslutet. */
+export type Hypothesis = {
+  id: string; date: string; title: string; statement: string; market: string; track: "A" | "B" | "C";
+  decision: string | null; result: string | null; t: number | null; krav: number | null; criteria: string; runs: number;
+};
+
+const num = (s: string) => Number(s.replace("−", "-").replace(",", "."));
+
+/** Kort rubrik: första meningen, utan inledande "Spår C (...)." eller "Fas 1, spår A.". */
+export function shortTitle(statement: string): string {
+  const rest = statement.replace(/^(Fas \d+,\s*)?[Ss]pår [ABC][^.]*\.\s*/, "");
+  const first = rest.split(/(?<=[a-zåäö0-9)])\.\s/)[0];
+  return first.length > 150 ? `${first.slice(0, 147)}…` : first.replace(/\.$/, "");
+}
+
+export function groupRegistry(reg: Registry): Hypothesis[] {
+  const out = new Map<string, Hypothesis>();
+  const hypCol = (r: RegistryRow) => Object.keys(r.cells).find((k) => k.startsWith("hypotes")) ?? "hypotes";
+  for (const r of reg.rows) {
+    const text = r.cells[hypCol(r)] ?? "";
+    const isResult = /^(Resultat|OGILTIG)/.test(text);
+    let h = out.get(r.id);
+    if (!h) {
+      const track = (text.match(/[Ss]pår ([ABC])/)?.[1] ?? "A") as "A" | "B" | "C";
+      h = { id: r.id, date: r.cells["datum"] ?? "", title: shortTitle(text), statement: text, market: r.cells["marknad"] ?? "",
+            track, decision: null, result: null, t: null, krav: null, criteria: r.cells["beslutskriterier"] ?? "", runs: 0 };
+      out.set(r.id, h);
+    }
+    if (isResult) h.runs += 1;
+    const d = r.cells["beslut"];
+    if (d && d !== "OGILTIG") {
+      h.decision = d;
+      h.result = r.cells["resultat"] ?? null;
+      // "t 1,43 (krav 2,71)" eller "t −1,8023 mot 2,67".
+      const m = (h.result ?? "").match(/\bt (−?-?\d+,\d+) (?:\(krav|mot) (\d+,\d+)/);
+      if (m) { h.t = num(m[1]); h.krav = num(m[2]); }
+    }
+  }
+  return [...out.values()];
+}

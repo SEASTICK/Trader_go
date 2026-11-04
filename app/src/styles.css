@@ -263,3 +263,31 @@ h2 { font-size:17px; font-weight:650; letter-spacing:-.01em; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration:.01ms !important; animation-delay:0s !important; transition-duration:.01ms !important; }
 }
+
+/* Hypoteslistan: en rad per hypotes, klick fäller ut detaljer. */
+.hyp-list { padding:4px 0; }
+.hyp + .hyp { border-top:1px solid var(--line); }
+.hyp-row { display:grid; grid-template-columns:70px 1fr 26px 120px 130px; gap:12px; align-items:center; width:100%; padding:12px 20px;
+  border:0; background:none; text-align:left; transition:background .15s; }
+.hyp-row:hover { background:var(--hover); }
+.hyp-id { font-size:13px; } .hyp-title { font-size:13.5px; line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.hyp.open .hyp-title { -webkit-line-clamp:unset; }
+.hyp-goal { display:inline-grid; place-items:center; width:22px; height:22px; border-radius:6px; background:var(--hover); font-size:11px; font-weight:700; }
+.hyp-t { font-size:12.5px; } .hyp-t i { color:var(--muted); font-style:normal; }
+.hyp-detail { display:grid; gap:12px; padding:4px 20px 18px 102px; font-size:13px; line-height:1.55; animation:rise .25s ease-out both; }
+.hyp-detail .k { display:block; font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:3px; }
+.hyp.open { background:color-mix(in srgb,var(--hover) 55%,transparent); }
+.calc summary { cursor:pointer; list-style:none; display:flex; gap:10px; align-items:baseline; } .calc summary::-webkit-details-marker { display:none; }
+.calc { margin-top:16px; }
+@media (max-width:900px) { .hyp-row { grid-template-columns:60px 1fr 90px; } .hyp-goal, .hyp-t { display:none; } .hyp-detail { padding-left:20px; } }
+
+/* Idéer: kompakt lista i stället för tomma rutor. */
+.idea-row { display:grid; grid-template-columns:60px 1.4fr 1.6fr 1fr 70px; gap:12px; padding:11px 20px; font-size:13px; align-items:center; }
+.idea-row + .idea-row { border-top:1px solid var(--line); }
+.idea-row.head { color:var(--muted); font-size:12px; font-weight:600; }
+
+/* Närmast målet på Översikt. */
+.near { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:10px; }
+.near-item { display:flex; flex-direction:column; gap:6px; padding:14px 16px; border-radius:12px; border:1px solid var(--line); background:var(--card); text-align:left; }
+.near-item b { font-size:14px; line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; } .near-bar { height:6px; border-radius:99px; background:var(--hover); overflow:hidden; }
+.near-bar i { display:block; height:100%; background:var(--accent); border-radius:99px; }

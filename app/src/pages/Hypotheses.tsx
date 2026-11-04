@@ -1,59 +1,68 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import registryMd from "../../../research/registry.md?raw";
-import { Page, StatusDot } from "../components/ui";
-import { parseRegistry } from "../lib/registry";
+import { Segmented, StatusDot } from "../components/ui";
+import { groupRegistry, parseRegistry } from "../lib/registry";
 import { tKrav } from "../lib/stats";
 
-const ROWS = [1, 5, 10, 20, 50, 100];
 const f = (n: number) => n.toFixed(2).replace(".", ",");
 const reg = parseRegistry(registryMd);
+const FILTERS = ["Alla", "Avvisade", "Pågår", "Vidare"] as const;
+type Filter = (typeof FILTERS)[number];
+const MÅL_NAMN: Record<string, string> = { A: "Slå marknaden", B: "Lägre risk", C: "Marknadsneutral" };
 
+/** Registret som en lista: en rad per hypotes (registrering, resultat och beslut ihop). Klick visar allt. */
 export default function Hypotheses() {
+  const all = useMemo(() => groupRegistry(reg).reverse(), []);
+  const [filter, setFilter] = useState<Filter>("Alla");
+  const [open, setOpen] = useState<string | null>(null);
   const [n, setN] = useState(Math.max(1, reg.attempts));
-  const hypCol = Object.keys(reg.rows[0]?.cells ?? {}).find((k) => k.startsWith("hypotes")) ?? "hypotes";
+  const shown = all.filter((h) => filter === "Alla" ? true : filter === "Avvisade" ? h.decision === "REJECT"
+    : filter === "Pågår" ? !h.decision : h.decision === "MORE_RESEARCH" || h.decision === "READY_FOR_PAPER");
+  const avvisade = all.filter((h) => h.decision === "REJECT").length;
+  const vidare = all.filter((h) => h.decision === "MORE_RESEARCH" || h.decision === "READY_FOR_PAPER").length;
   return (
-    <Page title="Hypoteser" sub="Varje försök räknas. Ju fler försök, desto strängare krav för att något ska räknas som verkligt.">
+    <>
       <div className="kpis">
-        <div className="card kpi"><span className="k">Registrerade försök</span><b>{reg.attempts}</b><span className="muted">Olika id i registret</span></div>
-        <div className="card kpi"><span className="k">Krav på t-värde nu</span><b>{f(tKrav(reg.attempts))}</b><span className="muted">Bonferroni, minst 2,0</span></div>
-        <div className="card kpi"><span className="k">Klara för papper</span><b>{Object.values(reg.decisions).filter((d) => d === "READY_FOR_PAPER").length}</b><span className="muted">READY_FOR_PAPER</span></div>
-        <div className="card kpi"><span className="k">Avvisade</span><b>{Object.values(reg.decisions).filter((d) => d === "REJECT").length}</b><span className="muted">REJECT är ett bra utfall</span></div>
+        <div className="card kpi"><span className="k">Registrerade</span><b>{reg.attempts}</b><span className="muted">Alla försök räknas, även avvisade</span></div>
+        <div className="card kpi"><span className="k">Krav på t-värde nu</span><b>{f(tKrav(reg.attempts))}</b><span className="muted">Stiger med antalet försök</span></div>
+        <div className="card kpi"><span className="k">Avvisade</span><b>{avvisade}</b><span className="muted">REJECT är ett bra utfall</span></div>
+        <div className="card kpi"><span className="k">Gått vidare</span><b>{vidare}</b><span className="muted">Till slutprov eller papper</span></div>
       </div>
 
-      <section className="card table-card">
-        <div className="card-head"><div><h2>Registret</h2><p className="muted">Från <code>research/registry.md</code> när appen byggdes. Rader ändras aldrig, resultat läggs till som nya rader.</p></div></div>
-        {reg.rows.length === 0 ? (
-          <div className="empty">Inga hypoteser registrerade än. Den första skrivs in och committas innan något testas (skillen <code>ny-hypotes</code>).</div>
-        ) : (
-          <div className="ttable">
-            <div className="ttr head reg"><span>Id</span><span>Datum</span><span>Hypotes</span><span>Marknad</span><span>Beslut</span></div>
-            {reg.rows.map((r, i) => (
-              <div className="ttr reg" key={`${r.id}-${i}`}>
-                <b>{r.id}</b><span>{r.cells["datum"]}</span><span>{r.cells[hypCol]}</span><span>{r.cells["marknad"]}</span>
-                <span>{r.cells["beslut"] ? <StatusDot status={r.cells["beslut"]} /> : <span className="muted">—</span>}</span>
+      <div className="toolbar"><Segmented value={filter} options={[...FILTERS]} onChange={setFilter} /></div>
+      <section className="card hyp-list">
+        {shown.length === 0 && <div className="empty">Inga hypoteser här.</div>}
+        {shown.map((h) => (
+          <div key={h.id} className={open === h.id ? "hyp open" : "hyp"}>
+            <button type="button" className="hyp-row" onClick={() => setOpen(open === h.id ? null : h.id)} aria-expanded={open === h.id}>
+              <b className="hyp-id">{h.id}</b>
+              <span className="hyp-title">{h.title}<span className="muted"> · {h.market}</span></span>
+              <span className="hyp-goal" title={MÅL_NAMN[h.track]}>{h.track}</span>
+              <span className="hyp-t">{h.t === null ? "" : <>t {f(h.t)} <i>/ {f(h.krav ?? 0)}</i></>}</span>
+              <span className="hyp-dec">{h.decision ? <StatusDot status={h.decision} /> : <span className="muted">Pågår</span>}</span>
+            </button>
+            {open === h.id && (
+              <div className="hyp-detail">
+                <div><span className="k">Hypotes, registrerad {h.date}</span><p>{h.statement}</p></div>
+                {h.criteria && h.criteria !== "Se registreringen" && <div><span className="k">Krav, bestämda i förväg</span><p>{h.criteria}</p></div>}
+                <div><span className="k">Resultat</span><p>{h.result ?? "Inte kört än."}</p></div>
+                {h.runs > 1 && <p className="muted">{h.runs} körningar i registret. Alla finns kvar, även ogiltiga.</p>}
               </div>
-            ))}
+            )}
           </div>
-        )}
+        ))}
       </section>
+      <p className="footnote">Från <code>research/registry.md</code> när appen byggdes. Rader ändras eller tas aldrig bort; nya resultat läggs till.</p>
 
-      <div className="split">
-        <section className="card pad">
-          <h2>Räkna själv</h2>
-          <p className="muted">Hur strängt blir kravet med fler försök?</p>
-          <div className="bignum">{f(tKrav(n))}</div>
-          <label className="slider">
-            <span>Antal försök: <b>{n}</b></span>
-            <input type="range" min={1} max={200} value={n} onChange={(e) => setN(Number(e.target.value))} />
-          </label>
-        </section>
-        <section className="card table-card">
-          <div className="thead two"><span>Antal försök</span><span>Krav på t-värde</span></div>
-          {ROWS.map((r) => (
-            <div key={r} className="trow two"><span>{r}</span><b>{f(tKrav(r))}</b></div>
-          ))}
-        </section>
-      </div>
-    </Page>
+      <details className="card pad calc">
+        <summary><b>Varför stiger kravet?</b> <span className="muted">Räkna själv</span></summary>
+        <p className="muted" style={{ marginTop: 8 }}>Ju fler idéer man testar, desto fler ser bra ut av ren tur. Därför höjs kravet med antalet försök.</p>
+        <div className="bignum">{f(tKrav(n))}</div>
+        <label className="slider">
+          <span>Antal försök: <b>{n}</b></span>
+          <input type="range" min={1} max={200} value={n} onChange={(e) => setN(Number(e.target.value))} />
+        </label>
+      </details>
+    </>
   );
 }
