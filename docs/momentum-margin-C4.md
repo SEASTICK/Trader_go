@@ -1,6 +1,8 @@
 # H-0017 leverans C4 – marginal och absorberande likvidation mom-margin/1.0.0
 
-Datum 2026-11-04. Underlag: [research/h0017-protokoll.md](../research/h0017-protokoll.md) §4, §6, §8.1–§8.4, §9, D21
+Datum 2026-11-04. Rättad efter [Codex granskning av 0773f76](momentum-C4-granskning-0773f76.md): trösklarnas
+nämnare kontrolleras före division (C4-01) och sats och kontotyp valideras före konvertering och fältåtkomst (C4-02).
+Underlag: [research/h0017-protokoll.md](../research/h0017-protokoll.md) §4, §6, §8.1–§8.4, §9, D21
 och [uppdraget](claude-uppdrag-momentum-C4.md). Implementation för Codex granskning, inte godkänd. Endast syntetiska
 konton och prispunkter; ingen marknadshistorik har lästs och ingen H-0017-körning har startats. Protokoll, register,
 signalmodulen (B), fundingmodulen (C2) och riskmodulen (C3) är oförändrade. Ledgern (C1) kompletteras.
@@ -12,12 +14,12 @@ Modul: [engine/traderlab/momentum_margin.py](../engine/traderlab/momentum_margin
 
 | Del | Beskrivning |
 |---|---|
-| `MarginState(account_key, scenario, mmr, liquidated=False, record=None)` | likvidationstillstånd per konto och scenario; endast de två registrerade satserna godtas |
+| `MarginState(account_key, scenario, mmr, liquidated=False, record=None)` | likvidationstillstånd per konto och scenario; satsen valideras numeriskt först (reellt, ändligt, inte bool eller komplext) och måste sedan vara en av de två registrerade |
 | `check(acct, state, phase, m, price_source, bar_open)` | direktvillkoret E(m) = C + q × m ≤ mmr × abs(q) × m utan epsilon; returnerar `MarginCheck` med exakt konto, fas, stapel, sats, källa, m, q, E (ej klippt), MM, träff och diagnostisk tröskel |
 | `check_bar(acct, state, bar_open, mark_open, mark_high, mark_low, mark_close)` | validerar mark-OHLC och prövar den ogynnsamma extremen: mark_low för long, mark_high för short |
 | `liquidate(acct, state, check)` | atomisk nollställning efter en träff på exakt samma konto; returnerar nollkonto, likviderat tillstånd och `LiquidationRecord` |
-| `threshold(acct, mmr)` | diagnostisk gräns: long −C/(q(1 − mmr)), short C/(abs(q)(1 + mmr)); None för platt konto. Används aldrig för beslutet |
-| `MarginError` | underklass till `LedgerError` |
+| `threshold(acct, mmr)` | diagnostisk gräns: long −C/(q(1 − mmr)), short C/(abs(q)(1 + mmr)); None för platt konto. Nämnaren kontrolleras för overflow före divisionen, så en oändlig mellanprodukt ger fel i stället för ett påhittat nollpris. Används aldrig för beslutet |
+| `MarginError` | underklass till `LedgerError`. Alla publika ingångar (`threshold`, `check`, `check_bar`, `liquidate`) avvisar ett konto som inte är ledger-Account innan något fält läses |
 
 Faser: `gap` (källa mark_open) och `intrabar_adverse` (källa mark_low för long, mark_high för short). En träff inom
 stapeln anges med stapelns öppningstid, aldrig med en påhittad händelsetid. Inga handelsbeslut tas från high/low.
@@ -54,7 +56,11 @@ Intrastapel-drawdown-bound (§10.2) är en separat leverans och inget handelssto
 
 ## Verifiering
 
-- [engine/tests/test_momentum_margin.py](../engine/tests/test_momentum_margin.py): 46 tester, alla godkända. Facit från
+- [engine/tests/test_momentum_margin.py](../engine/tests/test_momentum_margin.py): 60 tester, alla godkända. De 14 nya
+  regressionerna för granskningen: nämnaröverflow i short-tröskeln vid båda satserna (Codex exakta värden) med
+  kontrollerat fel i både `threshold` och `check` och oförändrat konto; vanliga gränser, legitim nolltröskel och None;
+  komplex, text, None, bytes och lista som sats vid konstruktion, replace och `threshold`; numpy-satser; fyra feltyper
+  som konto i alla publika ingångar och feltyp som tillstånd. 8 av dem fäller den granskade revisionen 0773f76. Facit från
   [orakelfilen](momentum-a1-orakel.json) och fristående Decimal-räkning:
   - O11: legacy-short w = −1 med trösklar 190,476… (5 %) och 199,004… (0,5 %) mot exakt formel, träff strax över och
     ingen strax under; long w = 1 likvideras efter 500 i betald funding (tröskel 0,527).
@@ -71,8 +77,10 @@ Intrastapel-drawdown-bound (§10.2) är en separat leverans och inget handelssto
     inom stapeln efter betald och före mottagen funding, där omvänd ordning skulle dölja träffen, och ingen
     återupplivning av en senare kredit. C3:s likvidationsväg med terminal. O18: likviderat delkonto står på noll
     medan ett separat överlevande konto handlar vidare. Tidigare modulers utfall med standardvärdet 0.
-- Alla momentumtester (signal, ledger, funding, risk, marginal): 353 godkända.
-- Riktade felprov: 16 avsiktliga fel i marginalmodulen, ledgern och kompositionstestet. Alla fångades: villkor åt fel
+- Alla momentumtester (signal, ledger, funding, risk, marginal): 367 godkända.
+- Riktade felprov efter rättningen: de 16 tidigare och 3 nya (nämnare utan kontroll, sats utan typkontroll,
+  kontotyp okontrollerad). Alla 19 fångas.
+- Riktade felprov i första leveransen: 16 avsiktliga fel i marginalmodulen, ledgern och kompositionstestet. Alla fångades: villkor åt fel
   håll, strikt `<`, epsilon, fel extrem för short och för long, fel sats, tyst klippt negativt E, dubbel nollställning,
   gammal prövning accepterad, tappad justering, raderade kostnad/funding, justering saknas i avstämningen, justering
   ovaliderad, okänd sats accepterad, oförklarat nollkonto accepterat och fill före gapprövning i kompositionen. Strikt

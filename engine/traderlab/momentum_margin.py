@@ -54,19 +54,31 @@ def _bar(t) -> pd.Timestamp:
 
 
 def _mmr(mmr) -> float:
-    if isinstance(mmr, bool) or mmr not in MMRS:
+    """Numerisk validering först (reellt, ändligt, inte bool eller komplext), därefter medlemskap."""
+    try:
+        value = _mnum("mmr", mmr)
+    except MarginError:
+        raise MarginError(f"Underhållssatsen måste vara exakt en av {MMRS}, fick {mmr!r}.") from None
+    if value not in MMRS:
         raise MarginError(f"Underhållssatsen måste vara exakt en av {MMRS}, fick {mmr!r}.")
-    return float(mmr)
+    return value
+
+
+def _account(acct) -> Account:
+    if not isinstance(acct, Account):
+        raise MarginError(f"Kontot måste vara ett ledger-Account, fick {type(acct).__name__}.")
+    return acct
 
 
 def threshold(acct: Account, mmr: float) -> float | None:
     """Diagnostisk likvidationsgräns enligt §9; None för platt konto. Används aldrig för beslutet."""
-    mmr = _mmr(mmr)
+    acct, mmr = _account(acct), _mmr(mmr)
+    if acct.q == 0:
+        return None
+    # Nämnaren kontrolleras före divisionen: en oändlig mellanprodukt får inte bli ett legitimt nollpris.
     if acct.q > 0:
-        return _out("tröskel", -acct.C / (acct.q * (1 - mmr)))
-    if acct.q < 0:
-        return _out("tröskel", acct.C / (-acct.q * (1 + mmr)))
-    return None
+        return _out("tröskel", -acct.C / _out("tröskelns nämnare", acct.q * (1 - mmr)))
+    return _out("tröskel", acct.C / _out("tröskelns nämnare", -acct.q * (1 + mmr)))
 
 
 @dataclass(frozen=True)
@@ -159,6 +171,9 @@ def check(acct: Account, state: MarginState, phase: str, m: float, price_source:
 def check_bar(acct: Account, state: MarginState, bar_open: pd.Timestamp, mark_open: float, mark_high: float,
               mark_low: float, mark_close: float) -> MarginCheck:
     """Ogynnsam extrem inom en hel markstapel, efter validering av OHLC. Inga beslut tas från high/low."""
+    acct = _account(acct)
+    if not isinstance(state, MarginState):
+        raise MarginError("Fel typ för tillstånd.")
     o, h, l, c = (_mnum(n, v) for n, v in (("mark_open", mark_open), ("mark_high", mark_high),
                                             ("mark_low", mark_low), ("mark_close", mark_close)))
     if min(o, h, l, c) <= 0 or not (l <= min(o, c) and max(o, c) <= h):
@@ -170,6 +185,7 @@ def check_bar(acct: Account, state: MarginState, bar_open: pd.Timestamp, mark_op
 
 def liquidate(acct: Account, state: MarginState, result: MarginCheck) -> tuple[Account, MarginState, LiquidationRecord]:
     """Atomisk nollställning efter en träff på exakt samma konto. Ingen fill, ingen avgift."""
+    acct = _account(acct)
     if not isinstance(result, MarginCheck) or not isinstance(state, MarginState):
         raise MarginError("Fel typ för prövning eller tillstånd.")
     if state.liquidated:

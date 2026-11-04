@@ -546,6 +546,10 @@
             {
               "file": "docs/momentum-C4-granskning-0773f76.md",
               "detail": "C4 ej godkänd på 0773f76: C4-01 P2 shorttröskelns overflow ger felaktigt nollpris; C4-02 P2 feltyper läcker TypeError/AttributeError. 353 momentum-/906 motorprov passerar; egen revisionslåst audit reproducerar fynden och verifierar 600 Decimal-jämförelser, 300 resetidentiteter och avgränsad komposition."
+            },
+            {
+              "file": "engine/tests/test_momentum_margin.py",
+              "detail": "Rättning av C4-01/C4-02 från granskningen av 0773f76: nämnaren i trösklarna kontrolleras före division; sats och kontotyp valideras före konvertering och fältåtkomst. 60 marginaltester; 8 nya fäller 0773f76; 19 riktade felprov fångade."
             }
           ],
           "note": "C4 ej godkänd på exakt 0773f76: C4-01/C4-02 kräver numerisk/API-rättning och omgranskning. Normala marginal-/resetfall samt avgränsad komposition verifierade syntetiskt. Full event-/riskordning återstår. Ingen senare leverans beställd; nästa del väntar på Edwins beslut efter godkänd C4."

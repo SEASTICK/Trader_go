@@ -329,3 +329,62 @@ def test_exact_equality_E_equals_MM_is_a_hit(C, q):
     chk = M.check(acct, st(0.05), M.GAP, 100.0, M.MARK_OPEN, BAR)
     assert chk.E == chk.MM == 5_000.0 and chk.hit                     # villkoret är inkluderande: E <= MM
     assert decimal_hit(C, q, 100.0, 0.05) is True                     # reellt är MM 5 000,000000000000277 >= E
+
+
+# Regressioner för Codex granskning av 0773f76 (C4-01 och C4-02).
+
+@pytest.mark.parametrize("mmr,q,exact", [(0.05, -1.75e308, "0.54421768707482993197"),
+                                         (0.005, -1.795e308, "0.55433140703169389820")])
+def test_short_threshold_denominator_overflow_is_controlled(mmr, q, exact):
+    acct = L.Account(C=1e308, q=q, deposit=1e308)
+    copy = dataclasses.replace(acct)
+    assert math.isinf(abs(q) * (1 + mmr))                              # nämnaren överflödar trots ändliga fält
+    assert D(repr(1e308)) / (abs(D(repr(q))) * (1 + D(repr(mmr)))) == pytest.approx(D(exact), rel=D("1e-18"))
+    with pytest.raises(L.LedgerError, match="nämnare"):
+        M.threshold(acct, mmr)
+    with pytest.raises(L.LedgerError, match="nämnare"):
+        M.check(acct, st(mmr), M.GAP, 0.5, M.MARK_OPEN, BAR)
+    assert acct == copy
+
+
+def test_ordinary_and_zero_thresholds_still_work():
+    assert M.threshold(L.Account(C=0.0, q=10.0, deposit=1000.0, avg_price=100.0), 0.05) == 0
+    assert M.threshold(L.Account.open(100), 0.005) is None
+    assert M.threshold(short_legacy(), 0.05) == pytest.approx(ORACLE["O11_likvidation"]["legacy_short_w-1"]["mark_mmr_0_05"],
+                                                             rel=1e-12)
+    assert M.threshold(L.Account(C=-60_000.0, q=1000.0, deposit=40_000.0, avg_price=100.0), 0.005) == pytest.approx(
+        60_000 / (1000 * 0.995), rel=1e-12)
+
+
+@pytest.mark.parametrize("mmr", [0.05 + 0j, 0.005 + 0j, "0.05", None, b"0.05", [0.05]])
+def test_rate_type_is_validated_before_membership(mmr):
+    with pytest.raises(M.MarginError, match="Underhållssatsen"):
+        M.MarginState("main", "A", mmr)
+    with pytest.raises(M.MarginError, match="Underhållssatsen"):
+        dataclasses.replace(st(), mmr=mmr)
+    with pytest.raises(M.MarginError, match="Underhållssatsen"):
+        M.threshold(L.Account.open(100), mmr)
+
+
+def test_valid_numpy_rates_still_work():
+    import numpy as np
+    s = M.MarginState("main", "A", np.float64(0.05))
+    assert s.mmr == 0.05 and type(s.mmr) is float
+    assert M.threshold(short_legacy(), np.float64(0.005)) == pytest.approx(
+        ORACLE["O11_likvidation"]["legacy_short_w-1"]["mark_mmr_0_005"], rel=1e-12)
+
+
+@pytest.mark.parametrize("bad", [None, "konto", 7, {"q": 1.0}])
+def test_public_entry_points_reject_non_accounts(bad):
+    with pytest.raises(M.MarginError, match="ledger-Account|Fel typ"):
+        M.threshold(bad, 0.05)
+    with pytest.raises(M.MarginError, match="ledger-Account|Fel typ"):
+        M.check_bar(bad, st(), BAR, 100, 110, 90, 100)
+    with pytest.raises(M.MarginError, match="ledger-Account|Fel typ"):
+        M.check(bad, st(), M.GAP, 100.0, M.MARK_OPEN, BAR)
+    acct = L.Account(C=-60_000.0, q=1000.0, deposit=40_000.0, avg_price=100.0)
+    chk = M.check(acct, st(), M.GAP, 62.0, M.MARK_OPEN, BAR)
+    with pytest.raises(M.MarginError, match="ledger-Account|Fel typ"):
+        M.liquidate(bad, st(), chk)
+    with pytest.raises(M.MarginError, match="Fel typ"):
+        M.check_bar(acct, "tillstånd", BAR, 100, 110, 90, 100)

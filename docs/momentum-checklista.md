@@ -160,6 +160,7 @@ C4 granskad på exakt 0773f76 mot db65a54: ej godkänd, C4-01/C4-02 (P2) i margi
   - Underlag: [engine/tests/test_momentum_margin.py](../engine/tests/test_momentum_margin.py) — 46 syntetiska tester mot O11, O18 och Decimal; 16 riktade felprov fångade.
   - Underlag: [docs/momentum-margin-C4.md](momentum-margin-C4.md) — API, bokföringsidentiteter, tillstånd, gräns mot eventloop, verifiering och påverkan för C4.
   - Underlag: [docs/momentum-C4-granskning-0773f76.md](momentum-C4-granskning-0773f76.md) — C4 ej godkänd på 0773f76: C4-01 P2 shorttröskelns overflow ger felaktigt nollpris; C4-02 P2 feltyper läcker TypeError/AttributeError. 353 momentum-/906 motorprov passerar; egen revisionslåst audit reproducerar fynden och verifierar 600 Decimal-jämförelser, 300 resetidentiteter och avgränsad komposition.
+  - Underlag: [engine/tests/test_momentum_margin.py](../engine/tests/test_momentum_margin.py) — Rättning av C4-01/C4-02 från granskningen av 0773f76: nämnaren i trösklarna kontrolleras före division; sats och kontotyp valideras före konvertering och fältåtkomst. 60 marginaltester; 8 nya fäller 0773f76; 19 riktade felprov fångade.
   - C4 ej godkänd på exakt 0773f76: C4-01/C4-02 kräver numerisk/API-rättning och omgranskning. Normala marginal-/resetfall samt avgränsad komposition verifierade syntetiskt. Full event-/riskordning återstår. Ingen senare leverans beställd; nästa del väntar på Edwins beslut efter godkänd C4.
 
 ## D. Utvärderare och jämförelser
