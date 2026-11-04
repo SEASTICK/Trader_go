@@ -3,8 +3,8 @@
   "title": "Efterföljare till H-0013 – granskning och implementation",
   "hypothesis": "H-0017 – riskstyrd tidsseriemomentum på BTCUSDT",
   "updated": "2026-11-04",
-  "reviewed_revision": "43b2a4bd26149bb04d77e1ef94113b2b684719a5",
-  "reviewed_scope": "C5 GODKÄND på exakt 43b2a4b mot aa81472, endast syntetiskt. C5-02/C5-04 stängda; C5-01/C5-03 fortsatt stängda. Ingen publik restore; privat fixturväg godtas endast som testhjälp utan proveniensgaranti. 507 momentumtester, 1060 motorprov, A1, 19 äldre audits och ny revisionslåst audit passerar. C03/C05 done inom huvudmodellens C5-gränser; C04 in_progress för §10.2-bound och 20 %-riskkontroll. A/B/C01/C02 behåller komponentgodkännande. Nästa C-del kan tilldelas; ingen historikkörning/drift/paper/live. 14/40.",
+  "reviewed_revision": "8e27c5f0c74a7f10687695e1b8e4bd35dc078e61",
+  "reviewed_scope": "C6 EJ GODKÄND på exakt 8e27c5f mot 5f5de0f, endast syntetiskt. C6-02 P2: close-punktens tid anges som stapelöppning trots att kapitalet blir känt vid nästa 4H-gräns. Decimal verifierar punktvärden, fundingbaser, peak/minimum och C6-01 H1/I1/G1/P1 inom granskad avgränsning. 539 momentumtester/1092 motorprov, A1, 20 äldre audits och ny revisionslåst audit passerar (ny audit reproducerar fyndet). Additiv BarResult.bar granskad; MOM-C03/C05 och äldre komponentgodkännanden består. MOM-C04 fortsatt in_progress, 14/40. Ingen historikkörning, registrering, drift eller paper/live; D tilldelas inte genom denna granskning.",
   "groups": [
     {
       "id": "A",
@@ -558,6 +558,10 @@
             {
               "file": "engine/traderlab/momentum_event.py",
               "detail": "Kompatibilitetsnot C6: BarResult får fältet bar, bara ett tillägg. 105 eventtester och 34 felprov för eventmodulen passerar; omgodkännande av exakt revision behövs."
+            },
+            {
+              "file": "docs/momentum-C6-granskning-8e27c5f.md",
+              "detail": "Codex omgranskar exakt 8e27c5f: BarResult.bar är ett additivt fält under befintlig konstruktionsgrind; eventordning och 105 eventtester är oförändrade. C03/C05-godkännandet består inom C5:s huvudmodellgränser; C6-02 gäller boundens tidsmetadata."
             }
           ],
           "note": "Done inom C5:s huvudmodell: funding, dagsreset, första/sista event och full syntetisk horisont verifierade på 43b2a4b. Ingen publik återställning. Legacy/jämförelsekonton och stress/fördröjning tillhör senare D; ingen historikkörning godkänd."
@@ -662,9 +666,17 @@
             {
               "file": "docs/momentum-bound-C6.md",
               "detail": "API, punktordning, fundingbaser och verifiering: 32 boundtester, 539 momentumtester/1 092 motortester; 17 av 18 riktade felprov fångade, ett bevisat ekvivalent."
+            },
+            {
+              "file": "docs/momentum-C6-granskning-8e27c5f.md",
+              "detail": "C6 EJ GODKÄND på 8e27c5f: C6-02 P2, close.time ligger 4 timmar för tidigt. Oberoende Decimal-, regressions- och integritetskontroller redovisas med faktiska antal. C6-01 består; ingen ekonomisk slutprövning."
+            },
+            {
+              "file": "research/audits/momentum-c6-8e27c5f/review.py",
+              "detail": "Revisionslåst git-show-audit med verification.json/--check: O7, 32 funding-/marginalfall, två gapfall, fyra 15-stapelsförlopp, 60 ickeinterferenspar, terminal och absorberande nollor; sex egna mutationer fångade. C6-02 reproduceras."
             }
           ],
-          "note": "C5 godkänd på 43b2a4b: integrerade closebaserade dags-/permanentstopp verifierade, inklusive bevarat permanent stopp genom publika motorsteg. §10.2-bound och konservativ 20 %-riskkontroll återstår; därför fortsatt in_progress."
+          "note": "C5:s closebaserade dags-/permanentstopp består efter granskning av det additiva BarResult.bar på 8e27c5f. C6:s kapital-/funding-/peakberäkningar verifierade syntetiskt, men C6-02 P2 i close-punktens tidsproveniens hindrar godkännande. MOM-C04 förblir in_progress; full boolesk 20 %-prövning hör till D. Ingen historikkörning eller drift."
         },
         {
           "id": "MOM-C05",
@@ -790,9 +802,13 @@
             {
               "file": "engine/tests/test_momentum_event.py",
               "detail": "Kompatibilitetsnot C6: eventtesterna är oförändrade och passerar på revisionen med BarResult.bar."
+            },
+            {
+              "file": "docs/momentum-C6-granskning-8e27c5f.md",
+              "detail": "Codex omgranskar exakt 8e27c5f: BarResult.bar är ett additivt fält under befintlig konstruktionsgrind; eventordning och 105 eventtester är oförändrade. C03/C05-godkännandet består inom C5:s huvudmodellgränser; C6-02 gäller boundens tidsmetadata."
             }
           ],
-          "note": "Done inom C5:s huvudmodell: gap, basis, likvidation och riskordning granskade mot oberoende Decimal-/kalenderfacit på 43b2a4b. C5-01–C5-04 stängda. Inget godkännande av legacy/grid, §10.2-bound, ekonomiskt resultat eller drift. Nästa C-del kan tilldelas."
+          "note": "Done inom C5:s huvudmodell: gap, basis, likvidation och riskordning granskade mot oberoende Decimal-/kalenderfacit på 43b2a4b. C5-01–C5-04 stängda. Inget godkännande av legacy/grid, §10.2-bound, ekonomiskt resultat eller drift. C6 är ännu inte godkänd."
         }
       ]
     },
