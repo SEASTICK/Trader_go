@@ -1,0 +1,264 @@
+{
+  "revision": "aa2c8669680b017d9d9a98e46d1f9a0cb1a4fb9d",
+  "base": "ab79f2a5f8c63456075f2e1c5d22a28f3c4e1f19",
+  "changed_files": [
+    "docs/momentum-D1-mutationer.json",
+    "docs/momentum-checklista.md",
+    "docs/momentum-control-D1.md",
+    "docs/momentum-status.json",
+    "engine/tests/test_momentum_control_integration.py",
+    "engine/traderlab/momentum_control.py",
+    "scripts/momentum-d1-mutations.py"
+  ],
+  "protected_unchanged": true,
+  "sha256": {
+    "engine/traderlab/stats.py": "4cfffdd0bc58034688349c2a9fbbd69c7e6ca3988fde41f378619411d4b31a19",
+    "engine/traderlab/momentum_ledger.py": "c043e39515a06a28f615bc93bc6a3d01cf74395328d77d8210f0c7f412808c02",
+    "engine/traderlab/momentum_signal.py": "a288de6450b71d06ccb53e3b88384a0475b111aeb7e4ce8c77dd49f6de2c3746",
+    "engine/traderlab/momentum_funding.py": "60cb1011f22cf471a7e2d6e66a7d24093a5d4068309f50622eab37c91a72aebc",
+    "engine/traderlab/momentum_risk.py": "694a6eb117be293714542de645d04b4b0f4c30320faba80ee2e2287d462b5bd2",
+    "engine/traderlab/momentum_margin.py": "957f91a373b8cb21b548be6977fb4181a0c7c836d79e719ebfadb81fe4909e12",
+    "engine/traderlab/momentum_event.py": "118378b3c669e3c7f5ddd128650cd98aab838ceda71c2aab86dca5e16fea6eb4",
+    "engine/traderlab/momentum_control.py": "7c33a82ffafdf6dd1190a76b19af77350421cdd0a5706bb811c5b88c338f049a",
+    "research/h0017-protokoll.md": "e15197c7d17c815eb89845909d7719e825607e4e49cc856b603af7549acc827d",
+    "research/registry.md": "6362325f1991e185d02d46756b62f4c43925cafa5fdfeae228df0ee46fccc127",
+    "docs/claude-uppdrag-momentum-D1.md": "e783189072b2bb48b6a6ef070df8b02cf8118e3281ac02a60a4e232c04cfd1f9",
+    "docs/momentum-a1-orakel.json": "887d08ad9bc10e3319b608c9703214db7519441614021944086dea1eae7cce3b",
+    "docs/momentum-control-D1.md": "8e5ad6ea158c04118a9b5c654a4bba02062b58c6aafb913ccc45eb485e1d0e10",
+    "docs/momentum-status.json": "b8e10f907a61e7e8841a4c371ccfa52c75f56bbfb05816a1d6f867f045f85029",
+    "engine/tests/test_momentum_control.py": "31e9a5bd813db89e93745ef164d10d48997569fe080bc5243ed550049e794c65",
+    "engine/tests/test_momentum_control_integration.py": "f6f3db3e1f6ab394a9f285a6e3a070542efda341fc436534c40210c337c63e1d",
+    "scripts/momentum-d1-mutations.py": "103182e3eee173f6c4b78da90a308153341ceb3404426c39226e4b7db77ea8e9",
+    "docs/momentum-D1-mutationer.json": "aeac8934a755c3d6422cb5d8aec7b6359f5294881a1090c2014d95eafd29cd2e"
+  },
+  "decimal_signal_comparisons": 3288,
+  "signal_combinations": 8,
+  "cap_below_one_days": 1096,
+  "full_histories": [
+    {
+      "component": "mom7",
+      "bars": 6576,
+      "close_points": 6577,
+      "days": 1096,
+      "q_entry_decimal": "998.4025559105431309904153354632587859424920127795527156549520766773163",
+      "E_terminal_decimal": "99680.51118210862619808306709265175718849840255591054313099041533546326"
+    },
+    {
+      "component": "mom14",
+      "bars": 6576,
+      "close_points": 6577,
+      "days": 1096,
+      "q_entry_decimal": "998.4025559105431309904153354632587859424920127795527156549520766773163",
+      "E_terminal_decimal": "99680.51118210862619808306709265175718849840255591054313099041533546326"
+    },
+    {
+      "component": "mom28",
+      "bars": 6576,
+      "close_points": 6577,
+      "days": 1096,
+      "q_entry_decimal": "998.4025559105431309904153354632587859424920127795527156549520766773163",
+      "E_terminal_decimal": "99680.51118210862619808306709265175718849840255591054313099041533546326"
+    }
+  ],
+  "changing_position_reference": {
+    "bars": 6576,
+    "close_points": 6577,
+    "days": 1096,
+    "terminal_decimal": "99743.28789328882602658394444290106389108270837405977315323540506967150",
+    "reference_states": [
+      [
+        "49960.03197442046362909672262190247801758593125499600319744204636290967",
+        "499.6003197442046362909672262190247801758593125499600319744204636290967"
+      ],
+      [
+        "19950.55135751584217504060450582132865998645281574305769451522224929488",
+        "798.0220543006336870016241802328531463994581126297223077806088899717969"
+      ],
+      [
+        "39864.33062051522841992194968022475833453883775507113311361210855648515",
+        "597.9649593077284262988292452033713750180825663260669967041816283472772"
+      ],
+      [
+        "99565.15215779883450159706152132935641634420117706566206455760233067731",
+        "0"
+      ],
+      [
+        "0E-65",
+        "994.0610239396848492571591605564033188532767689403520573538099274228965"
+      ]
+    ]
+  },
+  "D1-01_adapter_rejected_invalid_fields": {
+    "s": "rejected",
+    "available": "rejected",
+    "earliest_fill": "rejected",
+    "decision_time": "rejected",
+    "s14": "rejected",
+    "vol": "rejected"
+  },
+  "D1-02_2025_reached_signal_calculation": [],
+  "O9": "cap_breach; band false is not hold",
+  "mutation_harness": {
+    "all_30_catches_individually_replayed": [
+      {
+        "mutation": "main-s i stället för s_h",
+        "test": "tests/test_momentum_control.py::test_component_signals_match_independent_computation",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "växla 7/14",
+        "test": "tests/test_momentum_control.py::test_component_signals_match_independent_computation",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "framtida close",
+        "test": "tests/test_momentum_control.py::test_component_signals_match_independent_computation",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "cap = 1 alltid",
+        "test": "tests/test_momentum_control.py::test_component_signals_match_independent_computation",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "komponentens band avstängt",
+        "test": "tests/test_momentum_control.py::test_O9_component_full_capital_vs_main",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "komponentens dagsstopp avstängt",
+        "test": "tests/test_momentum_control.py::test_O9_component_full_capital_vs_main",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "komponentens permanenta stopp avstängt",
+        "test": "tests/test_momentum_control_integration.py::test_day_and_permanent_stop_exact_float_boundaries",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "A på nya q",
+        "test": "tests/test_momentum_control_integration.py::test_O5_O16_component_entry_decrease_exit[A]",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "B på gamla q",
+        "test": "tests/test_momentum_control_integration.py::test_O5_O16_component_entry_decrease_exit[B]",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "normal återupplivad efter riskexit",
+        "test": "tests/test_momentum_control_integration.py::test_O6_component_day_stop_with_normal_intent_and_reset",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "köp efter permanent stopp",
+        "test": "tests/test_momentum_control_integration.py::test_public_component_run_permanent_stop_holds_over_days_and_other_account_unaffected",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "startpunkt tappad",
+        "test": "tests/test_momentum_control.py::test_full_horizon_per_component",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "sista close/terminalpunkt tappad",
+        "test": "tests/test_momentum_control.py::test_full_horizon_per_component",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "terminalkostnad tappad",
+        "test": "tests/test_momentum_control.py::test_O2_full_capital_entry",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "kort horisont godtas",
+        "test": "tests/test_momentum_control.py::test_invalid_market_is_rejected_before_any_computation[lucka]",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "otillgänglig signal godtas som platt",
+        "test": "tests/test_momentum_control.py::test_invalid_signal_day_via_constant_window_is_rejected",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "adapterns earliest_fill okontrollerad",
+        "test": "tests/test_momentum_control_integration.py::test_adapter_rejects_inconsistent_source_rows[earliest_fill]",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "adapterns koherens okontrollerad",
+        "test": "tests/test_momentum_control_integration.py::test_adapter_rejects_inconsistent_source_rows[s_main]",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "adapterns cap/vol okontrollerad",
+        "test": "tests/test_momentum_control_integration.py::test_adapter_rejects_inconsistent_source_rows[vol_nan]",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "strikt bool available okontrollerad",
+        "test": "tests/test_momentum_control_integration.py::test_direct_construction_is_validated[available_int]",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "underlaget återvalideras inte",
+        "test": "tests/test_momentum_control_integration.py::test_market_owns_a_copy_and_detects_later_mutation",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "underlaget kopieras inte",
+        "test": "tests/test_momentum_control_integration.py::test_market_owns_a_copy_and_detects_later_mutation",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "2025-data i tabeller godtas",
+        "test": "tests/test_momentum_control.py::test_invalid_market_is_rejected_before_any_computation[2025_mark]",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "2025-funding godtas",
+        "test": "tests/test_momentum_control.py::test_invalid_market_is_rejected_before_any_computation[2025_funding]",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "legacy-identitet saknas",
+        "test": "tests/test_momentum_control.py::test_full_horizon_per_component",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "pre-start räknas inte",
+        "test": "tests/test_momentum_control.py::test_funding_ids_are_booked_independently_per_account_and_pre_start_counted",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "delad kontoidentitet/state mellan konton",
+        "test": "tests/test_momentum_control.py::test_full_horizon_per_component",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "peakreset vid årsskifte",
+        "test": "tests/test_momentum_control_integration.py::test_permanent_stop_across_new_year_uses_unbroken_peak",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "adapterns dubblettkontroll av",
+        "test": "tests/test_momentum_control_integration.py::test_adapter_huge_cap_and_duplicate_days_are_controlled",
+        "replayed_failure": true
+      },
+      {
+        "mutation": "adapterns numerik efter aritmetik",
+        "test": "tests/test_momentum_control_integration.py::test_adapter_huge_cap_and_duplicate_days_are_controlled",
+        "replayed_failure": true
+      }
+    ],
+    "year_expected_decimal": "2023-01-03 04:00:00+00:00",
+    "focused_baseline_passed": 2,
+    "year_reset_caught_by_independent_test": true,
+    "runtime_FileNotFoundError_class": "FÅNGAD",
+    "shared_state_mutant": "fresh EngineState per invocation; only key changed",
+    "check_compares_elapsed_seconds": true
+  },
+  "D1-05_adapter_huge_cap": "ControlError",
+  "adapter_duplicate_rows": "ControlError",
+  "decision": "EJ GODKÄND"
+}
