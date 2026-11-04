@@ -3,8 +3,8 @@
   "title": "Efterföljare till H-0013 – granskning och implementation",
   "hypothesis": "H-0017 – riskstyrd tidsseriemomentum på BTCUSDT",
   "updated": "2026-11-04",
-  "reviewed_revision": "0773f7647980834ddbf41365fd8f8cd3918051b7",
-  "reviewed_scope": "C4 granskad på exakt 0773f76 mot db65a54: ej godkänd, C4-01/C4-02 (P2) i marginalens numeriska diagnostik/felkontrakt. 353 momentumtester/906 motorprov; egen revisionslåst audit med 600 Decimal-jämförelser och 300 likvidationsavstämningar passerar och reproducerar fynden. C01 omgranskad done för ledgerkompletteringen, C02 fortsatt done; C03/C04/C05 in_progress. 12/40. Endast syntetiskt; nästa del väntar på Edwins beslut efter godkänd C4.",
+  "reviewed_revision": "c312dfacbd3165b7347b78788ec3067eb6eb2226",
+  "reviewed_scope": "C4 omgranskad på exakt c312dfa mot deb9c8f: ej godkänd. C4-01 och tidigare C4-02-reproduktioner stängda; ny regression C4-03 (P2), stor heltalssats läcker OverflowError. 367 momentumtester/920 motorprov passerar; egen revisionslåst audit med 600 Decimal-jämförelser, 300 likvidationsavstämningar och jämförelse av nya felet mot basen. C01/C02 fortsatt done, C03/C04/C05 in_progress. 12/40. Endast syntetiskt; ingen senare leverans beställd.",
   "groups": [
     {
       "id": "A",
@@ -362,9 +362,13 @@
             {
               "file": "docs/momentum-C4-granskning-0773f76.md",
               "detail": "Codex omgranskar ledgerkompletteringen på 0773f76: signerad ändlig liquidation_adjustment, 300 egna avstämningsfall och två partial-/fundingförlopp, 200 identiska före/efterfyllningar; 82 ledgertester och 906 motorprov passerar. Marginalfynd C4-01/C4-02 ändrar inte ledgeridentiteten."
+            },
+            {
+              "file": "docs/momentum-C4-granskning-c312dfa.md",
+              "detail": "Ledgern oförändrad mot deb9c8f; återverifierad på c312dfa med 300 avstämningsfall, två partial-/fundingförlopp och 200 identiska normalfyllningar mot ledgern före C4. C4-03 ligger i marginalens satsvalidering och ogiltigförklarar inte ledgergodkännandet."
             }
           ],
-          "note": "Återöppningen efter C4:s ledgerändring är omgranskad på exakt 0773f76: ledger/avstämning och tidigare giltiga belopp verifierade. C4:s marginalmodul är ej godkänd (C4-01/C4-02); full integration kvar under C05."
+          "note": "Ledgerkompletteringen fortsatt komponentgodkänd; oförändrad mot deb9c8f och oberoende återverifierad på c312dfa. Marginalens C4-03 påverkar inte ledgeridentiteten. Full integration kvar under C05."
         },
         {
           "id": "MOM-C02",
@@ -402,6 +406,10 @@
             {
               "file": "docs/momentum-C4-granskning-0773f76.md",
               "detail": "Oförändrad C3-källa på 0773f76, 101 risktester och sju egna absorberande gränser över midnatt till terminal passerar med kompletterad ledger. Komponentgodkännande bevaras."
+            },
+            {
+              "file": "docs/momentum-C4-granskning-c312dfa.md",
+              "detail": "Riskmodulen oförändrad mot deb9c8f; 101 risktester och sju egna absorberande gränser över midnatt till terminal återverifierade på c312dfa. Komponentgodkännande bevaras."
             }
           ],
           "note": "Komponentgodkänd på exakt 8c19618: band, avsikter och prioritet inklusive C1-komposition. Full eventordning verifieras under C03/C05; ompröva vid ändrad riskmodul. Kompatibilitet på 0773f76 oberoende verifierad i C4-granskningen."
@@ -454,6 +462,10 @@
             {
               "file": "docs/momentum-C4-granskning-0773f76.md",
               "detail": "C4 på 0773f76: fyra egna A/B-öppningskompositioner och fyra debit/adverse-kompositioner med båda satserna passerar. Ingen full eventloop eller slutverifierad första/sista-eventintegration."
+            },
+            {
+              "file": "docs/momentum-C4-granskning-c312dfa.md",
+              "detail": "Fyra öppningskompositioner och fyra intrastapelkompositioner återverifierade på c312dfa; full eventordning och integration återstår."
             }
           ],
           "note": "Funding C2 och ren dagsreset C3 godkända; första/sista event och full funding-/marginalintegration återstår."
@@ -490,6 +502,10 @@
             {
               "file": "docs/momentum-C4-granskning-0773f76.md",
               "detail": "C4 på 0773f76: likviderat nollkonto följer C3 över midnatt till terminal utan avsikter. Oförändrad riskmodul; intrastapel-bound och full eventintegration återstår."
+            },
+            {
+              "file": "docs/momentum-C4-granskning-c312dfa.md",
+              "detail": "Absorberande nollkonto och C3-terminal återverifierade på c312dfa; full intrastapel-bound och eventintegration återstår."
             }
           ],
           "note": "C3:s rena dags-/permanentstopp godkända på 8c19618. Konservativ intrastapel-bound och eventintegration återstår."
@@ -550,9 +566,13 @@
             {
               "file": "engine/tests/test_momentum_margin.py",
               "detail": "Rättning av C4-01/C4-02 från granskningen av 0773f76: nämnaren i trösklarna kontrolleras före division; sats och kontotyp valideras före konvertering och fältåtkomst. 60 marginaltester; 8 nya fäller 0773f76; 19 riktade felprov fångade."
+            },
+            {
+              "file": "docs/momentum-C4-granskning-c312dfa.md",
+              "detail": "C4 ej godkänd på c312dfa: C4-01 och tidigare C4-02-feltyper ger kontrollerade fel; nytt P2-fynd C4-03 ger OverflowError för 10**400 via konstruktion/replace/threshold, medan diffbasen gav MarginError. 367 momentumtester/920 motorprov och egen revisionslåst audit passerar inklusive reproducerat fynd. 600 Decimal-fall och 300 resetidentiteter återverifierade."
             }
           ],
-          "note": "C4 ej godkänd på exakt 0773f76: C4-01/C4-02 kräver numerisk/API-rättning och omgranskning. Normala marginal-/resetfall samt avgränsad komposition verifierade syntetiskt. Full event-/riskordning återstår. Ingen senare leverans beställd; nästa del väntar på Edwins beslut efter godkänd C4."
+          "note": "C4 ej godkänd på exakt c312dfa. Tidigare reproduktioner C4-01/C4-02 stängda, ny regression C4-03 kräver kontrollerad satsvalidering och omgranskning. Normala marginal-/resetfall och avgränsad komposition återverifierade syntetiskt. Full event-/riskordning återstår. Ingen senare leverans beställd."
         }
       ]
     },

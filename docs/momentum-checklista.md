@@ -2,9 +2,9 @@
 
 **12 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-Metodgranskning · Kontrollerad 2026-11-04 · Granskad kodversion `0773f7647980834ddbf41365fd8f8cd3918051b7`.
+Metodgranskning · Kontrollerad 2026-11-04 · Granskad kodversion `c312dfacbd3165b7347b78788ec3067eb6eb2226`.
 
-C4 granskad på exakt 0773f76 mot db65a54: ej godkänd, C4-01/C4-02 (P2) i marginalens numeriska diagnostik/felkontrakt. 353 momentumtester/906 motorprov; egen revisionslåst audit med 600 Decimal-jämförelser och 300 likvidationsavstämningar passerar och reproducerar fynden. C01 omgranskad done för ledgerkompletteringen, C02 fortsatt done; C03/C04/C05 in_progress. 12/40. Endast syntetiskt; nästa del väntar på Edwins beslut efter godkänd C4.
+C4 omgranskad på exakt c312dfa mot deb9c8f: ej godkänd. C4-01 och tidigare C4-02-reproduktioner stängda; ny regression C4-03 (P2), stor heltalssats läcker OverflowError. 367 momentumtester/920 motorprov passerar; egen revisionslåst audit med 600 Decimal-jämförelser, 300 likvidationsavstämningar och jämförelse av nya felet mot basen. C01/C02 fortsatt done, C03/C04/C05 in_progress. 12/40. Endast syntetiskt; ingen senare leverans beställd.
 
 ## Uppdateringsregler
 
@@ -114,7 +114,8 @@ C4 granskad på exakt 0773f76 mot db65a54: ej godkänd, C4-01/C4-02 (P2) i margi
   - Underlag: [docs/momentum-C2-granskning-1d9359f.md](momentum-C2-granskning-1d9359f.md) — Codex granskar exakt 1d9359f: C01:s funding_net/avstämning verifierad; C2-01/C2-02 i funding-API återstår. 129 riktade prov/718 motorprov och oberoende Decimal-kontroller passerar.
   - Underlag: [engine/traderlab/momentum_ledger.py](../engine/traderlab/momentum_ledger.py) — Kompletterad i C4: Account.liquidation_adjustment och avstämning C = C0 + realized − costs − funding_net + liquidation_adjustment − q × avg_price; tidigare 82 ledgertester oförändrade och godkända.
   - Underlag: [docs/momentum-C4-granskning-0773f76.md](momentum-C4-granskning-0773f76.md) — Codex omgranskar ledgerkompletteringen på 0773f76: signerad ändlig liquidation_adjustment, 300 egna avstämningsfall och två partial-/fundingförlopp, 200 identiska före/efterfyllningar; 82 ledgertester och 906 motorprov passerar. Marginalfynd C4-01/C4-02 ändrar inte ledgeridentiteten.
-  - Återöppningen efter C4:s ledgerändring är omgranskad på exakt 0773f76: ledger/avstämning och tidigare giltiga belopp verifierade. C4:s marginalmodul är ej godkänd (C4-01/C4-02); full integration kvar under C05.
+  - Underlag: [docs/momentum-C4-granskning-c312dfa.md](momentum-C4-granskning-c312dfa.md) — Ledgern oförändrad mot deb9c8f; återverifierad på c312dfa med 300 avstämningsfall, två partial-/fundingförlopp och 200 identiska normalfyllningar mot ledgern före C4. C4-03 ligger i marginalens satsvalidering och ogiltigförklarar inte ledgergodkännandet.
+  - Ledgerkompletteringen fortsatt komponentgodkänd; oförändrad mot deb9c8f och oberoende återverifierad på c312dfa. Marginalens C4-03 påverkar inte ledgeridentiteten. Full integration kvar under C05.
 - [x] **MOM-C02** Implementera handelsband, avsikter och riskprioritet utan dold ombalansering
   - Underlag: [engine/traderlab/momentum_risk.py](../engine/traderlab/momentum_risk.py) — mom-risk/1.0.0: rena tillståndsövergångar vid 4H-gränser, band 2 pp, dagsbeslut i §7:s ordning, sammanslagning terminal > permanent > dag > cap/platt > normal, dagsreset och lock_day.
   - Underlag: [engine/tests/test_momentum_risk.py](../engine/tests/test_momentum_risk.py) — 61 syntetiska tester mot O6, O14, O15 och handräkning med exakta float-gränser; 17 av 19 riktade felprov fångade, två bevisat ekvivalenta.
@@ -124,6 +125,7 @@ C4 granskad på exakt 0773f76 mot db65a54: ej godkänd, C4-01/C4-02 (P2) i margi
   - Underlag: [docs/momentum-C3-granskning-8c19618.md](momentum-C3-granskning-8c19618.md) — Codex godkänner exakt C3-revision 8c19618 efter rättad likviderad terminal och strikt signalkontrakt. 307 riktade prov/860 motorprov samt 400 egna oförändrade referensbeslut passerar. Full event-/marginal-/intrastapelintegration återstår.
   - Underlag: [engine/tests/test_momentum_margin.py](../engine/tests/test_momentum_margin.py) — C4-kompatibilitet: riskmodulen oförändrad; 101 risktester passerar med den kompletterade ledgern och nollkontot följer C3:s likvidationsväg inklusive terminal.
   - Underlag: [docs/momentum-C4-granskning-0773f76.md](momentum-C4-granskning-0773f76.md) — Oförändrad C3-källa på 0773f76, 101 risktester och sju egna absorberande gränser över midnatt till terminal passerar med kompletterad ledger. Komponentgodkännande bevaras.
+  - Underlag: [docs/momentum-C4-granskning-c312dfa.md](momentum-C4-granskning-c312dfa.md) — Riskmodulen oförändrad mot deb9c8f; 101 risktester och sju egna absorberande gränser över midnatt till terminal återverifierade på c312dfa. Komponentgodkännande bevaras.
   - Komponentgodkänd på exakt 8c19618: band, avsikter och prioritet inklusive C1-komposition. Full eventordning verifieras under C03/C05; ompröva vid ändrad riskmodul. Kompatibilitet på 0773f76 oberoende verifierad i C4-granskningen.
 - [ ] **MOM-C03** Implementera funding, dagsreset och första/sista event enligt låst kontrakt **Pågår.**
   - Underlag: [engine/traderlab/momentum_funding.py](../engine/traderlab/momentum_funding.py) — mom-funding/1.0.0: exakta fundingevent, betalning q × M_ref × ränta, mark_open-regel, stress bara på betalda belopp, dubbelbokningsskydd per konto och scenario.
@@ -137,6 +139,7 @@ C4 granskad på exakt 0773f76 mot db65a54: ej godkänd, C4-01/C4-02 (P2) i margi
   - Underlag: [docs/momentum-C3-granskning-d77e353.md](momentum-C3-granskning-d77e353.md) — Codex granskar exakt d77e353: 267 riktade prov/820 motorprov och 400 egna beslutsfall passerar; C3-01 terminal efter likvidation och C3-02 signalkontrakt behöver rättas före godkännande.
   - Underlag: [docs/momentum-C3-granskning-8c19618.md](momentum-C3-granskning-8c19618.md) — Codex godkänner exakt C3-revision 8c19618 efter rättad likviderad terminal och strikt signalkontrakt. 307 riktade prov/860 motorprov samt 400 egna oförändrade referensbeslut passerar. Full event-/marginal-/intrastapelintegration återstår.
   - Underlag: [docs/momentum-C4-granskning-0773f76.md](momentum-C4-granskning-0773f76.md) — C4 på 0773f76: fyra egna A/B-öppningskompositioner och fyra debit/adverse-kompositioner med båda satserna passerar. Ingen full eventloop eller slutverifierad första/sista-eventintegration.
+  - Underlag: [docs/momentum-C4-granskning-c312dfa.md](momentum-C4-granskning-c312dfa.md) — Fyra öppningskompositioner och fyra intrastapelkompositioner återverifierade på c312dfa; full eventordning och integration återstår.
   - Funding C2 och ren dagsreset C3 godkända; första/sista event och full funding-/marginalintegration återstår.
 - [ ] **MOM-C04** Implementera 2 % dagsstopp, 15 % permanent stopp och konservativ 20 %-riskkontroll **Pågår.**
   - Underlag: [engine/traderlab/momentum_risk.py](../engine/traderlab/momentum_risk.py) — mom-risk/1.0.0: rena tillståndsövergångar vid 4H-gränser, band 2 pp, dagsbeslut i §7:s ordning, sammanslagning terminal > permanent > dag > cap/platt > normal, dagsreset och lock_day.
@@ -146,6 +149,7 @@ C4 granskad på exakt 0773f76 mot db65a54: ej godkänd, C4-01/C4-02 (P2) i margi
   - Underlag: [engine/tests/test_momentum_risk.py](../engine/tests/test_momentum_risk.py) — Rättning av C3-01/C3-02 från granskningen av d77e353: ingen terminalavsikt för likviderat konto, strikt validering av signalens available, version och tider. 101 risktester; 38 nya fäller d77e353; 22 av 24 riktade felprov fångade, två bevisat ekvivalenta.
   - Underlag: [docs/momentum-C3-granskning-8c19618.md](momentum-C3-granskning-8c19618.md) — Codex godkänner exakt C3-revision 8c19618 efter rättad likviderad terminal och strikt signalkontrakt. 307 riktade prov/860 motorprov samt 400 egna oförändrade referensbeslut passerar. Full event-/marginal-/intrastapelintegration återstår.
   - Underlag: [docs/momentum-C4-granskning-0773f76.md](momentum-C4-granskning-0773f76.md) — C4 på 0773f76: likviderat nollkonto följer C3 över midnatt till terminal utan avsikter. Oförändrad riskmodul; intrastapel-bound och full eventintegration återstår.
+  - Underlag: [docs/momentum-C4-granskning-c312dfa.md](momentum-C4-granskning-c312dfa.md) — Absorberande nollkonto och C3-terminal återverifierade på c312dfa; full intrastapel-bound och eventintegration återstår.
   - C3:s rena dags-/permanentstopp godkända på 8c19618. Konservativ intrastapel-bound och eventintegration återstår.
 - [ ] **MOM-C05** Verifiera gap, basis, likvidation och riskordning med handräknade prov och kodgranskning **Pågår.**
   - Underlag: [engine/tests/test_momentum_ledger.py](../engine/tests/test_momentum_ledger.py) — 40 syntetiska tester mot orakel O1–O4, O11, O14, O15 och handräkning; 14 riktade felprov fångade.
@@ -161,7 +165,8 @@ C4 granskad på exakt 0773f76 mot db65a54: ej godkänd, C4-01/C4-02 (P2) i margi
   - Underlag: [docs/momentum-margin-C4.md](momentum-margin-C4.md) — API, bokföringsidentiteter, tillstånd, gräns mot eventloop, verifiering och påverkan för C4.
   - Underlag: [docs/momentum-C4-granskning-0773f76.md](momentum-C4-granskning-0773f76.md) — C4 ej godkänd på 0773f76: C4-01 P2 shorttröskelns overflow ger felaktigt nollpris; C4-02 P2 feltyper läcker TypeError/AttributeError. 353 momentum-/906 motorprov passerar; egen revisionslåst audit reproducerar fynden och verifierar 600 Decimal-jämförelser, 300 resetidentiteter och avgränsad komposition.
   - Underlag: [engine/tests/test_momentum_margin.py](../engine/tests/test_momentum_margin.py) — Rättning av C4-01/C4-02 från granskningen av 0773f76: nämnaren i trösklarna kontrolleras före division; sats och kontotyp valideras före konvertering och fältåtkomst. 60 marginaltester; 8 nya fäller 0773f76; 19 riktade felprov fångade.
-  - C4 ej godkänd på exakt 0773f76: C4-01/C4-02 kräver numerisk/API-rättning och omgranskning. Normala marginal-/resetfall samt avgränsad komposition verifierade syntetiskt. Full event-/riskordning återstår. Ingen senare leverans beställd; nästa del väntar på Edwins beslut efter godkänd C4.
+  - Underlag: [docs/momentum-C4-granskning-c312dfa.md](momentum-C4-granskning-c312dfa.md) — C4 ej godkänd på c312dfa: C4-01 och tidigare C4-02-feltyper ger kontrollerade fel; nytt P2-fynd C4-03 ger OverflowError för 10**400 via konstruktion/replace/threshold, medan diffbasen gav MarginError. 367 momentumtester/920 motorprov och egen revisionslåst audit passerar inklusive reproducerat fynd. 600 Decimal-fall och 300 resetidentiteter återverifierade.
+  - C4 ej godkänd på exakt c312dfa. Tidigare reproduktioner C4-01/C4-02 stängda, ny regression C4-03 kräver kontrollerad satsvalidering och omgranskning. Normala marginal-/resetfall och avgränsad komposition återverifierade syntetiskt. Full event-/riskordning återstår. Ingen senare leverans beställd.
 
 ## D. Utvärderare och jämförelser
 
