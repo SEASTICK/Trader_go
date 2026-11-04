@@ -236,7 +236,9 @@ C6 GODKÄND på exakt a84e0d8 mot 790d477, endast syntetiskt. C6-02 P2 stängt: 
 
 0/5 verifierade.
 
-- [ ] **MOM-D01** Implementera de förregistrerade kontrollkontona på gemensam horisont och kapitalbas
+- [ ] **MOM-D01** Implementera de förregistrerade kontrollkontona på gemensam horisont och kapitalbas **Pågår.**
+  - Underlag: [engine/traderlab/momentum_control.py](../engine/traderlab/momentum_control.py) — D1 för Codex granskning, inte godkänd: mom-control/1.0.0, mom7/mom14/mom28 med 100 000 vardera ovanpå godkänd eventmotor, obrutna förlopp, OGILTIG_DATA utan fallback. Återstår: buy_and_hold, legacy, no_vol, blandningar, kontrollkontonas bound (D1-Q01/Q02 öppna).
+  - Underlag: [docs/momentum-control-D1.md](momentum-control-D1.md) — API, avvikelse om O9 (capbrott inom band enligt §7/C3), verifiering: 26 kontrolltester, 566 momentumtester/1 119 motortester; 14 av 14 riktade felprov fångade.
 - [ ] **MOM-D02** Verifiera 50/50- och 1/3-blandningar, bruttoexponering och oberoende risklås
 - [ ] **MOM-D03** Implementera 2,5× kostnader, fundingstress, fördröjning och låst ordningskänslighet
 - [ ] **MOM-D04** Verifiera statistik, osäkerhet, DSR och sex booleska kriterier från fullständiga serier

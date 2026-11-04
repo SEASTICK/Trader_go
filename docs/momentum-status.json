@@ -839,8 +839,17 @@
         {
           "id": "MOM-D01",
           "title": "Implementera de förregistrerade kontrollkontona på gemensam horisont och kapitalbas",
-          "status": "todo",
-          "evidence": [],
+          "status": "in_progress",
+          "evidence": [
+            {
+              "file": "engine/traderlab/momentum_control.py",
+              "detail": "D1 för Codex granskning, inte godkänd: mom-control/1.0.0, mom7/mom14/mom28 med 100 000 vardera ovanpå godkänd eventmotor, obrutna förlopp, OGILTIG_DATA utan fallback. Återstår: buy_and_hold, legacy, no_vol, blandningar, kontrollkontonas bound (D1-Q01/Q02 öppna)."
+            },
+            {
+              "file": "docs/momentum-control-D1.md",
+              "detail": "API, avvikelse om O9 (capbrott inom band enligt §7/C3), verifiering: 26 kontrolltester, 566 momentumtester/1 119 motortester; 14 av 14 riktade felprov fångade."
+            }
+          ],
           "note": ""
         },
         {
