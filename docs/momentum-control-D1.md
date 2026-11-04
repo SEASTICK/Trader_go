@@ -138,6 +138,27 @@ Underlag: [Codex granskning av 720e1f8](momentum-D1-granskning-720e1f8.md).
     2022/2023. Det permanenta stoppet utlöses exakt där Decimal-facit med obruten peak anger, och ett årsreset skulle
     skjuta upp det.
 
+## Rättning D1-04, D1-06 och D1-07 (revision 4)
+
+Underlag: [Codex granskning av aa2c866](momentum-D1-granskning-aa2c866.md).
+
+- **D1-06:** pytests körtider tas bort ur sammanfattningen, så att `--check` jämför bara reproducerbara utfall.
+- **D1-04:** orsaken läses ur pytests JUnit-XML: type-attributet, annars undantagsnamnet i meddelandet; rena
+  `assert` och `pytest.raises` ger AssertionError respektive Failed. FileNotFoundError, ImportError och andra
+  miljöundantag ger MILJÖFEL och gör att skriptet fallerar. Ett inbyggt självtest injicerar Codex miljöfel, en
+  autouse-fixtur med FileNotFoundError, och kräver att det blir MILJÖFEL. Varje fångst sparar prov, orsak och typ.
+- **D1-07:** en riktig mutant för delat state: `run_controls` låter alla tre komponenterna dela mom7:s förlopp, med
+  peak, lås och funding-id. Den fångas. Den tidigare identitetsmutanten finns kvar som eget identitetsprov.
+- **Snabbare felprov på Edwins begäran:** varje fel kör först sina riktade prov. Fallerar ett av dem är felet fångat
+  av ett verkligt prov. Passerar de körs hela D1-sviten innan felet får klassas som MISSAD. Matrisen tar cirka två
+  minuter i stället för cirka 25.
+- **Utfall:** baslinjen är 65 passerade prov och självtestet ger MILJÖFEL (FileNotFoundError). 31 fel fångas med
+  orsakerna AssertionError, Failed, ControlError, EventError och OverflowError; 0 missas och 1 är ekvivalent.
+  `--check` ger PASS.
+- **O9:** dagsstoppsprovet kräver nu en avsikt innan det läser dess typ.
+- **Verifiering:** 605 momentumtester och 1 158 motortester passerar, liksom A1-oraklet, 25 av 25 momentum-audits och
+  alla fyra checklistor.
+
 ## Inte i D1
 
 - buy_and_hold, ema_legacy och bb_legacy samt no_vol.

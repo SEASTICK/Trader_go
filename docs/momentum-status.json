@@ -880,6 +880,10 @@
             {
               "file": "research/audits/momentum-d1-aa2c866/verification.json",
               "detail": "Git-show-låsta källor och skyddskontroll; 3 288 Decimal-signaljämförelser, tre fulla enkla förlopp samt varierande självständig ledger för varje close/dag, 2023-01-03 04:00-årsskiftesfacit och egen setupfelinjektion som felklassas FÅNGAD. Alla 30 sparade fångster individuellt omprövade med verkliga testfel; ny audit --check passerar, totalt 25 audits."
+            },
+            {
+              "file": "scripts/momentum-d1-mutations.py",
+              "detail": "Rättning av D1-04/D1-06/D1-07 från granskningen av aa2c866, för Codex omgranskning, inte godkänd: orsaksklassning ur JUnit-XML med miljöfelssjälvtest, körtider utanför --check, verklig mutant för delat förlopp/state, riktade prov med full svit före MISSAD. 31 fångade, 0 missade, 1 ekvivalent."
             }
           ],
           "note": "D1 revision 3 EJ GODKÄND på aa2c866. D1-05 stängt; D1-01/D1-02 fortsatt åtgärdade. D1-03:s oberoende belopps- och årsskiftesfacit verifierade, men faktisk stateisoleringsmutation saknas (D1-07). D1-04:s setup-/miljöklassning och D1-06:s tidsberoende --check återstår. MOM-D01 kan inte bli done av D1 ensam. buy_and_hold, legacy, no_vol, blandningar och komponent-bound återstår; D1-Q01/Q02 är inte avgjorda här."

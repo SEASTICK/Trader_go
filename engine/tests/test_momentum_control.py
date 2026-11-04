@@ -167,6 +167,7 @@ def test_O9_component_full_capital_vs_main():
     # Nedgång till 97,7: komponenten −2,07 % utlöser dagsstopp, main −0,69 % gör det inte.
     _, dn_c = _o9_run(97.7, 1.0)
     _, dn_m = _o9_run(97.7, 1 / 3)
+    assert dn_c.step_record.intent is not None, "dagsstopp väntas för komponenten vid −2,07 %"
     assert dn_c.step_record.intent.kind == R.DAY and dn_c.state.account.q == 0
     assert dn_m.step_record.intent is None or dn_m.step_record.intent.kind != R.DAY
 

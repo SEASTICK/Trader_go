@@ -5,217 +5,318 @@
     "tests/test_momentum_control.py",
     "tests/test_momentum_control_integration.py"
   ],
-  "baslinje": "65 passed in 55.85s",
+  "baslinje": "65 passed",
+  "miljöfel_självtest": "MILJÖFEL (FileNotFoundError) som väntat",
   "felprov": [
     {
       "fel": "main-s i stället för s_h",
       "fil": "momentum_control.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed in 0.45s",
-      "första_fel": "tests/test_momentum_control.py::test_component_signals_match_independent_computation"
+      "pytest": "1 failed, 64 deselected",
+      "första_fel": "tests.test_momentum_control::test_component_signals_match_independent_computation",
+      "orsak": "ControlError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "växla 7/14",
       "fil": "momentum_control.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed in 0.50s",
-      "första_fel": "tests/test_momentum_control.py::test_component_signals_match_independent_computation"
+      "pytest": "1 failed, 64 deselected",
+      "första_fel": "tests.test_momentum_control::test_component_signals_match_independent_computation",
+      "orsak": "AssertionError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "framtida close",
       "fil": "momentum_signal.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed in 0.54s",
-      "första_fel": "tests/test_momentum_control.py::test_component_signals_match_independent_computation"
+      "pytest": "1 failed, 64 deselected",
+      "första_fel": "tests.test_momentum_control::test_component_signals_match_independent_computation",
+      "orsak": "AssertionError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "cap = 1 alltid",
       "fil": "momentum_control.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed in 0.36s",
-      "första_fel": "tests/test_momentum_control.py::test_component_signals_match_independent_computation"
+      "pytest": "1 failed, 64 deselected",
+      "första_fel": "tests.test_momentum_control::test_component_signals_match_independent_computation",
+      "orsak": "ControlError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "komponentens band avstängt",
       "fil": "momentum_risk.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 3 passed in 0.84s",
-      "första_fel": "tests/test_momentum_control.py::test_O9_component_full_capital_vs_main"
+      "pytest": "1 failed, 63 deselected",
+      "första_fel": "tests.test_momentum_control::test_O9_component_full_capital_vs_main",
+      "orsak": "AssertionError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "komponentens dagsstopp avstängt",
       "fil": "momentum_risk.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 3 passed in 0.82s",
-      "första_fel": "tests/test_momentum_control.py::test_O9_component_full_capital_vs_main"
+      "pytest": "1 failed, 63 deselected",
+      "första_fel": "tests.test_momentum_control::test_O9_component_full_capital_vs_main",
+      "orsak": "AssertionError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "komponentens permanenta stopp avstängt",
       "fil": "momentum_risk.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 49 passed in 33.93s",
-      "första_fel": "tests/test_momentum_control_integration.py::test_day_and_permanent_stop_exact_float_boundaries"
+      "pytest": "1 failed, 63 deselected",
+      "första_fel": "tests.test_momentum_control_integration::test_day_and_permanent_stop_exact_float_boundaries",
+      "orsak": "AssertionError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "A på nya q",
       "fil": "momentum_event.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 44 passed in 28.91s",
-      "första_fel": "tests/test_momentum_control_integration.py::test_O5_O16_component_entry_decrease_exit[A]"
+      "pytest": "1 failed, 63 deselected",
+      "första_fel": "tests.test_momentum_control_integration::test_O5_O16_component_entry_decrease_exit[A]",
+      "orsak": "AssertionError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "B på gamla q",
       "fil": "momentum_event.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 45 passed in 28.77s",
-      "första_fel": "tests/test_momentum_control_integration.py::test_O5_O16_component_entry_decrease_exit[B]"
+      "pytest": "1 failed, 1 passed, 63 deselected",
+      "första_fel": "tests.test_momentum_control_integration::test_O5_O16_component_entry_decrease_exit[B]",
+      "orsak": "AssertionError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "normal återupplivad efter riskexit",
       "fil": "momentum_risk.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 51 passed in 33.19s",
-      "första_fel": "tests/test_momentum_control_integration.py::test_O6_component_day_stop_with_normal_intent_and_reset"
+      "pytest": "1 failed, 64 deselected",
+      "första_fel": "tests.test_momentum_control_integration::test_O6_component_day_stop_with_normal_intent_and_reset",
+      "orsak": "AssertionError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "köp efter permanent stopp",
       "fil": "momentum_risk.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 50 passed in 33.44s",
-      "första_fel": "tests/test_momentum_control_integration.py::test_public_component_run_permanent_stop_holds_over_days_and_other_account_unaffected"
+      "pytest": "1 failed, 64 deselected",
+      "första_fel": "tests.test_momentum_control_integration::test_public_component_run_permanent_stop_holds_over_days_and_other_account_unaffected",
+      "orsak": "AssertionError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "startpunkt tappad",
       "fil": "momentum_event.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 4 passed in 8.69s",
-      "första_fel": "tests/test_momentum_control.py::test_full_horizon_per_component"
+      "pytest": "1 failed, 63 deselected",
+      "första_fel": "tests.test_momentum_control::test_full_horizon_per_component",
+      "orsak": "AssertionError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "sista close/terminalpunkt tappad",
       "fil": "momentum_event.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 4 passed in 8.75s",
-      "första_fel": "tests/test_momentum_control.py::test_full_horizon_per_component"
+      "pytest": "1 failed, 63 deselected",
+      "första_fel": "tests.test_momentum_control::test_full_horizon_per_component",
+      "orsak": "AssertionError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "terminalkostnad tappad",
       "fil": "momentum_ledger.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 2 passed in 0.92s",
-      "första_fel": "tests/test_momentum_control.py::test_O2_full_capital_entry"
+      "pytest": "1 failed, 63 deselected",
+      "första_fel": "tests.test_momentum_control::test_O2_full_capital_entry",
+      "orsak": "AssertionError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "kort horisont godtas",
       "fil": "momentum_control.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 10 passed in 25.40s",
-      "första_fel": "tests/test_momentum_control.py::test_invalid_market_is_rejected_before_any_computation[lucka]"
+      "pytest": "1 failed, 55 deselected",
+      "första_fel": "tests.test_momentum_control::test_invalid_market_is_rejected_before_any_computation[lucka]",
+      "orsak": "Failed",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "otillgänglig signal godtas som platt",
       "fil": "momentum_control.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 20 passed in 26.64s",
-      "första_fel": "tests/test_momentum_control.py::test_invalid_signal_day_via_constant_window_is_rejected"
+      "pytest": "1 failed, 64 deselected",
+      "första_fel": "tests.test_momentum_control::test_invalid_signal_day_via_constant_window_is_rejected",
+      "orsak": "EventError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "adapterns earliest_fill okontrollerad",
       "fil": "momentum_control.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 28 passed in 26.24s",
-      "första_fel": "tests/test_momentum_control_integration.py::test_adapter_rejects_inconsistent_source_rows[earliest_fill]"
+      "pytest": "1 failed, 2 passed, 57 deselected",
+      "första_fel": "tests.test_momentum_control_integration::test_adapter_rejects_inconsistent_source_rows[earliest_fill]",
+      "orsak": "Failed",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "adapterns koherens okontrollerad",
       "fil": "momentum_control.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 26 passed in 26.27s",
-      "första_fel": "tests/test_momentum_control_integration.py::test_adapter_rejects_inconsistent_source_rows[s_main]"
+      "pytest": "1 failed, 57 deselected",
+      "första_fel": "tests.test_momentum_control_integration::test_adapter_rejects_inconsistent_source_rows[s_main]",
+      "orsak": "Failed",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "adapterns cap/vol okontrollerad",
       "fil": "momentum_control.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 31 passed in 26.54s",
-      "första_fel": "tests/test_momentum_control_integration.py::test_adapter_rejects_inconsistent_source_rows[vol_nan]"
+      "pytest": "1 failed, 5 passed, 57 deselected",
+      "första_fel": "tests.test_momentum_control_integration::test_adapter_rejects_inconsistent_source_rows[vol_nan]",
+      "orsak": "Failed",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "strikt bool available okontrollerad",
       "fil": "momentum_control.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 40 passed in 26.66s",
-      "första_fel": "tests/test_momentum_control_integration.py::test_direct_construction_is_validated[available_int]"
+      "pytest": "1 failed, 13 passed, 50 deselected",
+      "första_fel": "tests.test_momentum_control_integration::test_direct_construction_is_validated[available_int]",
+      "orsak": "Failed",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "underlaget återvalideras inte",
       "fil": "momentum_control.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 43 passed in 32.19s",
-      "första_fel": "tests/test_momentum_control_integration.py::test_market_owns_a_copy_and_detects_later_mutation"
+      "pytest": "1 failed, 64 deselected",
+      "första_fel": "tests.test_momentum_control_integration::test_market_owns_a_copy_and_detects_later_mutation",
+      "orsak": "Failed",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "underlaget kopieras inte",
       "fil": "momentum_control.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 43 passed in 31.47s",
-      "första_fel": "tests/test_momentum_control_integration.py::test_market_owns_a_copy_and_detects_later_mutation"
+      "pytest": "1 failed, 64 deselected",
+      "första_fel": "tests.test_momentum_control_integration::test_market_owns_a_copy_and_detects_later_mutation",
+      "orsak": "ControlError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "2025-data i tabeller godtas",
       "fil": "momentum_control.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 12 passed in 27.63s",
-      "första_fel": "tests/test_momentum_control.py::test_invalid_market_is_rejected_before_any_computation[2025_mark]"
+      "pytest": "1 failed, 2 passed, 55 deselected",
+      "första_fel": "tests.test_momentum_control::test_invalid_market_is_rejected_before_any_computation[2025_mark]",
+      "orsak": "AssertionError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "2025-funding godtas",
       "fil": "momentum_control.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 13 passed in 26.01s",
-      "första_fel": "tests/test_momentum_control.py::test_invalid_market_is_rejected_before_any_computation[2025_funding]"
+      "pytest": "1 failed, 3 passed, 55 deselected",
+      "första_fel": "tests.test_momentum_control::test_invalid_market_is_rejected_before_any_computation[2025_funding]",
+      "orsak": "Failed",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "legacy-identitet saknas",
       "fil": "momentum_control.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 4 passed in 9.05s",
-      "första_fel": "tests/test_momentum_control.py::test_full_horizon_per_component"
+      "pytest": "1 failed, 63 deselected",
+      "första_fel": "tests.test_momentum_control::test_full_horizon_per_component",
+      "orsak": "AssertionError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "pre-start räknas inte",
       "fil": "momentum_control.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 8 passed in 22.24s",
-      "första_fel": "tests/test_momentum_control.py::test_funding_ids_are_booked_independently_per_account_and_pre_start_counted"
+      "pytest": "1 failed, 64 deselected",
+      "första_fel": "tests.test_momentum_control::test_funding_ids_are_booked_independently_per_account_and_pre_start_counted",
+      "orsak": "AssertionError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
-      "fel": "delad kontoidentitet/state mellan konton",
+      "fel": "delat förlopp och state mellan konton (peak, lås, funding-id)",
       "fil": "momentum_control.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 4 passed in 9.09s",
-      "första_fel": "tests/test_momentum_control.py::test_full_horizon_per_component"
+      "pytest": "1 failed, 64 deselected",
+      "första_fel": "tests.test_momentum_control::test_components_differ_from_each_other_and_are_isolated",
+      "orsak": "AssertionError",
+      "typ": "failure",
+      "körda_prov": "riktade"
+    },
+    {
+      "fel": "delad kontoidentitet mellan konton",
+      "fil": "momentum_control.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 63 deselected",
+      "första_fel": "tests.test_momentum_control::test_full_horizon_per_component",
+      "orsak": "AssertionError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "peakreset vid årsskifte",
       "fil": "momentum_risk.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 64 passed in 55.50s",
-      "första_fel": "tests/test_momentum_control_integration.py::test_permanent_stop_across_new_year_uses_unbroken_peak"
+      "pytest": "1 failed, 64 deselected",
+      "första_fel": "tests.test_momentum_control_integration::test_permanent_stop_across_new_year_uses_unbroken_peak",
+      "orsak": "AssertionError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "adapterns dubblettkontroll av",
       "fil": "momentum_control.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 62 passed in 52.35s",
-      "första_fel": "tests/test_momentum_control_integration.py::test_adapter_huge_cap_and_duplicate_days_are_controlled"
+      "pytest": "1 failed, 64 deselected",
+      "första_fel": "tests.test_momentum_control_integration::test_adapter_huge_cap_and_duplicate_days_are_controlled",
+      "orsak": "AssertionError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "adapterns numerik efter aritmetik",
       "fil": "momentum_control.py",
       "utfall": "FÅNGAD",
-      "pytest": "1 failed, 62 passed in 53.22s",
-      "första_fel": "tests/test_momentum_control_integration.py::test_adapter_huge_cap_and_duplicate_days_are_controlled"
+      "pytest": "1 failed, 64 deselected",
+      "första_fel": "tests.test_momentum_control_integration::test_adapter_huge_cap_and_duplicate_days_are_controlled",
+      "orsak": "OverflowError",
+      "typ": "failure",
+      "körda_prov": "riktade"
     },
     {
       "fel": "observationsdagar i stället för kalenderdagar",
@@ -224,7 +325,7 @@
       "motivering": "Market kräver exakt 4H-raster från 2021-11-01 till terminal, så varje kalenderdag är komplett. Den h:te föregående observationen är då exakt h kalenderdagar bak, och mutationen ger identiska signaler på varje giltigt D1-underlag. Skillnaden prövas i signalmodulens egna B-prov med ofullständiga dagar."
     }
   ],
-  "fångade": 30,
+  "fångade": 31,
   "missade": 0,
   "ekvivalenta": 1,
   "ej_tillämpliga": 0
