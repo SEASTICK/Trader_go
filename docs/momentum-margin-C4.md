@@ -2,6 +2,8 @@
 
 Datum 2026-11-04. Rättad efter [Codex granskning av 0773f76](momentum-C4-granskning-0773f76.md): trösklarnas
 nämnare kontrolleras före division (C4-01) och sats och kontotyp valideras före konvertering och fältåtkomst (C4-02).
+Efter [omgranskningen av c312dfa](momentum-C4-granskning-c312dfa.md): ett reellt tal som inte kan bli en ändlig float,
+till exempel heltalet 10**400, ger MarginError i stället för OverflowError (C4-03).
 Underlag: [research/h0017-protokoll.md](../research/h0017-protokoll.md) §4, §6, §8.1–§8.4, §9, D21
 och [uppdraget](claude-uppdrag-momentum-C4.md). Implementation för Codex granskning, inte godkänd. Endast syntetiska
 konton och prispunkter; ingen marknadshistorik har lästs och ingen H-0017-körning har startats. Protokoll, register,
@@ -56,7 +58,9 @@ Intrastapel-drawdown-bound (§10.2) är en separat leverans och inget handelssto
 
 ## Verifiering
 
-- [engine/tests/test_momentum_margin.py](../engine/tests/test_momentum_margin.py): 60 tester, alla godkända. De 14 nya
+- [engine/tests/test_momentum_margin.py](../engine/tests/test_momentum_margin.py): 64 tester, alla godkända. Fyra
+  regressioner för C4-03: ±10**400 som sats vid konstruktion, replace och `threshold` med oförändrade indata, 10**400 som
+  pris i `check` och `check_bar`, och vanliga satser oförändrade. 3 av dem fäller c312dfa. Tidigare: De 14 nya
   regressionerna för granskningen: nämnaröverflow i short-tröskeln vid båda satserna (Codex exakta värden) med
   kontrollerat fel i både `threshold` och `check` och oförändrat konto; vanliga gränser, legitim nolltröskel och None;
   komplex, text, None, bytes och lista som sats vid konstruktion, replace och `threshold`; numpy-satser; fyra feltyper
@@ -77,9 +81,9 @@ Intrastapel-drawdown-bound (§10.2) är en separat leverans och inget handelssto
     inom stapeln efter betald och före mottagen funding, där omvänd ordning skulle dölja träffen, och ingen
     återupplivning av en senare kredit. C3:s likvidationsväg med terminal. O18: likviderat delkonto står på noll
     medan ett separat överlevande konto handlar vidare. Tidigare modulers utfall med standardvärdet 0.
-- Alla momentumtester (signal, ledger, funding, risk, marginal): 367 godkända.
-- Riktade felprov efter rättningen: de 16 tidigare och 3 nya (nämnare utan kontroll, sats utan typkontroll,
-  kontotyp okontrollerad). Alla 19 fångas.
+- Alla momentumtester (signal, ledger, funding, risk, marginal): 371 godkända.
+- Riktade felprov efter rättningarna: de 16 ursprungliga, 3 för C4-01/C4-02 (nämnare utan kontroll, sats utan
+  typkontroll, kontotyp okontrollerad) och 1 för C4-03 (OverflowError fångas inte). Alla 20 fångas.
 - Riktade felprov i första leveransen: 16 avsiktliga fel i marginalmodulen, ledgern och kompositionstestet. Alla fångades: villkor åt fel
   håll, strikt `<`, epsilon, fel extrem för short och för long, fel sats, tyst klippt negativt E, dubbel nollställning,
   gammal prövning accepterad, tappad justering, raderade kostnad/funding, justering saknas i avstämningen, justering
@@ -93,6 +97,12 @@ Intrastapel-drawdown-bound (§10.2) är en separat leverans och inget handelssto
 Ledgern ändras (nytt fält och ny avstämningsterm), så MOM-C01 återöppnas. Med standardvärdet 0 är alla tidigare
 belopp och identiteter oförändrade: 82 ledger-, 88 funding-, 101 risk- och 36 signaltester passerar utan ändring.
 Funding- och riskmodulerna är byte-identiska mot sina godkända revisioner; MOM-C02 behålls med kompatibilitetsunderlag.
+
+## Observation till granskaren
+
+Ledgerns gemensamma `_num` (C1, godkänd) kastar fortfarande OverflowError för ett heltal som 10**400 i till exempel
+`Account(C=10**400)`. C4-03 är rättad i marginalmodulens egen validering utan att ändra den godkända ledgern; om samma
+kontrakt ska gälla ledgern är det en separat C1-ändring som skulle återöppna MOM-C01.
 
 ## Utanför C4
 

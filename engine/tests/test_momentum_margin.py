@@ -388,3 +388,32 @@ def test_public_entry_points_reject_non_accounts(bad):
         M.liquidate(bad, st(), chk)
     with pytest.raises(M.MarginError, match="Fel typ"):
         M.check_bar(acct, "tillstånd", BAR, 100, 110, 90, 100)
+
+
+# Regressioner för Codex omgranskning av c312dfa (C4-03).
+
+@pytest.mark.parametrize("big", [10 ** 400, -(10 ** 400)])
+def test_huge_integer_rate_is_margin_error(big):
+    state = st()
+    acct = L.Account.open(1000)
+    with pytest.raises(M.MarginError, match="Underhållssatsen"):
+        M.MarginState("main", "A", big)
+    with pytest.raises(M.MarginError, match="Underhållssatsen"):
+        dataclasses.replace(state, mmr=big)
+    with pytest.raises(M.MarginError, match="Underhållssatsen"):
+        M.threshold(acct, big)
+    assert state == st() and acct == L.Account.open(1000)
+
+
+def test_huge_integer_price_is_margin_error():
+    acct = L.Account(C=-60_000.0, q=1000.0, deposit=40_000.0, avg_price=100.0)
+    with pytest.raises(M.MarginError, match="ändligt flyttal"):
+        M.check(acct, st(), M.GAP, 10 ** 400, M.MARK_OPEN, BAR)
+    with pytest.raises(M.MarginError, match="ändligt flyttal"):
+        M.check_bar(acct, st(), BAR, 100, 10 ** 400, 90, 100)
+
+
+def test_ordinary_integer_and_float_rates_unchanged():
+    assert M.MarginState("main", "A", 0.05).mmr == 0.05 and M.MarginState("main", "A", 0.005).mmr == 0.005
+    with pytest.raises(M.MarginError, match="Underhållssatsen"):
+        M.MarginState("main", "A", 1)                                # vanligt heltal: giltigt tal men ingen registrerad sats

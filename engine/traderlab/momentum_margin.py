@@ -39,10 +39,14 @@ class MarginError(LedgerError):
 
 
 def _mnum(name, v) -> float:
+    """Ledgerns numeriska validering. Ett reellt tal som inte kan bli en ändlig float (till exempel 10**400) ger
+    OverflowError vid konverteringen; bara det och LedgerError från själva valideringen översätts till MarginError."""
     try:
         return _num(name, v)
     except LedgerError as exc:
         raise MarginError(str(exc)) from None
+    except OverflowError:
+        raise MarginError(f"{name} kan inte representeras som ett ändligt flyttal: {type(v).__name__}.") from None
 
 
 def _bar(t) -> pd.Timestamp:

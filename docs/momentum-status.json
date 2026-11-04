@@ -570,6 +570,10 @@
             {
               "file": "docs/momentum-C4-granskning-c312dfa.md",
               "detail": "C4 ej godkänd på c312dfa: C4-01 och tidigare C4-02-feltyper ger kontrollerade fel; nytt P2-fynd C4-03 ger OverflowError för 10**400 via konstruktion/replace/threshold, medan diffbasen gav MarginError. 367 momentumtester/920 motorprov och egen revisionslåst audit passerar inklusive reproducerat fynd. 600 Decimal-fall och 300 resetidentiteter återverifierade."
+            },
+            {
+              "file": "engine/tests/test_momentum_margin.py",
+              "detail": "Rättning av C4-03 från omgranskningen av c312dfa: reellt tal som inte kan bli ändlig float (10**400) ger MarginError i marginalmodulens validering; ledgern oförändrad. 64 marginaltester; 3 nya fäller c312dfa; 20 riktade felprov fångade."
             }
           ],
           "note": "C4 ej godkänd på exakt c312dfa. Tidigare reproduktioner C4-01/C4-02 stängda, ny regression C4-03 kräver kontrollerad satsvalidering och omgranskning. Normala marginal-/resetfall och avgränsad komposition återverifierade syntetiskt. Full event-/riskordning återstår. Ingen senare leverans beställd."
