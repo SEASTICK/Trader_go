@@ -35,6 +35,8 @@ De tolkas så här, bestämt efter att ha sett texten men innan något resultat 
 - Inskannade redovisningar utan text räknas som otolkade och ingår i datakravet.
 - Redovisningar som bara gäller fastigheter (ingen ticker alls) har inga aktieaffärer och räknas varken som
   tolkade eller otolkade.
+- En redovisning räknas som tolkad om dess affärsrader gick att läsa, även när ingen av dem påverkar portföljen
+  (till exempel bara delförsäljningar).
 
 ## H-0017: beslutskriterier (spår A)
 

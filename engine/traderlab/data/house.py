@@ -128,3 +128,8 @@ def has_securities(text: str) -> bool:
     """Om redovisningen alls nämner värdepapper (en ticker inom parentes). Redovisningar som bara gäller fastigheter
     har inga aktieaffärer och räknas inte som otolkade."""
     return re.search(r"\(([A-Za-z][A-Za-z0-9.\-]{0,6})\)", re.sub(r"\s+", " ", text)) is not None
+
+
+def rows_read(text: str) -> int:
+    """Antal affärsrader som gick att läsa, oavsett om de påverkar portföljen (för datakravet)."""
+    return len(ROW.findall(re.sub(r"\s+", " ", text)))

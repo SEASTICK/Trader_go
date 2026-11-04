@@ -65,7 +65,10 @@ def run(hypothesis_id: str, repo: Path, data_dir: Path | None = None) -> dict:
         text = house.pdf_text(r, data_dir)
         trades = house.parse(text)
         if not trades:
-            (no_securities if text.strip() and not house.has_securities(text) else unparsed).append(r.doc_id)
+            if text.strip() and not house.has_securities(text):
+                no_securities.append(r.doc_id)
+            elif house.rows_read(text) == 0:
+                unparsed.append(r.doc_id)   # inskannad eller okänt format
             continue
         events.append((pd.Timestamp(r.filed, tz="UTC"), trades))
     events.sort(key=lambda e: e[0])
@@ -98,7 +101,7 @@ def run(hypothesis_id: str, repo: Path, data_dir: Path | None = None) -> dict:
     spy_eq = (1 + spy_ret[keep]).cumprod()
     buys = [t for _, tr in events for t in tr if t.kind == "buy"]
     priced_share = sum(1 for t in buys if t.ticker in panel.columns) / max(len(buys), 1)
-    parsed_share = len(events) / max(len(reps) - len(no_securities), 1)
+    parsed_share = 1 - len(unparsed) / max(len(reps) - len(no_securities), 1)
     t_req = stats.t_krav(reg.attempts)
     out = {
         "hypothesis_id": hypothesis_id, "registry_commit": reg.registry_commit,
@@ -148,7 +151,8 @@ def main() -> None:
         buys = [t for _, tr in ok for t in tr if t.kind == "buy"]
         print(f"redovisningar {len(reps)}, tolkade {len(ok)} ({len(ok) / max(len(reps), 1):.0%}), köp {len(buys)}, "
               f"sälj {sum(1 for _, tr in ok for t in tr if t.kind == 'sell')}, aktier {len({t.ticker for t in buys})}")
-        rest = [p for p in parsed if not p[1] and p[0] not in nosec]
+        rest = [p for p in parsed if not p[1] and p[0] not in nosec and house.rows_read(texts[p[0].doc_id]) == 0]
+        print(f"lästa (rader hittade eller inga värdepapper): {1 - len(rest) / max(len(reps) - len(nosec), 1):.0%}")
         print("otolkade:", [r.doc_id for r, _ in rest][:30])
         # Utdrag ur några otolkade (offentlig text), för att förbättra tolkningen. Inga resultat räknas.
         for r, _ in rest[:4]:

@@ -83,3 +83,8 @@ def test_no_space_before_date_and_real_estate_only():
     estate = "JT1600 Atlas Peak Road - Real EstateInvestmentS 12/30/2016 12/30/2016 $500,001 - $1,000,000 Napa/Napa, CA"
     assert house.parse(estate) == [] and not house.has_securities(estate)
     assert house.has_securities(t)
+
+
+def test_partial_sale_only_is_read_but_has_no_trades():
+    t = "SP Visa Inc. (V) [ST] S (partial) 08/07/2019 08/07/2019 $100,001 - $250,000"
+    assert house.parse(t) == [] and house.rows_read(t) == 1
