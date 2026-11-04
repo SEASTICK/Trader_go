@@ -35,7 +35,7 @@ import pandas as pd
 
 from . import momentum_ledger as ledger
 from .momentum_signal import VERSION as SIGNAL_VERSION
-from .momentum_ledger import Account, LedgerError, _num
+from .momentum_ledger import Account, LedgerError, _num, _show
 
 VERSION = "mom-risk/1.0.0"
 BAR = pd.Timedelta(hours=4)
@@ -72,7 +72,7 @@ def _finite(name: str, v: float) -> float:
 
 def _boundary(name: str, t) -> pd.Timestamp:
     if not isinstance(t, pd.Timestamp) or t.tz is None or str(t.tz) != "UTC":
-        raise RiskError(f"{name} måste vara en pd.Timestamp i UTC, fick {t!r}.")
+        raise RiskError(f"{name} måste vara en pd.Timestamp i UTC, fick {_show(t)}.")
     if (t - t.floor("D")) % BAR != pd.Timedelta(0):
         raise RiskError(f"{name} ligger inte på en 4H-gräns: {t}.")
     return t
@@ -156,14 +156,14 @@ class SignalInput:
     def __post_init__(self) -> None:
         # Kontraktsgränsen kontrolleras på råvärdena innan något tolkas; gäller även dataclasses.replace och from_row.
         if not isinstance(self.available, (bool, np.bool_)):
-            raise RiskError(f"available måste vara bool (eller numpy-bool), fick {self.available!r}.")
+            raise RiskError(f"available måste vara bool (eller numpy-bool), fick {_show(self.available)}.")
         object.__setattr__(self, "available", bool(self.available))
         if not isinstance(self.version, str) or self.version != SIGNAL_VERSION:
-            raise RiskError(f"Signalversionen måste vara exakt {SIGNAL_VERSION}, fick {self.version!r}.")
+            raise RiskError(f"Signalversionen måste vara exakt {SIGNAL_VERSION}, fick {_show(self.version)}.")
         for name in ("day", "decision_time"):
             v = getattr(self, name)
             if not isinstance(v, pd.Timestamp) or v.tz is None or str(v.tz) != "UTC":
-                raise RiskError(f"{name} måste vara en pd.Timestamp i UTC, fick {v!r}.")
+                raise RiskError(f"{name} måste vara en pd.Timestamp i UTC, fick {_show(v)}.")
         if self.day != self.day.floor("D") or self.decision_time != self.day + pd.Timedelta(days=1):
             raise RiskError(f"Signalens dag {self.day} och beslutstid {self.decision_time} följer inte dagskontraktet "
                             "(dag vid 00:00 UTC, beslut nästa 00:00).")

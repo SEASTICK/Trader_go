@@ -341,3 +341,33 @@ def test_restored_processed_id_rejects_second_booking_without_change():
 def test_non_string_price_source_is_funding_error(source):
     with pytest.raises(F.FundingError, match="Källan"):
         F.FundingEvent("x", T, R, 100.0, source, T)
+
+
+# Regressioner för C4-06 (Codex granskning av 4241d0e): felmeddelanden är säkra för heltal som inte kan skrivas som text.
+
+HUGE = 10 ** 5000
+
+
+def _huge_calls():
+    good = ev("x", T)
+    return {
+        "event_id": lambda: dataclasses.replace(good, event_id=HUGE),
+        "time": lambda: dataclasses.replace(good, time=HUGE),
+        "M_ref_time": lambda: dataclasses.replace(good, M_ref_time=HUGE),
+        "M_ref_source": lambda: dataclasses.replace(good, M_ref_source=HUGE),
+        "rate": lambda: dataclasses.replace(good, rate=HUGE),
+        "M_ref": lambda: dataclasses.replace(good, M_ref=HUGE),
+        "stress": lambda: F.FundingConfig(stress=HUGE),
+        "price_model": lambda: F.FundingConfig(price_model=HUGE),
+        "account_key": lambda: F.FundingState(HUGE, "A"),
+        "scenario": lambda: F.FundingState("main", HUGE),
+        "processed": lambda: F.FundingState("main", "A", processed=[HUGE]),
+        "phase": lambda: F.apply_funding(pos(50_000, 500, 100, 100_000), st(), good, HUGE),
+    }
+
+
+@pytest.mark.parametrize("field", list(_huge_calls()))
+def test_huge_integer_in_any_field_gives_readable_funding_error(field):
+    with pytest.raises(F.FundingError) as err:
+        _huge_calls()[field]()
+    assert str(err.value)

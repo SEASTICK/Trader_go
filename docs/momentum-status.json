@@ -430,6 +430,10 @@
             {
               "file": "docs/momentum-C4-granskning-4241d0e.md",
               "detail": "Återöppnad på 4241d0e för C4-06 P2: riskens metadatafel för stora heltal läcker ValueError mot dokumenterat RiskError. Samma fel reproducerat på diffbasen; ingen C4-regression. Giltiga beslut och sju absorberande steg återverifierade."
+            },
+            {
+              "file": "docs/momentum-C4-06-rattning.md",
+              "detail": "Rättning av C4-06: 13 repr-formateringar i funding och risk använder ledgerns _show; 22 regressioner (17 fäller 4241d0e); 12 av 13 felprov fångade, ett ekvivalent. Väntar på Codex granskning."
             }
           ],
           "note": "Återöppnad på 4241d0e för C4-06 P2: riskens metadatafel för stora heltal läcker ValueError mot dokumenterat RiskError. Samma fel reproducerat på diffbasen; ingen C4-regression. Giltiga beslut och sju absorberande steg återverifierade."
@@ -494,6 +498,10 @@
             {
               "file": "docs/momentum-C4-granskning-4241d0e.md",
               "detail": "C4:s avgränsade komposition godkänd på 4241d0e; full event-/funding-/marginalintegration återstår. C4-06 P2 bekräftar befintliga metadatafel i funding/risk; tidigare numerisk verifiering bevaras, inget helt komponentgodkännande för felkontraktet."
+            },
+            {
+              "file": "docs/momentum-C4-06-rattning.md",
+              "detail": "Rättning av C4-06: 13 repr-formateringar i funding och risk använder ledgerns _show; 22 regressioner (17 fäller 4241d0e); 12 av 13 felprov fångade, ett ekvivalent. Väntar på Codex granskning."
             }
           ],
           "note": "C4:s avgränsade komposition godkänd på 4241d0e; full event-/funding-/marginalintegration återstår. C4-06 P2 bekräftar befintliga metadatafel i funding/risk; tidigare numerisk verifiering bevaras, inget helt komponentgodkännande för felkontraktet."

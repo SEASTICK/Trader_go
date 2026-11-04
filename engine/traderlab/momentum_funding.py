@@ -24,7 +24,7 @@ from dataclasses import dataclass, replace
 
 import pandas as pd
 
-from .momentum_ledger import Account, LedgerError, _num, _out
+from .momentum_ledger import Account, LedgerError, _num, _out, _show
 
 VERSION = "mom-funding/1.0.0"
 BAR = pd.Timedelta(hours=4)
@@ -46,7 +46,7 @@ def _fnum(name: str, v) -> float:
 
 def _utc_ms(name: str, t) -> pd.Timestamp:
     if not isinstance(t, pd.Timestamp) or t.tz is None or str(t.tz) != "UTC":
-        raise FundingError(f"{name} måste vara en pd.Timestamp i UTC, fick {t!r}.")
+        raise FundingError(f"{name} måste vara en pd.Timestamp i UTC, fick {_show(t)}.")
     if t.nanosecond or t.microsecond % 1000:
         raise FundingError(f"{name} har finare upplösning än millisekund: {t}.")
     return t
@@ -64,9 +64,9 @@ class FundingConfig:
 
     def __post_init__(self) -> None:
         if not isinstance(self.stress, bool):
-            raise FundingError(f"stress måste vara bool, fick {self.stress!r}.")
+            raise FundingError(f"stress måste vara bool, fick {_show(self.stress)}.")
         if self.price_model not in (MARK_OPEN, MARK_CLOSE):
-            raise FundingError(f"Okänd prismodell {self.price_model!r}.")
+            raise FundingError(f"Okänd prismodell {_show(self.price_model)}.")
 
     @property
     def label(self) -> str:
@@ -84,7 +84,7 @@ class FundingEvent:
 
     def __post_init__(self) -> None:
         if not isinstance(self.event_id, str) or not self.event_id:
-            raise FundingError(f"event_id måste vara en icke-tom sträng, fick {self.event_id!r}.")
+            raise FundingError(f"event_id måste vara en icke-tom sträng, fick {_show(self.event_id)}.")
         _utc_ms("time", self.time)
         _utc_ms("M_ref_time", self.M_ref_time)
         object.__setattr__(self, "rate", _fnum("rate", self.rate))
@@ -93,10 +93,10 @@ class FundingEvent:
             raise FundingError(f"M_ref måste vara > 0, fick {M}.")
         object.__setattr__(self, "M_ref", M)
         if not isinstance(self.M_ref_source, str):
-            raise FundingError(f"Källan för M_ref måste vara en sträng, fick {self.M_ref_source!r}.")
+            raise FundingError(f"Källan för M_ref måste vara en sträng, fick {_show(self.M_ref_source)}.")
         expected = {MARK_OPEN: bar_open(self.time), MARK_CLOSE: bar_open(self.time) + BAR}.get(self.M_ref_source)
         if expected is None:
-            raise FundingError(f"Okänd källa för M_ref: {self.M_ref_source!r}.")
+            raise FundingError(f"Okänd källa för M_ref: {_show(self.M_ref_source)}.")
         if self.M_ref_time != expected:
             raise FundingError(f"M_ref_time {self.M_ref_time} stämmer inte med {self.M_ref_source} för event vid "
                                f"{self.time} (väntat {expected}).")
@@ -112,7 +112,7 @@ def _processed_ids(ids) -> frozenset:
         raise FundingError(f"processed måste vara set, frozenset, list eller tuple av event-id, fick {type(ids).__name__}.")
     for eid in ids:
         if not isinstance(eid, str) or not eid:
-            raise FundingError(f"Varje behandlat event-id måste vara en icke-tom sträng, fick {eid!r}.")
+            raise FundingError(f"Varje behandlat event-id måste vara en icke-tom sträng, fick {_show(eid)}.")
     return frozenset(ids)
 
 
@@ -127,7 +127,7 @@ class FundingState:
         for name in ("account_key", "scenario"):
             v = getattr(self, name)
             if not isinstance(v, str) or not v:
-                raise FundingError(f"{name} måste vara en icke-tom sträng, fick {v!r}.")
+                raise FundingError(f"{name} måste vara en icke-tom sträng, fick {_show(v)}.")
         object.__setattr__(self, "processed", _processed_ids(self.processed))
 
 
@@ -164,7 +164,7 @@ def apply_funding(acct: Account, state: FundingState, event: FundingEvent, phase
     if not isinstance(config, FundingConfig):
         raise FundingError("Fel typ för konfiguration.")
     if phase not in PHASES:
-        raise FundingError(f"Okänd fas {phase!r}; tillåtna {PHASES}.")
+        raise FundingError(f"Okänd fas {_show(phase)}; tillåtna {PHASES}.")
     simultaneous = event.time == bar_open(event.time)       # exakt 4H-gräns, millisekundprecision, ingen tolerans
     if phase in ("funding_A", "funding_B") and not simultaneous:
         raise FundingError(f"{phase} gäller bara händelser exakt på en 4H-gräns; {event.time} är en mellanhändelse.")

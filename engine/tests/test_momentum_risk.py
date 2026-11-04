@@ -602,3 +602,32 @@ def test_rejected_signals_leave_state_usable_and_unchanged():
     assert st == R.RiskState.start(100_000, T0)
     _, rec = R.step(st, T0, None, sig(T0, 1.0, 0.5))
     assert rec.intent.kind == R.NORMAL
+
+
+# Regressioner för C4-06 (Codex granskning av 4241d0e): felmeddelanden är säkra för heltal som inte kan skrivas som text.
+
+HUGE = 10 ** 5000
+
+
+def _huge_risk_calls():
+    good = sig(T0, 1.0, 0.5)
+    st = state_at(T0 + pd.Timedelta(days=3))
+    return {
+        "start": lambda: R.RiskState.start(1000, HUGE),
+        "initial": lambda: R.RiskState.start(HUGE, T0),
+        "available": lambda: dataclasses.replace(good, available=HUGE),
+        "version": lambda: dataclasses.replace(good, version=HUGE),
+        "day": lambda: dataclasses.replace(good, day=HUGE),
+        "decision_time": lambda: dataclasses.replace(good, decision_time=HUGE),
+        "step_T": lambda: R.step(st, HUGE, close_at(st.next_boundary, acct_w(0.3)), None),
+        "bar_open": lambda: R.CloseInput(HUGE, acct_w(0.3), 100.0),
+        "mark_close": lambda: R.CloseInput(T0, acct_w(0.3), HUGE),
+        "lock_day": lambda: dataclasses.replace(st, lock_day=HUGE),
+    }
+
+
+@pytest.mark.parametrize("field", list(_huge_risk_calls()))
+def test_huge_integer_in_any_field_gives_readable_risk_error(field):
+    with pytest.raises(R.RiskError) as err:
+        _huge_risk_calls()[field]()
+    assert str(err.value)
