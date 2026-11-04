@@ -143,6 +143,11 @@ def main() -> None:
         print(f"redovisningar {len(reps)}, tolkade {len(ok)} ({len(ok) / max(len(reps), 1):.0%}), köp {len(buys)}, "
               f"sälj {sum(1 for _, tr in ok for t in tr if t.kind == 'sell')}, aktier {len({t.ticker for t in buys})}")
         print("otolkade:", [r.doc_id for r, tr in parsed if not tr][:30])
+        # Utdrag ur några otolkade (offentlig text), för att förbättra tolkningen. Inga resultat räknas.
+        for r, _ in [p for p in parsed if not p[1]][:4]:
+            text = house.pdf_text(r, data_dir)
+            print(f"--- {r.doc_id} ({r.filed}), {len(text)} tecken ---")
+            print(text[:1800])
         return
     print(save(a.repo, run(a.hypothesis, a.repo)))
 
