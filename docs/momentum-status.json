@@ -3,8 +3,8 @@
   "title": "Efterföljare till H-0013 – granskning och implementation",
   "hypothesis": "H-0017 – riskstyrd tidsseriemomentum på BTCUSDT",
   "updated": "2026-11-04",
-  "reviewed_revision": "4241d0e164db6a7c20250f31fef2695d86e885bb",
-  "reviewed_scope": "C4 godkänd inom avgränsad marginal-/ledgerleverans på exakt 4241d0e mot 1505d08. C4-01–C4-05 stängda med egna reproduktioner. C4-06 P2: befintliga metadatafel i funding/risk läcker ValueError, reproducerat på båda revisionerna; utanför C4-rättningen. C01 done, C02 återöppnad, C03/C04/C05 in_progress. 600 Decimal-jämförelser, 300 likvidationsavstämningar, 380 momentumtester och 933 motorprov passerar; A1 och 15 tidigare audits passerar. Endast syntetiskt; nästa del väntar på Edwins beslut. 11/40.",
+  "reviewed_revision": "9174b9c4f1543cefa6793a33d4eb7b853e0a368d",
+  "reviewed_scope": "C4-06 P2 stängt på exakt 9174b9c mot 6530ca2. Endast 13 felmeddelandeformateringar och två importer ändrade i funding/risk; C2/C3 åter godkända inom tidigare komponentgränser. Åtta ursprungliga läckor reproducerade på basen, 44 kontrollerade avvisningar utan ändrade indata, 400 fundingutfall och 400 riskbeslut identiska med 4241d0e. 402 momentumtester, 955 motorprov, A1, 16 tidigare audits och ny audit passerar. C02 done; C03/C04/C05 fortsatt in_progress för full integration/intrastapel-bound. Endast syntetiskt; nästa del väntar på Edwins beslut. 12/40.",
   "groups": [
     {
       "id": "A",
@@ -385,7 +385,7 @@
         {
           "id": "MOM-C02",
           "title": "Implementera handelsband, avsikter och riskprioritet utan dold ombalansering",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "engine/traderlab/momentum_risk.py",
@@ -434,9 +434,17 @@
             {
               "file": "docs/momentum-C4-06-rattning.md",
               "detail": "Rättning av C4-06: 13 repr-formateringar i funding och risk använder ledgerns _show; 22 regressioner (17 fäller 4241d0e); 12 av 13 felprov fångade, ett ekvivalent. Väntar på Codex granskning."
+            },
+            {
+              "file": "docs/momentum-C4-06-granskning-9174b9c.md",
+              "detail": "C4-06 P2 stängt på exakt 9174b9c. C3:s rena risk-/avsiktsmodul åter godkänd: kontrollerade metadatafel, oförändrade indata och 400 giltiga beslut exakt identiska med 4241d0e. Full eventintegration ingår inte."
+            },
+            {
+              "file": "research/audits/momentum-c406-9174b9c/verification.json",
+              "detail": "Revisionslåst audit: 44 kontrollerade avvisningar, 17 basläckor inklusive åtta ursprungliga vägar, 400 funding- och 400 riskjämförelser samt oförändrad validering/beräkning/signatur."
             }
           ],
-          "note": "Återöppnad på 4241d0e för C4-06 P2: riskens metadatafel för stora heltal läcker ValueError mot dokumenterat RiskError. Samma fel reproducerat på diffbasen; ingen C4-regression. Giltiga beslut och sju absorberande steg återverifierade."
+          "note": "C4-06 P2 stängt på exakt 9174b9c. C3:s rena risk-/avsiktsmodul åter godkänd: kontrollerade metadatafel, oförändrade indata och 400 giltiga beslut exakt identiska med 4241d0e. Full eventintegration ingår inte."
         },
         {
           "id": "MOM-C03",
@@ -502,9 +510,13 @@
             {
               "file": "docs/momentum-C4-06-rattning.md",
               "detail": "Rättning av C4-06: 13 repr-formateringar i funding och risk använder ledgerns _show; 22 regressioner (17 fäller 4241d0e); 12 av 13 felprov fångade, ett ekvivalent. Väntar på Codex granskning."
+            },
+            {
+              "file": "docs/momentum-C4-06-granskning-9174b9c.md",
+              "detail": "C4-06 stängt på 9174b9c; C2-funding och C3 åter godkända inom komponentgränserna med 400 fundingutfall och 400 riskbeslut identiska med 4241d0e. Full event-/funding-/marginalintegration samt första/sista event återstår."
             }
           ],
-          "note": "C4:s avgränsade komposition godkänd på 4241d0e; full event-/funding-/marginalintegration återstår. C4-06 P2 bekräftar befintliga metadatafel i funding/risk; tidigare numerisk verifiering bevaras, inget helt komponentgodkännande för felkontraktet."
+          "note": "C4-06 stängt på 9174b9c; C2-funding och C3 åter godkända inom komponentgränserna med 400 fundingutfall och 400 riskbeslut identiska med 4241d0e. Full event-/funding-/marginalintegration samt första/sista event återstår."
         },
         {
           "id": "MOM-C04",
@@ -550,9 +562,13 @@
             {
               "file": "docs/momentum-C4-granskning-4241d0e.md",
               "detail": "Giltiga C3-beslut och absorberande nollkonto återverifierade på 4241d0e. C4-06 P2 i riskens felkontrakt återstår; konservativ intrastapel-bound och full eventintegration återstår."
+            },
+            {
+              "file": "docs/momentum-C4-06-granskning-9174b9c.md",
+              "detail": "C4-06 stängt på 9174b9c; C3-komponenten åter godkänd med 400 oförändrade referensbeslut och återkörda terminal-/signalkontroller. Konservativ intrastapel-bound och full eventintegration återstår."
             }
           ],
-          "note": "Giltiga C3-beslut och absorberande nollkonto återverifierade på 4241d0e. C4-06 P2 i riskens felkontrakt återstår; konservativ intrastapel-bound och full eventintegration återstår."
+          "note": "C4-06 stängt på 9174b9c; C3-komponenten åter godkänd med 400 oförändrade referensbeslut och återkörda terminal-/signalkontroller. Konservativ intrastapel-bound och full eventintegration återstår."
         },
         {
           "id": "MOM-C05",
@@ -630,9 +646,13 @@
             {
               "file": "docs/momentum-C4-granskning-4241d0e.md",
               "detail": "C4 godkänd inom marginal-/ledgerleveransen på exakt 4241d0e: C4-01–C4-05 stängda; 600 Decimal-fall och 300 avstämningar. C4-06 P2 i funding/risk ligger utanför rättningsytan och är dokumenterad. Full event-/riskordning återstår. Nästa del väntar på Edwins beslut."
+            },
+            {
+              "file": "docs/momentum-C4-06-granskning-9174b9c.md",
+              "detail": "Tidigare avgränsat C4-godkännande på 4241d0e bevaras för oförändrad marginal/ledger. C4-06 i funding/risk stängt på 9174b9c; giltiga C2/C3-utfall och felkontrakt återverifierade syntetiskt. Full event-/riskordning återstår. Nästa del väntar på Edwins beslut."
             }
           ],
-          "note": "C4 godkänd inom marginal-/ledgerleveransen på exakt 4241d0e: C4-01–C4-05 stängda; 600 Decimal-fall och 300 avstämningar. C4-06 P2 i funding/risk ligger utanför rättningsytan och är dokumenterad. Full event-/riskordning återstår. Nästa del väntar på Edwins beslut."
+          "note": "Tidigare avgränsat C4-godkännande på 4241d0e bevaras för oförändrad marginal/ledger. C4-06 i funding/risk stängt på 9174b9c; giltiga C2/C3-utfall och felkontrakt återverifierade syntetiskt. Full event-/riskordning återstår. Nästa del väntar på Edwins beslut."
         }
       ]
     },
