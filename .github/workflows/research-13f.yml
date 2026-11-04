@@ -1,0 +1,66 @@
+# Kör 13F-forskningen (research/13f-protokoll.md) på GitHubs servrar, som når SEC och Stooq.
+# Hämtar innehav och kurser, kör den registrerade hypotesen och lägger resultatet på en egen gren
+# (bot/<hypotes>-resultat) för granskning. Rör aldrig main direkt, och lägger inga order.
+name: Research 13F
+
+on:
+  workflow_dispatch:
+    inputs:
+      hypothesis:
+        description: "Registrerad hypotes att köra"
+        required: true
+        default: "H-0016"
+
+concurrency:
+  group: research-13f
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      # SEC kräver en kontaktadress i User-Agent för automatiska anrop (angiven av Philip för detta syfte).
+      SEC_CONTACT: philipsjoqvist20@gmail.com
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Installera motorn
+        run: pip install -q -r engine/requirements.txt
+      - name: Hämta cache för SEC-filer och kurser
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            data/raw/sec
+            data/raw/stooq
+          key: research-13f-${{ github.run_id }}
+          restore-keys: research-13f-
+      - name: Kör hypotesen
+        working-directory: engine
+        run: python -m traderlab.copy13f --hypothesis "${{ inputs.hypothesis }}" | tee ../run.log
+      - name: Spara cachen även om körningen avbröts (till exempel av Stooqs dagsgräns)
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            data/raw/sec
+            data/raw/stooq
+          key: research-13f-${{ github.run_id }}
+      - name: Lägg resultatet på en gren
+        run: |
+          branch="bot/$(echo '${{ inputs.hypothesis }}' | tr 'A-Z' 'a-z')-resultat"
+          git config user.name "tradergo-research-bot"
+          git config user.email "tradergo-research-bot@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add research/results/
+          git commit -m "Resultat ${{ inputs.hypothesis }} från research-13f (körning ${{ github.run_id }})"
+          git push -f origin "$branch"
+          echo "### Resultat på grenen \`$branch\`" >> "$GITHUB_STEP_SUMMARY"
+          tail -1 run.log >> "$GITHUB_STEP_SUMMARY"
