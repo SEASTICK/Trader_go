@@ -2,9 +2,9 @@
 
 **15 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-Metodgranskning · Kontrollerad 2026-11-04 · Granskad kodversion `a84e0d87e3bfaef06bb916bf8234cbf4e8a1775f`.
+Metodgranskning · Kontrollerad 2026-11-04 · Granskad kodversion `6e6730cc950b880aa0aa247ec29892bb767a2f4d`.
 
-C6 GODKÄND på exakt a84e0d8 mot 790d477, endast syntetiskt. C6-02 P2 stängt: close T+4h med källstapel kvar i bar_open, verifierat efter mellanfunding och mot RunLog. Oberoende Decimal: 115 punktsekvenser/629 punkter, 60 ickeinterferenspar och sju fångade mutationer. MOM-C04 done inom huvudmodellens leverans C; C 5/5, totalt 15/40. Full boolesk 20 %-prövning, legacy/jämförelser och stress tillhör senare D. Ingen historikkörning, registrering, drift eller paper/live; inget nytt uppdrag.
+D1 EJ GODKÄND på exakt 6e6730c mot fc02e1d, endast syntetiskt. D1-01 P2: adapter tappar earliest_fill och accepterar inkonsekvent källa. D1-02 P1: muterbart Market släpper 2025 till signalberäkningen efter konstruktion. D1-03 P2: obligatoriska komponent-/scenario-/riskprov och felprovsredovisning saknas. Oberoende revisionsaudit: 3 288 Decimal-signaljämförelser och tre fulla syntetiska förlopp. 566 momentumtester, 1 119 motortester och 23 audits passerar; gröna tester stänger inte fynden. A/B/C:s avgränsade godkännanden består; MOM-D01 in_progress. Ingen historik, registrering, drift eller paper/live; inget nytt uppdrag.
 
 ## Uppdateringsregler
 
@@ -237,8 +237,10 @@ C6 GODKÄND på exakt a84e0d8 mot 790d477, endast syntetiskt. C6-02 P2 stängt: 
 0/5 verifierade.
 
 - [ ] **MOM-D01** Implementera de förregistrerade kontrollkontona på gemensam horisont och kapitalbas **Pågår.**
-  - Underlag: [engine/traderlab/momentum_control.py](../engine/traderlab/momentum_control.py) — D1 för Codex granskning, inte godkänd: mom-control/1.0.0, mom7/mom14/mom28 med 100 000 vardera ovanpå godkänd eventmotor, obrutna förlopp, OGILTIG_DATA utan fallback. Återstår: buy_and_hold, legacy, no_vol, blandningar, kontrollkontonas bound (D1-Q01/Q02 öppna).
-  - Underlag: [docs/momentum-control-D1.md](momentum-control-D1.md) — API, avvikelse om O9 (capbrott inom band enligt §7/C3), verifiering: 26 kontrolltester, 566 momentumtester/1 119 motortester; 14 av 14 riktade felprov fångade.
+  - Underlag: [docs/momentum-D1-granskning-6e6730c.md](momentum-D1-granskning-6e6730c.md) — Codex: D1 EJ GODKÄND; D1-01 P2, D1-02 P1 och D1-03 P2 öppna. O9-capbrott enligt §7 är rätt; uppdragets hold-formulering var fel.
+  - Underlag: [research/audits/momentum-d1-6e6730c/review.py](../research/audits/momentum-d1-6e6730c/review.py) — Revisionslåst git show från 6e6730c, Decimal för komponentval/vol/cap/mål och tre fulla förlopp; --check reproducerar öppna adapter-/2025-fynd.
+  - Underlag: [research/audits/momentum-d1-6e6730c/verification.json](../research/audits/momentum-d1-6e6730c/verification.json) — SHA-256, oförändrade skyddade källor, 3 288 signaljämförelser och tre förlopp med 6 576 staplar/6 577 closepunkter/1 096 dagar vardera.
+  - D1 är inte godkänd och kan inte ensam slutföra MOM-D01. Rättning och kompletterande obligatoriska syntetiska prov krävs; buy_and_hold, legacy, no_vol, blandningar och komponent-bound återstår. D1-Q01/Q02 är inte avgjorda här.
 - [ ] **MOM-D02** Verifiera 50/50- och 1/3-blandningar, bruttoexponering och oberoende risklås
 - [ ] **MOM-D03** Implementera 2,5× kostnader, fundingstress, fördröjning och låst ordningskänslighet
 - [ ] **MOM-D04** Verifiera statistik, osäkerhet, DSR och sex booleska kriterier från fullständiga serier
