@@ -16,11 +16,18 @@ STOOQ = "https://stooq.com/q/d/l/?s={sym}.us&i=d"
 FIGI = "https://api.openfigi.com/v3/mapping"
 
 
-def _open(req, opener=None) -> bytes:
+def _open(req, opener=None, tries: int = 5) -> bytes:
     if opener:
         return opener(req)
-    with urllib.request.urlopen(req, timeout=60) as r:
-        return r.read()
+    for attempt in range(tries):
+        try:
+            with urllib.request.urlopen(req, timeout=60) as r:
+                return r.read()
+        except (OSError, urllib.error.URLError):
+            if attempt == tries - 1:
+                raise
+            time.sleep(2 * 2 ** attempt)   # 2, 4, 8, 16 s
+    raise RuntimeError("oåtkomlig")
 
 
 def stooq_symbol(ticker: str) -> str:
@@ -33,9 +40,14 @@ def load_prices(ticker: str, data_dir: Path, opener=None) -> pd.DataFrame | None
     if not path.exists():
         url = STOOQ.format(sym=stooq_symbol(ticker))
         raw = _open(urllib.request.Request(url, headers={"User-Agent": "TraderGo research"}), opener)
+        head = raw[:200].decode("utf-8", "replace").strip().lower()
+        # Bara riktiga svar sparas: en tabell, eller "No data" (källan saknar aktien). Gränsmeddelanden och
+        # felsidor sparas inte, så att de inte senare tolkas som "aktien finns inte".
+        if not (head.startswith("date") or head.startswith("no data")):
+            raise RuntimeError(f"Oväntat svar från Stooq för {ticker}: {head[:80]!r}")
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(raw)
-        time.sleep(0.3)
+        time.sleep(0.5)
     text = path.read_text(encoding="utf-8", errors="replace").strip()
     if not text.lower().startswith("date"):
         return None   # "No data" eller felsida

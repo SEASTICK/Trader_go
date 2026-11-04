@@ -34,3 +34,12 @@ def test_map_cusips_batches_and_caches(tmp_path):
     assert sent == [10, 3] and m["BAD"] is None and m["000000000"] == "T000"
     stocks.map_cusips(cus, tmp_path, opener)
     assert sent == [10, 3]
+
+
+def test_limit_message_is_not_cached(tmp_path):
+    import pytest
+    def opener(req):
+        return b"Exceeded the daily hits limit"
+    with pytest.raises(RuntimeError):
+        stocks.load_prices("AAPL", tmp_path, opener)
+    assert not (tmp_path / "raw" / "stooq" / "aapl.csv").exists()

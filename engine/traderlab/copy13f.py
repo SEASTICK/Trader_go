@@ -13,7 +13,7 @@ import pandas as pd
 
 from . import portfolio, stats
 from .costs import CostModel
-from .data import sec13f, stocks
+from .data import ftd, sec13f, stocks
 from .experiment import RESULTS
 from .registry import require_registered
 
@@ -80,7 +80,9 @@ def run(hypothesis_id: str, repo: Path, data_dir: Path | None = None, managers: 
     ciks = managers or list(MANAGERS)
     events = {c: manager_events(c, data_dir) for c in ciks}
     cusips = sorted({cu for evs in events.values() for _, w in evs for cu in w})
-    tickers = stocks.map_cusips(cusips, data_dir)
+    # CUSIP → ticker ur SEC:s egna fails-to-deliver-filer (historiska, täcker även avnoterade bolag).
+    fmap = ftd.load_map(data_dir)
+    tickers = {c: fmap.get(c) for c in cusips}
     lo, hi = pd.Timestamp(START, tz="UTC") - pd.Timedelta(days=10), pd.Timestamp(END, tz="UTC")
     opens = {}
     for t in sorted({t for t in tickers.values() if t} | {"SPY"}):
@@ -137,6 +139,31 @@ def run(hypothesis_id: str, repo: Path, data_dir: Path | None = None, managers: 
     return out
 
 
+def main() -> None:
+    """Kör H-0016 och diagnostiken (varje förvaltare ensam) och sparar resultaten. Används av research-13f.yml."""
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--hypothesis", default="H-0016")
+    ap.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[2])
+    a = ap.parse_args()
+    main_out = run(a.hypothesis, a.repo)
+    paths = [save(a.repo, main_out)]
+    diag = {}
+    for cik, name in MANAGERS.items():
+        try:
+            d = run(a.hypothesis, a.repo, managers=[cik], diagnostic=True)
+        except Exception as exc:   # en förvaltare utan data stoppar inte resten
+            diag[name] = {"error": str(exc)}
+            continue
+        diag[name] = {k: d[k] for k in ("period", "total_return", "spy_total_return", "sharpe", "spy_sharpe",
+                                        "t_excess_nw", "max_drawdown", "mean_unpriced_share", "rebalances")}
+    main_out_path = paths[0]
+    data = json.loads(main_out_path.read_text())
+    data["diagnostic_per_manager"] = diag
+    main_out_path.write_text(json.dumps(data, ensure_ascii=False, indent=1, default=float) + "\n", encoding="utf-8")
+    print(main_out_path)
+
+
 def save(repo: Path, out: dict, suffix: str = "") -> Path:
     folder = repo / RESULTS
     folder.mkdir(parents=True, exist_ok=True)
@@ -145,3 +172,7 @@ def save(repo: Path, out: dict, suffix: str = "") -> Path:
         raise FileExistsError(path)
     path.write_text(json.dumps(out, ensure_ascii=False, indent=1, default=float) + "\n", encoding="utf-8")
     return path
+
+
+if __name__ == "__main__":
+    main()
