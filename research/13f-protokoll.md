@@ -54,6 +54,13 @@ nästa redovisning.
 Kriterium 1 mäter överavkastningen. En portfölj av amerikanska aktier stiger med marknaden, så t på den egna
 avkastningen säger inget om förmåga.
 
+## Datakrav (tillagt 2026-11-04, före körning)
+
+Minst **90 %** av portföljvikten ska i genomsnitt ha ett pris vid ombalanseringarna. Annars markeras körningen
+`OGILTIG` (datakvalitet) och inget beslut fattas, eftersom bortfallna innehav ofta är uppköpta eller
+avnoterade bolag och testet då blir missvisande. Tillägget gjordes när en namnbaserad koppling CUSIP → ticker gav
+62 % täckning, innan några kurser hämtats eller något körts.
+
 ## Diagnostik (inga beslut)
 
 Varje förvaltare ensam med samma regler redovisas, så att ni ser vem som drog upp eller ned. Det är tio

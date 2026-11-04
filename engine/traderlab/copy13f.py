@@ -132,6 +132,8 @@ def run(hypothesis_id: str, repo: Path, data_dir: Path | None = None, managers: 
                        "stressed_beats_spy": out["stressed_total_return"] > out["spy_total_return"],
                        "sharpe_above_spy": out["sharpe"] > out["spy_sharpe"]}
     out["meets_all_criteria"] = all(out["criteria"].values())
+    # Datakrav i protokollet: minst 90 % av vikten måste ha pris, annars ogiltig körning utan beslut.
+    out["data_quality_ok"] = out["mean_unpriced_share"] is not None and out["mean_unpriced_share"] <= 0.10
     return out
 
 
