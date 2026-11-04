@@ -1,4 +1,5 @@
-# Kör 13F-forskningen (research/13f-protokoll.md) på GitHubs servrar, som når SEC och Stooq.
+# Kör investerarforskningen på GitHubs servrar, som når SEC, House Clerk och Stooq:
+# H-0016 (research/13f-protokoll.md) och H-0017 (research/pelosi-protokoll.md).
 # Hämtar innehav och kurser, kör den registrerade hypotesen och lägger resultatet på en egen gren
 # (bot/<hypotes>-resultat) för granskning. Rör aldrig main direkt, och lägger inga order.
 name: Research 13F
@@ -10,6 +11,10 @@ on:
         description: "Registrerad hypotes att köra"
         required: true
         default: "H-0016"
+      data_only:
+        description: "Bara hämta och tolka data (inget resultat)"
+        type: boolean
+        default: false
 
 concurrency:
   group: research-13f
@@ -21,8 +26,13 @@ permissions:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 350
+    defaults:
+      run:
+        shell: bash
     env:
+      TIINGO_API_KEY: ${{ secrets.TIINGO_API_KEY }}
+      TIINGO_SLEEP: "72"
       # SEC kräver en kontaktadress i User-Agent för automatiska anrop (angiven av Philip för detta syfte).
       SEC_CONTACT: philipsjoqvist20@gmail.com
     steps:
@@ -39,21 +49,32 @@ jobs:
         with:
           path: |
             data/raw/sec
+            data/raw/house
             data/raw/stooq
           key: research-13f-${{ github.run_id }}
           restore-keys: research-13f-
       - name: Kör hypotesen
         working-directory: engine
-        run: python -m traderlab.copy13f --hypothesis "${{ inputs.hypothesis }}" | tee ../run.log
+        run: |
+          case "${{ inputs.hypothesis }}" in
+            H-0016) mod=traderlab.copy13f ;;
+            H-0017) mod=traderlab.copypelosi ;;
+            *) echo "Okänd hypotes" >&2; exit 1 ;;
+          esac
+          extra=""; [ "${{ inputs.data_only }}" = "true" ] && extra="--data-only"
+          python -m "$mod" --hypothesis "${{ inputs.hypothesis }}" $extra | tee ../run.log
+          tail -5 ../run.log >> "$GITHUB_STEP_SUMMARY"
       - name: Spara cachen även om körningen avbröts (till exempel av Stooqs dagsgräns)
         if: always()
         uses: actions/cache/save@v4
         with:
           path: |
             data/raw/sec
+            data/raw/house
             data/raw/stooq
           key: research-13f-${{ github.run_id }}
       - name: Lägg resultatet på en gren
+        if: ${{ !inputs.data_only }}
         run: |
           branch="bot/$(echo '${{ inputs.hypothesis }}' | tr 'A-Z' 'a-z')-resultat"
           git config user.name "tradergo-research-bot"

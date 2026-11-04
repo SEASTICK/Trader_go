@@ -1,18 +1,26 @@
-"""Dagliga aktiekurser (Stooq, justerade för split och utdelning) och CUSIP → ticker (OpenFIGI).
+"""Dagliga aktiekurser, justerade för split och utdelning, och CUSIP → ticker (OpenFIGI).
 
-Båda är gratis och kräver ingen nyckel. Allt sparas under data/raw/ och hämtas inte igen.
+Kurskälla: Tiingo (officiellt API, gratis nyckel i miljövariabeln TIINGO_API_KEY) om nyckeln finns, annars Stooq.
+Stooq blockerar automatiska hämtningar från molnservrar; det kringgås inte. Allt sparas under data/raw/.
 """
 from __future__ import annotations
 
 import io
 import json
+import os
 import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
 import pandas as pd
 
 STOOQ = "https://stooq.com/q/d/l/?s={sym}.us&i=d"
+TIINGO = "https://api.tiingo.com/tiingo/daily/{sym}/prices?startDate=2012-01-01&format=csv&token={key}"
+
+
+class PriceSourceUnavailable(RuntimeError):
+    """Kurskällan svarar inte med data (blockerad, gräns nådd eller nyckel saknas). Inget sparas."""
 FIGI = "https://api.openfigi.com/v3/mapping"
 
 
@@ -34,9 +42,54 @@ def stooq_symbol(ticker: str) -> str:
     return ticker.lower().replace("/", "-").replace(".", "-")
 
 
-def load_prices(ticker: str, data_dir: Path, opener=None) -> pd.DataFrame | None:
-    """Dagsstaplar (open, high, low, close, volume) i UTC, eller None om källan inte har aktien."""
+def tiingo_symbol(ticker: str) -> str:
+    return ticker.upper().replace("/", "-").replace(".", "-")
+
+
+def _load_tiingo(ticker: str, data_dir: Path, key: str, opener=None, max_age_hours: float | None = None) -> pd.DataFrame | None:
+    path = data_dir / "raw" / "tiingo" / f"{tiingo_symbol(ticker)}.csv"
+    if path.exists() and max_age_hours is not None and time.time() - path.stat().st_mtime > max_age_hours * 3600:
+        path.unlink()
+    if not path.exists():
+        url = TIINGO.format(sym=tiingo_symbol(ticker), key=key)
+        try:
+            raw = _open(urllib.request.Request(url, headers={"User-Agent": "TraderGo research"}), opener, tries=2)
+        except urllib.error.HTTPError as exc:
+            if exc.code == 404:
+                raw = b"No data"
+            elif exc.code in (401, 403, 429):
+                raise PriceSourceUnavailable(f"Tiingo svarade {exc.code} för {ticker} (nyckel eller gräns)") from exc
+            else:
+                raise
+        head = raw[:200].decode("utf-8", "replace").strip().lower()
+        if not (head.startswith("date") or head.startswith("no data")):
+            raise PriceSourceUnavailable(f"Oväntat svar från Tiingo för {ticker}: {head[:80]!r}")
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(raw)
+        time.sleep(float(os.environ.get("TIINGO_SLEEP", "1")))   # gratisnivån: sätt 72 för 50 anrop per timme
+    text = path.read_text(encoding="utf-8", errors="replace").strip()
+    if not text.lower().startswith("date"):
+        return None
+    df = pd.read_csv(io.StringIO(text))
+    df.columns = [c.lower() for c in df.columns]
+    if df.empty:
+        return None
+    idx = pd.DatetimeIndex(pd.to_datetime(df["date"], utc=True).dt.normalize(), name="date")
+    out = pd.DataFrame({"open": df["adjopen"].to_numpy(), "high": df["adjhigh"].to_numpy(), "low": df["adjlow"].to_numpy(),
+                        "close": df["adjclose"].to_numpy(), "volume": df["adjvolume"].to_numpy()}, index=idx)
+    return out.astype(float)
+
+
+def load_prices(ticker: str, data_dir: Path, opener=None, max_age_hours: float | None = None) -> pd.DataFrame | None:
+    """Dagsstaplar (open, high, low, close, volume) i UTC, eller None om källan inte har aktien.
+
+    max_age_hours: hämta om filen om den är äldre (för papper framåt, där nya dagar tillkommer)."""
+    key = os.environ.get("TIINGO_API_KEY")
+    if key:
+        return _load_tiingo(ticker, data_dir, key, opener, max_age_hours)
     path = data_dir / "raw" / "stooq" / f"{stooq_symbol(ticker)}.csv"
+    if path.exists() and max_age_hours is not None and time.time() - path.stat().st_mtime > max_age_hours * 3600:
+        path.unlink()
     if not path.exists():
         url = STOOQ.format(sym=stooq_symbol(ticker))
         raw = _open(urllib.request.Request(url, headers={"User-Agent": "TraderGo research"}), opener)
@@ -44,7 +97,7 @@ def load_prices(ticker: str, data_dir: Path, opener=None) -> pd.DataFrame | None
         # Bara riktiga svar sparas: en tabell, eller "No data" (källan saknar aktien). Gränsmeddelanden och
         # felsidor sparas inte, så att de inte senare tolkas som "aktien finns inte".
         if not (head.startswith("date") or head.startswith("no data")):
-            raise RuntimeError(f"Oväntat svar från Stooq för {ticker}: {head[:80]!r}")
+            raise PriceSourceUnavailable(f"Oväntat svar från Stooq för {ticker}: {head[:80]!r}")
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(raw)
         time.sleep(0.5)
