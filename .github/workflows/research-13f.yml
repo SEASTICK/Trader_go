@@ -1,4 +1,5 @@
-# Kör 13F-forskningen (research/13f-protokoll.md) på GitHubs servrar, som når SEC och Stooq.
+# Kör investerarforskningen på GitHubs servrar, som når SEC, House Clerk och Stooq:
+# H-0016 (research/13f-protokoll.md) och H-0017 (research/pelosi-protokoll.md).
 # Hämtar innehav och kurser, kör den registrerade hypotesen och lägger resultatet på en egen gren
 # (bot/<hypotes>-resultat) för granskning. Rör aldrig main direkt, och lägger inga order.
 name: Research 13F
@@ -39,18 +40,26 @@ jobs:
         with:
           path: |
             data/raw/sec
+            data/raw/house
             data/raw/stooq
           key: research-13f-${{ github.run_id }}
           restore-keys: research-13f-
       - name: Kör hypotesen
         working-directory: engine
-        run: python -m traderlab.copy13f --hypothesis "${{ inputs.hypothesis }}" | tee ../run.log
+        run: |
+          case "${{ inputs.hypothesis }}" in
+            H-0016) mod=traderlab.copy13f ;;
+            H-0017) mod=traderlab.copypelosi ;;
+            *) echo "Okänd hypotes" >&2; exit 1 ;;
+          esac
+          python -m "$mod" --hypothesis "${{ inputs.hypothesis }}" | tee ../run.log
       - name: Spara cachen även om körningen avbröts (till exempel av Stooqs dagsgräns)
         if: always()
         uses: actions/cache/save@v4
         with:
           path: |
             data/raw/sec
+            data/raw/house
             data/raw/stooq
           key: research-13f-${{ github.run_id }}
       - name: Lägg resultatet på en gren
