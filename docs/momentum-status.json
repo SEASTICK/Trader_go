@@ -3,8 +3,8 @@
   "title": "Efterföljare till H-0013 – granskning och implementation",
   "hypothesis": "H-0017 – riskstyrd tidsseriemomentum på BTCUSDT",
   "updated": "2026-11-04",
-  "reviewed_revision": "b131ff47a03f9d49f6e9df0ebd172a4bea0b6fcf",
-  "reviewed_scope": "C5 EJ GODKÄND på exakt b131ff4 mot cd25ac8. C5-01 P1: adverse-underlag ersätter kronologisk fundingledger vid träff; C5-02 P1: start-/konto-/riskstateinvarianter otillräckliga; C5-03 P2: RunLog accepterar dubbla och främmande resultat. 464 momentumtester, 1017 motorprov, A1, 17 tidigare audits och ny revisionslåst C5-audit passerar inklusive reproducerade fynd. C03/C04/C05 in_progress; oförändrade A/B/C01/C02 behåller komponentgodkännande. Bound återstår. Endast syntetiskt; ingen nästa C-del godkänd. 12/40.",
+  "reviewed_revision": "3f46aa572d5315527ef45e48ac218e9d80e551c8",
+  "reviewed_scope": "C5 EJ GODKÄND på exakt 3f46aa5 mot 8e447cb. C5-01 och C5-03 stängda inom C5. C5-02 P1 kvarstår: publik restore kan byta bort permanent stopp och godtar fel kapitalbas/historik. C5-04 P2: naiv restore-tid läcker TypeError. 503 momentumtester, 1056 motorprov, A1, 18 äldre audits och ny revisionslåst audit passerar inklusive reproducerade fynd. C03/C04/C05 in_progress; oförändrade A/B/C01/C02 behåller komponentgodkännande. §10.2-bound återstår. Endast syntetiskt; ingen nästa C-del godkänd. 12/40.",
   "groups": [
     {
       "id": "A",
@@ -538,9 +538,17 @@
             {
               "file": "docs/momentum-C5-01-edwins-beslut.md",
               "detail": "Rättning av C5-01–C5-03 från granskningen av b131ff4, för Codex omgranskning, inte godkänd: Edwins beslut 2026-11-04 att ingen mellanhändelse i en stapel med intrastapelträff bokförs (olöst, exakt tid och belopp; underlag skilt från ledger); varje event med exakt en fundingkategori."
+            },
+            {
+              "file": "docs/momentum-C5-granskning-3f46aa5.md",
+              "detail": "Oberoende granskning av exakt 3f46aa5 mot 8e447cb: 503 momentum-/1056 motorprov. Edwins fundingbeslut verifierat, RunLog-kedjan verifierad; restore kan fortfarande ta bort permanent stopp, godta fel kapitalbas/historik och läcka TypeError. C5 EJ GODKÄND."
+            },
+            {
+              "file": "research/audits/momentum-c5-3f46aa5/review.py",
+              "detail": "Revisionslåst git-show-audit: 24 Decimal-inträde/exitfall, 32 separata funding-/marginalfall, O6/terminal/tidsfall, full syntetisk horisont 6576/6577/1096, gamla motexempel och verkligt sekventiellt permanent stopp. Fem mutationer fångade; --check jämför verification.json och reproducerar kvarstående fynd."
             }
           ],
-          "note": "C5 EJ GODKÄND på b131ff4: C5-01 P1 i intrastapel-fundingledger, C5-02 P1 i start-/konto-/riskstate och C5-03 P2 i loggkomposition. Normal A/B, reset och sekventiell horisont verifierade; full integration inte godkänd."
+          "note": "C5 EJ GODKÄND på 3f46aa5: C5-01/C5-03 stängda; C5-02 P1 kvarstår via publik restore och C5-04 P2 ger TypeError för naiv återställningstid. §10.2-bound ingår inte i C5 och återstår. Nästa C-del väntar på godkänd rättning."
         },
         {
           "id": "MOM-C04",
@@ -614,9 +622,17 @@
             {
               "file": "engine/traderlab/momentum_event.py",
               "detail": "Rättning av C5-02 från granskningen av b131ff4, för Codex omgranskning, inte godkänd: EngineState skapas bara via start/restore/process_bar; insättning = riskmodulens startkapital, avstämd bokföring, inget risklås med position, inget oförklarat nollkonto, exakt startläge. §10.2-bounden ingår fortfarande inte."
+            },
+            {
+              "file": "docs/momentum-C5-granskning-3f46aa5.md",
+              "detail": "Oberoende granskning av exakt 3f46aa5 mot 8e447cb: 503 momentum-/1056 motorprov. Edwins fundingbeslut verifierat, RunLog-kedjan verifierad; restore kan fortfarande ta bort permanent stopp, godta fel kapitalbas/historik och läcka TypeError. C5 EJ GODKÄND."
+            },
+            {
+              "file": "research/audits/momentum-c5-3f46aa5/review.py",
+              "detail": "Revisionslåst git-show-audit: 24 Decimal-inträde/exitfall, 32 separata funding-/marginalfall, O6/terminal/tidsfall, full syntetisk horisont 6576/6577/1096, gamla motexempel och verkligt sekventiellt permanent stopp. Fem mutationer fångade; --check jämför verification.json och reproducerar kvarstående fynd."
             }
           ],
-          "note": "C5 EJ GODKÄND på b131ff4: främmande riskstate kan ta bort permanent stopp (C5-02 P1); intrastapelkomposition/logg har C5-01/C5-03. Oförändrad C3-komponent behåller godkännande. §10.2-bound återstår."
+          "note": "C5 EJ GODKÄND på 3f46aa5: C5-01/C5-03 stängda; C5-02 P1 kvarstår via publik restore och C5-04 P2 ger TypeError för naiv återställningstid. §10.2-bound ingår inte i C5 och återstår. Nästa C-del väntar på godkänd rättning."
         },
         {
           "id": "MOM-C05",
@@ -722,9 +738,17 @@
             {
               "file": "engine/tests/test_momentum_event.py",
               "detail": "Rättning av C5-01–C5-03 från granskningen av b131ff4, för Codex omgranskning, inte godkänd: 101 eventtester (Decimal-facit för olösta event i A/B × båda mmr × teckenordning × med/utan samtidig funding), RunLog bunden till förloppet; 31 av 31 riktade felprov fångade."
+            },
+            {
+              "file": "docs/momentum-C5-granskning-3f46aa5.md",
+              "detail": "Oberoende granskning av exakt 3f46aa5 mot 8e447cb: 503 momentum-/1056 motorprov. Edwins fundingbeslut verifierat, RunLog-kedjan verifierad; restore kan fortfarande ta bort permanent stopp, godta fel kapitalbas/historik och läcka TypeError. C5 EJ GODKÄND."
+            },
+            {
+              "file": "research/audits/momentum-c5-3f46aa5/review.py",
+              "detail": "Revisionslåst git-show-audit: 24 Decimal-inträde/exitfall, 32 separata funding-/marginalfall, O6/terminal/tidsfall, full syntetisk horisont 6576/6577/1096, gamla motexempel och verkligt sekventiellt permanent stopp. Fem mutationer fångade; --check jämför verification.json och reproducerar kvarstående fynd."
             }
           ],
-          "note": "C5 EJ GODKÄND på b131ff4: C5-01/C5-02 P1 och C5-03 P2 reproducerade oberoende. 24 Decimal-kompositioner, O6/terminal, gap/intrastapel och full syntetisk horisont verifierade inom dokumenterade gränser; integration/bound återstår."
+          "note": "C5 EJ GODKÄND på 3f46aa5: C5-01/C5-03 stängda; C5-02 P1 kvarstår via publik restore och C5-04 P2 ger TypeError för naiv återställningstid. §10.2-bound ingår inte i C5 och återstår. Nästa C-del väntar på godkänd rättning."
         }
       ]
     },
