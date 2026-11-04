@@ -1,10 +1,10 @@
 # Efterföljare till H-0013 – Arbetsplan
 
-**14 av 40 uppgifter verifierade · 8 arbetsområden.**
+**15 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-Metodgranskning · Kontrollerad 2026-11-04 · Granskad kodversion `8e27c5f0c74a7f10687695e1b8e4bd35dc078e61`.
+Metodgranskning · Kontrollerad 2026-11-04 · Granskad kodversion `a84e0d87e3bfaef06bb916bf8234cbf4e8a1775f`.
 
-C6 EJ GODKÄND på exakt 8e27c5f mot 5f5de0f, endast syntetiskt. C6-02 P2: close-punktens tid anges som stapelöppning trots att kapitalet blir känt vid nästa 4H-gräns. Decimal verifierar punktvärden, fundingbaser, peak/minimum och C6-01 H1/I1/G1/P1 inom granskad avgränsning. 539 momentumtester/1092 motorprov, A1, 20 äldre audits och ny revisionslåst audit passerar (ny audit reproducerar fyndet). Additiv BarResult.bar granskad; MOM-C03/C05 och äldre komponentgodkännanden består. MOM-C04 fortsatt in_progress, 14/40. Ingen historikkörning, registrering, drift eller paper/live; D tilldelas inte genom denna granskning.
+C6 GODKÄND på exakt a84e0d8 mot 790d477, endast syntetiskt. C6-02 P2 stängt: close T+4h med källstapel kvar i bar_open, verifierat efter mellanfunding och mot RunLog. Oberoende Decimal: 115 punktsekvenser/629 punkter, 60 ickeinterferenspar och sju fångade mutationer. MOM-C04 done inom huvudmodellens leverans C; C 5/5, totalt 15/40. Full boolesk 20 %-prövning, legacy/jämförelser och stress tillhör senare D. Ingen historikkörning, registrering, drift eller paper/live; inget nytt uppdrag.
 
 ## Uppdateringsregler
 
@@ -101,7 +101,7 @@ C6 EJ GODKÄND på exakt 8e27c5f mot 5f5de0f, endast syntetiskt. C6-02 P2: close
 
 ## C. Utförande och nettobaserad risk
 
-4/5 verifierade.
+5/5 verifierade.
 
 - [x] **MOM-C01** Implementera enhetsledger med partial fills, markvärdering och kostnad exakt en gång
   - Underlag: [engine/traderlab/momentum_ledger.py](../engine/traderlab/momentum_ledger.py) — mom-ledger/1.0.0: konto C/q, E = C + qM, exakt §6-lösare, kostnad en gång, normal- och reduce-only-fyllning, E_trade i fas after_trade.
@@ -164,8 +164,9 @@ C6 EJ GODKÄND på exakt 8e27c5f mot 5f5de0f, endast syntetiskt. C6-02 P2: close
   - Underlag: [research/audits/momentum-c5-43b2a4b/review.py](../research/audits/momentum-c5-43b2a4b/review.py) — Revisionslåst git-show-audit med verification.json och --check: 24 Decimal-inträde/exitfall, 32 funding/marginalfall, O6/terminal/tidsfall, 6576 staplar/6577 punkter/1096 dagar, publika motexempel avvisade, sex skalade handelsfall/fyra marginalfall och åtta fångade mutationer.
   - Underlag: [engine/traderlab/momentum_event.py](../engine/traderlab/momentum_event.py) — Kompatibilitetsnot C6: BarResult får fältet bar, bara ett tillägg. 105 eventtester och 34 felprov för eventmodulen passerar; omgodkännande av exakt revision behövs.
   - Underlag: [docs/momentum-C6-granskning-8e27c5f.md](momentum-C6-granskning-8e27c5f.md) — Codex omgranskar exakt 8e27c5f: BarResult.bar är ett additivt fält under befintlig konstruktionsgrind; eventordning och 105 eventtester är oförändrade. C03/C05-godkännandet består inom C5:s huvudmodellgränser; C6-02 gäller boundens tidsmetadata.
+  - Underlag: [docs/momentum-C6-granskning-a84e0d8.md](momentum-C6-granskning-a84e0d8.md) — Codex godkänner exakt a84e0d8 mot 790d477 inom C6:s huvudmodell. C6-02 stängt; event och övriga handelsmoduler byte-oförändrade. C03/C05:s tidigare avgränsade godkännanden består; MOM-C04 klar inom C, ingen boolesk slutprövning.
   - Done inom C5:s huvudmodell: funding, dagsreset, första/sista event och full syntetisk horisont verifierade på 43b2a4b. Ingen publik återställning. Legacy/jämförelsekonton och stress/fördröjning tillhör senare D; ingen historikkörning godkänd.
-- [ ] **MOM-C04** Implementera 2 % dagsstopp, 15 % permanent stopp och konservativ 20 %-riskkontroll **Pågår.**
+- [x] **MOM-C04** Implementera 2 % dagsstopp, 15 % permanent stopp och konservativ 20 %-riskkontroll
   - Underlag: [engine/traderlab/momentum_risk.py](../engine/traderlab/momentum_risk.py) — mom-risk/1.0.0: rena tillståndsövergångar vid 4H-gränser, band 2 pp, dagsbeslut i §7:s ordning, sammanslagning terminal > permanent > dag > cap/platt > normal, dagsreset och lock_day.
   - Underlag: [engine/tests/test_momentum_risk.py](../engine/tests/test_momentum_risk.py) — 61 syntetiska tester mot O6, O14, O15 och handräkning med exakta float-gränser; 17 av 19 riktade felprov fångade, två bevisat ekvivalenta.
   - Underlag: [docs/momentum-risk-C3.md](momentum-risk-C3.md) — API, tillståndsövergångar, gräns mot eventloop, fel, verifiering och gränser för C3.
@@ -193,7 +194,9 @@ C6 EJ GODKÄND på exakt 8e27c5f mot 5f5de0f, endast syntetiskt. C6-02 P2: close
   - Underlag: [docs/momentum-C6-granskning-8e27c5f.md](momentum-C6-granskning-8e27c5f.md) — C6 EJ GODKÄND på 8e27c5f: C6-02 P2, close.time ligger 4 timmar för tidigt. Oberoende Decimal-, regressions- och integritetskontroller redovisas med faktiska antal. C6-01 består; ingen ekonomisk slutprövning.
   - Underlag: [research/audits/momentum-c6-8e27c5f/review.py](../research/audits/momentum-c6-8e27c5f/review.py) — Revisionslåst git-show-audit med verification.json/--check: O7, 32 funding-/marginalfall, två gapfall, fyra 15-stapelsförlopp, 60 ickeinterferenspar, terminal och absorberande nollor; sex egna mutationer fångade. C6-02 reproduceras.
   - Underlag: [engine/tests/test_momentum_bound.py](../engine/tests/test_momentum_bound.py) — Rättning av C6-02 från granskningen av 8e27c5f, för Codex omgranskning, inte godkänd: closepunkten tidsstämplas när den är känd (T + 4h, samma som RunLog), regression med mellanfunding. 33 boundtester/1 093 motortester; 18 av 19 riktade felprov fångade, ett bevisat ekvivalent.
-  - C5:s closebaserade dags-/permanentstopp består efter granskning av det additiva BarResult.bar på 8e27c5f. C6:s kapital-/funding-/peakberäkningar verifierade syntetiskt, men C6-02 P2 i close-punktens tidsproveniens hindrar godkännande. MOM-C04 förblir in_progress; full boolesk 20 %-prövning hör till D. Ingen historikkörning eller drift.
+  - Underlag: [docs/momentum-C6-granskning-a84e0d8.md](momentum-C6-granskning-a84e0d8.md) — Codex godkänner exakt a84e0d8 mot 790d477 inom C6:s huvudmodell. C6-02 stängt; event och övriga handelsmoduler byte-oförändrade. C03/C05:s tidigare avgränsade godkännanden består; MOM-C04 klar inom C, ingen boolesk slutprövning.
+  - Underlag: [research/audits/momentum-c6-a84e0d8/review.py](../research/audits/momentum-c6-a84e0d8/review.py) — Revisionslåst git-show-audit med verification.json/--check: 115 Decimal-punktsekvenser/629 punkter, 60 ickeinterferenspar, åtta fundingstaplar med korrekt close-tid och sju egna mutationer fångade. Alla punktfasers tidsproveniens verifierad.
+  - Done inom leverans C:s huvudmodell: C5:s closebaserade 2 % dagsstopp/15 % permanentstopp består och C6:s separata §10.2-bound med 20 %-kriterieunderlag godkänns på a84e0d8. C6-02 stängt. 20 % styr ingen handel; full boolesk prövning inklusive likvidation hör till D. Ingen historikkörning eller drift.
 - [x] **MOM-C05** Verifiera gap, basis, likvidation och riskordning med handräknade prov och kodgranskning
   - Underlag: [engine/tests/test_momentum_ledger.py](../engine/tests/test_momentum_ledger.py) — 40 syntetiska tester mot orakel O1–O4, O11, O14, O15 och handräkning; 14 riktade felprov fångade.
   - Underlag: [docs/momentum-C1-granskning-6eba8d6.md](momentum-C1-granskning-6eba8d6.md) — Codex granskar exakt 6eba8d6. Orakel/Decimal stämmer för normala fall, men C1-01 och C1-02 behöver numerisk/API-rättning och regressioner före godkännande. 40 ledgerprov, 629 motorprov godkända.
@@ -226,7 +229,8 @@ C6 EJ GODKÄND på exakt 8e27c5f mot 5f5de0f, endast syntetiskt. C6-02 P2: close
   - Underlag: [research/audits/momentum-c5-43b2a4b/review.py](../research/audits/momentum-c5-43b2a4b/review.py) — Revisionslåst git-show-audit med verification.json och --check: 24 Decimal-inträde/exitfall, 32 funding/marginalfall, O6/terminal/tidsfall, 6576 staplar/6577 punkter/1096 dagar, publika motexempel avvisade, sex skalade handelsfall/fyra marginalfall och åtta fångade mutationer.
   - Underlag: [engine/tests/test_momentum_event.py](../engine/tests/test_momentum_event.py) — Kompatibilitetsnot C6: eventtesterna är oförändrade och passerar på revisionen med BarResult.bar.
   - Underlag: [docs/momentum-C6-granskning-8e27c5f.md](momentum-C6-granskning-8e27c5f.md) — Codex omgranskar exakt 8e27c5f: BarResult.bar är ett additivt fält under befintlig konstruktionsgrind; eventordning och 105 eventtester är oförändrade. C03/C05-godkännandet består inom C5:s huvudmodellgränser; C6-02 gäller boundens tidsmetadata.
-  - Done inom C5:s huvudmodell: gap, basis, likvidation och riskordning granskade mot oberoende Decimal-/kalenderfacit på 43b2a4b. C5-01–C5-04 stängda. Inget godkännande av legacy/grid, §10.2-bound, ekonomiskt resultat eller drift. C6 är ännu inte godkänd.
+  - Underlag: [docs/momentum-C6-granskning-a84e0d8.md](momentum-C6-granskning-a84e0d8.md) — Codex godkänner exakt a84e0d8 mot 790d477 inom C6:s huvudmodell. C6-02 stängt; event och övriga handelsmoduler byte-oförändrade. C03/C05:s tidigare avgränsade godkännanden består; MOM-C04 klar inom C, ingen boolesk slutprövning.
+  - Done inom C5:s huvudmodell: gap, basis, likvidation och riskordning granskade mot oberoende Decimal-/kalenderfacit på 43b2a4b. C5-01–C5-04 stängda. C5-godkännandet omfattar inte legacy/grid, §10.2-bound, ekonomiskt resultat eller drift. C6:s separata huvudmodell-bound godkänd på a84e0d8; full boolesk kriterieprövning hör till D.
 
 ## D. Utvärderare och jämförelser
 

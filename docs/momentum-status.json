@@ -3,8 +3,8 @@
   "title": "Efterföljare till H-0013 – granskning och implementation",
   "hypothesis": "H-0017 – riskstyrd tidsseriemomentum på BTCUSDT",
   "updated": "2026-11-04",
-  "reviewed_revision": "8e27c5f0c74a7f10687695e1b8e4bd35dc078e61",
-  "reviewed_scope": "C6 EJ GODKÄND på exakt 8e27c5f mot 5f5de0f, endast syntetiskt. C6-02 P2: close-punktens tid anges som stapelöppning trots att kapitalet blir känt vid nästa 4H-gräns. Decimal verifierar punktvärden, fundingbaser, peak/minimum och C6-01 H1/I1/G1/P1 inom granskad avgränsning. 539 momentumtester/1092 motorprov, A1, 20 äldre audits och ny revisionslåst audit passerar (ny audit reproducerar fyndet). Additiv BarResult.bar granskad; MOM-C03/C05 och äldre komponentgodkännanden består. MOM-C04 fortsatt in_progress, 14/40. Ingen historikkörning, registrering, drift eller paper/live; D tilldelas inte genom denna granskning.",
+  "reviewed_revision": "a84e0d87e3bfaef06bb916bf8234cbf4e8a1775f",
+  "reviewed_scope": "C6 GODKÄND på exakt a84e0d8 mot 790d477, endast syntetiskt. C6-02 P2 stängt: close T+4h med källstapel kvar i bar_open, verifierat efter mellanfunding och mot RunLog. Oberoende Decimal: 115 punktsekvenser/629 punkter, 60 ickeinterferenspar och sju fångade mutationer. MOM-C04 done inom huvudmodellens leverans C; C 5/5, totalt 15/40. Full boolesk 20 %-prövning, legacy/jämförelser och stress tillhör senare D. Ingen historikkörning, registrering, drift eller paper/live; inget nytt uppdrag.",
   "groups": [
     {
       "id": "A",
@@ -562,6 +562,10 @@
             {
               "file": "docs/momentum-C6-granskning-8e27c5f.md",
               "detail": "Codex omgranskar exakt 8e27c5f: BarResult.bar är ett additivt fält under befintlig konstruktionsgrind; eventordning och 105 eventtester är oförändrade. C03/C05-godkännandet består inom C5:s huvudmodellgränser; C6-02 gäller boundens tidsmetadata."
+            },
+            {
+              "file": "docs/momentum-C6-granskning-a84e0d8.md",
+              "detail": "Codex godkänner exakt a84e0d8 mot 790d477 inom C6:s huvudmodell. C6-02 stängt; event och övriga handelsmoduler byte-oförändrade. C03/C05:s tidigare avgränsade godkännanden består; MOM-C04 klar inom C, ingen boolesk slutprövning."
             }
           ],
           "note": "Done inom C5:s huvudmodell: funding, dagsreset, första/sista event och full syntetisk horisont verifierade på 43b2a4b. Ingen publik återställning. Legacy/jämförelsekonton och stress/fördröjning tillhör senare D; ingen historikkörning godkänd."
@@ -569,7 +573,7 @@
         {
           "id": "MOM-C04",
           "title": "Implementera 2 % dagsstopp, 15 % permanent stopp och konservativ 20 %-riskkontroll",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "engine/traderlab/momentum_risk.py",
@@ -678,9 +682,17 @@
             {
               "file": "engine/tests/test_momentum_bound.py",
               "detail": "Rättning av C6-02 från granskningen av 8e27c5f, för Codex omgranskning, inte godkänd: closepunkten tidsstämplas när den är känd (T + 4h, samma som RunLog), regression med mellanfunding. 33 boundtester/1 093 motortester; 18 av 19 riktade felprov fångade, ett bevisat ekvivalent."
+            },
+            {
+              "file": "docs/momentum-C6-granskning-a84e0d8.md",
+              "detail": "Codex godkänner exakt a84e0d8 mot 790d477 inom C6:s huvudmodell. C6-02 stängt; event och övriga handelsmoduler byte-oförändrade. C03/C05:s tidigare avgränsade godkännanden består; MOM-C04 klar inom C, ingen boolesk slutprövning."
+            },
+            {
+              "file": "research/audits/momentum-c6-a84e0d8/review.py",
+              "detail": "Revisionslåst git-show-audit med verification.json/--check: 115 Decimal-punktsekvenser/629 punkter, 60 ickeinterferenspar, åtta fundingstaplar med korrekt close-tid och sju egna mutationer fångade. Alla punktfasers tidsproveniens verifierad."
             }
           ],
-          "note": "C5:s closebaserade dags-/permanentstopp består efter granskning av det additiva BarResult.bar på 8e27c5f. C6:s kapital-/funding-/peakberäkningar verifierade syntetiskt, men C6-02 P2 i close-punktens tidsproveniens hindrar godkännande. MOM-C04 förblir in_progress; full boolesk 20 %-prövning hör till D. Ingen historikkörning eller drift."
+          "note": "Done inom leverans C:s huvudmodell: C5:s closebaserade 2 % dagsstopp/15 % permanentstopp består och C6:s separata §10.2-bound med 20 %-kriterieunderlag godkänns på a84e0d8. C6-02 stängt. 20 % styr ingen handel; full boolesk prövning inklusive likvidation hör till D. Ingen historikkörning eller drift."
         },
         {
           "id": "MOM-C05",
@@ -810,9 +822,13 @@
             {
               "file": "docs/momentum-C6-granskning-8e27c5f.md",
               "detail": "Codex omgranskar exakt 8e27c5f: BarResult.bar är ett additivt fält under befintlig konstruktionsgrind; eventordning och 105 eventtester är oförändrade. C03/C05-godkännandet består inom C5:s huvudmodellgränser; C6-02 gäller boundens tidsmetadata."
+            },
+            {
+              "file": "docs/momentum-C6-granskning-a84e0d8.md",
+              "detail": "Codex godkänner exakt a84e0d8 mot 790d477 inom C6:s huvudmodell. C6-02 stängt; event och övriga handelsmoduler byte-oförändrade. C03/C05:s tidigare avgränsade godkännanden består; MOM-C04 klar inom C, ingen boolesk slutprövning."
             }
           ],
-          "note": "Done inom C5:s huvudmodell: gap, basis, likvidation och riskordning granskade mot oberoende Decimal-/kalenderfacit på 43b2a4b. C5-01–C5-04 stängda. Inget godkännande av legacy/grid, §10.2-bound, ekonomiskt resultat eller drift. C6 är ännu inte godkänd."
+          "note": "Done inom C5:s huvudmodell: gap, basis, likvidation och riskordning granskade mot oberoende Decimal-/kalenderfacit på 43b2a4b. C5-01–C5-04 stängda. C5-godkännandet omfattar inte legacy/grid, §10.2-bound, ekonomiskt resultat eller drift. C6:s separata huvudmodell-bound godkänd på a84e0d8; full boolesk kriterieprövning hör till D."
         }
       ]
     },
