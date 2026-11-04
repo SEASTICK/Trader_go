@@ -42,7 +42,7 @@ export default function Investors() {
 
       {!started ? (
         <section className="card pad"><h2>Inte startad än</h2>
-          <p className="muted" style={{ marginTop: 8 }}>Portföljen uppdateras varje vardagskväll av GitHub (flödet Paper 13F) och startar {p.start}. Siffrorna här kommer från den senaste uppdateringen när appen byggdes.</p>
+          <p className="muted" style={{ marginTop: 8 }}>Portföljen uppdateras varje lördag av GitHub (flödet Paper 13F) och startar {p.start}. Siffrorna här kommer från den senaste uppdateringen när appen byggdes.</p>
         </section>
       ) : (
         <section className="card chart-card">

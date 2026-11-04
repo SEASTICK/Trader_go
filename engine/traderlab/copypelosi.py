@@ -132,7 +132,18 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--hypothesis", default="H-0017")
     ap.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[2])
+    ap.add_argument("--data-only", action="store_true", help="Hämta och tolka redovisningarna, räkna inget resultat")
     a = ap.parse_args()
+    if a.data_only:
+        data_dir = a.repo / "data"
+        reps = [r for y in range(2013, 2025) for r in house.reports(y, data_dir) if START <= r.filed < END]
+        parsed = [(r, house.parse(house.pdf_text(r, data_dir))) for r in reps]
+        ok = [p for p in parsed if p[1]]
+        buys = [t for _, tr in ok for t in tr if t.kind == "buy"]
+        print(f"redovisningar {len(reps)}, tolkade {len(ok)} ({len(ok) / max(len(reps), 1):.0%}), köp {len(buys)}, "
+              f"sälj {sum(1 for _, tr in ok for t in tr if t.kind == 'sell')}, aktier {len({t.ticker for t in buys})}")
+        print("otolkade:", [r.doc_id for r, tr in parsed if not tr][:30])
+        return
     print(save(a.repo, run(a.hypothesis, a.repo)))
 
 

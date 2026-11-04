@@ -128,7 +128,11 @@ def main() -> None:
     ap.add_argument("--start", default="2026-11-05")
     ap.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[2])
     a = ap.parse_args()
-    s = update(a.repo, a.start)
+    try:
+        s = update(a.repo, a.start)
+    except stocks.PriceSourceUnavailable as exc:
+        print(f"Ingen uppdatering: kurskällan svarar inte ({exc}). Sätt hemligheten TIINGO_API_KEY.")
+        return
     print(f"värde {s['value']:.2f} USD (SPY {s['spy_value']:.2f}), {len(s['holdings'])} innehav, "
           f"{len(s['events'])} nya redovisningar sedan start")
 

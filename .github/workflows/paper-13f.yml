@@ -1,11 +1,12 @@
-# Papper framåt för 13F-observationen (engine/traderlab/paper13f.py): varje vardagskväll efter börsens stängning
+# Papper framåt för 13F-observationen (engine/traderlab/paper13f.py): varje lördag (13F kommer kvartalsvis,
+# och veckovis räcker för värderingen; gratisnivån hos Tiingo tillåter 50 anrop i timmen)
 # hämtas nya 13F-redovisningar och kurser, och papperportföljen på 100 000 USD uppdateras. Inga riktiga order.
 # Tillståndet committas till main (research/paper/ och app/data/paper13f.json), så appen och Universe ser det.
 name: Paper 13F
 
 on:
   schedule:
-    - cron: "37 22 * * 1-5"
+    - cron: "37 6 * * 6"
   workflow_dispatch:
 
 concurrency:
@@ -18,9 +19,14 @@ permissions:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 180
+    defaults:
+      run:
+        shell: bash
     env:
       SEC_CONTACT: philipsjoqvist20@gmail.com
+      TIINGO_API_KEY: ${{ secrets.TIINGO_API_KEY }}
+      TIINGO_SLEEP: "72"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

@@ -11,6 +11,10 @@ on:
         description: "Registrerad hypotes att köra"
         required: true
         default: "H-0016"
+      data_only:
+        description: "Bara hämta och tolka data (inget resultat)"
+        type: boolean
+        default: false
 
 concurrency:
   group: research-13f
@@ -22,8 +26,13 @@ permissions:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 350
+    defaults:
+      run:
+        shell: bash
     env:
+      TIINGO_API_KEY: ${{ secrets.TIINGO_API_KEY }}
+      TIINGO_SLEEP: "72"
       # SEC kräver en kontaktadress i User-Agent för automatiska anrop (angiven av Philip för detta syfte).
       SEC_CONTACT: philipsjoqvist20@gmail.com
     steps:
@@ -52,7 +61,9 @@ jobs:
             H-0017) mod=traderlab.copypelosi ;;
             *) echo "Okänd hypotes" >&2; exit 1 ;;
           esac
-          python -m "$mod" --hypothesis "${{ inputs.hypothesis }}" | tee ../run.log
+          extra=""; [ "${{ inputs.data_only }}" = "true" ] && extra="--data-only"
+          python -m "$mod" --hypothesis "${{ inputs.hypothesis }}" $extra | tee ../run.log
+          tail -5 ../run.log >> "$GITHUB_STEP_SUMMARY"
       - name: Spara cachen även om körningen avbröts (till exempel av Stooqs dagsgräns)
         if: always()
         uses: actions/cache/save@v4
@@ -63,6 +74,7 @@ jobs:
             data/raw/stooq
           key: research-13f-${{ github.run_id }}
       - name: Lägg resultatet på en gren
+        if: ${{ !inputs.data_only }}
         run: |
           branch="bot/$(echo '${{ inputs.hypothesis }}' | tr 'A-Z' 'a-z')-resultat"
           git config user.name "tradergo-research-bot"
