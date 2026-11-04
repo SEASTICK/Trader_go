@@ -1,0 +1,107 @@
+# Driftsätter forskningsworkern på DigitalOcean från en commit på main, enligt docs/fas2-driftsattning.md.
+# Bara för hand (Run workflow). Kräver ett "approve" i ärendet som skapas innan servern rörs.
+# Supabase-schemat ändras inte här: migrationer körs fortfarande en gång var i SQL Editor.
+# Hemligheter: SERVER_HOST, SERVER_SSH_KEY, SERVER_KNOWN_HOSTS (se docs/moln-github.md).
+name: Research deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: "Commit på main att driftsätta (tomt = senaste main)"
+        required: false
+        default: ""
+
+concurrency:
+  group: research-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      name: ${{ steps.pkg.outputs.name }}
+      sha: ${{ steps.pkg.outputs.sha }}
+      commit: ${{ steps.pkg.outputs.commit }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Bygg reproducerbart paket
+        id: pkg
+        env:
+          INPUT_COMMIT: ${{ inputs.commit }}
+        run: |
+          commit=$(git rev-parse --verify "${INPUT_COMMIT:-origin/main}^{commit}")
+          git merge-base --is-ancestor "$commit" origin/main || { echo "Bara commits som finns på main får driftsättas." >&2; exit 1; }
+          out=$(bash scripts/build-research-release.sh "$commit" dist)
+          tgz=$(echo "$out" | sed -n 1p); sha=$(echo "$out" | sed -n 2p)
+          echo "name=$(basename "$tgz" .tar.gz)" >> "$GITHUB_OUTPUT"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "commit=$commit" >> "$GITHUB_OUTPUT"
+          echo "### Paket $(basename "$tgz")" >> "$GITHUB_STEP_SUMMARY"
+          echo "SHA-256: \`$sha\` (samma commit ger samma värde lokalt)" >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: research-release
+          path: dist/
+          retention-days: 30
+
+  approve:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Vänta på godkännande i ett ärende
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          APPROVERS: SEASTICK edwinfighter42-star
+          TRIGGERED_BY: ${{ github.actor }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          APPROVAL_TITLE: "Driftsätt forskningsworkern ${{ needs.build.outputs.name }} på servern"
+          APPROVAL_BODY: |
+            Forskningsworkern från commit `${{ needs.build.outputs.commit }}` är byggd men inte driftsatt.
+            Paketets SHA-256: `${{ needs.build.outputs.sha }}`.
+
+            Vid godkännande: paketet verifieras, workern stoppas när inget jobb pågår, installeras med install.sh,
+            startas och kontrolleras med check-single-worker.sh. Föregående release ligger kvar för återgång.
+            Supabase-migrationer görs inte här.
+        run: bash .github/scripts/wait_for_approval.sh
+
+  deploy:
+    needs: [build, approve]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: research-release
+          path: dist
+      - name: SSH med fäst värdnyckel
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          SERVER_KNOWN_HOSTS: ${{ secrets.SERVER_KNOWN_HOSTS }}
+        run: |
+          for v in SERVER_HOST SERVER_SSH_KEY SERVER_KNOWN_HOSTS; do
+            [ -n "${!v}" ] || { echo "Hemligheten $v saknas (se docs/moln-github.md)." >&2; exit 1; }
+          done
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SERVER_SSH_KEY" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
+          printf '%s\n' "$SERVER_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          echo "SSH=ssh -i $HOME/.ssh/id_deploy -o BatchMode=yes -o StrictHostKeyChecking=yes root@$SERVER_HOST" >> "$GITHUB_ENV"
+          echo "SCP=scp -i $HOME/.ssh/id_deploy -o BatchMode=yes -o StrictHostKeyChecking=yes" >> "$GITHUB_ENV"
+          echo "HOST=$SERVER_HOST" >> "$GITHUB_ENV"
+      - name: Ladda upp paketet
+        run: $SCP "dist/${{ needs.build.outputs.name }}.tar.gz" "root@$HOST:/tmp/"
+      - name: Driftsätt enligt docs/fas2-driftsattning.md (steg 3–6)
+        run: $SSH 'bash -s' -- "${{ needs.build.outputs.name }}" "${{ needs.build.outputs.sha }}" < .github/scripts/research-deploy-remote.sh

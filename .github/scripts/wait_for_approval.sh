@@ -18,14 +18,27 @@ for user in $APPROVERS; do
 done
 if [ ${#assignees[@]} -eq 0 ]; then for user in $APPROVERS; do assignees+=(--assignee "$user"); done; fi
 
+# Valfritt: APPROVAL_TITLE och APPROVAL_BODY för andra godkännanden än appreleaser (till exempel serverdriftsättning).
+if [ -n "${APPROVAL_BODY:-}" ]; then
+  body="${APPROVAL_BODY}
+
+Svara i det här ärendet med **approve** för att fortsätta eller **deny** för att avbryta.
+Bara ${APPROVERS// /, } kan godkänna.
+
+Körningen: ${RUN_URL}"
+else
 body="Trader_go **v${RELEASE_VERSION}** är byggd men inte publicerad. När den godkänns går uppdateringen ut till alla som har appen.
 
 Svara i det här ärendet med **approve** för att publicera eller **deny** för att avbryta.
 Bara ${APPROVERS// /, } kan godkänna. Ärendet är tilldelat den som startade körningen, men båda kan svara.
 
 Bygget: ${RUN_URL}"
+fi
+title="${APPROVAL_TITLE:-Godkänn uppdatering v${RELEASE_VERSION} till användarna}"
+ok_msg="Godkänd. Publicerar v${RELEASE_VERSION:-}."; deny_msg="Avslagen. Ingenting publiceras."
+if [ -n "${APPROVAL_BODY:-}" ]; then ok_msg="Godkänd. Fortsätter."; deny_msg="Avslagen. Ingenting görs."; fi
 
-issue_url="$(gh issue create --title "Godkänn uppdatering v${RELEASE_VERSION} till användarna" --body "$body" "${assignees[@]}")" || exit 1
+issue_url="$(gh issue create --title "$title" --body "$body" "${assignees[@]}")" || exit 1
 issue="${issue_url##*/}"
 echo "Väntar på godkännande i $issue_url"
 
@@ -54,12 +67,12 @@ while true; do
   decision="$(find_decision)"
   case "$decision" in
     approve)
-      gh issue close "$issue" --comment "Godkänd. Publicerar v${RELEASE_VERSION}." >/dev/null || true
+      gh issue close "$issue" --comment "$ok_msg" >/dev/null || true
       trap - EXIT
       exit 0
       ;;
     deny)
-      gh issue close "$issue" --comment "Avslagen. Ingenting publiceras." >/dev/null || true
+      gh issue close "$issue" --comment "$deny_msg" >/dev/null || true
       trap - EXIT
       echo "Releasen avslogs av en godkännare." >&2
       exit 1

@@ -1,0 +1,33 @@
+# Hälsokontroll av servern var sjätte timme. Bara läsning: startar, stoppar och ändrar inget.
+# Misslyckas den skickar GitHub ett mejl (Actions-notiser), och det är larmet.
+# Supabase-nyckeln stannar på servern; GitHub har bara SSH-åtkomst. Saknas hemligheterna hoppas allt över.
+name: Research health
+
+on:
+  schedule:
+    - cron: "23 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SERVER_HOST: ${{ secrets.SERVER_HOST }}
+      SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+      SERVER_KNOWN_HOSTS: ${{ secrets.SERVER_KNOWN_HOSTS }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Kontrollera servern
+        run: |
+          if [ -z "$SERVER_HOST" ] || [ -z "$SERVER_SSH_KEY" ] || [ -z "$SERVER_KNOWN_HOSTS" ]; then
+            echo "::notice::Serverhemligheterna saknas ännu, hoppar över (se docs/moln-github.md)."; exit 0
+          fi
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SERVER_SSH_KEY" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
+          printf '%s\n' "$SERVER_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          ssh -i ~/.ssh/id_deploy -o BatchMode=yes -o StrictHostKeyChecking=yes "root@$SERVER_HOST" 'bash -s' \
+            < .github/scripts/research-health-remote.sh | tee -a "$GITHUB_STEP_SUMMARY"
