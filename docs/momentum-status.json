@@ -514,9 +514,21 @@
             {
               "file": "docs/momentum-C4-06-granskning-9174b9c.md",
               "detail": "C4-06 stängt på 9174b9c; C2-funding och C3 åter godkända inom komponentgränserna med 400 fundingutfall och 400 riskbeslut identiska med 4241d0e. Full event-/funding-/marginalintegration samt första/sista event återstår."
+            },
+            {
+              "file": "engine/traderlab/momentum_event.py",
+              "detail": "mom-event/1.0.0: eventkomposition för ett huvudmodellskonto enligt §8.1–§8.4 med första/sista event, §10.1-closepunkter och §4-dagsögonblick; återanvänder godkända moduler."
+            },
+            {
+              "file": "engine/tests/test_momentum_event.py",
+              "detail": "62 syntetiska tester mot O3, O5/O5b, O6, O10, O11/O18-snitt, O14–O16 och Decimal; 16 riktade felprov fångade."
+            },
+            {
+              "file": "docs/momentum-event-C5.md",
+              "detail": "API, fasordning, invarianter, identiteter, horisont, verifiering och avgränsningar för C5."
             }
           ],
-          "note": "C4-06 stängt på 9174b9c; C2-funding och C3 åter godkända inom komponentgränserna med 400 fundingutfall och 400 riskbeslut identiska med 4241d0e. Full event-/funding-/marginalintegration samt första/sista event återstår."
+          "note": "C5: eventordning, funding i A/B och mellanhändelser, dagsreset och första/sista event integrerade syntetiskt; väntar på Codex granskning."
         },
         {
           "id": "MOM-C04",
@@ -566,9 +578,21 @@
             {
               "file": "docs/momentum-C4-06-granskning-9174b9c.md",
               "detail": "C4-06 stängt på 9174b9c; C3-komponenten åter godkänd med 400 oförändrade referensbeslut och återkörda terminal-/signalkontroller. Konservativ intrastapel-bound och full eventintegration återstår."
+            },
+            {
+              "file": "engine/traderlab/momentum_event.py",
+              "detail": "mom-event/1.0.0: eventkomposition för ett huvudmodellskonto enligt §8.1–§8.4 med första/sista event, §10.1-closepunkter och §4-dagsögonblick; återanvänder godkända moduler."
+            },
+            {
+              "file": "engine/tests/test_momentum_event.py",
+              "detail": "62 syntetiska tester mot O3, O5/O5b, O6, O10, O11/O18-snitt, O14–O16 och Decimal; 16 riktade felprov fångade."
+            },
+            {
+              "file": "docs/momentum-event-C5.md",
+              "detail": "API, fasordning, invarianter, identiteter, horisont, verifiering och avgränsningar för C5."
             }
           ],
-          "note": "C4-06 stängt på 9174b9c; C3-komponenten åter godkänd med 400 oförändrade referensbeslut och återkörda terminal-/signalkontroller. Konservativ intrastapel-bound och full eventintegration återstår."
+          "note": "C5: integrerade close-/riskprov i eventordningen; konservativ intrastapel-bound (§10.2) återstår i nästa del."
         },
         {
           "id": "MOM-C05",
@@ -650,9 +674,21 @@
             {
               "file": "docs/momentum-C4-06-granskning-9174b9c.md",
               "detail": "Tidigare avgränsat C4-godkännande på 4241d0e bevaras för oförändrad marginal/ledger. C4-06 i funding/risk stängt på 9174b9c; giltiga C2/C3-utfall och felkontrakt återverifierade syntetiskt. Full event-/riskordning återstår. Nästa del väntar på Edwins beslut."
+            },
+            {
+              "file": "engine/traderlab/momentum_event.py",
+              "detail": "mom-event/1.0.0: eventkomposition för ett huvudmodellskonto enligt §8.1–§8.4 med första/sista event, §10.1-closepunkter och §4-dagsögonblick; återanvänder godkända moduler."
+            },
+            {
+              "file": "engine/tests/test_momentum_event.py",
+              "detail": "62 syntetiska tester mot O3, O5/O5b, O6, O10, O11/O18-snitt, O14–O16 och Decimal; 16 riktade felprov fångade."
+            },
+            {
+              "file": "docs/momentum-event-C5.md",
+              "detail": "API, fasordning, invarianter, identiteter, horisont, verifiering och avgränsningar för C5."
             }
           ],
-          "note": "Tidigare avgränsat C4-godkännande på 4241d0e bevaras för oförändrad marginal/ledger. C4-06 i funding/risk stängt på 9174b9c; giltiga C2/C3-utfall och felkontrakt återverifierade syntetiskt. Full event-/riskordning återstår. Nästa del väntar på Edwins beslut."
+          "note": "C5: kompositionsprov för gap, basis, likvidation och riskordning; väntar på Codex granskning. Bound återstår."
         }
       ]
     },
