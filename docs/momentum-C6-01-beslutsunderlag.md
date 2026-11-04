@@ -49,13 +49,14 @@ kronologiskt.
 
 ## Möjliga punktsekvenser (konsekvensillustrationer, inga nya scenarier)
 
-**A. High/low med olöst hypotetisk funding och oklippta negativa värden, sedan nollpunkt (ett förslag till tillägg; §10.2 låser inte fortsättningen vid likvidation).** Punkterna open, trade, post, high och low räknas med q_open och de
-olösta mellaneventen som hypotetiska belopp. Negativa värden står kvar oklippta. Därefter kommer en nollpunkt
+**A. High/low med olöst hypotetisk funding och oklippta negativa värden, sedan nollpunkt (ett förslag till tillägg; §10.2 låser inte fortsättningen vid likvidation).** Open räknas på ingående C/q före A-funding och fyllning.
+Trade och post är öppningens kapitalfaser, och high och low räknas med q_open och de olösta mellaneventen som
+hypotetiska belopp. Negativa värden står kvar oklippta. Därefter kommer en nollpunkt
 `liquidation` (E = 0) och nollor till terminal. Vid gapträff ingår E_open, även negativt, och sedan nollpunkten. Det
 blir inga high/low-punkter med positionen.
 **B. Som A, men ingen punkt under 0.** Negativt kapital före nollställningen syns i marginal- och gapspåret men inte i
 bounden. Trough blir 0.
-**C. Inga high/low-punkter i träffstapeln.** Punkterna open, trade och post räknas med q_open, sedan nollpunkten. Vid
+**C. Inga high/low-punkter i träffstapeln.** Punkterna open (ingående C/q), trade och post följs av nollpunkten. Vid
 gap gäller samma som B.
 
 | Fall | A: punkter (peak 101 000) | A: max_dd_bound | B | C |
@@ -70,9 +71,12 @@ boundens peak är minst 100 000.
 
 ## Konsekvens
 
-- **Huvudmodellen:** varje likvidation gör C6 falskt genom likvidationsvillkoret i §13. Alla tre varianterna ger
-  magnitud ≥ 1 > 0,20. Valet kan därför inte ändra C6, REJECT/PASS eller något beslut för huvudmodellen. Det ändrar
-  bara den redovisade magnituden vid negativt kapital före nollställning (A: över 1, B/C: exakt 1).
+- **Huvudmodellen:** varje likvidation gör C6 falskt genom likvidationsvillkoret i §13.2. Alla varianter ger ett
+  lokalt bidrag med magnitud ≥ 1 > 0,20. För en giltig main-körning med oförändrad ledger, marginalflagga och
+  close-serie kan valet därför inte ändra C6 eller den ekonomiska klassificeringen REJECT/MORE_RESEARCH. OGILTIG och
+  OGILTIG_DATA är separata frågor. Valet ändrar den redovisade magnituden: lokalt bidrag över 1 i A vid negativt
+  kapital före nollställning, annars lokalt exakt 1. Hela förloppets mått är min(tidigare minimum, lokalt minimum)
+  och kan alltså redan vara lägre.
 - **Övriga konton (diagnostik):** samma skillnad i redovisad magnitud, utan beslutseffekt.
 - **Handel:** ingen variant matar stopp, avsikter eller marginalbeslut.
 
@@ -109,3 +113,34 @@ bedömde att det behövde rättas. Rättningarna:
 
 Codex ersatte frågorna 1–3 ovan med fyra valfrågor (H, I, G och P). Edwins svar finns i
 [momentum-C6-01-edwins-beslut.md](momentum-C6-01-edwins-beslut.md).
+
+## Kompletterande exempel (andra rättningen efter Codex granskning av beslutet)
+
+Codex [granskning av det dokumenterade beslutet](momentum-C6-01-granskning-beslut.md) krävde exempel där high höjer
+peak och där ett tidigare minimum styr. Exemplen följer Edwins val (H1, I1, G1, P1) och är handräknade i Decimal.
+Alla tal är syntetiska.
+
+**Fall 4, high höjer peak före en negativ low.** Scenario A, mmr 0,05, ingen avsikt och ingen samtidig funding.
+C = −300 000, q = 4 000, boundens peak före stapeln 100 000 och tidigare minimum −0,05. Mark O/H/L = 100/110/70.
+Mellanevent med M_ref 100: betalning +0,01 (p = +4 000) och kredit −0,01 (p = −4 000). Gapmarginal: E_open 100 000 >
+MM 20 000, ingen gapträff. C_high = −296 000 och C_low = −304 000. Marginalunderlaget vid low ger E −24 000 ≤ MM
+14 000, alltså träff inom stapeln.
+
+| Punkt | E | Peak efter punkten | Drawdown | Ackumulerat minimum |
+|---|---|---|---|---|
+| open | 100 000 | 100 000 | 0 | −0,05 |
+| trade | 100 000 | 100 000 | 0 | −0,05 |
+| post | 100 000 | 100 000 | 0 | −0,05 |
+| high | 144 000 | 144 000 | 0 | −0,05 |
+| low | −24 000 | 144 000 | −7/6 ≈ −1,1666666666666667 | −7/6 |
+| liquidation | 0 | 144 000 | −1 | −7/6 |
+
+Med peak kvar på 100 000 hade low gett −1,24. Den högre peaken gör alltså den negativa troughen mindre negativ, vilket
+illustrerar reservationen om konservativitet.
+
+**Fall 5, ett tidigare minimum styr.** Ett levande konto utan träff har tidigare haft en djup low: ackumulerat minimum
+−0,40. En senare stapel utan träff ger lokalt minimum −0,25, och det ackumulerade minimumet förblir −0,40. Om en
+senare stapel i stället likvideras som fall 1 blir det lokala bidraget −1 och det ackumulerade minimumet −1.
+
+**Var negativa punkter kan uppstå.** Utan träff är E_low > MM ≥ 0 och E_open > MM ≥ 0, så alla punkter med position
+är positiva. Negativa boundpunkter uppstår bara i själva likvidationsstapeln (I1/G1), och därefter är alla punkter 0.
