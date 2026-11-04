@@ -554,6 +554,10 @@
             {
               "file": "research/audits/momentum-c5-43b2a4b/review.py",
               "detail": "Revisionslåst git-show-audit med verification.json och --check: 24 Decimal-inträde/exitfall, 32 funding/marginalfall, O6/terminal/tidsfall, 6576 staplar/6577 punkter/1096 dagar, publika motexempel avvisade, sex skalade handelsfall/fyra marginalfall och åtta fångade mutationer."
+            },
+            {
+              "file": "engine/traderlab/momentum_event.py",
+              "detail": "Kompatibilitetsnot C6: BarResult får fältet bar, bara ett tillägg. 105 eventtester och 34 felprov för eventmodulen passerar; omgodkännande av exakt revision behövs."
             }
           ],
           "note": "Done inom C5:s huvudmodell: funding, dagsreset, första/sista event och full syntetisk horisont verifierade på 43b2a4b. Ingen publik återställning. Legacy/jämförelsekonton och stress/fördröjning tillhör senare D; ingen historikkörning godkänd."
@@ -650,6 +654,14 @@
             {
               "file": "research/audits/momentum-c5-43b2a4b/review.py",
               "detail": "Revisionslåst git-show-audit med verification.json och --check: 24 Decimal-inträde/exitfall, 32 funding/marginalfall, O6/terminal/tidsfall, 6576 staplar/6577 punkter/1096 dagar, publika motexempel avvisade, sex skalade handelsfall/fyra marginalfall och åtta fångade mutationer."
+            },
+            {
+              "file": "engine/traderlab/momentum_bound.py",
+              "detail": "C6 för Codex granskning, inte godkänd: mom-bound/1.0.0, separat §10.2-bound för huvudmodellen ovanpå eventkompositionen, med C6-01-tillägget (Edwins val H1, I1, G1, P1; Codex: klart för implementation). Ingen återkoppling till handel."
+            },
+            {
+              "file": "docs/momentum-bound-C6.md",
+              "detail": "API, punktordning, fundingbaser och verifiering: 32 boundtester, 539 momentumtester/1 092 motortester; 17 av 18 riktade felprov fångade, ett bevisat ekvivalent."
             }
           ],
           "note": "C5 godkänd på 43b2a4b: integrerade closebaserade dags-/permanentstopp verifierade, inklusive bevarat permanent stopp genom publika motorsteg. §10.2-bound och konservativ 20 %-riskkontroll återstår; därför fortsatt in_progress."
@@ -774,6 +786,10 @@
             {
               "file": "research/audits/momentum-c5-43b2a4b/review.py",
               "detail": "Revisionslåst git-show-audit med verification.json och --check: 24 Decimal-inträde/exitfall, 32 funding/marginalfall, O6/terminal/tidsfall, 6576 staplar/6577 punkter/1096 dagar, publika motexempel avvisade, sex skalade handelsfall/fyra marginalfall och åtta fångade mutationer."
+            },
+            {
+              "file": "engine/tests/test_momentum_event.py",
+              "detail": "Kompatibilitetsnot C6: eventtesterna är oförändrade och passerar på revisionen med BarResult.bar."
             }
           ],
           "note": "Done inom C5:s huvudmodell: gap, basis, likvidation och riskordning granskade mot oberoende Decimal-/kalenderfacit på 43b2a4b. C5-01–C5-04 stängda. Inget godkännande av legacy/grid, §10.2-bound, ekonomiskt resultat eller drift. Nästa C-del kan tilldelas."

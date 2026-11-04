@@ -279,6 +279,7 @@ class BarResult:
     prev_state: EngineState      # tillståndet som stapeln behandlades från
     state: EngineState
     bar_open: pd.Timestamp
+    bar: Bar                     # den behandlade stapeln (mark-OHLC för §10.2-bounden, C6)
     trace: tuple                 # ordnade Trace-poster
     close_point: tuple | None    # (källstapel, tid känd, E_close) för föregående stapel, None för första
     day_end: tuple | None        # (dag, E_end, likviderad) vid 00:00-gränser
@@ -467,7 +468,7 @@ def process_bar(state: EngineState, bar: Bar, events=(), signal: risk.SignalInpu
     with _issuing():
         new_state = EngineState(scenario=s, account=acct, risk_state=rs, funding_state=fs, margin_state=ms,
                                 next_bar=T + BAR, prev_mark_close=bar.mark_close, terminated=terminated)
-        return BarResult(prev_state=state, state=new_state, bar_open=T, trace=tuple(trace), close_point=close_point,
+        return BarResult(prev_state=state, state=new_state, bar_open=T, bar=bar, trace=tuple(trace), close_point=close_point,
                          day_end=day_end, terminal_point=terminal_point, step_record=rec,
                          simultaneous=len(simultaneous), interior_booked=booked, absorbed=absorbed,
                          unresolved=tuple(unresolved), margin_basis=margin_basis)
