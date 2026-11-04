@@ -1,10 +1,10 @@
 # Efterföljare till H-0013 – Arbetsplan
 
-**12 av 40 uppgifter verifierade · 8 arbetsområden.**
+**14 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-Metodgranskning · Kontrollerad 2026-11-04 · Granskad kodversion `3f46aa572d5315527ef45e48ac218e9d80e551c8`.
+Metodgranskning · Kontrollerad 2026-11-04 · Granskad kodversion `43b2a4bd26149bb04d77e1ef94113b2b684719a5`.
 
-C5 EJ GODKÄND på exakt 3f46aa5 mot 8e447cb. C5-01 och C5-03 stängda inom C5. C5-02 P1 kvarstår: publik restore kan byta bort permanent stopp och godtar fel kapitalbas/historik. C5-04 P2: naiv restore-tid läcker TypeError. 503 momentumtester, 1056 motorprov, A1, 18 äldre audits och ny revisionslåst audit passerar inklusive reproducerade fynd. C03/C04/C05 in_progress; oförändrade A/B/C01/C02 behåller komponentgodkännande. §10.2-bound återstår. Endast syntetiskt; ingen nästa C-del godkänd. 12/40.
+C5 GODKÄND på exakt 43b2a4b mot aa81472, endast syntetiskt. C5-02/C5-04 stängda; C5-01/C5-03 fortsatt stängda. Ingen publik restore; privat fixturväg godtas endast som testhjälp utan proveniensgaranti. 507 momentumtester, 1060 motorprov, A1, 19 äldre audits och ny revisionslåst audit passerar. C03/C05 done inom huvudmodellens C5-gränser; C04 in_progress för §10.2-bound och 20 %-riskkontroll. A/B/C01/C02 behåller komponentgodkännande. Nästa C-del kan tilldelas; ingen historikkörning/drift/paper/live. 14/40.
 
 ## Uppdateringsregler
 
@@ -101,7 +101,7 @@ C5 EJ GODKÄND på exakt 3f46aa5 mot 8e447cb. C5-01 och C5-03 stängda inom C5. 
 
 ## C. Utförande och nettobaserad risk
 
-2/5 verifierade.
+4/5 verifierade.
 
 - [x] **MOM-C01** Implementera enhetsledger med partial fills, markvärdering och kostnad exakt en gång
   - Underlag: [engine/traderlab/momentum_ledger.py](../engine/traderlab/momentum_ledger.py) — mom-ledger/1.0.0: konto C/q, E = C + qM, exakt §6-lösare, kostnad en gång, normal- och reduce-only-fyllning, E_trade i fas after_trade.
@@ -135,7 +135,7 @@ C5 EJ GODKÄND på exakt 3f46aa5 mot 8e447cb. C5-01 och C5-03 stängda inom C5. 
   - Underlag: [docs/momentum-C4-06-granskning-9174b9c.md](momentum-C4-06-granskning-9174b9c.md) — C4-06 P2 stängt på exakt 9174b9c. C3:s rena risk-/avsiktsmodul åter godkänd: kontrollerade metadatafel, oförändrade indata och 400 giltiga beslut exakt identiska med 4241d0e. Full eventintegration ingår inte.
   - Underlag: [research/audits/momentum-c406-9174b9c/verification.json](../research/audits/momentum-c406-9174b9c/verification.json) — Revisionslåst audit: 44 kontrollerade avvisningar, 17 basläckor inklusive åtta ursprungliga vägar, 400 funding- och 400 riskjämförelser samt oförändrad validering/beräkning/signatur.
   - C4-06 P2 stängt på exakt 9174b9c. C3:s rena risk-/avsiktsmodul åter godkänd: kontrollerade metadatafel, oförändrade indata och 400 giltiga beslut exakt identiska med 4241d0e. Full eventintegration ingår inte.
-- [ ] **MOM-C03** Implementera funding, dagsreset och första/sista event enligt låst kontrakt **Pågår.**
+- [x] **MOM-C03** Implementera funding, dagsreset och första/sista event enligt låst kontrakt
   - Underlag: [engine/traderlab/momentum_funding.py](../engine/traderlab/momentum_funding.py) — mom-funding/1.0.0: exakta fundingevent, betalning q × M_ref × ränta, mark_open-regel, stress bara på betalda belopp, dubbelbokningsskydd per konto och scenario.
   - Underlag: [engine/tests/test_momentum_funding.py](../engine/tests/test_momentum_funding.py) — 47 syntetiska tester mot O5, O5b, O16, O17 och Decimal; 15 riktade felprov fångade.
   - Underlag: [docs/momentum-funding-C2.md](momentum-funding-C2.md) — API, regler, ledgerkomplettering, fel, verifiering och gränser för C2.
@@ -160,7 +160,9 @@ C5 EJ GODKÄND på exakt 3f46aa5 mot 8e447cb. C5-01 och C5-03 stängda inom C5. 
   - Underlag: [docs/momentum-C5-01-edwins-beslut.md](momentum-C5-01-edwins-beslut.md) — Rättning av C5-01–C5-03 från granskningen av b131ff4, för Codex omgranskning, inte godkänd: Edwins beslut 2026-11-04 att ingen mellanhändelse i en stapel med intrastapelträff bokförs (olöst, exakt tid och belopp; underlag skilt från ledger); varje event med exakt en fundingkategori.
   - Underlag: [docs/momentum-C5-granskning-3f46aa5.md](momentum-C5-granskning-3f46aa5.md) — Oberoende granskning av exakt 3f46aa5 mot 8e447cb: 503 momentum-/1056 motorprov. Edwins fundingbeslut verifierat, RunLog-kedjan verifierad; restore kan fortfarande ta bort permanent stopp, godta fel kapitalbas/historik och läcka TypeError. C5 EJ GODKÄND.
   - Underlag: [research/audits/momentum-c5-3f46aa5/review.py](../research/audits/momentum-c5-3f46aa5/review.py) — Revisionslåst git-show-audit: 24 Decimal-inträde/exitfall, 32 separata funding-/marginalfall, O6/terminal/tidsfall, full syntetisk horisont 6576/6577/1096, gamla motexempel och verkligt sekventiellt permanent stopp. Fem mutationer fångade; --check jämför verification.json och reproducerar kvarstående fynd.
-  - C5 EJ GODKÄND på 3f46aa5: C5-01/C5-03 stängda; C5-02 P1 kvarstår via publik restore och C5-04 P2 ger TypeError för naiv återställningstid. §10.2-bound ingår inte i C5 och återstår. Nästa C-del väntar på godkänd rättning.
+  - Underlag: [docs/momentum-C5-granskning-43b2a4b.md](momentum-C5-granskning-43b2a4b.md) — Codex godkänner exakt C5-revision 43b2a4b mot aa81472: C5-02/C5-04 stängda, C5-01/C5-03 fortsatt stängda. 507 momentumtester/1060 motorprov; privat testfixtur utanför publikt API. Skalade O14/O15 och marginalprov bevarar facit. §10.2-bound ingår inte.
+  - Underlag: [research/audits/momentum-c5-43b2a4b/review.py](../research/audits/momentum-c5-43b2a4b/review.py) — Revisionslåst git-show-audit med verification.json och --check: 24 Decimal-inträde/exitfall, 32 funding/marginalfall, O6/terminal/tidsfall, 6576 staplar/6577 punkter/1096 dagar, publika motexempel avvisade, sex skalade handelsfall/fyra marginalfall och åtta fångade mutationer.
+  - Done inom C5:s huvudmodell: funding, dagsreset, första/sista event och full syntetisk horisont verifierade på 43b2a4b. Ingen publik återställning. Legacy/jämförelsekonton och stress/fördröjning tillhör senare D; ingen historikkörning godkänd.
 - [ ] **MOM-C04** Implementera 2 % dagsstopp, 15 % permanent stopp och konservativ 20 %-riskkontroll **Pågår.**
   - Underlag: [engine/traderlab/momentum_risk.py](../engine/traderlab/momentum_risk.py) — mom-risk/1.0.0: rena tillståndsövergångar vid 4H-gränser, band 2 pp, dagsbeslut i §7:s ordning, sammanslagning terminal > permanent > dag > cap/platt > normal, dagsreset och lock_day.
   - Underlag: [engine/tests/test_momentum_risk.py](../engine/tests/test_momentum_risk.py) — 61 syntetiska tester mot O6, O14, O15 och handräkning med exakta float-gränser; 17 av 19 riktade felprov fångade, två bevisat ekvivalenta.
@@ -182,8 +184,10 @@ C5 EJ GODKÄND på exakt 3f46aa5 mot 8e447cb. C5-01 och C5-03 stängda inom C5. 
   - Underlag: [docs/momentum-C5-granskning-3f46aa5.md](momentum-C5-granskning-3f46aa5.md) — Oberoende granskning av exakt 3f46aa5 mot 8e447cb: 503 momentum-/1056 motorprov. Edwins fundingbeslut verifierat, RunLog-kedjan verifierad; restore kan fortfarande ta bort permanent stopp, godta fel kapitalbas/historik och läcka TypeError. C5 EJ GODKÄND.
   - Underlag: [research/audits/momentum-c5-3f46aa5/review.py](../research/audits/momentum-c5-3f46aa5/review.py) — Revisionslåst git-show-audit: 24 Decimal-inträde/exitfall, 32 separata funding-/marginalfall, O6/terminal/tidsfall, full syntetisk horisont 6576/6577/1096, gamla motexempel och verkligt sekventiellt permanent stopp. Fem mutationer fångade; --check jämför verification.json och reproducerar kvarstående fynd.
   - Underlag: [docs/momentum-event-C5.md](momentum-event-C5.md) — Revision 3 för Codex omgranskning, inte godkänd: kvarstående C5-02 och C5-04 från granskningen av 3f46aa5 rättade. Ingen publik restore (privat fixturväg för syntetiska prov), låst startkapital 100 000, funding kräver historik, UTC-validering före intervalljämförelse. 105 eventtester/1 060 motortester; 34 av 34 riktade felprov fångade. §10.2-bounden ingår fortfarande inte.
-  - C5 EJ GODKÄND på 3f46aa5: C5-01/C5-03 stängda; C5-02 P1 kvarstår via publik restore och C5-04 P2 ger TypeError för naiv återställningstid. §10.2-bound ingår inte i C5 och återstår. Nästa C-del väntar på godkänd rättning.
-- [ ] **MOM-C05** Verifiera gap, basis, likvidation och riskordning med handräknade prov och kodgranskning **Pågår.**
+  - Underlag: [docs/momentum-C5-granskning-43b2a4b.md](momentum-C5-granskning-43b2a4b.md) — Codex godkänner exakt C5-revision 43b2a4b mot aa81472: C5-02/C5-04 stängda, C5-01/C5-03 fortsatt stängda. 507 momentumtester/1060 motorprov; privat testfixtur utanför publikt API. Skalade O14/O15 och marginalprov bevarar facit. §10.2-bound ingår inte.
+  - Underlag: [research/audits/momentum-c5-43b2a4b/review.py](../research/audits/momentum-c5-43b2a4b/review.py) — Revisionslåst git-show-audit med verification.json och --check: 24 Decimal-inträde/exitfall, 32 funding/marginalfall, O6/terminal/tidsfall, 6576 staplar/6577 punkter/1096 dagar, publika motexempel avvisade, sex skalade handelsfall/fyra marginalfall och åtta fångade mutationer.
+  - C5 godkänd på 43b2a4b: integrerade closebaserade dags-/permanentstopp verifierade, inklusive bevarat permanent stopp genom publika motorsteg. §10.2-bound och konservativ 20 %-riskkontroll återstår; därför fortsatt in_progress.
+- [x] **MOM-C05** Verifiera gap, basis, likvidation och riskordning med handräknade prov och kodgranskning
   - Underlag: [engine/tests/test_momentum_ledger.py](../engine/tests/test_momentum_ledger.py) — 40 syntetiska tester mot orakel O1–O4, O11, O14, O15 och handräkning; 14 riktade felprov fångade.
   - Underlag: [docs/momentum-C1-granskning-6eba8d6.md](momentum-C1-granskning-6eba8d6.md) — Codex granskar exakt 6eba8d6. Orakel/Decimal stämmer för normala fall, men C1-01 och C1-02 behöver numerisk/API-rättning och regressioner före godkännande. 40 ledgerprov, 629 motorprov godkända.
   - Underlag: [engine/tests/test_momentum_ledger.py](../engine/tests/test_momentum_ledger.py) — Rättning av C1-01/C1-02 från granskningen av 6eba8d6: kontofält och beräknade belopp ändlighetskontrollerade, vakt för kostnadsfri nämnare, enhetliga skalärtyper. 82 syntetiska tester; 39 nya fäller 6eba8d6.
@@ -211,7 +215,9 @@ C5 EJ GODKÄND på exakt 3f46aa5 mot 8e447cb. C5-01 och C5-03 stängda inom C5. 
   - Underlag: [engine/tests/test_momentum_event.py](../engine/tests/test_momentum_event.py) — Rättning av C5-01–C5-03 från granskningen av b131ff4, för Codex omgranskning, inte godkänd: 101 eventtester (Decimal-facit för olösta event i A/B × båda mmr × teckenordning × med/utan samtidig funding), RunLog bunden till förloppet; 31 av 31 riktade felprov fångade.
   - Underlag: [docs/momentum-C5-granskning-3f46aa5.md](momentum-C5-granskning-3f46aa5.md) — Oberoende granskning av exakt 3f46aa5 mot 8e447cb: 503 momentum-/1056 motorprov. Edwins fundingbeslut verifierat, RunLog-kedjan verifierad; restore kan fortfarande ta bort permanent stopp, godta fel kapitalbas/historik och läcka TypeError. C5 EJ GODKÄND.
   - Underlag: [research/audits/momentum-c5-3f46aa5/review.py](../research/audits/momentum-c5-3f46aa5/review.py) — Revisionslåst git-show-audit: 24 Decimal-inträde/exitfall, 32 separata funding-/marginalfall, O6/terminal/tidsfall, full syntetisk horisont 6576/6577/1096, gamla motexempel och verkligt sekventiellt permanent stopp. Fem mutationer fångade; --check jämför verification.json och reproducerar kvarstående fynd.
-  - C5 EJ GODKÄND på 3f46aa5: C5-01/C5-03 stängda; C5-02 P1 kvarstår via publik restore och C5-04 P2 ger TypeError för naiv återställningstid. §10.2-bound ingår inte i C5 och återstår. Nästa C-del väntar på godkänd rättning.
+  - Underlag: [docs/momentum-C5-granskning-43b2a4b.md](momentum-C5-granskning-43b2a4b.md) — Codex godkänner exakt C5-revision 43b2a4b mot aa81472: C5-02/C5-04 stängda, C5-01/C5-03 fortsatt stängda. 507 momentumtester/1060 motorprov; privat testfixtur utanför publikt API. Skalade O14/O15 och marginalprov bevarar facit. §10.2-bound ingår inte.
+  - Underlag: [research/audits/momentum-c5-43b2a4b/review.py](../research/audits/momentum-c5-43b2a4b/review.py) — Revisionslåst git-show-audit med verification.json och --check: 24 Decimal-inträde/exitfall, 32 funding/marginalfall, O6/terminal/tidsfall, 6576 staplar/6577 punkter/1096 dagar, publika motexempel avvisade, sex skalade handelsfall/fyra marginalfall och åtta fångade mutationer.
+  - Done inom C5:s huvudmodell: gap, basis, likvidation och riskordning granskade mot oberoende Decimal-/kalenderfacit på 43b2a4b. C5-01–C5-04 stängda. Inget godkännande av legacy/grid, §10.2-bound, ekonomiskt resultat eller drift. Nästa C-del kan tilldelas.
 
 ## D. Utvärderare och jämförelser
 
