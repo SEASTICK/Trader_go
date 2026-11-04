@@ -1,0 +1,77 @@
+# Claude: H-0017 D1 – tre enskilda momentumkonton på gemensam horisont
+
+Edwin har beslutat att arbetet fortsätter i samma flöde: Codex skriver nästa avgränsade uppdrag, Claude implementerar och Codex granskar exakt revision och rättningar tills godkännande. Endast syntetiska data. Leverans D omfattar MOM-D01–D05; **D1 är en del av MOM-D01, inte hela D och inte hela kontrollmatrisen.**
+
+Utgå från **codex/momentum-d1-assignment, HEAD `5a0d95909c3ea86a0df9d33765f68a1a5b4974fc`**, som innehåller Codex C6-godkännande av exakt `a84e0d87e3bfaef06bb916bf8234cbf4e8a1775f`. Gren, full HEAD och ren arbetskopia kontrollerades när uppdraget skrevs, 2026-11-04. Leverans C är klar inom huvudmodellens uttryckliga avgränsning. Kontrollera själv gren, full HEAD, diffbas, arbetskopia och fjärrstatus före ändring. Använd egen gren utan reset/force-push eller överskrivning av andra sessioners arbete. Claude committar denna uppdragsfil oförändrad tillsammans med leveransen; Codex har inte committat eller pushat den.
+
+## Läs och avgränsa
+
+Läs AGENTS.md, CLAUDE.md, research/h0017-protokoll.md (särskilt §4, §5, §7–§15, D07–D21 och oraklen), docs/momentum-status.json och den genererade checklistan, tidigare docs/claude-uppdrag-momentum-*.md och docs/momentum-*-granskning-*.md. Läs Edwins C5-01- och C6-01-beslut, de godkända momentum_signal/ledger/funding/risk/margin/event/bound-modulerna och deras API-/verifieringsrapporter. Stäm av faktiska orakelvärden i docs/momentum-a1-orakel.json; avrundningarna i protokolltexten räcker inte.
+
+Bygg en versionsmärkt, ren komposition för **mom7, mom14 och mom28, vart och ett med 100 000 eget startkapital**, ovanpå den godkända eventmotorn. Ta emot syntetiska minnesdata; lägg inte till fil-, nätverks- eller jobb-ingång. Leverera modul/integration, syntetiska tester och en API-/verifieringsrapport i engine/ och docs/. Återanvänd signalens dagsaggregering, volatilitet och delsignaler samt godkänd ledger, funding, risk och marginal. Ingen andra handelsmotor och ingen kopierad risk-/fill-implementation.
+
+**Materiella kontraktsfrågor redovisas till Codex före kodning av berörd del.** Dokumentera källregel, konkret motexempel och frågan till Edwin. Ingen egen standard, alternativvalsflagga eller tyst generalisering får ersätta ett saknat materiellt beslut. Oberoende, entydiga delar får fortsätta.
+
+## Exakt omfattning och låsta värden
+
+| Del | Regel för D1 |
+|---|---|
+| Konton | mom7, mom14, mom28; inga delkonton och inga överföringar |
+| Signal | s_h(D) = 1 endast om C_D/C_(D−h)−1 > 0, annars 0; h exakt 7, 14 respektive 28 kalenderdagar |
+| Volatilitet | Samma 60 enkla dagsavkastningar från 61 closes, ddof=1 och √365 som main |
+| Cap/mål | cap = min(1, 0,10/vol), w_target = s_h × cap; ingen ny volskattning eller parameter |
+| Handel/risk | §7:s 2 pp band, capbrott/platt, 2 % dagsstopp, 15 % permanent stopp, prioritet och reduce-only, separat per konto |
+| Start | 2022-01-01 00:00 UTC, C=E=100 000, q=0, peak/day_start=100 000 före kostnad; första beslut från 2021-12-31 |
+| Uppvärmning | Syntetiska kontraktscloses från 2021-11-01, inga positioner, avgifter eller funding före teststart |
+| Terminal | 2024-12-31 20:00 UTC, full stängning med kostnad, inga köp vid/efter terminal; inget beslut 2025-01-01 |
+| Normal kostnad | c=0,0016 per sida, bokförd en gång enligt §6; kontinuerliga float64-enheter |
+| Priser/funding | Kontrakts-open för fyllning, mark för kapital; M_ref=mark_open i innehållande stapel; endast exakt t=T är A/B |
+| Scenario | A/B × mmr 0,05/0,005 × L1/L2, separata identiteter; L1/L2 ekonomiskt identiska här utan legacy-stop |
+| Kapitalserier | Godkänd RunLog med §10.1-closepunkter och §4:s 1 096 E_end-dagar; start är ingen avkastningsdag |
+
+Gränser jämförs på beräknade floatvärden utan extra epsilon; behåll befintliga uttryckliga identitets-/avstämningstoleranser. För nya belopps-/viktfacit gäller relativ avvikelse ≤1e−12 enligt §6. Ändra inte gamla toleranser för att få grönt.
+
+1. **Signaladapter med spårbar betydelse.** Utgå från rätt rad ur godkänd signals(). Behåll källdag, decision_time, earliest_fill, available, version, vol, cap och de tre ursprungliga delsignalerna. Välj endast den namngivna komponentens s_h och härled dess mål. Källans main-s och komponentens använda s ska kunna särskiljas i rapport/spår. B:s signalversion anger källan; en ny versionsmärkt adapter anger transformationen. Utge inte en transformerad rad för att vara oförändrad main-utdata. Riskmodulens numeriska kontrakt accepterar 0/1 och s×cap; använd detta utan att vidga godkända valideringsregler. Om det inte räcker: redovisa behovet innan kärnkontraktet ändras.
+2. **Ett obrutet förlopp per konto/scenario.** Starta via publik EngineState.start och fortsätt med process_bar/RunLog. Separata kontoidentiteter, funding-id-mängder, riskpeak, day_start, lock_day och permanent-/likvidationstillstånd. Inga privata _fixture-anrop i levererad publik väg, ingen restore, ingen hopfogning av fristående kontotillstånd, ingen skalning till tredjedelskapital. Både separat anrop och eventuell samlingsfunktion måste bevara samma förlopp och identiteter.
+3. **Samma ekonomiska regler som godkänd C.** Bevara gap → A-funding → marginal → fill → B-funding, E_trade skilt från E_post, kronologisk mellanfunding utan träff och C5-01:s olösta händelser vid intrastapelträff. Inga återupplivade normalavsikter vid riskexit, inga köp i lock_day/efter permanent stopp, ingen funding/handel efter likvidation. Separera faktisk ledger från adverse-underlag.
+4. **Gemensam kalender och proveniens.** Returnera fullständiga oförminskade event-/close-/dagsspår med konto, komponent, scenario, källa och modul-/protokollversioner. Kräv samma syntetiska kontrakts-/mark-/fundingunderlag och horisont för konton som jämförs. Saknad eller otillgänglig testdag avvisas som OGILTIG_DATA-underlag; ingen fallback till platt, senaste signal eller kortare horisont. Ett publikt fullhorisontsanrop får inte returnera framgång med en ofullständig serie. Inga dataset-SHA eller verkliga körnings-id fabriceras.
+5. **Ingen utvärderare i förväg.** Returnera E_end och likvidationsstatus för senare D21-avkastningsberäkning. Beräkna inte Sharpe, t, DSR, bootstrap, kriteriebooleans eller ekonomiskt REJECT/MORE_RESEARCH. D1:s verifieringsrapport är inte en resultatrapport för H-0017.
+
+## Öppna materiella frågor till Edwin – inga val gjorda
+
+**D1-Q01, inför komponenternas likvidations-bound:** §10.2 omfattar momentumkonton, men C6-01:s H1/I1/G1/P1-beslut anger uttryckligen huvudmodellen och motiverar sin reservation med likvidation i main som automatiskt falskt C6. Ett likviderat jämförelsekonto har inte samma beslutsroll. **Ska H1/I1/G1/P1 och reservationen för negativ trough gälla även mom7/mom14/mom28, eller krävs ett separat kontrakt för deras diagnostiska bound?** D1 skapar ingen §10.2-bound för dessa konton och använder inte C6-01 som ett redan givet komponentbeslut. Deras faktiska event- och close-/dagsserier ingår och bevarar underlag för senare boundarbete. Frågan blockerar den bounddelen, inte denna D1-komposition.
+
+**D1-Q02, inför senare no_vol:** §11 anger mål s×1 och risk som main, medan §7:s capbrott och §13.3:s capinvariant refererar till cap(D). **Ska no_vol använda cap=1 även i capbrott och after_trade-invarianten, eller avses något annat uttryckligt kontrakt?** Välj inte själv och bygg inte no_vol i D1. Övriga materiella luckor som upptäcks, särskilt legacy-stop/funding/marginal och short-bound vid likvidation, ska beskrivas med fall till Codex inför Edwins beslut; detta uppdrag ger inget legacybeslut.
+
+## Obligatoriska syntetiska prov och oberoende facit
+
+Använd separat handräkning/Decimal och beslutstabeller, inte den nya adaptern eller samlingsfunktionen som facit. Kontrollera belopp, valda signaler, state, tider och ordnade faser; lika slutkapital räcker inte.
+
+- **Komponentval:** konstruera riktiga syntetiska 4H-closes med alla åtta kombinationer av (s7,s14,s28), lika pris vid respektive horisont, cap<1 och cap=1 samt varierande positiv vol. Räkna delsignaler/vol/cap/mål oberoende. Alla tre ska skiljas från main där komponent och medelvärde skiljer sig. Ingen framtida close eller öppningspris får påverka dagens beslut.
+- **O12 och O1–O4:** bevara signal-/ledgeroraklen; komponentens mål är 0 eller cap, inte O12:s medelvärde 2/3. Visa riktiga komponentinträden och senare ökning/minskning med basis P≠M och kostnad. O2:s q=998,4025559105431 vid w=1, P=M=100 är direkt tillämpligt. Nollsignal stänger helt.
+- **O5/O5b och O16:** A/B vid inträde, minskning och utgång; målidentitet på E_trade, tillåten drift i B. Exakt T, T±30s och T±1ms, vanlig öppning, midnatt, första öppning och terminal. Ingen dubbelbokning eller tolerans för samtidighet. Samma event-id får behandlas oberoende i olika konton/scenarier.
+- **O6, O14/O15:** integrerade komponentfall med samtidig risk/normal, midnattsreset före gap/funding, permanent stopp över flera dygn, reduce-only-hold utan kostnad och normalavsikt som byter köp/sälj efter gap. Handfall som kräver privat mittperiodsfixtur märks som sådana och kompletteras med publikt sekventiellt förlopp; fixturprov bevisar inte publik proveniens.
+- **Band/risk:** exakt 0,02 samt närmaste representerbara värden på båda sidor, capbrott även inom band, exakt −2 % och −15 % samt angränsande floatfall. Visa egna kontopeaks och dagsbaser, inget lån av main- eller annat komponentkontos risklås.
+- **O9, tillämpligt snitt:** för cap=0,9 och komponentvektor (1,0,0), verifiera mom7:s fullkapitalförlopp och main som separat referens; normalisera kapitalhomogena belopp mot oraklets tredjedelsfall. Vid 110: komponentvikt 0,90825688 ger hold mot 0,9; main bryter bandet mot 0,3. Vid 97,7: komponent −2,07 % utlöser dagsstopp, main −0,69 % gör det inte. Detta godkänner ingen new_mix eller faktisk delkontoskalning.
+- **O10/full kalender:** varje komponent genom exakt 6 576 syntetiska staplar, 6 577 closepunkter inklusive start och terminal samt 1 096 E_end-dagar, mot fristående kalender. Aktiv första signal, senare platta/aktiva dagar, sista close och terminalkostnad. Ingen nollställning vid halvår/år, ingen extra startdag, inget 2025-beslut. Separat handräknat terminalfall med P≠M. Ingen position eller ekonomisk aktivitet under uppvärmningen.
+- **O11/O18:s tillämpliga long-snitt:** båda mmr, gap- och intrastapelträff, negativa prövningsvärden, blandade betalda/mottagna mellanevent, korrekta funding_unresolved/absorbed och liquidation_adjustment. Dokumenterat absorberande noll över midnatt och terminal med oförändrade historiska ledgerfält. Ingen avkastningsdivision eller blandnings-/beslutsprövning i D1.
+- **Scenario-/kontoisolering:** alla åtta etiketter, L1/L2-identiska ekonomiska spår efter normalisering av etikett; A/B och mmr får ge olika förlopp. Ingen deduplicering som tappar proveniens eller väljer gynnsamt scenario. Ändra ett annat kontos signal/riskförlopp och visa oförändrat eget resultat. Samlingskörning ska motsvara tre separata anrop.
+- **Prefix och indatafel:** senare priser/funding påverkar inte tidigare beslut/spår; bound/extremer får inte mata close-risk utom faktisk marginalträff. Avvisa okänd komponent, bool/feltyp, NaN/inf, 10**400/10**5000 och overflow från ändliga argument, fel version/available/dag/tidszon, inkonsekvent komponentrad, luckor/dubbletter/osortering, otillgänglig signal och fel konto/scenario. Kontrollera utskrivbara domänfel utan mutation eller partiellt framgångsresultat. Ingen global numerikändring. Syntetiska 2025-indata ska avvisas innan någon ekonomisk beräkning; bygg ingen verklig dataläsare för provet.
+
+Riktade felprov i isolerade källkopior: välj main-s i stället för s_h, växla 7/14, räkna observationsdagar i stället för kalenderdagar, använd framtida close, cap=1 alltid, stäng av komponentens band/stopp, dela riskstate/fundingstate mellan konton, reset vid årsskifte, A på nya q/B på gamla q, återuppliva normal efter riskexit, släpp köp efter permanent stopp, tappa start/sista close/terminalkostnad, godta kort horisont och godta otillgänglig signal som platt. Redovisa varje mutation som fångad, missad eller bevisat ekvivalent med motivering; rätta testluckor och återställ alla fel före commit.
+
+## Utanför D1 och säkerhetsram
+
+Senare delar får omfatta buy_and_hold, ema_legacy/bb_legacy (standardversioner och D08–D10/D16/D18), no_vol, old_mix/new_mix med verkliga delkonton, bruttoexponering och oberoende risklås, samt kontrollkontonas diagnostiska bound efter erforderliga beslut. MOM-D03:s 2,5× kostnad, fundingstress, mark_close-diagnostik och +4h-fördröjning, full grid-/kriterieprövning, statistik/osäkerhet/DSR och slutligt D05-godkännande ingår inte. O8/O17:s ATR-/L1/L2-facit och O13:s Sharpe-motexempel förblir låsta underlag för senare delar; D1 får inte beskrivas som verifiering av dem.
+
+**Ingen marknadshistorik, dataaudit eller nedladdning; ingen H-0017-körning eller jobb mot verklig historik; ingen ändring av fryst protokoll, register, gamla resultat eller audits; inga ekonomiska beslut på verkliga data; ingen kö, worker, app, server, SQL, release eller paper/live.** Endast syntetiska enhets-/integrationstester. H-0013 förblir REJECT; H-0016:s protokoll och status är orörda. Ingen automatisk fortsättning till körning eller drift.
+
+## Status, tidigare godkännanden och återrapportering
+
+Uppdatera endast underlag/not för **MOM-D01**, högst till in_progress för implementerat men ännu inte godkänt D1-arbete. Ange uttryckligen vilka kontrollkonton och bounddelar som återstår. MOM-D02–D05 och senare leveranser förblir todo; markera inget nytt done. reviewed_revision/reviewed_scope får inte utge Claudes nya kod för Codex-granskad. Denna tilldelning ändrar ingen statuskälla och innebär inget implementationsgodkännande.
+
+Bevara A/B och C:s avgränsade godkännanden när kod och verifiering består. Om godkänd signal/ledger/funding/risk/marginal/event/bound måste ändras: redovisa motiv, exakt diff och påverkan innan kontraktsvidgning. Återöppna berörda punkter till in_progress när tidigare verifiering blir ogiltig (B för signal, C01 ledger, C02 risk, C03/C05 event/funding/ordning, C04 close-risk/bound). Även indirekt påverkade garantier ska bedömas. Nya gröna tester eller gamla revisionsaudits räcker inte som godkännande av ändrad kod. Bevara gamla granskningar/audits byte-oförändrade; skapa nytt underlag för exakt ny revision. Codex avgör återgodkännande. Ändrade kommentarer/API-dokumentation redovisas också, med motivering om semantiken anses oförändrad.
+
+Kör relevanta nya tester, samtliga momentumtester och hela motorsviten i projektets venv, A1-oraklet med --check och samtliga tidigare revisionslåsta momentum-audits med --check som historisk reproduktion. Regenerera med `python3 scripts/render-momentum-checklist.py` och sedan samma kommando med `--check`; kör de övriga tre checklistgeneratorerna med --check utan statusändringar. Kontrollera git diff --check och byteintegritet för frysta filer/äldre audits. Rapportera faktisk interpreter, kommandon, antal och utfall, inte förväntade gamla testantal.
+
+Lämna gren, full HEAD, diffbas, ändrade filer, API/version och komponentproveniens, ordnat fasexempel, självständiga facit, verkliga test-/mutationsutfall, öppna Edwinfrågor, status och påverkan på varje äldre godkännande. Ange explicit att endast tre fullkapitalkonton omfattas och att resten av MOM-D01–D05 återstår. Nästa del börjar först efter Codex granskning och godkännande av exakt D1-revision.
