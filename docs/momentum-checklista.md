@@ -2,9 +2,9 @@
 
 **15 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-Metodgranskning · Kontrollerad 2026-11-04 · Granskad kodversion `6e6730cc950b880aa0aa247ec29892bb767a2f4d`.
+Metodgranskning · Kontrollerad 2026-11-04 · Granskad kodversion `720e1f882ddc62f7e3a166e5cec09ac9e9ab754a`.
 
-D1 EJ GODKÄND på exakt 6e6730c mot fc02e1d, endast syntetiskt. D1-01 P2: adapter tappar earliest_fill och accepterar inkonsekvent källa. D1-02 P1: muterbart Market släpper 2025 till signalberäkningen efter konstruktion. D1-03 P2: obligatoriska komponent-/scenario-/riskprov och felprovsredovisning saknas. Oberoende revisionsaudit: 3 288 Decimal-signaljämförelser och tre fulla syntetiska förlopp. 566 momentumtester, 1 119 motortester och 23 audits passerar; gröna tester stänger inte fynden. A/B/C:s avgränsade godkännanden består; MOM-D01 in_progress. Ingen historik, registrering, drift eller paper/live; inget nytt uppdrag.
+D1-rättning EJ GODKÄND på exakt 720e1f8 mot fa89803, endast syntetiskt. D1-01:s sex ursprungliga motexempel och D1-02:s 2025-gränsöverträdelser är åtgärdade. D1-03 kvarstår: ofullständigt oberoende förloppsfacit och ogiltig mutationsfångst. D1-04 P2: felprovsskriptet klassar saknat orakel vid insamling som 26 fångster. D1-05 P2: adapter läcker OverflowError före validering och skriver över dubblettdagar. 3 288 Decimal-signaljämförelser, tre fulla syntetiska referensförlopp, 602 momentumtester, 1 155 motortester och 24 audits verifierade. A/B/C:s avgränsade godkännanden består; MOM-D01 in_progress. Ingen historik, registrering, drift eller paper/live; inget nytt uppdrag.
 
 ## Uppdateringsregler
 
@@ -240,8 +240,11 @@ D1 EJ GODKÄND på exakt 6e6730c mot fc02e1d, endast syntetiskt. D1-01 P2: adapt
   - Underlag: [docs/momentum-D1-granskning-6e6730c.md](momentum-D1-granskning-6e6730c.md) — Codex: D1 EJ GODKÄND; D1-01 P2, D1-02 P1 och D1-03 P2 öppna. O9-capbrott enligt §7 är rätt; uppdragets hold-formulering var fel.
   - Underlag: [research/audits/momentum-d1-6e6730c/review.py](../research/audits/momentum-d1-6e6730c/review.py) — Revisionslåst git show från 6e6730c, Decimal för komponentval/vol/cap/mål och tre fulla förlopp; --check reproducerar öppna adapter-/2025-fynd.
   - Underlag: [research/audits/momentum-d1-6e6730c/verification.json](../research/audits/momentum-d1-6e6730c/verification.json) — SHA-256, oförändrade skyddade källor, 3 288 signaljämförelser och tre förlopp med 6 576 staplar/6 577 closepunkter/1 096 dagar vardera.
-  - Underlag: [scripts/momentum-d1-mutations.py](../scripts/momentum-d1-mutations.py) — Rättning av D1-01–D1-03 från granskningen av 6e6730c, för Codex omgranskning, inte godkänd: validerad ComponentSignal med earliest_fill, låst Market med fingeravtryck, komponentintegrerade O5/O16/O6/O14/likvidations-/gränsprov, reproducerbar felprovsmatris (26 fångade, 0 missade, 1 ekvivalent, 2 ej tillämpliga). 62 D1-tester/1 155 motortester.
-  - D1 är inte godkänd och kan inte ensam slutföra MOM-D01. Rättning och kompletterande obligatoriska syntetiska prov krävs; buy_and_hold, legacy, no_vol, blandningar och komponent-bound återstår. D1-Q01/Q02 är inte avgjorda här.
+  - Underlag: [scripts/momentum-d1-mutations.py](../scripts/momentum-d1-mutations.py) — Claudes rättning på 720e1f8 granskad: --check reproducerar 26/0/1/2 men fångsterna underkänns enligt D1-04; temporär kopia saknar orakelfilen och insamlingsfel klassas som FÅNGAD. Inget verifierat mutationsgodkännande.
+  - Underlag: [docs/momentum-D1-granskning-720e1f8.md](momentum-D1-granskning-720e1f8.md) — Codex EJ GODKÄND på exakt 720e1f8 mot fa89803. Ursprungliga D1-01-motexempel och D1-02 åtgärdade; D1-03 kvarstår, nya D1-04 P2 och D1-05 P2. 602 momentumtester/1 155 motortester och 24 audits passerar.
+  - Underlag: [research/audits/momentum-d1-720e1f8/review.py](../research/audits/momentum-d1-720e1f8/review.py) — Revisionslåst git show, --check: 3 288 Decimal-signaljämförelser, tre fulla referensförlopp, ursprungliga adapter-/2025-motexempel avvisade; trasig mutationsbaslinje, adapteroverflow och tyst dubblettöverskrivning reproducerade.
+  - Underlag: [research/audits/momentum-d1-720e1f8/verification.json](../research/audits/momentum-d1-720e1f8/verification.json) — Källhashar, exakt åttafilsdiff, oförändrade skyddade källor, oberoende Decimal-resultat och reproduktion av D1-04/D1-05.
+  - D1-rättningen är EJ GODKÄND på 720e1f8. D1-03, D1-04 och D1-05 är öppna; ursprungliga D1-01-motexempel och D1-02 är åtgärdade. MOM-D01 förblir in_progress och kan inte bli done av D1 ensam. buy_and_hold, legacy, no_vol, blandningar och komponent-bound återstår; D1-Q01/Q02 är inte avgjorda här.
 - [ ] **MOM-D02** Verifiera 50/50- och 1/3-blandningar, bruttoexponering och oberoende risklås
 - [ ] **MOM-D03** Implementera 2,5× kostnader, fundingstress, fördröjning och låst ordningskänslighet
 - [ ] **MOM-D04** Verifiera statistik, osäkerhet, DSR och sex booleska kriterier från fullständiga serier
