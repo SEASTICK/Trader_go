@@ -5,158 +5,227 @@
     "tests/test_momentum_control.py",
     "tests/test_momentum_control_integration.py"
   ],
+  "baslinje": "65 passed in 55.85s",
   "felprov": [
     {
       "fel": "main-s i stället för s_h",
       "fil": "momentum_control.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed in 0.45s",
+      "första_fel": "tests/test_momentum_control.py::test_component_signals_match_independent_computation"
     },
     {
       "fel": "växla 7/14",
       "fil": "momentum_control.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed in 0.50s",
+      "första_fel": "tests/test_momentum_control.py::test_component_signals_match_independent_computation"
     },
     {
       "fel": "framtida close",
       "fil": "momentum_signal.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed in 0.54s",
+      "första_fel": "tests/test_momentum_control.py::test_component_signals_match_independent_computation"
     },
     {
       "fel": "cap = 1 alltid",
       "fil": "momentum_control.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed in 0.36s",
+      "första_fel": "tests/test_momentum_control.py::test_component_signals_match_independent_computation"
     },
     {
       "fel": "komponentens band avstängt",
       "fil": "momentum_risk.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 3 passed in 0.84s",
+      "första_fel": "tests/test_momentum_control.py::test_O9_component_full_capital_vs_main"
     },
     {
       "fel": "komponentens dagsstopp avstängt",
       "fil": "momentum_risk.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 3 passed in 0.82s",
+      "första_fel": "tests/test_momentum_control.py::test_O9_component_full_capital_vs_main"
     },
     {
       "fel": "komponentens permanenta stopp avstängt",
       "fil": "momentum_risk.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 49 passed in 33.93s",
+      "första_fel": "tests/test_momentum_control_integration.py::test_day_and_permanent_stop_exact_float_boundaries"
     },
     {
       "fel": "A på nya q",
       "fil": "momentum_event.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 44 passed in 28.91s",
+      "första_fel": "tests/test_momentum_control_integration.py::test_O5_O16_component_entry_decrease_exit[A]"
     },
     {
       "fel": "B på gamla q",
       "fil": "momentum_event.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 45 passed in 28.77s",
+      "första_fel": "tests/test_momentum_control_integration.py::test_O5_O16_component_entry_decrease_exit[B]"
     },
     {
       "fel": "normal återupplivad efter riskexit",
       "fil": "momentum_risk.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 51 passed in 33.19s",
+      "första_fel": "tests/test_momentum_control_integration.py::test_O6_component_day_stop_with_normal_intent_and_reset"
     },
     {
       "fel": "köp efter permanent stopp",
       "fil": "momentum_risk.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 50 passed in 33.44s",
+      "första_fel": "tests/test_momentum_control_integration.py::test_public_component_run_permanent_stop_holds_over_days_and_other_account_unaffected"
     },
     {
       "fel": "startpunkt tappad",
       "fil": "momentum_event.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 4 passed in 8.69s",
+      "första_fel": "tests/test_momentum_control.py::test_full_horizon_per_component"
     },
     {
       "fel": "sista close/terminalpunkt tappad",
       "fil": "momentum_event.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 4 passed in 8.75s",
+      "första_fel": "tests/test_momentum_control.py::test_full_horizon_per_component"
     },
     {
       "fel": "terminalkostnad tappad",
       "fil": "momentum_ledger.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 2 passed in 0.92s",
+      "första_fel": "tests/test_momentum_control.py::test_O2_full_capital_entry"
     },
     {
       "fel": "kort horisont godtas",
       "fil": "momentum_control.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 10 passed in 25.40s",
+      "första_fel": "tests/test_momentum_control.py::test_invalid_market_is_rejected_before_any_computation[lucka]"
     },
     {
       "fel": "otillgänglig signal godtas som platt",
       "fil": "momentum_control.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 20 passed in 26.64s",
+      "första_fel": "tests/test_momentum_control.py::test_invalid_signal_day_via_constant_window_is_rejected"
     },
     {
       "fel": "adapterns earliest_fill okontrollerad",
       "fil": "momentum_control.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 28 passed in 26.24s",
+      "första_fel": "tests/test_momentum_control_integration.py::test_adapter_rejects_inconsistent_source_rows[earliest_fill]"
     },
     {
       "fel": "adapterns koherens okontrollerad",
       "fil": "momentum_control.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 26 passed in 26.27s",
+      "första_fel": "tests/test_momentum_control_integration.py::test_adapter_rejects_inconsistent_source_rows[s_main]"
     },
     {
       "fel": "adapterns cap/vol okontrollerad",
       "fil": "momentum_control.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 31 passed in 26.54s",
+      "första_fel": "tests/test_momentum_control_integration.py::test_adapter_rejects_inconsistent_source_rows[vol_nan]"
     },
     {
       "fel": "strikt bool available okontrollerad",
       "fil": "momentum_control.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 40 passed in 26.66s",
+      "första_fel": "tests/test_momentum_control_integration.py::test_direct_construction_is_validated[available_int]"
     },
     {
       "fel": "underlaget återvalideras inte",
       "fil": "momentum_control.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 43 passed in 32.19s",
+      "första_fel": "tests/test_momentum_control_integration.py::test_market_owns_a_copy_and_detects_later_mutation"
     },
     {
       "fel": "underlaget kopieras inte",
       "fil": "momentum_control.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 43 passed in 31.47s",
+      "första_fel": "tests/test_momentum_control_integration.py::test_market_owns_a_copy_and_detects_later_mutation"
     },
     {
       "fel": "2025-data i tabeller godtas",
       "fil": "momentum_control.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 12 passed in 27.63s",
+      "första_fel": "tests/test_momentum_control.py::test_invalid_market_is_rejected_before_any_computation[2025_mark]"
     },
     {
       "fel": "2025-funding godtas",
       "fil": "momentum_control.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 13 passed in 26.01s",
+      "första_fel": "tests/test_momentum_control.py::test_invalid_market_is_rejected_before_any_computation[2025_funding]"
     },
     {
       "fel": "legacy-identitet saknas",
       "fil": "momentum_control.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 4 passed in 9.05s",
+      "första_fel": "tests/test_momentum_control.py::test_full_horizon_per_component"
     },
     {
       "fel": "pre-start räknas inte",
       "fil": "momentum_control.py",
-      "utfall": "FÅNGAD"
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 8 passed in 22.24s",
+      "första_fel": "tests/test_momentum_control.py::test_funding_ids_are_booked_independently_per_account_and_pre_start_counted"
+    },
+    {
+      "fel": "delad kontoidentitet/state mellan konton",
+      "fil": "momentum_control.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 4 passed in 9.09s",
+      "första_fel": "tests/test_momentum_control.py::test_full_horizon_per_component"
+    },
+    {
+      "fel": "peakreset vid årsskifte",
+      "fil": "momentum_risk.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 64 passed in 55.50s",
+      "första_fel": "tests/test_momentum_control_integration.py::test_permanent_stop_across_new_year_uses_unbroken_peak"
+    },
+    {
+      "fel": "adapterns dubblettkontroll av",
+      "fil": "momentum_control.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 62 passed in 52.35s",
+      "första_fel": "tests/test_momentum_control_integration.py::test_adapter_huge_cap_and_duplicate_days_are_controlled"
+    },
+    {
+      "fel": "adapterns numerik efter aritmetik",
+      "fil": "momentum_control.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 62 passed in 53.22s",
+      "första_fel": "tests/test_momentum_control_integration.py::test_adapter_huge_cap_and_duplicate_days_are_controlled"
     },
     {
       "fel": "observationsdagar i stället för kalenderdagar",
       "fil": "momentum_signal.py",
       "utfall": "EKVIVALENT",
       "motivering": "Market kräver exakt 4H-raster från 2021-11-01 till terminal, så varje kalenderdag är komplett. Den h:te föregående observationen är då exakt h kalenderdagar bak, och mutationen ger identiska signaler på varje giltigt D1-underlag. Skillnaden prövas i signalmodulens egna B-prov med ofullständiga dagar."
-    },
-    {
-      "fel": "delat risk-/fundingstate mellan konton",
-      "fil": null,
-      "utfall": "EJ_TILLÄMPLIG",
-      "motivering": "Varje konto skapas med egen EngineState.start(Scenario(nyckel, ...)); eventlagrets grind förhindrar att state sätts ihop av delar (C5-02). Det finns ingen delad referens att mutera i kompositionen."
-    },
-    {
-      "fel": "reset vid årsskifte",
-      "fil": null,
-      "utfall": "EJ_TILLÄMPLIG",
-      "motivering": "Ingen kod i signal, risk eller kontroll gör reset per år eller halvår; en sådan reset skulle vara ny kod, inte en mutation av befintlig. Fullhorisontsprovet visar obruten serie över båda årsskiftena."
     }
   ],
-  "fångade": 26,
+  "fångade": 30,
   "missade": 0,
   "ekvivalenta": 1,
-  "ej_tillämpliga": 2
+  "ej_tillämpliga": 0
 }

@@ -96,6 +96,48 @@ vid 0,908 > 0,9).
 - **Verifiering:** 62 D1-tester, 602 momentumtester och 1 155 motortester passerar. A1-oraklet, 23 av 23
   momentum-audits och alla fyra checklistor passerar. Ingen godkänd modul är ändrad.
 
+## Rättning D1-03–D1-05 (revision 3)
+
+Underlag: [Codex granskning av 720e1f8](momentum-D1-granskning-720e1f8.md).
+
+- **D1-04:** felprovsmatrisen i revision 2 var ogiltig. Skriptet kopierade bara engine/, så proven kraschade vid
+  import eftersom oraklet saknades, och varje krasch räknades som "fångad". Inget av de 26 utfallen var en verifierad
+  fångst. Det nya skriptet:
+  - kopierar även docs/momentum-a1-orakel.json i samma struktur;
+  - kör först en oförändrad baslinje, som måste vara grön, annars avbryts allt;
+  - stänger av pytest.ini:s `addopts`, som annars döljer sammanfattningen;
+  - räknar FÅNGAD bara när proven körde och minst ett prov fallerade utan insamlingsfel, och sparar det första
+    fallerande provet;
+  - avbryter vid miljöfel.
+
+  Delat state och årsreset är nu riktiga felinjektioner, inte "ej tillämpliga". Resultatet finns i
+  [docs/momentum-D1-mutationer.json](momentum-D1-mutationer.json): baslinjen är 65 passerade prov, 30 fel fångas, 0
+  missas och 1 är bevisat ekvivalent (observationsdagar). Varje fångst har sitt första fallerande prov angivet.
+
+  Den första ärliga körningen gav tre missar, som är rättade:
+  - "Köp efter permanent stopp" kostade inget ekonomiskt, men gav fel beslutsetikett. Provet kräver nu HOLD som
+    dagsbeslut.
+  - Min mutant för delat state gjorde ingenting och är ersatt av en delad kontoidentitet.
+  - Årsreset gick inte att se så länge peak låg på startkapitalet. Årsskiftesprovet höjer nu först peak över
+    startkapitalet.
+
+  En årsresetmutant som bröt riskmodulens invariant peak ≥ startkapital gjordes giltig, så att den prövar
+  semantiken.
+- **Verifiering i revision 3:** 65 D1-tester, 605 momentumtester och 1 158 motortester passerar. A1-oraklet, 24 av
+  24 momentum-audits, felprovsskriptet med `--check` och alla fyra checklistor passerar. Ingen godkänd modul är
+  ändrad.
+- **D1-05:** adaptern prövar index (DatetimeIndex i UTC, unika och sorterade dagar) och numerik med `_real` före all
+  aritmetik. Kontrollerade fel gäller nu även cap 10**5000 i en riktig rad, dubblettdagar med motsatt s7 och omvänd
+  ordning.
+- **D1-03:** två nya prov.
+  - `test_independent_full_horizon_capital_path_with_trades_and_terminal_P_ne_M` är ett publikt förlopp genom hela
+    horisonten med inträde, ökning (P = 100,4), minskning genom capbrott (P = 99,7), utgång, återinträde och terminal
+    med P = 100,5 ≠ M. Varje dagsslut, varje closepunkt efter återinträdet och terminalkapitalet räknas helt
+    oberoende i Decimal från startkapitalet, utan motorns mellanresultat.
+  - `test_permanent_stop_across_new_year_uses_unbroken_peak` låter priset falla 1,5 % per dag över årsskiftet
+    2022/2023. Det permanenta stoppet utlöses exakt där Decimal-facit med obruten peak anger, och ett årsreset skulle
+    skjuta upp det.
+
 ## Inte i D1
 
 - buy_and_hold, ema_legacy och bb_legacy samt no_vol.

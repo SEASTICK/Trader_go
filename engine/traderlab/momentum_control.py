@@ -59,6 +59,12 @@ def _real(name, v) -> float:
         raise ControlError(f"{name} kan inte representeras som float: {_show(v)}.") from None
 
 
+def _out_w(w: float) -> float:
+    if not math.isfinite(w):
+        raise ControlError(f"w_target är inte ändligt: {w}.")
+    return w
+
+
 @dataclass(frozen=True)
 class ComponentSignal:
     """Beslutet för dag D för en komponent, med källraden ur B bevarad och transformationen märkt.
@@ -125,14 +131,20 @@ def component_signals(sig: pd.DataFrame, component: str) -> dict:
     component = _component(component)
     if not isinstance(sig, pd.DataFrame) or list(sig.columns) != sigmod.COLUMNS:
         raise ControlError("component_signals kräver en tabell ur momentum_signal.signals() med exakt dess kolumner.")
+    idx = sig.index
+    if not isinstance(idx, pd.DatetimeIndex) or idx.tz is None or str(idx.tz) != "UTC":
+        raise ControlError("Signaltabellens index måste vara ett DatetimeIndex i UTC.")
+    if idx.has_duplicates or not idx.is_monotonic_increasing:
+        raise ControlError("Signaltabellens dagar måste vara unika och sorterade; dubbletter skrivs inte över.")
     key = COMPONENTS[component]
     out = {}
     for day, row in sig.iterrows():
         avail = row["available"]
         if row["version"] != sigmod.VERSION:
             raise ControlError(f"Signalversionen måste vara {sigmod.VERSION}, fick {_show(row['version'])}.")
-        used = row[key] if isinstance(avail, (bool, np.bool_)) and avail else math.nan
-        w = used * row["cap"] if isinstance(avail, (bool, np.bool_)) and avail else math.nan
+        live = isinstance(avail, (bool, np.bool_)) and bool(avail)
+        used = _real(key, row[key]) if live else math.nan          # numerik prövas före all aritmetik
+        w = _out_w(used * _real("cap", row["cap"])) if live else math.nan
         out[day] = ComponentSignal(component=component, day=day, decision_time=row["decision_time"],
                                    earliest_fill=row["earliest_fill"], available=avail, s_main=row["s"],
                                    s7=row["s7"], s14=row["s14"], s28=row["s28"], vol=row["vol"], cap=row["cap"],

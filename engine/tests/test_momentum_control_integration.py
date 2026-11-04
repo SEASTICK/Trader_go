@@ -282,6 +282,10 @@ def test_public_component_run_permanent_stop_holds_over_days_and_other_account_u
                 triggered = T
     s7, s14 = states["mom7"], states["mom14"]
     assert triggered is not None and s7.risk_state.permanent and s7.account.q == 0
+    # Senare dagsbeslut efter stoppet är HOLD (platt), inte ett köp som stryks i efterhand.
+    T = T0 + len(prices) * H
+    r = V.process_bar(s7, V.Bar(T, 84.0, 84.0, 84.0, 84.0, 84.0), (), make_sig(T - pd.Timedelta(days=1), (1, 0, 0), 1.0).to_input())
+    assert T == T.floor("D") and r.step_record.daily_decision == R.HOLD and r.step_record.intent is None
     assert not s14.risk_state.permanent and s14.risk_state.lock_day is None and s14.account.q == 0
     assert s14.risk_state.peak == 100_000.0 and s7.risk_state.peak > s14.risk_state.peak - 1   # egna peaks
 
@@ -405,3 +409,114 @@ def test_more_invalid_markets():
         K.Market(m.contract, huge)
     with pytest.raises(K.ControlError):
         K.Market(m.contract, m.mark, funding="inte en lista")
+
+
+# D1-05: adapterns numerik prövas före aritmetik, dubblettdagar avvisas.
+
+def test_adapter_huge_cap_and_duplicate_days_are_controlled(table):
+    day = pd.Timestamp("2023-05-10", tz="UTC")
+    t = table.astype({"cap": object}).copy()
+    t.loc[day, "cap"] = 10 ** 5000
+    with pytest.raises(K.ControlError):
+        K.component_signals(t, "mom7")
+    dup = pd.concat([table.loc[:day], table.loc[[day]], table.loc[day + pd.Timedelta(days=1):]])
+    dup.iloc[dup.index.get_loc(day).start + 1 if isinstance(dup.index.get_loc(day), slice) else 0, 3] = 1 - table.loc[day, "s7"]
+    with pytest.raises(K.ControlError, match="unika"):
+        K.component_signals(dup, "mom7")
+    with pytest.raises(K.ControlError, match="unika"):
+        K.component_signals(table.iloc[::-1], "mom7")
+
+
+# D1-03: helt oberoende kapitalförlopp genom hela horisonten (publik start, process_bar, RunLog).
+
+def _hand_path():
+    """mom7: inträde cap 0,5 vid start (P = M = 100), ökning cap 0,8 nästa dag (P = 100,4), minskning cap 0,6
+    (P = 99,7, ett capbrott), utgång s = 0, återinträde cap 1,0 och hold till terminal där P = 100,5 ≠ M = 100.
+    Mark är 100 överallt, så E är konstant mellan affärer. Ingen funding."""
+    days = {0: ((1, 0, 0), 0.5, 100.0), 1: ((1, 0, 0), 0.8, 100.4), 2: ((1, 0, 0), 0.6, 99.7), 3: ((0, 1, 1), 0.6, 100.0),
+            4: ((1, 1, 1), 1.0, 100.0)}
+    return days
+
+
+def test_independent_full_horizon_capital_path_with_trades_and_terminal_P_ne_M():
+    days = _hand_path()
+    st = V.EngineState.start(V.Scenario("mom7/L1", "A", 0.05))
+    log = V.RunLog.begin(st)
+    T = T0
+    while True:
+        d = (T - T0).days
+        P = 100.5 if T == V.TERMINAL else (days[d][2] if T == T.floor("D") and d in days else 100.0)
+        sig = None
+        if T == T.floor("D"):
+            subs, cap, _ = days.get(d, ((1, 1, 1), 1.0, None))
+            sig = make_sig(T - pd.Timedelta(days=1), subs, cap).to_input()
+        r = V.process_bar(st, V.Bar(T, P, 100.0, 100.0, 100.0, 100.0), (), sig)
+        log, st = log.add(r), r.state
+        if st.terminated:
+            break
+        T += H
+    # Oberoende Decimal: C, q genom affärerna; E konstant mellan dem (M = 100).
+    Mk, C, q = D(100), D(100_000), D(0)
+    expected_after = {}
+    for d in range(5):
+        subs, cap, P = days[d]
+        P = D(repr(P))
+        cap = D(repr(min(1.0, 0.1 / vol_for(cap))))
+        E0 = C + q * Mk
+        w = cap if subs[0] == 1 else D(0)
+        if w == 0:
+            q_new = D(0)
+        elif w * E0 > q * Mk:
+            q_new = buy_q(E0, q, w, P, Mk)
+        else:
+            q_new = sell_q(E0, q, w, P, Mk)
+        if abs(q_new * Mk / E0 - q * Mk / E0) < D("0.02") and not (q * Mk / E0 > cap) and w != 0 and q != 0:
+            q_new = q                                                       # inom band: hold
+        dq = q_new - q
+        C -= dq * P + abs(dq) * P * c
+        q = q_new
+        expected_after[d] = (C, q)
+    E_hold = C + q * Mk
+    C_term = C + q * D("100.5") * (1 - c)
+    # Kontrollera varje dagsslut och closepunkt.
+    for day, E_end, liq in log.day_ends[:-1]:
+        d = (day - T0).days
+        Cd, qd = expected_after[min(d, 4)]
+        assert close(E_end, Cd + qd * Mk) and not liq
+    assert close(log.day_ends[-1][1], C_term) and close(log.close_points[-1][2], C_term)
+    assert all(close(cp[2], E_hold) for cp in log.close_points if cp[0] is not None and cp[0] >= T0 + pd.Timedelta(days=4)
+               and cp[0] != V.TERMINAL)
+    assert len(log.close_points) == 6577 and len(log.day_ends) == 1096 and st.account.q == 0
+    assert close(st.account.C, C_term) and st.account.reconciliation_gap() == pytest.approx(0, abs=1e-6)
+
+
+def test_permanent_stop_across_new_year_uses_unbroken_peak():
+    """Pris 100, från 2022-12-01 110 (peak över startkapitalet), från 2022-12-24 −1,5 % per dag över årsskiftet;
+    w ≈ 1. Inget dagsstopp (> −2 %), permanent stopp först när E/peak − 1 <= −0,15 mot peaken från december 2022.
+    En årsreset av peak skulle skjuta upp stoppet."""
+    st = V.EngineState.start(V.Scenario("mom7/L1", "A", 0.05))
+    start_rise, start_fall = pd.Timestamp("2022-12-01", tz="UTC"), pd.Timestamp("2022-12-24", tz="UTC")
+    T, price, trig = T0, 100.0, None
+    while T < pd.Timestamp("2023-01-20", tz="UTC"):
+        if T == start_rise:
+            price = 110.0
+        if T >= start_fall and T == T.floor("D"):
+            price = price * 0.985
+        sig = make_sig(T - pd.Timedelta(days=1), (1, 1, 1), 1.0).to_input() if T == T.floor("D") else None
+        r = V.process_bar(st, V.Bar(T, price, price, price, price, price), (), sig)
+        if r.step_record.permanent_triggered:
+            trig = (T, r)
+            break
+        st = r.state
+        T += H
+    q = buy_q(D(100_000), D(0), D(1), D(100), D(100))
+    C = D(100_000) - q * 100 - q * 100 * c
+    peak = C + q * 110                                                 # vikt efter uppgången < 1: hold, inget byte
+    assert C + q * 110 > D(100_000)
+    # Oberoende: priset är 110·0,985^m under dag m − 1 räknat från 2022-12-24. Första stapelns close den dagen blir
+    # känd kl. 04:00; stoppet utlöses vid första m med C + q·110·0,985^m <= 0,85·peak.
+    m = 1
+    while C + q * D(110) * D("0.985") ** m > D("0.85") * peak:
+        m += 1
+    expected = start_fall + pd.Timedelta(days=m - 1, hours=4)
+    assert trig is not None and trig[0] == expected and expected.year == 2023

@@ -868,6 +868,10 @@
             {
               "file": "research/audits/momentum-d1-720e1f8/verification.json",
               "detail": "Källhashar, exakt åttafilsdiff, oförändrade skyddade källor, oberoende Decimal-resultat och reproduktion av D1-04/D1-05."
+            },
+            {
+              "file": "docs/momentum-D1-mutationer.json",
+              "detail": "Rättning av D1-03–D1-05 från granskningen av 720e1f8, för Codex omgranskning, inte godkänd: giltig felprovsmatris mot grön baslinje (65 prov; 30 fångade, 0 missade, 1 ekvivalent), adaptern validerar före aritmetik och avvisar dubbletter, oberoende Decimal-förlopp genom hela horisonten med terminal P≠M och årsskiftesprov. 65 D1-tester/1 158 motortester."
             }
           ],
           "note": "D1-rättningen är EJ GODKÄND på 720e1f8. D1-03, D1-04 och D1-05 är öppna; ursprungliga D1-01-motexempel och D1-02 är åtgärdade. MOM-D01 förblir in_progress och kan inte bli done av D1 ensam. buy_and_hold, legacy, no_vol, blandningar och komponent-bound återstår; D1-Q01/Q02 är inte avgjorda här."
