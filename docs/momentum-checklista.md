@@ -118,6 +118,7 @@ C3 på d77e353 granskad: 267 riktade prov/820 motorprov samt 400 egna syntetiska
   - Underlag: [engine/tests/test_momentum_risk.py](../engine/tests/test_momentum_risk.py) — 61 syntetiska tester mot O6, O14, O15 och handräkning med exakta float-gränser; 17 av 19 riktade felprov fångade, två bevisat ekvivalenta.
   - Underlag: [docs/momentum-risk-C3.md](momentum-risk-C3.md) — API, tillståndsövergångar, gräns mot eventloop, fel, verifiering och gränser för C3.
   - Underlag: [docs/momentum-C3-granskning-d77e353.md](momentum-C3-granskning-d77e353.md) — Codex granskar exakt d77e353: 267 riktade prov/820 motorprov och 400 egna beslutsfall passerar; C3-01 terminal efter likvidation och C3-02 signalkontrakt behöver rättas före godkännande.
+  - Underlag: [engine/tests/test_momentum_risk.py](../engine/tests/test_momentum_risk.py) — Rättning av C3-01/C3-02 från granskningen av d77e353: ingen terminalavsikt för likviderat konto, strikt validering av signalens available, version och tider. 101 risktester; 38 nya fäller d77e353; 22 av 24 riktade felprov fångade, två bevisat ekvivalenta.
   - C3:s rena band-/avsiktsbeslut verifierade för giltiga fall; signalkontraktsfynd C3-02 blockerar godkännande. Eventintegration återstår.
 - [ ] **MOM-C03** Implementera funding, dagsreset och första/sista event enligt låst kontrakt **Pågår.**
   - Underlag: [engine/traderlab/momentum_funding.py](../engine/traderlab/momentum_funding.py) — mom-funding/1.0.0: exakta fundingevent, betalning q × M_ref × ränta, mark_open-regel, stress bara på betalda belopp, dubbelbokningsskydd per konto och scenario.
@@ -135,6 +136,7 @@ C3 på d77e353 granskad: 267 riktade prov/820 motorprov samt 400 egna syntetiska
   - Underlag: [engine/tests/test_momentum_risk.py](../engine/tests/test_momentum_risk.py) — 61 syntetiska tester mot O6, O14, O15 och handräkning med exakta float-gränser; 17 av 19 riktade felprov fångade, två bevisat ekvivalenta.
   - Underlag: [docs/momentum-risk-C3.md](momentum-risk-C3.md) — API, tillståndsövergångar, gräns mot eventloop, fel, verifiering och gränser för C3.
   - Underlag: [docs/momentum-C3-granskning-d77e353.md](momentum-C3-granskning-d77e353.md) — Codex granskar exakt d77e353: 267 riktade prov/820 motorprov och 400 egna beslutsfall passerar; C3-01 terminal efter likvidation och C3-02 signalkontrakt behöver rättas före godkännande.
+  - Underlag: [engine/tests/test_momentum_risk.py](../engine/tests/test_momentum_risk.py) — Rättning av C3-01/C3-02 från granskningen av d77e353: ingen terminalavsikt för likviderat konto, strikt validering av signalens available, version och tider. 101 risktester; 38 nya fäller d77e353; 22 av 24 riktade felprov fångade, två bevisat ekvivalenta.
   - C3:s dags-/permanentstopp prövade syntetiskt; C3 som helhet inte godkänd. Konservativ intrastapel-bound och eventintegration återstår.
 - [ ] **MOM-C05** Verifiera gap, basis, likvidation och riskordning med handräknade prov och kodgranskning **Pågår.**
   - Underlag: [engine/tests/test_momentum_ledger.py](../engine/tests/test_momentum_ledger.py) — 40 syntetiska tester mot orakel O1–O4, O11, O14, O15 och handräkning; 14 riktade felprov fångade.

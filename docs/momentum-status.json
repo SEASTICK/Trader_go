@@ -378,6 +378,10 @@
             {
               "file": "docs/momentum-C3-granskning-d77e353.md",
               "detail": "Codex granskar exakt d77e353: 267 riktade prov/820 motorprov och 400 egna beslutsfall passerar; C3-01 terminal efter likvidation och C3-02 signalkontrakt behöver rättas före godkännande."
+            },
+            {
+              "file": "engine/tests/test_momentum_risk.py",
+              "detail": "Rättning av C3-01/C3-02 från granskningen av d77e353: ingen terminalavsikt för likviderat konto, strikt validering av signalens available, version och tider. 101 risktester; 38 nya fäller d77e353; 22 av 24 riktade felprov fångade, två bevisat ekvivalenta."
             }
           ],
           "note": "C3:s rena band-/avsiktsbeslut verifierade för giltiga fall; signalkontraktsfynd C3-02 blockerar godkännande. Eventintegration återstår."
@@ -446,6 +450,10 @@
             {
               "file": "docs/momentum-C3-granskning-d77e353.md",
               "detail": "Codex granskar exakt d77e353: 267 riktade prov/820 motorprov och 400 egna beslutsfall passerar; C3-01 terminal efter likvidation och C3-02 signalkontrakt behöver rättas före godkännande."
+            },
+            {
+              "file": "engine/tests/test_momentum_risk.py",
+              "detail": "Rättning av C3-01/C3-02 från granskningen av d77e353: ingen terminalavsikt för likviderat konto, strikt validering av signalens available, version och tider. 101 risktester; 38 nya fäller d77e353; 22 av 24 riktade felprov fångade, två bevisat ekvivalenta."
             }
           ],
           "note": "C3:s dags-/permanentstopp prövade syntetiskt; C3 som helhet inte godkänd. Konservativ intrastapel-bound och eventintegration återstår."

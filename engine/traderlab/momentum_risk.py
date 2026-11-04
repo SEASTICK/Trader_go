@@ -30,9 +30,11 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass, field, replace
 
+import numpy as np
 import pandas as pd
 
 from . import momentum_ledger as ledger
+from .momentum_signal import VERSION as SIGNAL_VERSION
 from .momentum_ledger import Account, LedgerError, _num
 
 VERSION = "mom-risk/1.0.0"
@@ -151,10 +153,29 @@ class SignalInput:
     w_target: float
     version: str
 
+    def __post_init__(self) -> None:
+        # Kontraktsgränsen kontrolleras på råvärdena innan något tolkas; gäller även dataclasses.replace och from_row.
+        if not isinstance(self.available, (bool, np.bool_)):
+            raise RiskError(f"available måste vara bool (eller numpy-bool), fick {self.available!r}.")
+        object.__setattr__(self, "available", bool(self.available))
+        if not isinstance(self.version, str) or self.version != SIGNAL_VERSION:
+            raise RiskError(f"Signalversionen måste vara exakt {SIGNAL_VERSION}, fick {self.version!r}.")
+        for name in ("day", "decision_time"):
+            v = getattr(self, name)
+            if not isinstance(v, pd.Timestamp) or v.tz is None or str(v.tz) != "UTC":
+                raise RiskError(f"{name} måste vara en pd.Timestamp i UTC, fick {v!r}.")
+        if self.day != self.day.floor("D") or self.decision_time != self.day + pd.Timedelta(days=1):
+            raise RiskError(f"Signalens dag {self.day} och beslutstid {self.decision_time} följer inte dagskontraktet "
+                            "(dag vid 00:00 UTC, beslut nästa 00:00).")
+
     @classmethod
     def from_row(cls, row: pd.Series) -> "SignalInput":
-        return cls(day=row.name, decision_time=row["decision_time"], available=bool(row["available"]),
-                   s=row["s"], cap=row["cap"], w_target=row["w_target"], version=row["version"])
+        """Rad ur B:s signals(); available och version skickas vidare som råvärden och valideras, inte omtolkas."""
+        if not isinstance(row, pd.Series):
+            raise RiskError("from_row kräver en rad (pd.Series) ur signals().")
+        g = row.get                                        # saknat fält blir None och avvisas av valideringen
+        return cls(day=row.name, decision_time=g("decision_time"), available=g("available"),
+                   s=g("s"), cap=g("cap"), w_target=g("w_target"), version=g("version"))
 
 
 @dataclass(frozen=True)
@@ -261,7 +282,8 @@ def step(state: RiskState, T: pd.Timestamp, close: CloseInput | None = None, sig
     else:
         q, E, mark = 0.0, state.initial, None             # första gränsen: platt med startkapital
 
-    if terminal:
+    if terminal and not liquidated:
+        # Ett likviderat konto är absorberande (D21): terminalen markeras behandlad men ger ingen avsikt eller fill.
         candidates.append((TERMINAL, 0.0, "terminal stängning"))
 
     decision = None

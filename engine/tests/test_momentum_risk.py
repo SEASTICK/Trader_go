@@ -8,6 +8,7 @@ import json
 import math
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -473,3 +474,131 @@ def test_time_order_check_alone_rejects_duplicate_and_skip():
         R.step(st2, T, close_at(T, a), None)                 # samma gräns igen, med matchande close
     with pytest.raises(R.RiskError, match="Fel tid"):
         R.step(st, T + H, close_at(T + H, a), None)          # lucka, med matchande close
+
+
+# Regressioner för Codex granskning av d77e353 (C3-01 och C3-02).
+
+TERM = pd.Timestamp("2024-12-31 20:00", tz="UTC")
+ZERO = L.Account(C=0.0, q=0.0, deposit=100_000.0)
+
+
+def test_terminal_on_already_liquidated_account_gives_no_intent():
+    st = state_at(TERM, liquidated=True, day_start=0.0)
+    st2, rec = R.step(st, TERM, close_at(TERM, ZERO, liquidated=True), None, terminal=True)
+    assert rec.intent is None and rec.candidates == () and st2.terminated and st2.liquidated
+    with pytest.raises(R.RiskError, match="terminal"):
+        R.step(st2, TERM + H, close_at(TERM + H, ZERO, liquidated=True), None)
+
+
+def test_liquidation_first_reported_at_terminal_gives_no_intent():
+    st2, rec = R.step(state_at(TERM), TERM, close_at(TERM, ZERO, liquidated=True), None, terminal=True)
+    assert rec.intent is None and rec.candidates == () and st2.liquidated and st2.terminated
+
+
+@pytest.mark.parametrize("with_signal", [False, True])
+def test_liquidated_state_holds_over_midnight_until_terminal(with_signal):
+    T = TERM - pd.Timedelta(days=1)                          # 2024-12-30 20:00
+    st, rec = R.step(state_at(T), T, close_at(T, ZERO, liquidated=True), None)
+    assert st.liquidated and rec.intent is None
+    while True:
+        Tn = st.next_boundary
+        midnight = Tn == Tn.floor("D")
+        signal = sig(Tn, 1.0, 0.5) if (midnight and with_signal) else None
+        st, rec = R.step(st, Tn, close_at(Tn, ZERO, liquidated=True), signal, terminal=Tn == TERM)
+        assert rec.intent is None and rec.candidates == () and st.liquidated and rec.daily_decision is None
+        if Tn == TERM:
+            break
+    assert st.terminated
+
+
+def test_live_terminal_still_closes_with_cost():
+    acct = acct_w(0.4)
+    st2, rec = R.step(state_at(TERM), TERM, close_at(TERM, acct), None, terminal=True)
+    assert rec.intent.kind == R.TERMINAL and st2.terminated
+    closed, fill = R.fill_intent(acct, rec.intent, 99.0, 99.0)
+    assert closed.q == 0 and fill.cost == pytest.approx(L.COST_NORMAL * 99.0 * acct.q)
+
+
+BAD_AVAILABLE = ["False", "True", 0, 1, None, math.nan, 1.0]
+BAD_VERSION = ["mom-signal/999", "mom-signal/1.0", None, 1, b"mom-signal/1.0.0"]
+
+
+@pytest.mark.parametrize("value", BAD_AVAILABLE)
+def test_available_must_be_a_real_bool(value):
+    with pytest.raises(R.RiskError, match="available"):
+        dataclasses.replace(sig(T0, 1.0, 0.5), available=value)
+    with pytest.raises(R.RiskError, match="available"):
+        R.SignalInput(T0 - pd.Timedelta(days=1), T0, value, 1.0, 0.5, 0.5, S.VERSION)
+
+
+@pytest.mark.parametrize("value", BAD_VERSION)
+def test_signal_version_must_be_exactly_locked(value):
+    with pytest.raises(R.RiskError, match="version"):
+        dataclasses.replace(sig(T0, 1.0, 0.5), version=value)
+
+
+def _b_row(**changes):
+    from test_momentum_signal import bars_from_daily
+    closes = [100 * (1 + 0.01 * ((-1) ** i)) for i in range(62)]
+    row = S.signals(bars_from_daily(closes, start=T0 - pd.Timedelta(days=62))).iloc[-1].copy()
+    for k, v in changes.items():
+        if v is _DROP:
+            row = row.drop(k)
+        else:
+            row[k] = v
+    return row
+
+
+_DROP = object()
+
+
+@pytest.mark.parametrize("field,value", [("available", v) for v in ["False", "True", 0, 1, None, math.nan]]
+                         + [("version", v) for v in ["mom-signal/999", None, 1]]
+                         + [("available", _DROP), ("version", _DROP)])
+def test_from_row_rejects_invalid_contract_fields(field, value):
+    with pytest.raises(R.RiskError):
+        R.SignalInput.from_row(_b_row(**{field: value}))
+
+
+def test_valid_python_and_numpy_bools_and_real_b_rows_still_work():
+    row = _b_row()
+    assert isinstance(row["available"], (bool, np.bool_))
+    s_in = R.SignalInput.from_row(row)
+    assert s_in.available is True and s_in.version == S.VERSION
+    for b in (True, np.bool_(True)):
+        assert dataclasses.replace(sig(T0, 1.0, 0.5), available=b).available is True
+    st, rec = R.step(R.RiskState.start(100_000, T0), T0, None, s_in)
+    assert rec.daily_decision in (R.NORMAL, R.HOLD)
+
+
+@pytest.mark.parametrize("false", [False, np.bool_(False)])
+def test_real_false_is_still_unavailable_data(false):
+    s_in = dataclasses.replace(sig(T0, 1.0, 0.5), available=false)
+    assert s_in.available is False
+    st = R.RiskState.start(100_000, T0)
+    with pytest.raises(R.RiskError, match="OGILTIG_DATA"):
+        R.step(st, T0, None, s_in)
+    unavailable_b = R.SignalInput.from_row(_b_row(available=np.bool_(False), s=math.nan, cap=math.nan, w_target=math.nan))
+    with pytest.raises(R.RiskError, match="OGILTIG_DATA"):
+        R.step(st, T0, None, unavailable_b)
+
+
+@pytest.mark.parametrize("field,value", [
+    ("day", pd.Timestamp("2021-12-31")), ("day", pd.Timestamp("2021-12-31 01:00", tz="Europe/Stockholm")),
+    ("day", "2021-12-31"), ("day", pd.Timestamp("2021-12-31 04:00", tz="UTC")),
+    ("decision_time", pd.Timestamp("2022-01-01")), ("decision_time", T0.tz_convert("Etc/GMT-4")),
+    ("decision_time", T0 + H), ("decision_time", "2022-01-01T00:00Z")])
+def test_signal_times_follow_utc_day_contract(field, value):
+    with pytest.raises(R.RiskError):
+        dataclasses.replace(sig(T0, 1.0, 0.5), **{field: value})
+
+
+def test_rejected_signals_leave_state_usable_and_unchanged():
+    st = R.RiskState.start(100_000, T0)
+    for bad in ("False", "mom-signal/999"):
+        with pytest.raises(R.RiskError):
+            R.SignalInput(T0 - pd.Timedelta(days=1), T0, bad if bad == "False" else True, 1.0, 0.5, 0.5,
+                          S.VERSION if bad == "False" else bad)
+    assert st == R.RiskState.start(100_000, T0)
+    _, rec = R.step(st, T0, None, sig(T0, 1.0, 0.5))
+    assert rec.intent.kind == R.NORMAL
