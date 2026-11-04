@@ -281,10 +281,6 @@ h2 { font-size:17px; font-weight:650; letter-spacing:-.01em; }
 .calc { margin-top:16px; }
 @media (max-width:900px) { .hyp-row { grid-template-columns:60px 1fr 90px; } .hyp-goal, .hyp-t { display:none; } .hyp-detail { padding-left:20px; } }
 
-/* Idéer: kompakt lista i stället för tomma rutor. */
-.idea-row { display:grid; grid-template-columns:60px 1.4fr 1.6fr 1fr 70px; gap:12px; padding:11px 20px; font-size:13px; align-items:center; }
-.idea-row + .idea-row { border-top:1px solid var(--line); }
-.idea-row.head { color:var(--muted); font-size:12px; font-weight:600; }
 
 /* Närmast målet på Översikt. */
 .near { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:10px; }

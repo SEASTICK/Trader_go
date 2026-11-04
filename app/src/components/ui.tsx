@@ -27,6 +27,3 @@ export function Page({ title, sub, actions, children }: { title: string; sub?: s
   );
 }
 
-export function SimChip() {
-  return <span className="chip-sim" title="Påhittad data som visar hur ett resultat kommer att se ut. Inget är verkligt.">SIMULERAD DATA</span>;
-}
