@@ -138,9 +138,33 @@ MM 20 000, ingen gapträff. C_high = −296 000 och C_low = −304 000. Marginal
 Med peak kvar på 100 000 hade low gett −1,24. Den högre peaken gör alltså den negativa troughen mindre negativ, vilket
 illustrerar reservationen om konservativitet.
 
-**Fall 5, ett tidigare minimum styr.** Ett levande konto utan träff har tidigare haft en djup low: ackumulerat minimum
-−0,40. En senare stapel utan träff ger lokalt minimum −0,25, och det ackumulerade minimumet förblir −0,40. Om en
-senare stapel i stället likvideras som fall 1 blir det lokala bidraget −1 och det ackumulerade minimumet −1.
+**Fall 5, ett tidigare minimum styr (ordnade punkter).** Boundens peak börjar på 100 000. Stapel 1 och 2 har ingen
+träff, och stapel 3 likvideras inom stapeln. Kapitalpunkterna är syntetiska och valda så att kvoterna blir exakta:
+
+| Stapel | Punkt | E | Peak | Drawdown | Ackumulerat minimum |
+|---|---|---|---|---|---|
+| 1 | open | 100 000 | 100 000 | 0 | 0 |
+| 1 | trade | 100 000 | 100 000 | 0 | 0 |
+| 1 | post | 100 000 | 100 000 | 0 | 0 |
+| 1 | high | 110 000 | 110 000 | 0 | 0 |
+| 1 | low | 66 000 | 110 000 | -0.4 | -0.4 |
+| 1 | close | 90 000 | 110 000 | -0.1818181818 | -0.4 |
+| 2 | open | 90 000 | 110 000 | -0.1818181818 | -0.4 |
+| 2 | trade | 90 000 | 110 000 | -0.1818181818 | -0.4 |
+| 2 | post | 90 000 | 110 000 | -0.1818181818 | -0.4 |
+| 2 | high | 100 000 | 110 000 | -0.0909090909 | -0.4 |
+| 2 | low | 82 500 | 110 000 | -0.25 | -0.4 |
+| 2 | close | 95 000 | 110 000 | -0.1363636364 | -0.4 |
+| 3 | open | 95 000 | 110 000 | -0.1363636364 | -0.4 |
+| 3 | trade | 95 000 | 110 000 | -0.1363636364 | -0.4 |
+| 3 | post | 95 000 | 110 000 | -0.1363636364 | -0.4 |
+| 3 | high | 100 000 | 110 000 | -0.0909090909 | -0.4 |
+| 3 | low | 30 000 | 110 000 | -0.7272727273 | -0.7272727273 |
+| 3 | liquidation | 0 | 110 000 | -1 | -1 |
+
+Lokala minima: stapel 1 −0,4 (low 66 000 mot peak 110 000), stapel 2 −0,25 (low 82 500 mot samma peak) och stapel 3
+−1. Efter stapel 2 är det ackumulerade minimumet fortfarande −0,4: det tidigare minimumet styr. Efter stapel 3 är det
+−1. Peak 110 000 behålls genom likvidationen.
 
 **Var negativa punkter kan uppstå.** Utan träff är E_low > MM ≥ 0 och E_open > MM ≥ 0, så alla punkter med position
 är positiva. Negativa boundpunkter uppstår bara i själva likvidationsstapeln (I1/G1), och därefter är alla punkter 0.
