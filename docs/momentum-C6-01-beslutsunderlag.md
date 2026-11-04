@@ -27,8 +27,9 @@ marknadsdata ingår.
 | Marginalunderlag (§8.3) | C efter betald och före mottagen funding, vid mark_low | utlöser träffen; loggas med E och MM |
 | §10.2-bound | hypotetiska kapitalpunkter med egen peak | **öppen fråga**: vilka punkter, vilken fundingbas och var nollpunkten ligger |
 
-Boundens low-punkt med C efter betald och före mottagen funding är samma tal som marginalunderlagets E vid mark_low.
-Den är alltså den punkt där träffen konstateras.
+Om denna low-konvention väljs sammanfaller boundens low-punkt (C efter betald och före mottagen funding) med
+marginalunderlagets E vid mark_low. Marginalprövningen är oberoende av om bounden har en sådan punkt, och low är ingen
+observerad träfftid.
 
 ## Syntetiskt sifferexempel
 
@@ -48,7 +49,7 @@ kronologiskt.
 
 ## Möjliga punktsekvenser (konsekvensillustrationer, inga nya scenarier)
 
-**A. §10.2 som skrivet fram till nollpunkten.** Punkterna open, trade, post, high och low räknas med q_open och de
+**A. High/low med olöst hypotetisk funding och oklippta negativa värden, sedan nollpunkt (ett förslag till tillägg; §10.2 låser inte fortsättningen vid likvidation).** Punkterna open, trade, post, high och low räknas med q_open och de
 olösta mellaneventen som hypotetiska belopp. Negativa värden står kvar oklippta. Därefter kommer en nollpunkt
 `liquidation` (E = 0) och nollor till terminal. Vid gapträff ingår E_open, även negativt, och sedan nollpunkten. Det
 blir inga high/low-punkter med positionen.
@@ -87,3 +88,24 @@ boundens peak är minst 100 000.
 
 Ingen ändring av det frysta protokollet eller av C5-01-beslutet. Det valda alternativet dokumenteras som ett tillägg
 med länk hit.
+
+## Rättning efter Codex granskning
+
+Codex granskade underlaget i [momentum-C6-01-granskning-underlag.md](momentum-C6-01-granskning-underlag.md) och
+bedömde att det behövde rättas. Rättningarna:
+
+- **A är ett förslag till tillägg.** Rubriken ovan är ändrad, så att A inte framstår som entydigt ur §10.2.
+- **B var inget färdigt punktkontrakt.** B kan betyda att negativa punkter utelämnas eller att de ersätts med 0.
+- **C kopplade ihop två oberoende val.** Utelämnade high/low och behandlingen av negativt gapvärde är separata
+  frågor.
+- **Ett fundingalternativ saknades:** high/low med q_open men utan olöst funding (C_post). Det ger high 60 000 och
+  low 35 000 respektive −20 000.
+- **Fall 3 är ett separat gapfall.** Eventuella mellanevent där har M_ref 55 och absorberas.
+- **Historikförbehåll:** tabellens värden är lokala bidrag. Hela förloppets mått är min(tidigare minimum, lokalt
+  minimum).
+- **Konservativitet vid negativt kapital:** en högre peak gör en negativ trough mindre negativ. A är därför inte
+  bevisat strängast under −100 %.
+- **Rätt beslutsnamn:** REJECT/MORE_RESEARCH, inte REJECT/PASS.
+
+Codex ersatte frågorna 1–3 ovan med fyra valfrågor (H, I, G och P). Edwins svar finns i
+[momentum-C6-01-edwins-beslut.md](momentum-C6-01-edwins-beslut.md).
