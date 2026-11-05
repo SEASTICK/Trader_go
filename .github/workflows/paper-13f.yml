@@ -41,6 +41,9 @@ jobs:
           restore-keys: |
             paper-13f-
             research-13f-
+      - name: Vad investerarna äger nu (senaste 13F, kräver inga kurser)
+        working-directory: engine
+        run: python -m traderlab.holdings13f | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Uppdatera papperportföljen
         working-directory: engine
         run: python -m traderlab.paper13f --start 2026-11-05 | tee -a "$GITHUB_STEP_SUMMARY"
@@ -54,7 +57,9 @@ jobs:
         run: |
           git config user.name "tradergo-research-bot"
           git config user.email "tradergo-research-bot@users.noreply.github.com"
-          git add research/paper/13f-observation.json app/data/paper13f.json
+          for f in research/paper/13f-observation.json app/data/paper13f.json app/data/investors13f.json; do
+            if [ -e "$f" ]; then git add "$f"; fi
+          done
           git diff --cached --quiet && { echo "Inga ändringar."; exit 0; }
           git commit -m "Papper 13F: uppdatering $(date -u +%F)"
           for i in 1 2 3; do git pull --rebase -q origin main && git push -q origin HEAD:main && exit 0; sleep 10; done

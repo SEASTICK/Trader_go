@@ -38,3 +38,19 @@ def test_rerun_is_deterministic(world):
     a = paper13f.update(world, "2026-11-02")
     b = paper13f.update(world, "2026-11-02")
     assert a["history"] == b["history"] and a["holdings"] == b["holdings"]
+
+
+def test_holdings_snapshot_without_prices(tmp_path, monkeypatch):
+    from traderlab import holdings13f
+    monkeypatch.setattr(ftd, "load_map", lambda d: {"c1": "AAA", "c2": "BBB"})
+    fs = {1067983: [sec13f.Filing(1067983, "a1", "2026-08-14", "2026-06-30")],
+          1061768: [sec13f.Filing(1061768, "b1", "2026-08-13", "2026-06-30")]}
+    rows = {"a1": {"c1": {"name": "A", "value": 300.0, "shares": 1}, "c2": {"name": "B", "value": 100.0, "shares": 1}},
+            "b1": {"c2": {"name": "B", "value": 50.0, "shares": 1}}}
+    monkeypatch.setattr(sec13f, "list_filings", lambda cik, d, opener=None, refresh=False: fs.get(cik, []))
+    monkeypatch.setattr(sec13f, "holdings", lambda f, d, opener=None: rows[f.accession])
+    s = holdings13f.snapshot(tmp_path)
+    cons = {c["ticker"]: c for c in s["consensus"]}
+    assert cons["BBB"]["weight"] == pytest.approx((0.25 + 1.0) / 2) and len(cons["BBB"]["holders"]) == 2
+    assert s["recent_filings"][0]["filed"] == "2026-08-14"
+    assert (tmp_path / "app/data/investors13f.json").exists()

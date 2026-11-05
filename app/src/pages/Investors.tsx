@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import paper from "../../data/paper13f.json";
+import snap from "../../data/investors13f.json";
 import { LineChart } from "../components/Charts";
 import { Page } from "../components/ui";
 
@@ -10,6 +11,14 @@ type Paper = {
   holdings: Holding[]; history: { day: string; value: number; spy: number }[]; events: Event[];
 };
 const p = paper as unknown as Paper;
+type Snapshot = {
+  updated_at: string;
+  managers: { manager: string; filed: string; period: string; top10: { ticker: string | null; name: string; weight: number }[] }[];
+  consensus: { ticker: string | null; name: string; weight: number; holders: string[] }[];
+  recent_filings: { manager: string; filed: string; period: string }[];
+};
+const sn = snap as unknown as Snapshot;
+const latestFiling = sn.recent_filings[0]?.filed ?? "";
 const usd = (v: number) => `${Math.round(v).toLocaleString("sv-SE")} USD`;
 const pct = (v: number) => `${v >= 0 ? "+" : ""}${(v * 100).toFixed(2).replace(".", ",")} %`;
 export const SEEN_KEY = "trader_go.seenFilings";
@@ -18,20 +27,24 @@ export const SEEN_KEY = "trader_go.seenFilings";
 export function unseenFilings(): number {
   let seen = "";
   try { seen = localStorage.getItem(SEEN_KEY) ?? ""; } catch { /* ignoreras */ }
-  return p.events.filter((e) => e.day > seen).length;
+  // Första gången (inget sparat): bara redovisningar från de senaste 14 dagarna räknas som nya.
+  if (!seen) seen = new Date(Date.now() - 14 * 86400000).toISOString().slice(0, 10);
+  return sn.recent_filings.filter((f) => f.filed > seen).length;
 }
 
 export default function Investors() {
-  const [seenBefore] = useState(() => { try { return localStorage.getItem(SEEN_KEY) ?? ""; } catch { return ""; } });
+  const [seenBefore] = useState(() => {
+    let v = "";
+    try { v = localStorage.getItem(SEEN_KEY) ?? ""; } catch { /* ignoreras */ }
+    return v || new Date(Date.now() - 14 * 86400000).toISOString().slice(0, 10);
+  });
   useEffect(() => {
-    const last = p.events.length ? p.events[p.events.length - 1].day : "";
-    try { if (last) localStorage.setItem(SEEN_KEY, last); } catch { /* ignoreras */ }
+    try { if (latestFiling) localStorage.setItem(SEEN_KEY, latestFiling); } catch { /* ignoreras */ }
   }, []);
   const started = p.history.length > 0;
   const ret = p.value / p.start_capital - 1;
   const spyRet = p.spy_value / p.start_capital - 1;
-  const events = [...p.events].reverse();
-  return (
+    return (
     <Page title="Investerare" sub={`Papperportfölj på ${usd(p.start_capital)} som följer genomsnittet av tio kända investerares största innehav (13F). Inga riktiga pengar.`}>
       <div className="kpis">
         <div className="card kpi"><span className="k">Värde nu</span><b>{usd(p.value)}</b><span className={ret >= 0 ? "up" : "down"}>{started ? pct(ret) : "Inte startad än"}</span></div>
@@ -54,19 +67,26 @@ export default function Investors() {
         </section>
       )}
 
+      <section className="card table-card">
+        <div className="card-head"><div><h2>Vad de äger nu</h2><p className="muted">Genomsnitt av de tio investerarnas tio största innehav enligt senaste 13F (samma vikter som portföljen). Uppdaterad {sn.updated_at.slice(0, 10)}.</p></div></div>
+        {sn.consensus.slice(0, 15).map((c) => (
+          <div key={c.ticker ?? c.name} className="inv-row cons"><b>{c.ticker ?? "–"}</b><span className="muted">{c.name}</span>
+            <span>{(c.weight * 100).toFixed(1).replace(".", ",")} %</span><span className="muted" title={c.holders.join(", ")}>{c.holders.length} av {sn.managers.length}</span></div>
+        ))}
+      </section>
+
       <div className="split">
         <section className="card table-card">
-          <div className="card-head"><div><h2>Nya redovisningar</h2><p className="muted">När en investerare lämnar en ny 13F flyttas pengarna nästa handelsdag.</p></div></div>
-          {events.length === 0 ? <div className="empty">Inga nya redovisningar sedan start. Nästa period är runt 15 februari (helåret).</div> : events.map((e) => (
-            <div key={e.accession} className={e.day > seenBefore ? "inv-event new" : "inv-event"}>
-              <div><b>{e.manager}</b>{e.day > seenBefore && <span className="inv-new">Ny</span>}<span className="muted"> · inlämnad {e.filed}, ombalanserat {e.day}</span></div>
-              <div className="muted inv-top">{e.top10.filter((h) => h.ticker).slice(0, 10).map((h) => `${h.ticker} ${Math.round(h.weight * 100)} %`).join(" · ")}</div>
+          <div className="card-head"><div><h2>Senaste redovisningar</h2><p className="muted">13F lämnas senast 45 dagar efter varje kvartal. En ny flyttar portföljen nästa handelsdag.</p></div></div>
+          {sn.recent_filings.slice(0, 12).map((f) => (
+            <div key={f.manager + f.filed} className={f.filed > seenBefore ? "inv-event new" : "inv-event"}>
+              <div><b>{f.manager}</b>{f.filed > seenBefore && <span className="inv-new">Ny</span>}<span className="muted"> · inlämnad {f.filed}, avser {f.period}</span></div>
             </div>
           ))}
         </section>
         <section className="card table-card">
-          <div className="card-head"><div><h2>Innehav nu</h2><p className="muted">Papper. Inga riktiga order.</p></div></div>
-          {p.holdings.length === 0 ? <div className="empty">Inga innehav än.</div> : p.holdings.map((h) => (
+          <div className="card-head"><div><h2>Papperportföljens innehav</h2><p className="muted">Papper. Inga riktiga order.</p></div></div>
+          {p.holdings.length === 0 ? <div className="empty">Inga innehav än. Portföljen köper när kurskällan är på plats.</div> : p.holdings.map((h) => (
             <div key={h.ticker} className="inv-row"><b>{h.ticker}</b><span className="muted">{h.shares.toLocaleString("sv-SE", { maximumFractionDigits: 2 })} st</span><span>{usd(h.value)}</span><span className="muted">{((h.value / p.value) * 100).toFixed(1).replace(".", ",")} %</span></div>
           ))}
         </section>
