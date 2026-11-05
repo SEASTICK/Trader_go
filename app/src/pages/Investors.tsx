@@ -33,6 +33,7 @@ export function unseenFilings(): number {
 }
 
 export default function Investors() {
+  const [openMgr, setOpenMgr] = useState<string | null>(null);
   const [seenBefore] = useState(() => {
     let v = "";
     try { v = localStorage.getItem(SEEN_KEY) ?? ""; } catch { /* ignoreras */ }
@@ -72,6 +73,27 @@ export default function Investors() {
         {sn.consensus.slice(0, 15).map((c) => (
           <div key={c.ticker ?? c.name} className="inv-row cons"><b>{c.ticker ?? "–"}</b><span className="muted">{c.name}</span>
             <span>{(c.weight * 100).toFixed(1).replace(".", ",")} %</span><span className="muted" title={c.holders.join(", ")}>{c.holders.length} av {sn.managers.length}</span></div>
+        ))}
+      </section>
+
+      <section className="card table-card">
+        <div className="card-head"><div><h2>Investerarna</h2><p className="muted">Klicka för att se varje investerares tio största innehav enligt senaste 13F.</p></div></div>
+        {sn.managers.map((m) => (
+          <div key={m.manager} className={openMgr === m.manager ? "hyp open" : "hyp"}>
+            <button type="button" className="hyp-row inv-mgr" onClick={() => setOpenMgr(openMgr === m.manager ? null : m.manager)} aria-expanded={openMgr === m.manager}>
+              <b>{m.manager}</b>
+              <span className="muted">{m.top10.slice(0, 3).map((t) => t.ticker ?? t.name).join(", ")} …</span>
+              <span className="muted">avser {m.period}, inlämnad {m.filed}</span>
+            </button>
+            {openMgr === m.manager && (
+              <div className="inv-mgr-detail">
+                {m.top10.map((t) => (
+                  <div key={(t.ticker ?? "") + t.name} className="inv-row cons"><b>{t.ticker ?? "–"}</b><span className="muted">{t.name}</span>
+                    <span>{(t.weight * 100).toFixed(1).replace(".", ",")} %</span><span /></div>
+                ))}
+              </div>
+            )}
+          </div>
         ))}
       </section>
 

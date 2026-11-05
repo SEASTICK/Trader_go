@@ -298,3 +298,6 @@ h2 { font-size:17px; font-weight:650; letter-spacing:-.01em; }
 
 .inv-card { width:100%; cursor:pointer; transition:border-color .15s; } .inv-card:hover { border-color:var(--accent); }
 .inv-row.cons { grid-template-columns:80px 1fr 70px 60px; }
+.hyp-row.inv-mgr { grid-template-columns:200px 1fr 260px; }
+.inv-mgr-detail { padding:0 0 10px; animation:rise .25s ease-out both; }
+@media (max-width:900px) { .hyp-row.inv-mgr { grid-template-columns:1fr; } }
