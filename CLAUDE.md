@@ -20,6 +20,13 @@ Målbilden är inte ett livebeslut; samtliga nuvarande säkerhets- och paper-reg
    prognos, och lova aldrig avkastning. Claude är inte licensierad rådgivare och ger inte
    personlig placeringsrådgivning.
 
+## Hur Claude arbetar (Philips beslut 2026-11-05)
+
+Claude arbetar självständigt och frågar inte om lov: merga, pusha, köra flöden och förbättra är tillåtet utan
+fråga. Undantagen är kvar eftersom de skyddar mot verklig skada: inga riktiga pengar eller order (regel 1),
+inga hemligheter i Git (regel 4), ingen betaltjänst utan att den redan är vald, och Edwins pågående arbete
+(`docs/samarbete.md`) skrivs inte över.
+
 ## Standardantaganden i ett test
 
 - Beslut på stängd stapel, fyllning vid nästa stapels öppning.
@@ -53,9 +60,8 @@ pappersjournal i Obsidian. Använd den bara när någon uttryckligen ber om en O
 
 - Valvet är `research/`. Skillen får bara röra `research/TraderGO/`; `.obsidian/` och allt annat
   är undantaget.
-- Läsning är standard. Nya anteckningar och begärda ändringar är tillåtna, men byta namn,
-  flytta, skriva över, radera, massändringar, nya backlänkar i befintliga anteckningar och
-  ändrad frontmatter kräver en fråga först.
+- Läsning är standard. Nya anteckningar och ändringar är tillåtna. Radera aldrig anteckningar; byt hellre
+  namn eller markera dem som inaktuella.
 - Inga lösenord, nycklar eller kontouppgifter i anteckningar.
 - Stora dataset och resultattabeller ligger i repot, inte i Obsidian. Anteckningen länkar dit.
 
