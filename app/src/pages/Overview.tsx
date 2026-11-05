@@ -4,11 +4,13 @@ import { tKrav } from "../lib/stats";
 import registryMd from "../../../research/registry.md?raw";
 import { groupRegistry, parseRegistry } from "../lib/registry";
 import type { SeriesRef } from "../lib/candles";
+import paper from "../../data/paper13f.json";
+import { unseenFilings } from "./Investors";
 
 const STEPS = ["Idé", "Research", "Fryst", "Papper", "Liten live", "Live", "Pensionerad"];
 const BTC_4H: SeriesRef = { provider: "binance", market: "spot", symbol: "BTCUSDT", interval: "4h" };
 
-export default function Overview({ go }: { go: (p: "Research" | "Marknad") => void }) {
+export default function Overview({ go }: { go: (p: "Research" | "Marknad" | "Investerare") => void }) {
   const reg = parseRegistry(registryMd);
   const attempts = reg.attempts;
   const beslut = Object.values(reg.decisions);
@@ -34,6 +36,8 @@ export default function Overview({ go }: { go: (p: "Research" | "Marknad") => vo
         <div className="card kpi"><span className="k">Krav på t-värde</span><b>{tKrav(attempts).toFixed(1).replace(".", ",")}</b><span className="muted">Stiger med antal försök</span></div>
         <div className="card kpi"><span className="k">Gått vidare</span><b>{vidare}</b><span className="muted">Till slutprov eller papper</span></div>
       </div>
+
+      <InvestorCard onOpen={() => go("Investerare")} />
 
       {nära.length > 0 && (
         <section style={{ marginBottom: 22 }}>
@@ -72,5 +76,31 @@ export default function Overview({ go }: { go: (p: "Research" | "Marknad") => vo
         </ol>
       </section>
     </Page>
+  );
+}
+
+type PaperSummary = { start: string; start_capital: number; value: number; spy_value: number; history: unknown[];
+  events: { day: string; manager: string }[] };
+
+/** Kort om papperportföljen som följer investerarna (sidan Investerare). */
+function InvestorCard({ onOpen }: { onOpen: () => void }) {
+  const p = paper as unknown as PaperSummary;
+  const started = p.history.length > 0;
+  const ret = p.value / p.start_capital - 1;
+  const diff = ret - (p.spy_value / p.start_capital - 1);
+  const last = p.events[p.events.length - 1];
+  const nya = unseenFilings();
+  const fmt = (v: number) => `${v >= 0 ? "+" : ""}${(v * 100).toFixed(2).replace(".", ",")} %`;
+  return (
+    <section style={{ marginBottom: 22 }}>
+      <button type="button" className="near-item inv-card" onClick={onOpen}>
+        <span className="muted">Papperportfölj · 100 000 USD · följer tio kända investerare (13F)</span>
+        <b>{started ? `${Math.round(p.value).toLocaleString("sv-SE")} USD (${fmt(ret)}, ${fmt(diff)} mot S&P 500)` : `Startar ${p.start}`}</b>
+        <span className="muted">
+          {nya > 0 ? `${nya} ny${nya === 1 ? "" : "a"} redovisning${nya === 1 ? "" : "ar"} sedan du tittade senast` :
+            last ? `Senaste redovisning: ${last.manager}, ${last.day}` : "Inga nya redovisningar sedan start"}
+        </span>
+      </button>
+    </section>
   );
 }

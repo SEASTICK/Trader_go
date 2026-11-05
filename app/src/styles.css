@@ -295,3 +295,5 @@ h2 { font-size:17px; font-weight:650; letter-spacing:-.01em; }
 .inv-top { font-size:12px; margin-top:3px; }
 .inv-row { display:grid; grid-template-columns:80px 1fr 1fr 60px; gap:10px; padding:10px 20px; border-top:1px solid var(--line); font-size:13px; }
 .nav-badge { margin-left:auto; min-width:18px; height:18px; padding:0 5px; border-radius:99px; background:var(--accent); color:var(--on-accent); font-size:11px; font-weight:700; display:inline-grid; place-items:center; }
+
+.inv-card { width:100%; cursor:pointer; transition:border-color .15s; } .inv-card:hover { border-color:var(--accent); }
