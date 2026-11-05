@@ -12,5 +12,7 @@
   {"id": "E-23", "spår": "F1", "namn": "BTC terminer 4h BB+RSI", "strategi": "Bollinger + RSI återgång", "grupp": "terminer", "marknad": "Bitcoin-terminer", "tidsram": "4h", "riktning": "Long/short", "mål": "A"},
   {"id": "E-24", "spår": "F1", "namn": "BTC terminer 4h kläm", "strategi": "Volatilitetskläm-utbrott", "grupp": "terminer", "marknad": "Bitcoin-terminer", "tidsram": "4h", "riktning": "Long/short", "mål": "A"},
   {"id": "E-25", "spår": "X1", "namn": "11 terminer momentum", "strategi": "Long starkast 5, short svagast 5, varje vecka", "grupp": "terminer", "marknad": "11 krypto-terminer", "tidsram": "1d", "riktning": "Marknadsneutral", "mål": "C"},
-  {"id": "E-26", "spår": "X2", "namn": "11 terminer funding-carry", "strategi": "Short högst ränta 5, long lägst 5, varje vecka", "grupp": "terminer", "marknad": "11 krypto-terminer", "tidsram": "1d", "riktning": "Marknadsneutral", "mål": "C"}
+  {"id": "E-26", "spår": "X2", "namn": "11 terminer funding-carry", "strategi": "Short högst ränta 5, long lägst 5, varje vecka", "grupp": "terminer", "marknad": "11 krypto-terminer", "tidsram": "1d", "riktning": "Marknadsneutral", "mål": "C"},
+  {"id": "E-27", "spår": "X3", "namn": "Alla terminer momentum", "strategi": "Long starkaste tiondelen, short svagaste, varje vecka", "grupp": "terminer", "marknad": "Alla likvida krypto-terminer", "tidsram": "1d", "riktning": "Marknadsneutral", "mål": "C"},
+  {"id": "E-28", "spår": "X4", "namn": "Alla terminer funding-carry", "strategi": "Short högst ränta (tiondel), long lägst, varje vecka", "grupp": "terminer", "marknad": "Alla likvida krypto-terminer", "tidsram": "1d", "riktning": "Marknadsneutral", "mål": "C"}
 ]

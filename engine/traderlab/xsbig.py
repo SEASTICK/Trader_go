@@ -172,6 +172,8 @@ def run(hypothesis_id: str, kind: str, repo: Path, data_dir: Path | None = None)
     spot = binance.load("spot", "BTCUSDT", "1d", data_dir)
     spot = spot[(spot.index >= pd.Timestamp(START, tz="UTC")) & (spot.index < pd.Timestamp(HOLDOUT, tz="UTC"))]
     bench = benchmark_stats(normal, spot, "spot BTCUSDT 1d")
+    bh = (spot["open"].shift(-1) / spot["open"].iloc[0]).reindex(eq.index)
+    bh = bh / bh.dropna().iloc[0]
     st_eq = stressed.equity[keep] / stressed.equity[keep].iloc[0]
     live = w[(w != 0).any(axis=1)]
     per_side = (w > 0).sum(axis=1)[(w != 0).any(axis=1)]
@@ -181,7 +183,7 @@ def run(hypothesis_id: str, kind: str, repo: Path, data_dir: Path | None = None)
     out = {
         "hypothesis_id": hypothesis_id, "registry_commit": reg.registry_commit, "phase": "xs-big", "track": "C",
         "kind": kind, "run_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-        "universe_size": len(syms), "with_data": int(opens.shape[1]),
+        "universe": list(opens.columns), "universe_size": len(syms), "with_data": int(opens.shape[1]),
         "eligible_median": float(eligible(closes, dvol).sum(axis=1).loc[xs.rebalance_days(closes.index)].median()),
         "per_side_median": float(per_side.median()) if len(per_side) else 0.0,
         "period": [str(eq.index[0].date()), str(eq.index[-1].date())], "rebalances": int(len(live)),
@@ -197,8 +199,10 @@ def run(hypothesis_id: str, kind: str, repo: Path, data_dir: Path | None = None)
                     "monthly_returns": {k.strftime("%Y-%m"): round(float(v), 6) for k, v in (m / m.shift(1).fillna(1.0) - 1).items()}},
         "summary_stressed_costs": {"total_return": float(st_eq.iloc[-1] - 1)},
         "benchmark": bench,
+        "baseline_btc_buy_and_hold": {"total_return": float(bh.dropna().iloc[-1] - 1)},
         "random_label_t": None,
-        "curve": {"t": [d.isoformat() for d in eq.index[::5]], "strategy": [round(float(v) * 100, 4) for v in eq.iloc[::5]]},
+        "curve": {"t": [d.isoformat() for d in eq.index[::5]], "strategy": [round(float(v) * 100, 4) for v in eq.iloc[::5]],
+                  "btc": [round(float(v) * 100, 4) if pd.notna(v) else None for v in bh.iloc[::5]]},
         "simulated": False,
     }
     # Slumpkontroll: slumpade tiondelar samma söndagar, utan kostnader. t ska ligga nära noll.
