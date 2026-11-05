@@ -28,6 +28,19 @@ def test_parse_follows_protocol():
     assert tr[0].traded == "2020-12-30"
 
 
+OLD = ("TrANSAcTIONSIDOwnerAssetTransaction TypeDate Notification DateAmount sPalcoa Inc. (aa)s 10/23/2014 10/23/2014 "
+       "$15,001 - $50,000 FIlINg sTaTus: NewsPsunEdison, Inc. (suNE)P 10/24/2014 10/24/2014 $100,001 - $250,000 "
+       "FIlINg sTaTus: New Hertz global Holdings, Inc (HTZ)P 11/5/2014 11/5/2014 $15,001 - $50,000 FIlINg sTaTus: "
+       "NewDEsCRIPTION: Purchase of 50 OptionsWalt Disney Company (DIs)P 12/10/2014 12/10/2014 $50,001 - $100,000 "
+       "FIlINg sTaTus: NewDEsCRIPTION: Purchase of 92 Puts options")
+
+
+def test_parse_old_format_without_tags_and_broken_case():
+    tr = house.parse(OLD)
+    assert [(t.ticker, t.kind, t.asset, t.traded) for t in tr] == [
+        ("AA", "sell", "ST", "2014-10-23"), ("SUNE", "buy", "ST", "2014-10-24"), ("HTZ", "buy", "OP", "2014-11-05")]
+
+
 def test_reports_filters_pelosi_ptr(tmp_path):
     xml = b"""<FinancialDisclosure>
 <Member><Last>Pelosi</Last><First>Nancy</First><FilingType>P</FilingType><FilingDate>1/5/2021</FilingDate><DocID>20017744</DocID></Member>
@@ -62,3 +75,16 @@ def test_weights_equal_and_spy_when_empty():
     w = copypelosi.build_weights(ev, opens)
     assert w.loc[pd.Timestamp("2021-01-05", tz="UTC"), "GOOGL"] == 1.0
     assert w.iloc[-1]["SPY"] == 1.0 and w.iloc[-1]["GOOGL"] == 0.0
+
+
+def test_no_space_before_date_and_real_estate_only():
+    t = "sPAmazon.com, Inc. (AMZN) [sT] P07/27/2018 07/27/2018 $500,001 - $1,000,000"
+    assert [(x.ticker, x.kind, x.traded) for x in house.parse(t)] == [("AMZN", "buy", "2018-07-27")]
+    estate = "JT1600 Atlas Peak Road - Real EstateInvestmentS 12/30/2016 12/30/2016 $500,001 - $1,000,000 Napa/Napa, CA"
+    assert house.parse(estate) == [] and not house.has_securities(estate)
+    assert house.has_securities(t)
+
+
+def test_partial_sale_only_is_read_but_has_no_trades():
+    t = "SP Visa Inc. (V) [ST] S (partial) 08/07/2019 08/07/2019 $100,001 - $250,000"
+    assert house.parse(t) == [] and house.rows_read(t) == 1

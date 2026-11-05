@@ -81,8 +81,10 @@ def pdf_text(report: Report, data_dir: Path, opener=None) -> str:
         return ""
 
 
-# "Alphabet Inc. - Class A (GOOGL) [ST] P 12/30/2020" eller med radbrytningar och ägarkod (SP, JT) emellan.
-ROW = re.compile(r"\(([A-Z][A-Z0-9.\-]{0,6})\)\s*\[(ST|OP)\]\s*(S\s*\(partial\)|P|S|E)\s+(\d{2}/\d{2}/\d{4})", re.S)
+# Nyare format: "Alphabet Inc. - Class A (GOOGL) [ST] P 12/30/2020" (med radbrytningar och ägarkod emellan).
+# Äldre format (2014–2015): "alcoa Inc. (aa)s 10/23/2014" utan typtagg och med trasig versalisering i PDF-texten.
+ROW = re.compile(r"\(([A-Za-z][A-Za-z0-9.\-]{0,6})\)\s*(?:\[([A-Za-z]{2})\])?\s*(S\s*\(partial\)|P|S|E)\s*(\d{1,2}/\d{1,2}/\d{4})",
+                 re.S | re.I)
 
 
 @dataclass(frozen=True)
@@ -99,15 +101,20 @@ def parse(text: str) -> list[Trade]:
     flat = re.sub(r"\s+", " ", text)
     out = []
     for m in ROW.finditer(flat):
-        ticker, asset, typ, date = m.group(1), m.group(2), re.sub(r"\s+", " ", m.group(3)), m.group(4)
-        mm, dd, yy = date.split("/")
-        when = f"{yy}-{mm}-{dd}"
+        ticker = m.group(1).upper()
+        tag = (m.group(2) or "").upper()
+        typ = re.sub(r"\s+", " ", m.group(3)).upper()
+        mm, dd, yy = m.group(4).split("/")
+        when = f"{yy}-{int(mm):02d}-{int(dd):02d}"
+        nxt = ROW.search(flat, m.end())
+        tail = flat[m.end(): nxt.start() if nxt else m.end() + 400].lower()
+        if tag and tag not in ("ST", "OP"):
+            continue   # fonder, obligationer och annat räknas inte
+        asset = tag or ("OP" if "option" in tail else "ST")
         if asset == "OP":
-            tail = flat[m.end(): m.end() + 400].lower()
-            nxt = ROW.search(flat, m.end())
-            if nxt:
-                tail = flat[m.end(): nxt.start()].lower()
-            if typ == "P" and "call" in tail and "put" not in tail:
+            # Köpoptioner räknas som köp av aktien. Äldre redovisningar skriver bara "Options" utan typ; de räknas
+            # som köpoptioner om "put" inte står där (tolkning bestämd före körning, se protokollet).
+            if typ == "P" and "put" not in tail:
                 out.append(Trade(ticker, "buy", "OP", when))
             continue
         if typ == "P":
@@ -115,3 +122,14 @@ def parse(text: str) -> list[Trade]:
         elif typ == "S":
             out.append(Trade(ticker, "sell", "ST", when))
     return out
+
+
+def has_securities(text: str) -> bool:
+    """Om redovisningen alls nämner värdepapper (en ticker inom parentes). Redovisningar som bara gäller fastigheter
+    har inga aktieaffärer och räknas inte som otolkade."""
+    return re.search(r"\(([A-Za-z][A-Za-z0-9.\-]{0,6})\)", re.sub(r"\s+", " ", text)) is not None
+
+
+def rows_read(text: str) -> int:
+    """Antal affärsrader som gick att läsa, oavsett om de påverkar portföljen (för datakravet)."""
+    return len(ROW.findall(re.sub(r"\s+", " ", text)))
