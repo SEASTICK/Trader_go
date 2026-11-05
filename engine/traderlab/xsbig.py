@@ -86,11 +86,24 @@ def fetch(data_dir: Path, symbols: list[str]) -> None:
     def one(s):
         binance.fetch("um", s, "1d", "2020-11", "2024-12", data_dir)
         binance.fetch("um", s, "1d", "2020-11", "2024-12", data_dir, kind="fundingRate")
+    import time
+
+    def safe(s):
+        for attempt in range(4):   # tillfälliga nätverksfel: försök igen; redan hämtade filer hoppas över
+            try:
+                one(s)
+                return None
+            except OSError as exc:
+                if attempt == 3:
+                    return f"{s}: {exc}"
+                time.sleep(5 * (attempt + 1))
     try:
         with ThreadPoolExecutor(6) as ex:
-            list(ex.map(one, symbols))
+            failed = [f for f in ex.map(safe, symbols) if f]
     finally:
         binance._append_manifest = orig
+    if failed:
+        raise RuntimeError("Kunde inte hämta: " + "; ".join(failed))
 
 
 def eligible(closes: pd.DataFrame, dollar_volume: pd.DataFrame) -> pd.DataFrame:
