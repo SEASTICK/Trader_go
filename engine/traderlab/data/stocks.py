@@ -92,7 +92,10 @@ def load_prices(ticker: str, data_dir: Path, opener=None, max_age_hours: float |
         path.unlink()
     if not path.exists():
         url = STOOQ.format(sym=stooq_symbol(ticker))
-        raw = _open(urllib.request.Request(url, headers={"User-Agent": "TraderGo research"}), opener)
+        try:
+            raw = _open(urllib.request.Request(url, headers={"User-Agent": "TraderGo research"}), opener)
+        except OSError as exc:   # nätverksfel, tidsgräns eller blockering efter omförsöken
+            raise PriceSourceUnavailable(f"Stooq svarar inte för {ticker}: {exc}") from exc
         head = raw[:200].decode("utf-8", "replace").strip().lower()
         # Bara riktiga svar sparas: en tabell, eller "No data" (källan saknar aktien). Gränsmeddelanden och
         # felsidor sparas inte, så att de inte senare tolkas som "aktien finns inte".
