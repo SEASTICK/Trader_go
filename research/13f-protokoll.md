@@ -66,6 +66,12 @@ avnoterade bolag och testet då blir missvisande. Tillägget gjordes när en nam
 Varje förvaltare ensam med samma regler redovisas, så att ni ser vem som drog upp eller ned. Det är tio
 jämförelser till och väljs inte som strategi efteråt. En vald enskild förvaltare blir en ny hypotes.
 
+## Framåt (tillagt 2026-11-05)
+
+Sidan Investerare och papperportföljen läser varje förvaltares **senaste** 13F, alltså även redovisningar inlämnade
+under slutprovsperioden. Det är innehav, inte avkastning: inga kurser för 2025–2026-10 hämtas eller visas, så
+slutprovets resultat förblir okänt tills det körs enligt protokollet.
+
 ## Kända svagheter, skrivna i förväg
 
 - **Urvalet är gjort i efterhand:** investerarna är kända för att de har lyckats. Det gör testet för optimistiskt.

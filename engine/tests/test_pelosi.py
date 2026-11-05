@@ -88,3 +88,13 @@ def test_no_space_before_date_and_real_estate_only():
 def test_partial_sale_only_is_read_but_has_no_trades():
     t = "SP Visa Inc. (V) [ST] S (partial) 08/07/2019 08/07/2019 $100,001 - $250,000"
     assert house.parse(t) == [] and house.rows_read(t) == 1
+
+
+def test_feed_reads_only_from_start(tmp_path, monkeypatch):
+    from traderlab import pelosi_feed
+    reps = {2026: [house.Report("1", 2026, "2026-10-01"), house.Report("2", 2026, "2026-11-20")]}
+    monkeypatch.setattr(house, "reports", lambda y, d, opener=None: reps.get(y, []))
+    monkeypatch.setattr(house, "pdf_text", lambda r, d, opener=None: "SP Apple Inc. (AAPL) [ST] P 11/18/2026 11/18/2026")
+    out = pelosi_feed.update(tmp_path, "2026-11-05", today="2026-11-25")
+    assert [f["doc_id"] for f in out["filings"]] == ["2"]
+    assert out["filings"][0]["trades"][0]["ticker"] == "AAPL"

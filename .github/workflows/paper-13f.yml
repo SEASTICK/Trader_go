@@ -44,6 +44,9 @@ jobs:
       - name: Vad investerarna äger nu (senaste 13F, kräver inga kurser)
         working-directory: engine
         run: python -m traderlab.holdings13f | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Pelosis nya redovisningar (från 2026-11-05)
+        working-directory: engine
+        run: python -m traderlab.pelosi_feed | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Uppdatera papperportföljen
         working-directory: engine
         run: python -m traderlab.paper13f --start 2026-11-05 | tee -a "$GITHUB_STEP_SUMMARY"
@@ -57,7 +60,7 @@ jobs:
         run: |
           git config user.name "tradergo-research-bot"
           git config user.email "tradergo-research-bot@users.noreply.github.com"
-          for f in research/paper/13f-observation.json app/data/paper13f.json app/data/investors13f.json; do
+          for f in research/paper/13f-observation.json app/data/paper13f.json app/data/investors13f.json app/data/pelosi.json; do
             if [ -e "$f" ]; then git add "$f"; fi
           done
           git diff --cached --quiet && { echo "Inga ändringar."; exit 0; }

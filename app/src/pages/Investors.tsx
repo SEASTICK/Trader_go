@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import paper from "../../data/paper13f.json";
 import snap from "../../data/investors13f.json";
+import pelosiData from "../../data/pelosi.json";
 import { LineChart } from "../components/Charts";
 import { Page } from "../components/ui";
 
@@ -18,7 +19,9 @@ type Snapshot = {
   recent_filings: { manager: string; filed: string; period: string }[];
 };
 const sn = snap as unknown as Snapshot;
-const latestFiling = sn.recent_filings[0]?.filed ?? "";
+type Pelosi = { updated_at: string | null; start: string; filings: { filed: string; doc_id: string; trades: { ticker: string; kind: string; asset: string; traded: string }[] }[] };
+const pel = pelosiData as unknown as Pelosi;
+const latestFiling = [sn.recent_filings[0]?.filed ?? "", pel.filings[0]?.filed ?? ""].sort().pop() ?? "";
 const usd = (v: number) => `${Math.round(v).toLocaleString("sv-SE")} USD`;
 const pct = (v: number) => `${v >= 0 ? "+" : ""}${(v * 100).toFixed(2).replace(".", ",")} %`;
 export const SEEN_KEY = "trader_go.seenFilings";
@@ -29,10 +32,11 @@ export function unseenFilings(): number {
   try { seen = localStorage.getItem(SEEN_KEY) ?? ""; } catch { /* ignoreras */ }
   // Första gången (inget sparat): bara redovisningar från de senaste 14 dagarna räknas som nya.
   if (!seen) seen = new Date(Date.now() - 14 * 86400000).toISOString().slice(0, 10);
-  return sn.recent_filings.filter((f) => f.filed > seen).length;
+  return sn.recent_filings.filter((f) => f.filed > seen).length + pel.filings.filter((f) => f.filed > seen).length;
 }
 
 export default function Investors() {
+  const [openMgr, setOpenMgr] = useState<string | null>(null);
   const [seenBefore] = useState(() => {
     let v = "";
     try { v = localStorage.getItem(SEEN_KEY) ?? ""; } catch { /* ignoreras */ }
@@ -72,6 +76,38 @@ export default function Investors() {
         {sn.consensus.slice(0, 15).map((c) => (
           <div key={c.ticker ?? c.name} className="inv-row cons"><b>{c.ticker ?? "–"}</b><span className="muted">{c.name}</span>
             <span>{(c.weight * 100).toFixed(1).replace(".", ",")} %</span><span className="muted" title={c.holders.join(", ")}>{c.holders.length} av {sn.managers.length}</span></div>
+        ))}
+      </section>
+
+      <section className="card table-card">
+        <div className="card-head"><div><h2>Investerarna</h2><p className="muted">Klicka för att se varje investerares tio största innehav enligt senaste 13F.</p></div></div>
+        {sn.managers.map((m) => (
+          <div key={m.manager} className={openMgr === m.manager ? "hyp open" : "hyp"}>
+            <button type="button" className="hyp-row inv-mgr" onClick={() => setOpenMgr(openMgr === m.manager ? null : m.manager)} aria-expanded={openMgr === m.manager}>
+              <b>{m.manager}</b>
+              <span className="muted">{m.top10.slice(0, 3).map((t) => t.ticker ?? t.name).join(", ")} …</span>
+              <span className="muted">avser {m.period}, inlämnad {m.filed}</span>
+            </button>
+            {openMgr === m.manager && (
+              <div className="inv-mgr-detail">
+                {m.top10.map((t) => (
+                  <div key={(t.ticker ?? "") + t.name} className="inv-row cons"><b>{t.ticker ?? "–"}</b><span className="muted">{t.name}</span>
+                    <span>{(t.weight * 100).toFixed(1).replace(".", ",")} %</span><span /></div>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </section>
+
+      <section className="card table-card">
+        <div className="card-head"><div><h2>Nancy Pelosi</h2><p className="muted">Nya redovisade aktieaffärer från {pel.start} (House PTR). Affärer redovisas upp till 45 dagar i efterhand. Testet H-0017 väntar på kurskällan.</p></div></div>
+        {pel.filings.length === 0 ? <div className="empty">Inga nya redovisningar sedan {pel.start}.</div> : pel.filings.map((f) => (
+          <div key={f.doc_id} className={f.filed > seenBefore ? "inv-event new" : "inv-event"}>
+            <div><b>Redovisning {f.filed}</b>{f.filed > seenBefore && <span className="inv-new">Ny</span>}</div>
+            <div className="muted inv-top">{f.trades.length === 0 ? "Inga aktieköp eller hela försäljningar." :
+              f.trades.map((t) => `${t.kind === "buy" ? "Köp" : "Sälj"} ${t.ticker}${t.asset === "OP" ? " (köpoption)" : ""} ${t.traded}`).join(" · ")}</div>
+          </div>
         ))}
       </section>
 
