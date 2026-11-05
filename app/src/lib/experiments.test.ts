@@ -55,3 +55,11 @@ it("Fas 1 requires all four registered criteria, including stability", () => {
   expect(klararMål("A",r)).toBe(false);
   expect(klararMål("A",{...r,criteria:{...r.criteria,stability_at_least_half:true}})).toBe(true);
 });
+
+it("stora tvärsnittet visas som portfölj utan BTC-baslinje", () => {
+  const r = { ...real, phase: "xs-big" as const, universe: ["BTCUSDT", "ETHUSDT"],
+    curve: { t: ["2021-01-01T00:00:00+00:00"], strategy: [100], buy_and_hold: [100] } };
+  const c = fromResult(exp, r);
+  expect(c.baseline).toEqual([]);
+  expect(c.portfölj?.universum).toEqual(["BTCUSDT", "ETHUSDT"]);
+});
