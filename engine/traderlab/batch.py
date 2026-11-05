@@ -66,7 +66,7 @@ def run_all(repo: Path, data_dir: Path | None = None, loader=binance.load, only:
     for tile, spec in load_plan(repo).items():
         if only and tile not in only:
             continue
-        if spec.get("phase") in ("fas1", "xs", "xs-big"):
+        if spec.get("phase") in ("fas1", "xs", "xs-big", "basis"):
             continue  # körs av traderlab.fas1 (walk-forward) och traderlab.xsrun (tvärsnitt), inte här
         try:
             bars = loader(spec.get("market", "spot"), spec["symbol"], spec["interval"], data_dir)
@@ -211,7 +211,7 @@ def export_to_app(repo: Path) -> dict:
         if r.get("phase") == "fas1":
             out[tile] = _export_fas1(repo, tile, r, files[-1])
             continue
-        if r.get("phase") in ("xs", "xs-big"):
+        if r.get("phase") in ("xs", "xs-big", "basis"):
             out[tile] = _export_xs(repo, r, files[-1])
             continue
         s = r["summary"]

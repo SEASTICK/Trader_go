@@ -258,5 +258,10 @@
     "hypothesis": "H-0019",
     "phase": "xs-big",
     "track": "C"
+  },
+  "E-29": {
+    "hypothesis": "H-0020",
+    "phase": "basis",
+    "track": "C"
   }
 }

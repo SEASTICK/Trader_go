@@ -63,3 +63,10 @@ it("stora tvärsnittet visas som portfölj utan BTC-baslinje", () => {
   expect(c.baseline).toEqual([]);
   expect(c.portfölj?.universum).toEqual(["BTCUSDT", "ETHUSDT"]);
 });
+
+it("basis kräver alla sina fem kriterier", () => {
+  const r = { ...real, phase: "basis" as const, passes: true, stressed_total_return: 0.1, beta: 0,
+    criteria: { t_at_least_required: true, stressed_costs_positive: true, beta_within_0_2: true, cagr_above_cash: false, no_liquidation: true } };
+  expect(klararMål("C", r)).toBe(false);
+  expect(klararMål("C", { ...r, criteria: { ...r.criteria, cagr_above_cash: true } })).toBe(true);
+});

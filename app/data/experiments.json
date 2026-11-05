@@ -14,5 +14,6 @@
   {"id": "E-25", "spår": "X1", "namn": "11 terminer momentum", "strategi": "Long starkast 5, short svagast 5, varje vecka", "grupp": "terminer", "marknad": "11 krypto-terminer", "tidsram": "1d", "riktning": "Marknadsneutral", "mål": "C"},
   {"id": "E-26", "spår": "X2", "namn": "11 terminer funding-carry", "strategi": "Short högst ränta 5, long lägst 5, varje vecka", "grupp": "terminer", "marknad": "11 krypto-terminer", "tidsram": "1d", "riktning": "Marknadsneutral", "mål": "C"},
   {"id": "E-27", "spår": "X3", "namn": "Alla terminer momentum", "strategi": "Long starkaste tiondelen, short svagaste, varje vecka", "grupp": "terminer", "marknad": "Alla likvida krypto-terminer", "tidsram": "1d", "riktning": "Marknadsneutral", "mål": "C"},
-  {"id": "E-28", "spår": "X4", "namn": "Alla terminer funding-carry", "strategi": "Short högst ränta (tiondel), long lägst, varje vecka", "grupp": "terminer", "marknad": "Alla likvida krypto-terminer", "tidsram": "1d", "riktning": "Marknadsneutral", "mål": "C"}
+  {"id": "E-28", "spår": "X4", "namn": "Alla terminer funding-carry", "strategi": "Short högst ränta (tiondel), long lägst, varje vecka", "grupp": "terminer", "marknad": "Alla likvida krypto-terminer", "tidsram": "1d", "riktning": "Marknadsneutral", "mål": "C"},
+  {"id": "E-29", "spår": "X5", "namn": "BTC och ETH basis", "strategi": "Köp spot, sälj kvartalsterminen när premien är hög", "grupp": "terminer", "marknad": "Bitcoin och Ethereum, spot och kvartalstermin", "tidsram": "1d", "riktning": "Säkrad", "mål": "C"}
 ]
