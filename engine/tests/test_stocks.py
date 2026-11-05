@@ -59,3 +59,12 @@ def test_limit_message_is_not_cached(tmp_path, monkeypatch):
     with pytest.raises(stocks.PriceSourceUnavailable):
         stocks.load_prices("AAPL", tmp_path, opener)
     assert not (tmp_path / "raw" / "stooq" / "aapl.csv").exists()
+
+
+def test_network_error_means_source_unavailable(tmp_path, monkeypatch):
+    import pytest
+    monkeypatch.delenv("TIINGO_API_KEY", raising=False)
+    def opener(req):
+        raise TimeoutError("timed out")
+    with pytest.raises(stocks.PriceSourceUnavailable):
+        stocks.load_prices("AAPL", tmp_path, opener)
