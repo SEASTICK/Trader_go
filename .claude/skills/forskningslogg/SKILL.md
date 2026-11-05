@@ -13,7 +13,7 @@ utvecklas, men de ändrar aldrig ett beslut. Följ `obsidian-markdown` för form
 
 Lägg anteckningar i `research/TraderGO/01 Research/` i repot, så att ni båda får dem via Git.
 Öppna `research/` som valv i Obsidian. Skillen `obsidian-tradergo` sätter gränserna: skriv bara
-inom `research/TraderGO/`, och fråga innan något skrivs utanför.
+inom `research/TraderGO/` och skriv inte utanför.
 
 ## En anteckning per hypotes
 
