@@ -89,7 +89,7 @@ export type RealResult = {
   sharpe?: number | null;
   baseline?: { total_return: number; max_drawdown: number; sharpe: number | null; t_daily_nw: number | null } | null;
   track?: Mål;
-  phase?: "fas1" | "xs";
+  phase?: "fas1" | "xs" | "xs-big" | "basis";
   universe?: string[];
   criteria?: Record<string, boolean>;
   strategy_run_id?: string;
@@ -102,6 +102,7 @@ export type RealResult = {
 /** Klarar resultatet alla kriterier i sitt spår? Samma regler som research/tracks.md. */
 export function klararMål(mål: Mål, r: RealResult): boolean {
   if (r.phase === "fas1") return !!r.criteria && Object.keys(r.criteria).length === 4 && Object.values(r.criteria).every(v => v === true);
+  if (r.phase === "basis") return !!r.criteria && Object.values(r.criteria).every(v => v === true);
   const grund = r.passes && r.stressed_total_return > 0;
   if (!grund) return false;
   if (mål === "A") return r.sharpe != null && r.baseline?.sharpe != null && r.sharpe > r.baseline.sharpe;
@@ -114,7 +115,8 @@ export function fromResult(exp: Experiment, r: RealResult): Computed {
   const curve = r.curve ?? { t: [], strategy: [], buy_and_hold: [] };
   const labels = curve.t.map((t) => fmtDate(new Date(t)));
   // Marknadsneutrala portföljer jämförs med noll, inte med BTC: ingen baslinje.
-  const baseline = r.phase === "xs" ? [] : curve.buy_and_hold.every(v => v != null && Number.isFinite(v))
+  const portfölj = r.phase === "xs" || r.phase === "xs-big" || r.phase === "basis";
+  const baseline = portfölj ? [] : curve.buy_and_hold.every(v => v != null && Number.isFinite(v))
     ? curve.buy_and_hold as number[] : [];
   const trades: Trade[] = r.recent_trades.map((t, i) => ({
     nr: r.trades - r.recent_trades.length + i + 1,
@@ -134,7 +136,7 @@ export function fromResult(exp: Experiment, r: RealResult): Computed {
     vinstandel: r.win_rate * 100, t: r.t, krav: r.t_required, passes: r.passes,
     deflated: r.deflated_sharpe, stressad: r.stressed_total_return * 100, hypotes: r.hypothesis,
     beta: r.beta ?? null, klararMål: klararMål(r.track ?? målFör(exp), r),
-    portfölj: r.phase === "xs" ? { universum: r.universe ?? [] } : undefined,
+    portfölj: portfölj ? { universum: r.universe ?? [] } : undefined,
     fas1: r.phase === "fas1" ? { windows: r.windows ?? [], stability: r.stability ?? null, runId: r.strategy_run_id ?? "" } : undefined,
     registerCommit: r.registry_commit, period: r.period, resultatfil: r.result_file,
     position: pos === 0 ? { läge: "Ingen" } : { läge: pos > 0 ? "Long" : "Short", storlek: Math.round(Math.abs(pos) * 100) },

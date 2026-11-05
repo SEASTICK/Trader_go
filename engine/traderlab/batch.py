@@ -66,7 +66,7 @@ def run_all(repo: Path, data_dir: Path | None = None, loader=binance.load, only:
     for tile, spec in load_plan(repo).items():
         if only and tile not in only:
             continue
-        if spec.get("phase") in ("fas1", "xs"):
+        if spec.get("phase") in ("fas1", "xs", "xs-big", "basis"):
             continue  # körs av traderlab.fas1 (walk-forward) och traderlab.xsrun (tvärsnitt), inte här
         try:
             bars = loader(spec.get("market", "spot"), spec["symbol"], spec["interval"], data_dir)
@@ -183,7 +183,7 @@ def _export_xs(repo: Path, r: dict, path: Path) -> dict:
     s, cv = r["summary"], r["curve"]
     monthly = list(s.get("monthly_returns", {}).values())
     return {
-        "source": "HISTORIK", "phase": "xs", "hypothesis": r["hypothesis_id"], "registry_commit": r["registry_commit"],
+        "source": "HISTORIK", "phase": r["phase"], "hypothesis": r["hypothesis_id"], "registry_commit": r["registry_commit"],
         "run_at": r["run_at"], "period": r["period"], "total_return": s["total_return"], "max_drawdown": s["max_drawdown"],
         "trades": r["rebalances"], "win_rate": (sum(1 for m in monthly if m > 0) / len(monthly)) if monthly else 0.0,
         "t": r["t_daily_nw"], "t_required": r["t_required"], "passes": bool(r["criteria"]["t_at_least_required"]),
@@ -211,7 +211,7 @@ def export_to_app(repo: Path) -> dict:
         if r.get("phase") == "fas1":
             out[tile] = _export_fas1(repo, tile, r, files[-1])
             continue
-        if r.get("phase") == "xs":
+        if r.get("phase") in ("xs", "xs-big", "basis"):
             out[tile] = _export_xs(repo, r, files[-1])
             continue
         s = r["summary"]

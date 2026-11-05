@@ -31,8 +31,8 @@ def repo(tmp_path, monkeypatch):
                                 "volume": 1.0}, index=idx)
     data["BTCUSDT"] = data["S0USDT"]
     monkeypatch.setattr(xsrun, "universe", lambda d: syms)
-    monkeypatch.setattr(binance, "load", lambda m, s, i, d: data[s])
-    monkeypatch.setattr(binance, "load_funding", lambda s, d: pd.Series(1e-4, index=pd.date_range("2020-01-01", "2026-06-30", freq="8h", tz="UTC")))
+    monkeypatch.setattr(binance, "load", lambda m, s, i, d, **kw: data[s])
+    monkeypatch.setattr(binance, "load_funding", lambda s, d, **kw: pd.Series(1e-4, index=pd.date_range("2020-01-01", "2026-06-30", freq="8h", tz="UTC")))
     return tmp_path
 
 
