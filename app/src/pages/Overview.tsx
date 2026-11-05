@@ -5,6 +5,7 @@ import registryMd from "../../../research/registry.md?raw";
 import { groupRegistry, parseRegistry } from "../lib/registry";
 import type { SeriesRef } from "../lib/candles";
 import paper from "../../data/paper13f.json";
+import snap from "../../data/investors13f.json";
 import { unseenFilings } from "./Investors";
 
 const STEPS = ["Idé", "Research", "Fryst", "Papper", "Liten live", "Live", "Pensionerad"];
@@ -88,7 +89,7 @@ function InvestorCard({ onOpen }: { onOpen: () => void }) {
   const started = p.history.length > 0;
   const ret = p.value / p.start_capital - 1;
   const diff = ret - (p.spy_value / p.start_capital - 1);
-  const last = p.events[p.events.length - 1];
+  const last = (snap as unknown as { recent_filings: { manager: string; filed: string }[] }).recent_filings[0];
   const nya = unseenFilings();
   const fmt = (v: number) => `${v >= 0 ? "+" : ""}${(v * 100).toFixed(2).replace(".", ",")} %`;
   return (
@@ -98,7 +99,7 @@ function InvestorCard({ onOpen }: { onOpen: () => void }) {
         <b>{started ? `${Math.round(p.value).toLocaleString("sv-SE")} USD (${fmt(ret)}, ${fmt(diff)} mot S&P 500)` : `Startar ${p.start}`}</b>
         <span className="muted">
           {nya > 0 ? `${nya} ny${nya === 1 ? "" : "a"} redovisning${nya === 1 ? "" : "ar"} sedan du tittade senast` :
-            last ? `Senaste redovisning: ${last.manager}, ${last.day}` : "Inga nya redovisningar sedan start"}
+            last ? `Senaste redovisning: ${last.manager}, ${last.filed}` : "Inga redovisningar inlästa än"}
         </span>
       </button>
     </section>

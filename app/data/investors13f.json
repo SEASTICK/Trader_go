@@ -1,0 +1,1049 @@
+{
+ "updated_at": "2026-11-05T04:01:04+00:00",
+ "source": "SEC EDGAR 13F-HR",
+ "rules": "research/13f-protokoll.md",
+ "managers": [
+  {
+   "manager": "Berkshire Hathaway",
+   "cik": 1067983,
+   "filed": "2026-08-14",
+   "period": "2026-06-30",
+   "top10": [
+    {
+     "ticker": "AAPL",
+     "name": "APPLE INC",
+     "cusip": "037833100",
+     "weight": 0.2491
+    },
+    {
+     "ticker": "AXP",
+     "name": "AMERICAN EXPRESS CO",
+     "cusip": "025816109",
+     "weight": 0.1937
+    },
+    {
+     "ticker": "KO",
+     "name": "COCA COLA CO",
+     "cusip": "191216100",
+     "weight": 0.1228
+    },
+    {
+     "ticker": "GOOGL",
+     "name": "ALPHABET INC",
+     "cusip": "02079K305",
+     "weight": 0.1064
+    },
+    {
+     "ticker": "BAC",
+     "name": "BANK OF AMER CORP",
+     "cusip": "060505104",
+     "weight": 0.104
+    },
+    {
+     "ticker": "CVX",
+     "name": "CHEVRON CORPORATION",
+     "cusip": "166764100",
+     "weight": 0.0528
+    },
+    {
+     "ticker": "OXY",
+     "name": "OCCIDENTAL PETE CORP",
+     "cusip": "674599105",
+     "weight": 0.0486
+    },
+    {
+     "ticker": "CB",
+     "name": "CHUBB LIMITED",
+     "cusip": "H1467J104",
+     "weight": 0.0441
+    },
+    {
+     "ticker": "MCO",
+     "name": "MOODYS CORP",
+     "cusip": "615369105",
+     "weight": 0.0422
+    },
+    {
+     "ticker": "GOOG",
+     "name": "ALPHABET INC",
+     "cusip": "02079K107",
+     "weight": 0.0363
+    }
+   ]
+  },
+  {
+   "manager": "Baupost Group",
+   "cik": 1061768,
+   "filed": "2026-08-13",
+   "period": "2026-06-30",
+   "top10": [
+    {
+     "ticker": "AMZN",
+     "name": "AMAZON COM INC",
+     "cusip": "023135106",
+     "weight": 0.22
+    },
+    {
+     "ticker": "ELV",
+     "name": "ELEVANCE HEALTH INC FORMERLY",
+     "cusip": "036752103",
+     "weight": 0.1216
+    },
+    {
+     "ticker": "QSR",
+     "name": "RESTAURANT BRANDS INTL INC",
+     "cusip": "76131D103",
+     "weight": 0.1207
+    },
+    {
+     "ticker": "GOOG",
+     "name": "ALPHABET INC",
+     "cusip": "02079K107",
+     "weight": 0.1195
+    },
+    {
+     "ticker": "FERG",
+     "name": "FERGUSON ENTERPRISES INC",
+     "cusip": "31488V107",
+     "weight": 0.0849
+    },
+    {
+     "ticker": "GPC",
+     "name": "GENUINE PARTS CO",
+     "cusip": "372460105",
+     "weight": 0.0819
+    },
+    {
+     "ticker": "UNP",
+     "name": "UNION PAC CORP",
+     "cusip": "907818108",
+     "weight": 0.0795
+    },
+    {
+     "ticker": "V",
+     "name": "VISA INC",
+     "cusip": "92826C839",
+     "weight": 0.0593
+    },
+    {
+     "ticker": "WCC",
+     "name": "WESCO INTL INC",
+     "cusip": "95082P105",
+     "weight": 0.0565
+    },
+    {
+     "ticker": "AON",
+     "name": "AON PLC",
+     "cusip": "G0403H108",
+     "weight": 0.0562
+    }
+   ]
+  },
+  {
+   "manager": "Pershing Square",
+   "cik": 1336528,
+   "filed": "2026-05-15",
+   "period": "2026-03-31",
+   "top10": [
+    {
+     "ticker": "BN",
+     "name": "BROOKFIELD CORP",
+     "cusip": "11271J107",
+     "weight": 0.1763
+    },
+    {
+     "ticker": "AMZN",
+     "name": "AMAZON COM INC",
+     "cusip": "023135106",
+     "weight": 0.174
+    },
+    {
+     "ticker": "UBER",
+     "name": "UBER TECHNOLOGIES INC",
+     "cusip": "90353T100",
+     "weight": 0.1572
+    },
+    {
+     "ticker": "MSFT",
+     "name": "MICROSOFT CORP",
+     "cusip": "594918104",
+     "weight": 0.1527
+    },
+    {
+     "ticker": "QSR",
+     "name": "RESTAURANT BRANDS INTL INC",
+     "cusip": "76131D103",
+     "weight": 0.1221
+    },
+    {
+     "ticker": "META",
+     "name": "META PLATFORMS INC",
+     "cusip": "30303M102",
+     "weight": 0.1111
+    },
+    {
+     "ticker": "HHH",
+     "name": "HOWARD HUGHES HOLDINGS INC",
+     "cusip": "44267T102",
+     "weight": 0.087
+    },
+    {
+     "ticker": "SEG",
+     "name": "SEAPORT ENTMT GROUP INC",
+     "cusip": "812215200",
+     "weight": 0.0079
+    },
+    {
+     "ticker": "GOOG",
+     "name": "ALPHABET INC",
+     "cusip": "02079K107",
+     "weight": 0.0065
+    },
+    {
+     "ticker": "HTZ",
+     "name": "HERTZ GLOBAL HLDGS INC",
+     "cusip": "42806J700",
+     "weight": 0.0051
+    }
+   ]
+  },
+  {
+   "manager": "Akre Capital",
+   "cik": 1112520,
+   "filed": "2026-08-14",
+   "period": "2026-06-30",
+   "top10": [
+    {
+     "ticker": "MA",
+     "name": "MASTERCARD INCORPORATED",
+     "cusip": "57636Q104",
+     "weight": 0.2278
+    },
+    {
+     "ticker": "MCO",
+     "name": "MOODYS CORP",
+     "cusip": "615369105",
+     "weight": 0.1168
+    },
+    {
+     "ticker": "BN",
+     "name": "BROOKFIELD CORP",
+     "cusip": "11271J107",
+     "weight": 0.1151
+    },
+    {
+     "ticker": "KKR",
+     "name": "KKR & CO L P DEL",
+     "cusip": "48251W104",
+     "weight": 0.1019
+    },
+    {
+     "ticker": "FICO",
+     "name": "FAIR ISAAC CORP",
+     "cusip": "303250104",
+     "weight": 0.0964
+    },
+    {
+     "ticker": "ROP",
+     "name": "ROPER TECHNOLOGIES INC",
+     "cusip": "776696106",
+     "weight": 0.0887
+    },
+    {
+     "ticker": "V",
+     "name": "VISA INC",
+     "cusip": "92826C839",
+     "weight": 0.085
+    },
+    {
+     "ticker": "CSGP",
+     "name": "COSTAR GROUP INC",
+     "cusip": "22160N109",
+     "weight": 0.0739
+    },
+    {
+     "ticker": "CPRT",
+     "name": "COPART INC",
+     "cusip": "217204106",
+     "weight": 0.0502
+    },
+    {
+     "ticker": "ORLY",
+     "name": "OREILLY AUTOMOTIVE INC",
+     "cusip": "67103H107",
+     "weight": 0.0444
+    }
+   ]
+  },
+  {
+   "manager": "Markel Group",
+   "cik": 1096343,
+   "filed": "2026-10-30",
+   "period": "2026-09-30",
+   "top10": [
+    {
+     "ticker": "GOOG",
+     "name": "ALPHABET INC",
+     "cusip": "02079K107",
+     "weight": 0.1677
+    },
+    {
+     "ticker": "BRK-A",
+     "name": "BERKSHIRE HATHAWAY INC DEL",
+     "cusip": "084670108",
+     "weight": 0.149
+    },
+    {
+     "ticker": "BRK-B",
+     "name": "BERKSHIRE HATHAWAY INC DEL",
+     "cusip": "084670702",
+     "weight": 0.1366
+    },
+    {
+     "ticker": "DE",
+     "name": "DEERE & CO",
+     "cusip": "244199105",
+     "weight": 0.1035
+    },
+    {
+     "ticker": "AMZN",
+     "name": "AMAZON COM INC",
+     "cusip": "023135106",
+     "weight": 0.0906
+    },
+    {
+     "ticker": "BN",
+     "name": "BROOKFIELD CORP",
+     "cusip": "11271J107",
+     "weight": 0.0853
+    },
+    {
+     "ticker": "AAPL",
+     "name": "APPLE INC",
+     "cusip": "037833100",
+     "weight": 0.0732
+    },
+    {
+     "ticker": "ADI",
+     "name": "ANALOG DEVICES INC",
+     "cusip": "032654105",
+     "weight": 0.071
+    },
+    {
+     "ticker": "V",
+     "name": "VISA INC",
+     "cusip": "92826C839",
+     "weight": 0.0652
+    },
+    {
+     "ticker": "GS",
+     "name": "GOLDMAN SACHS GROUP INC",
+     "cusip": "38141G104",
+     "weight": 0.0579
+    }
+   ]
+  },
+  {
+   "manager": "Himalaya Capital",
+   "cik": 1709323,
+   "filed": "2026-08-14",
+   "period": "2026-06-30",
+   "top10": [
+    {
+     "ticker": "GOOGL",
+     "name": "ALPHABET INC",
+     "cusip": "02079K305",
+     "weight": 0.2455
+    },
+    {
+     "ticker": "GOOG",
+     "name": "ALPHABET INC",
+     "cusip": "02079K107",
+     "weight": 0.2339
+    },
+    {
+     "ticker": "PDD",
+     "name": "PDD HOLDINGS INC",
+     "cusip": "722304102",
+     "weight": 0.2217
+    },
+    {
+     "ticker": "BRK-B",
+     "name": "BERKSHIRE HATHAWAY INC DEL",
+     "cusip": "084670702",
+     "weight": 0.1498
+    },
+    {
+     "ticker": "EWBC",
+     "name": "EAST WEST BANCORP INC",
+     "cusip": "27579R104",
+     "weight": 0.0968
+    },
+    {
+     "ticker": "CROX",
+     "name": "CROCS INC",
+     "cusip": "227046109",
+     "weight": 0.0289
+    },
+    {
+     "ticker": "TME",
+     "name": "TENCENT MUSIC ENTERTAINM",
+     "cusip": "88034P109",
+     "weight": 0.0149
+    },
+    {
+     "ticker": "AAPL",
+     "name": "APPLE INC",
+     "cusip": "037833100",
+     "weight": 0.0086
+    }
+   ]
+  },
+  {
+   "manager": "Appaloosa",
+   "cik": 1656456,
+   "filed": "2026-08-14",
+   "period": "2026-06-30",
+   "top10": [
+    {
+     "ticker": "AMZN",
+     "name": "AMAZON COM INC",
+     "cusip": "023135106",
+     "weight": 0.1954
+    },
+    {
+     "ticker": "MU",
+     "name": "MICRON TECHNOLOGY INC",
+     "cusip": "595112103",
+     "weight": 0.1846
+    },
+    {
+     "ticker": "TSM",
+     "name": "TAIWAN SEMICONDUCTOR MANUFAC",
+     "cusip": "874039100",
+     "weight": 0.1292
+    },
+    {
+     "ticker": "GOOG",
+     "name": "ALPHABET INC",
+     "cusip": "02079K107",
+     "weight": 0.1072
+    },
+    {
+     "ticker": "UBER",
+     "name": "UBER TECHNOLOGIES INC",
+     "cusip": "90353T100",
+     "weight": 0.0911
+    },
+    {
+     "ticker": "EWY",
+     "name": "ISHARES INC",
+     "cusip": "464286772",
+     "weight": 0.0803
+    },
+    {
+     "ticker": "META",
+     "name": "META PLATFORMS INC",
+     "cusip": "30303M102",
+     "weight": 0.0624
+    },
+    {
+     "ticker": "VST",
+     "name": "VISTRA CORP",
+     "cusip": "92840M102",
+     "weight": 0.0576
+    },
+    {
+     "ticker": "NVDA",
+     "name": "NVIDIA CORPORATION",
+     "cusip": "67066G104",
+     "weight": 0.05
+    },
+    {
+     "ticker": "NRG",
+     "name": "NRG ENERGY INC",
+     "cusip": "629377508",
+     "weight": 0.0422
+    }
+   ]
+  },
+  {
+   "manager": "Third Point",
+   "cik": 1040273,
+   "filed": "2026-08-14",
+   "period": "2026-06-30",
+   "top10": [
+    {
+     "ticker": "WBD",
+     "name": "WARNER BROS DISCOVERY INC",
+     "cusip": "934423104",
+     "weight": 0.1896
+    },
+    {
+     "ticker": "AMZN",
+     "name": "AMAZON COM INC",
+     "cusip": "023135106",
+     "weight": 0.1483
+    },
+    {
+     "ticker": "GOOGL",
+     "name": "ALPHABET INC",
+     "cusip": "02079K305",
+     "weight": 0.1303
+    },
+    {
+     "ticker": "CRH",
+     "name": "CRH PLC",
+     "cusip": "G25508105",
+     "weight": 0.0835
+    },
+    {
+     "ticker": "TDS",
+     "name": "TELEPHONE & DATA SYS INC",
+     "cusip": "879433829",
+     "weight": 0.0826
+    },
+    {
+     "ticker": "TSM",
+     "name": "TAIWAN SEMICONDUCTOR MANUFAC",
+     "cusip": "874039100",
+     "weight": 0.0781
+    },
+    {
+     "ticker": "LYV",
+     "name": "LIVE NATION ENTERTAINMENT IN",
+     "cusip": "538034109",
+     "weight": 0.0739
+    },
+    {
+     "ticker": "KEYS",
+     "name": "KEYSIGHT TECHNOLOGIES INC",
+     "cusip": "49338L103",
+     "weight": 0.0728
+    },
+    {
+     "ticker": "TPX",
+     "name": "SOMNIGROUP INTERNATIONAL INC",
+     "cusip": "88023U101",
+     "weight": 0.0717
+    },
+    {
+     "ticker": "SQ",
+     "name": "BLOCK INC",
+     "cusip": "852234103",
+     "weight": 0.0692
+    }
+   ]
+  },
+  {
+   "manager": "ValueAct",
+   "cik": 1418814,
+   "filed": "2026-08-14",
+   "period": "2026-06-30",
+   "top10": [
+    {
+     "ticker": "V",
+     "name": "VISA INC",
+     "cusip": "92826C839",
+     "weight": 0.1626
+    },
+    {
+     "ticker": "AMZN",
+     "name": "AMAZON COM INC",
+     "cusip": "023135106",
+     "weight": 0.1435
+    },
+    {
+     "ticker": "RKT",
+     "name": "ROCKET COS INC",
+     "cusip": "77311W101",
+     "weight": 0.1343
+    },
+    {
+     "ticker": "BLK",
+     "name": "BLACKROCK INC",
+     "cusip": "09290D101",
+     "weight": 0.1144
+    },
+    {
+     "ticker": "META",
+     "name": "META PLATFORMS INC",
+     "cusip": "30303M102",
+     "weight": 0.1055
+    },
+    {
+     "ticker": "CRM",
+     "name": "SALESFORCE INC",
+     "cusip": "79466L302",
+     "weight": 0.096
+    },
+    {
+     "ticker": "TOST",
+     "name": "TOAST INC",
+     "cusip": "888787108",
+     "weight": 0.0805
+    },
+    {
+     "ticker": "KKR",
+     "name": "KKR & CO INC",
+     "cusip": "48251W104",
+     "weight": 0.0668
+    },
+    {
+     "ticker": "SPOT",
+     "name": "SPOTIFY TECHNOLOGY S A",
+     "cusip": "L8681T102",
+     "weight": 0.0495
+    },
+    {
+     "ticker": null,
+     "name": "LIBERTY LIVE HOLDINGS INC",
+     "cusip": "530909308",
+     "weight": 0.047
+    }
+   ]
+  },
+  {
+   "manager": "Duquesne Family Office",
+   "cik": 1536411,
+   "filed": "2026-08-14",
+   "period": "2026-06-30",
+   "top10": [
+    {
+     "ticker": "NTRA",
+     "name": "Natera Inc",
+     "cusip": "632307104",
+     "weight": 0.3794
+    },
+    {
+     "ticker": "TSM",
+     "name": "Taiwan Semiconductor Manufac",
+     "cusip": "874039100",
+     "weight": 0.1235
+    },
+    {
+     "ticker": "STM",
+     "name": "Stmicroelectronics N V",
+     "cusip": "861012102",
+     "weight": 0.1019
+    },
+    {
+     "ticker": "INSM",
+     "name": "Insmed Inc",
+     "cusip": "457669307",
+     "weight": 0.0666
+    },
+    {
+     "ticker": "YPF",
+     "name": "Ypf Sociedad Anonima",
+     "cusip": "984245100",
+     "weight": 0.0626
+    },
+    {
+     "ticker": "AMZN",
+     "name": "Amazon Com Inc",
+     "cusip": "023135106",
+     "weight": 0.0566
+    },
+    {
+     "ticker": "TBBB",
+     "name": "Bbb Foods Inc",
+     "cusip": "G0896C103",
+     "weight": 0.053
+    },
+    {
+     "ticker": "GOOGL",
+     "name": "Alphabet Inc",
+     "cusip": "02079K305",
+     "weight": 0.0527
+    },
+    {
+     "ticker": "EWZ",
+     "name": "Ishares Inc",
+     "cusip": "464286400",
+     "weight": 0.052
+    },
+    {
+     "ticker": "STX",
+     "name": "Seagate Technology Hldngs Pl",
+     "cusip": "G7997R103",
+     "weight": 0.0516
+    }
+   ]
+  }
+ ],
+ "consensus": [
+  {
+   "ticker": "AMZN",
+   "name": "AMAZON COM INC",
+   "weight": 0.1028,
+   "holders": [
+    "Baupost Group",
+    "Pershing Square",
+    "Markel Group",
+    "Appaloosa",
+    "Third Point",
+    "ValueAct",
+    "Duquesne Family Office"
+   ]
+  },
+  {
+   "ticker": "GOOG",
+   "name": "ALPHABET INC",
+   "weight": 0.0671,
+   "holders": [
+    "Berkshire Hathaway",
+    "Baupost Group",
+    "Pershing Square",
+    "Markel Group",
+    "Himalaya Capital",
+    "Appaloosa"
+   ]
+  },
+  {
+   "ticker": "GOOGL",
+   "name": "ALPHABET INC",
+   "weight": 0.0535,
+   "holders": [
+    "Berkshire Hathaway",
+    "Himalaya Capital",
+    "Third Point",
+    "Duquesne Family Office"
+   ]
+  },
+  {
+   "ticker": "NTRA",
+   "name": "Natera Inc",
+   "weight": 0.0379,
+   "holders": [
+    "Duquesne Family Office"
+   ]
+  },
+  {
+   "ticker": "BN",
+   "name": "BROOKFIELD CORP",
+   "weight": 0.0377,
+   "holders": [
+    "Pershing Square",
+    "Akre Capital",
+    "Markel Group"
+   ]
+  },
+  {
+   "ticker": "V",
+   "name": "VISA INC",
+   "weight": 0.0372,
+   "holders": [
+    "Baupost Group",
+    "Akre Capital",
+    "Markel Group",
+    "ValueAct"
+   ]
+  },
+  {
+   "ticker": "AAPL",
+   "name": "APPLE INC",
+   "weight": 0.0331,
+   "holders": [
+    "Berkshire Hathaway",
+    "Markel Group",
+    "Himalaya Capital"
+   ]
+  },
+  {
+   "ticker": "TSM",
+   "name": "TAIWAN SEMICONDUCTOR MANUFAC",
+   "weight": 0.0331,
+   "holders": [
+    "Appaloosa",
+    "Third Point",
+    "Duquesne Family Office"
+   ]
+  },
+  {
+   "ticker": "BRK-B",
+   "name": "BERKSHIRE HATHAWAY INC DEL",
+   "weight": 0.0286,
+   "holders": [
+    "Markel Group",
+    "Himalaya Capital"
+   ]
+  },
+  {
+   "ticker": "META",
+   "name": "META PLATFORMS INC",
+   "weight": 0.0279,
+   "holders": [
+    "Pershing Square",
+    "Appaloosa",
+    "ValueAct"
+   ]
+  },
+  {
+   "ticker": "UBER",
+   "name": "UBER TECHNOLOGIES INC",
+   "weight": 0.0248,
+   "holders": [
+    "Pershing Square",
+    "Appaloosa"
+   ]
+  },
+  {
+   "ticker": "QSR",
+   "name": "RESTAURANT BRANDS INTL INC",
+   "weight": 0.0243,
+   "holders": [
+    "Baupost Group",
+    "Pershing Square"
+   ]
+  },
+  {
+   "ticker": "MA",
+   "name": "MASTERCARD INCORPORATED",
+   "weight": 0.0228,
+   "holders": [
+    "Akre Capital"
+   ]
+  },
+  {
+   "ticker": "PDD",
+   "name": "PDD HOLDINGS INC",
+   "weight": 0.0222,
+   "holders": [
+    "Himalaya Capital"
+   ]
+  },
+  {
+   "ticker": "AXP",
+   "name": "AMERICAN EXPRESS CO",
+   "weight": 0.0194,
+   "holders": [
+    "Berkshire Hathaway"
+   ]
+  },
+  {
+   "ticker": "WBD",
+   "name": "WARNER BROS DISCOVERY INC",
+   "weight": 0.019,
+   "holders": [
+    "Third Point"
+   ]
+  },
+  {
+   "ticker": "MU",
+   "name": "MICRON TECHNOLOGY INC",
+   "weight": 0.0185,
+   "holders": [
+    "Appaloosa"
+   ]
+  },
+  {
+   "ticker": "KKR",
+   "name": "KKR & CO L P DEL",
+   "weight": 0.0169,
+   "holders": [
+    "Akre Capital",
+    "ValueAct"
+   ]
+  },
+  {
+   "ticker": "MCO",
+   "name": "MOODYS CORP",
+   "weight": 0.0159,
+   "holders": [
+    "Berkshire Hathaway",
+    "Akre Capital"
+   ]
+  },
+  {
+   "ticker": "MSFT",
+   "name": "MICROSOFT CORP",
+   "weight": 0.0153,
+   "holders": [
+    "Pershing Square"
+   ]
+  },
+  {
+   "ticker": "BRK-A",
+   "name": "BERKSHIRE HATHAWAY INC DEL",
+   "weight": 0.0149,
+   "holders": [
+    "Markel Group"
+   ]
+  },
+  {
+   "ticker": "RKT",
+   "name": "ROCKET COS INC",
+   "weight": 0.0134,
+   "holders": [
+    "ValueAct"
+   ]
+  },
+  {
+   "ticker": "KO",
+   "name": "COCA COLA CO",
+   "weight": 0.0123,
+   "holders": [
+    "Berkshire Hathaway"
+   ]
+  },
+  {
+   "ticker": "ELV",
+   "name": "ELEVANCE HEALTH INC FORMERLY",
+   "weight": 0.0122,
+   "holders": [
+    "Baupost Group"
+   ]
+  },
+  {
+   "ticker": "BLK",
+   "name": "BLACKROCK INC",
+   "weight": 0.0114,
+   "holders": [
+    "ValueAct"
+   ]
+  },
+  {
+   "ticker": "BAC",
+   "name": "BANK OF AMER CORP",
+   "weight": 0.0104,
+   "holders": [
+    "Berkshire Hathaway"
+   ]
+  },
+  {
+   "ticker": "DE",
+   "name": "DEERE & CO",
+   "weight": 0.0103,
+   "holders": [
+    "Markel Group"
+   ]
+  },
+  {
+   "ticker": "STM",
+   "name": "Stmicroelectronics N V",
+   "weight": 0.0102,
+   "holders": [
+    "Duquesne Family Office"
+   ]
+  },
+  {
+   "ticker": "EWBC",
+   "name": "EAST WEST BANCORP INC",
+   "weight": 0.0097,
+   "holders": [
+    "Himalaya Capital"
+   ]
+  },
+  {
+   "ticker": "FICO",
+   "name": "FAIR ISAAC CORP",
+   "weight": 0.0096,
+   "holders": [
+    "Akre Capital"
+   ]
+  }
+ ],
+ "recent_filings": [
+  {
+   "manager": "Markel Group",
+   "filed": "2026-10-30",
+   "period": "2026-09-30"
+  },
+  {
+   "manager": "Berkshire Hathaway",
+   "filed": "2026-08-14",
+   "period": "2026-06-30"
+  },
+  {
+   "manager": "Akre Capital",
+   "filed": "2026-08-14",
+   "period": "2026-06-30"
+  },
+  {
+   "manager": "Himalaya Capital",
+   "filed": "2026-08-14",
+   "period": "2026-06-30"
+  },
+  {
+   "manager": "Appaloosa",
+   "filed": "2026-08-14",
+   "period": "2026-06-30"
+  },
+  {
+   "manager": "Third Point",
+   "filed": "2026-08-14",
+   "period": "2026-06-30"
+  },
+  {
+   "manager": "ValueAct",
+   "filed": "2026-08-14",
+   "period": "2026-06-30"
+  },
+  {
+   "manager": "Duquesne Family Office",
+   "filed": "2026-08-14",
+   "period": "2026-06-30"
+  },
+  {
+   "manager": "Baupost Group",
+   "filed": "2026-08-13",
+   "period": "2026-06-30"
+  },
+  {
+   "manager": "Markel Group",
+   "filed": "2026-07-31",
+   "period": "2026-06-30"
+  },
+  {
+   "manager": "Berkshire Hathaway",
+   "filed": "2026-05-15",
+   "period": "2026-03-31"
+  },
+  {
+   "manager": "Pershing Square",
+   "filed": "2026-05-15",
+   "period": "2026-03-31"
+  },
+  {
+   "manager": "Himalaya Capital",
+   "filed": "2026-05-15",
+   "period": "2026-03-31"
+  },
+  {
+   "manager": "Appaloosa",
+   "filed": "2026-05-15",
+   "period": "2026-03-31"
+  },
+  {
+   "manager": "Third Point",
+   "filed": "2026-05-15",
+   "period": "2026-03-31"
+  },
+  {
+   "manager": "ValueAct",
+   "filed": "2026-05-15",
+   "period": "2026-03-31"
+  },
+  {
+   "manager": "Duquesne Family Office",
+   "filed": "2026-05-15",
+   "period": "2026-03-31"
+  },
+  {
+   "manager": "Baupost Group",
+   "filed": "2026-05-14",
+   "period": "2026-03-31"
+  },
+  {
+   "manager": "Akre Capital",
+   "filed": "2026-05-14",
+   "period": "2026-03-31"
+  },
+  {
+   "manager": "Markel Group",
+   "filed": "2026-05-01",
+   "period": "2026-03-31"
+  }
+ ]
+}
