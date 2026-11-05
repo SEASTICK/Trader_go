@@ -89,11 +89,33 @@ def run(opens: pd.DataFrame, weights: pd.DataFrame, costs: CostModel,
         equity += pnl - f
         tf += f
         notional = notional * (1 + r)
+        if equity <= 0:   # konkurs: kontot är slut och kan inte återuppstå
+            equity, notional = 0.0, np.zeros(k)
+            tgt[i:] = 0.0
+            has_row[i:] = False
         eq_out[i] = equity
     sl = slice(0, n - 1)
     return PortfolioResult(pd.Series(eq_out[sl], index=idx[sl], name="equity"),
                            pd.DataFrame(w_out[sl], index=idx[sl], columns=cols),
                            pd.Series(turn_out[sl], index=idx[sl], name="turnover"), tc, tf)
+
+
+def funding_gaps(held: pd.DataFrame, funding: dict[str, pd.Series]) -> dict[str, int]:
+    """Antal dagar per mynt där en position hölls men ingen finansieringsränta finns registrerad.
+
+    Saknad ränta får inte bli gratis ränta (granskningsfynd P1): motorerna avbryter om det finns luckor.
+    """
+    out = {}
+    for sym in held.columns:
+        days = held.index[held[sym].abs() > 0]
+        if len(days) == 0:
+            continue
+        f = funding.get(sym)
+        have = set() if f is None or f.empty else set(f.index.floor("1D"))
+        missing = sum(1 for d in days if d.floor("1D") not in have)
+        if missing:
+            out[sym] = missing
+    return out
 
 
 def check_no_lookahead(signal, panel: dict, cut_points: list[int], known_until: dict | None = None) -> None:

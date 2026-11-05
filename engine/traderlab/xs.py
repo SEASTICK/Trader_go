@@ -58,7 +58,9 @@ def funding_score(index: pd.DatetimeIndex, funding: dict[str, pd.Series], days: 
         lo = f.index.searchsorted(closes - pd.Timedelta(days=days), side="left")
         cnt = hi - lo
         val = np.where(cnt > 0, (cs[hi] - cs[lo]) / np.maximum(cnt, 1), np.nan)
-        out[sym] = val
+        # Avrunda: lika räntor (ofta exakt 0,01 %) ska ge exakt lika poäng, så att ordningen inte avgörs av
+        # flyttalsbrus från hur lång historik som lästs in.
+        out[sym] = np.round(val, 12)
     return out
 
 

@@ -140,7 +140,7 @@ def load_panel(data_dir: Path, symbols: list[str]):
     opens, closes, dvol, funding = {}, {}, {}, {}
     for s in symbols:
         try:
-            b = binance.load("um", s, "1d", data_dir)
+            b = binance.load("um", s, "1d", data_dir, start=lo, end=hi)
         except FileNotFoundError:
             continue
         b = b[(b.index >= lo) & (b.index < hi)]
@@ -148,7 +148,7 @@ def load_panel(data_dir: Path, symbols: list[str]):
             continue
         opens[s], closes[s], dvol[s] = b["open"], b["close"], b["close"] * b["volume"]
         try:
-            f = binance.load_funding(s, data_dir)
+            f = binance.load_funding(s, data_dir, start=lo, end=hi)
             funding[s] = f[f.index < hi]
         except FileNotFoundError:
             funding[s] = pd.Series(dtype=float)
@@ -164,12 +164,15 @@ def run(hypothesis_id: str, kind: str, repo: Path, data_dir: Path | None = None)
     w = weights(kind, closes, dvol, funding)
     w = w[w.index >= pd.Timestamp(START, tz="UTC")]
     normal = portfolio.run(opens, w, COSTS, funding)
+    gaps = portfolio.funding_gaps(normal.weights, funding)
+    if gaps:   # saknad finansieringsränta får aldrig bli gratis
+        raise ValueError(f"Finansieringsränta saknas för hållna dagar: {gaps}")
     stressed = portfolio.run(opens, w, COSTS.stressed(), funding)
     keep = normal.equity.index >= pd.Timestamp(START, tz="UTC")
     eq = normal.equity[keep] / normal.equity[keep].iloc[0]
     daily = stats.daily_returns(normal.bar_returns[keep])
     t_req, t_nw = stats.t_krav(reg.attempts), stats.newey_west_t(daily)
-    spot = binance.load("spot", "BTCUSDT", "1d", data_dir)
+    spot = binance.load("spot", "BTCUSDT", "1d", data_dir, end=pd.Timestamp(HOLDOUT, tz="UTC"))
     spot = spot[(spot.index >= pd.Timestamp(START, tz="UTC")) & (spot.index < pd.Timestamp(HOLDOUT, tz="UTC"))]
     bench = benchmark_stats(normal, spot, "spot BTCUSDT 1d")
     bh = (spot["open"].shift(-1) / spot["open"].iloc[0]).reindex(eq.index)

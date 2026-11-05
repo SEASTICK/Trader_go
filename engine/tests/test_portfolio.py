@@ -80,3 +80,21 @@ def test_carry_shorts_highest_funding():
     w = xs.carry_weights(closes, f)
     last = w[(w != 0).any(axis=1)].iloc[-1]
     assert last["C11"] < 0 and last["C1"] > 0
+
+
+def test_bankruptcy_is_absorbing():
+    """Granskningsfynd (Edwin): short −1 och priset fyrdubblas ska ge konkurs, inte återuppståndelse."""
+    idx = pd.date_range("2024-01-01", periods=5, freq="1D", tz="UTC")
+    opens = pd.DataFrame({"X": [100.0, 100.0, 400.0, 100.0, 100.0]}, index=idx)
+    w = pd.DataFrame({"X": [-1.0, np.nan, np.nan, np.nan, np.nan]}, index=idx)
+    res = portfolio.run(opens, w, CostModel(0, 0, 0))
+    assert (res.equity >= 0).all()
+    assert res.equity.iloc[-1] == 0.0
+
+
+def test_funding_gaps_counts_held_days_without_settlement():
+    idx = pd.date_range("2024-01-01", periods=4, freq="1D", tz="UTC")
+    held = pd.DataFrame({"A": [0.5, 0.5, 0.0, 0.5], "B": [0.0, 0.0, 0.0, 0.0]}, index=idx)
+    fund = {"A": pd.Series([0.0001, 0.0001], index=[idx[0] + pd.Timedelta(hours=8), idx[3] + pd.Timedelta(hours=16)])}
+    assert portfolio.funding_gaps(held, fund) == {"A": 1}
+    assert portfolio.funding_gaps(held, {}) == {"A": 3}

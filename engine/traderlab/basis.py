@@ -49,16 +49,20 @@ def fetch(data_dir: Path) -> None:
             binance.fetch("um", c, "1d", "2020-09", end, data_dir)
 
 
-def _cut(df: pd.DataFrame) -> pd.DataFrame:
-    return df[(df.index >= pd.Timestamp("2020-11-01", tz="UTC")) & (df.index < pd.Timestamp(HOLDOUT, tz="UTC"))]
+LO, HI = pd.Timestamp("2020-11-01", tz="UTC"), pd.Timestamp(HOLDOUT, tz="UTC")
+
+
+def _load(market: str, symbol: str, data_dir: Path) -> pd.DataFrame:
+    """Begränsad läsning: arkiv från slutprovet öppnas aldrig."""
+    return binance.load(market, symbol, "1d", data_dir, start=LO, end=HI)
 
 
 def load(asset: str, data_dir: Path) -> tuple[pd.DataFrame, dict[str, pd.DataFrame]]:
-    spot = _cut(binance.load("spot", asset, "1d", data_dir))
+    spot = _load("spot", asset, data_dir)
     futs = {}
     for c in contracts(asset, data_dir):
         try:
-            f = _cut(binance.load("um", c, "1d", data_dir))
+            f = _load("um", c, data_dir)
         except FileNotFoundError:
             continue
         if not f.empty:
@@ -178,7 +182,7 @@ def run(hypothesis_id: str, repo: Path, data_dir: Path | None = None) -> Path:
     st_eq, _ = run_portfolio(data_dir, COSTS.stressed())
     daily = eq.pct_change().dropna()
     t_req, t_nw = stats.t_krav(reg.attempts), stats.newey_west_t(daily)
-    btc_close = _cut(binance.load("spot", "BTCUSDT", "1d", data_dir))["close"]
+    btc_close = _load("spot", "BTCUSDT", data_dir)["close"]
     btc = btc_close.pct_change().reindex(daily.index)
     bh = btc_close.reindex(eq.index) / btc_close.reindex(eq.index).iloc[0]
     both = pd.concat([daily, btc], axis=1).dropna()
