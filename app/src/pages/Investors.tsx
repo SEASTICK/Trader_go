@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import paper from "../../data/paper13f.json";
 import snap from "../../data/investors13f.json";
+import pelosiData from "../../data/pelosi.json";
 import { LineChart } from "../components/Charts";
 import { Page } from "../components/ui";
 
@@ -18,7 +19,9 @@ type Snapshot = {
   recent_filings: { manager: string; filed: string; period: string }[];
 };
 const sn = snap as unknown as Snapshot;
-const latestFiling = sn.recent_filings[0]?.filed ?? "";
+type Pelosi = { updated_at: string | null; start: string; filings: { filed: string; doc_id: string; trades: { ticker: string; kind: string; asset: string; traded: string }[] }[] };
+const pel = pelosiData as unknown as Pelosi;
+const latestFiling = [sn.recent_filings[0]?.filed ?? "", pel.filings[0]?.filed ?? ""].sort().pop() ?? "";
 const usd = (v: number) => `${Math.round(v).toLocaleString("sv-SE")} USD`;
 const pct = (v: number) => `${v >= 0 ? "+" : ""}${(v * 100).toFixed(2).replace(".", ",")} %`;
 export const SEEN_KEY = "trader_go.seenFilings";
@@ -29,7 +32,7 @@ export function unseenFilings(): number {
   try { seen = localStorage.getItem(SEEN_KEY) ?? ""; } catch { /* ignoreras */ }
   // Första gången (inget sparat): bara redovisningar från de senaste 14 dagarna räknas som nya.
   if (!seen) seen = new Date(Date.now() - 14 * 86400000).toISOString().slice(0, 10);
-  return sn.recent_filings.filter((f) => f.filed > seen).length;
+  return sn.recent_filings.filter((f) => f.filed > seen).length + pel.filings.filter((f) => f.filed > seen).length;
 }
 
 export default function Investors() {
@@ -93,6 +96,17 @@ export default function Investors() {
                 ))}
               </div>
             )}
+          </div>
+        ))}
+      </section>
+
+      <section className="card table-card">
+        <div className="card-head"><div><h2>Nancy Pelosi</h2><p className="muted">Nya redovisade aktieaffärer från {pel.start} (House PTR). Affärer redovisas upp till 45 dagar i efterhand. Testet H-0017 väntar på kurskällan.</p></div></div>
+        {pel.filings.length === 0 ? <div className="empty">Inga nya redovisningar sedan {pel.start}.</div> : pel.filings.map((f) => (
+          <div key={f.doc_id} className={f.filed > seenBefore ? "inv-event new" : "inv-event"}>
+            <div><b>Redovisning {f.filed}</b>{f.filed > seenBefore && <span className="inv-new">Ny</span>}</div>
+            <div className="muted inv-top">{f.trades.length === 0 ? "Inga aktieköp eller hela försäljningar." :
+              f.trades.map((t) => `${t.kind === "buy" ? "Köp" : "Sälj"} ${t.ticker}${t.asset === "OP" ? " (köpoption)" : ""} ${t.traded}`).join(" · ")}</div>
           </div>
         ))}
       </section>
