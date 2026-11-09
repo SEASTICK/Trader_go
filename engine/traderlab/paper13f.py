@@ -103,7 +103,8 @@ def update(repo: Path, start: str, data_dir: Path | None = None, today: pd.Times
         c = closes.loc[day]
         value = cash + sum(n * c[t] for t, n in shares.items() if t in c.index and np.isfinite(c[t]))
         history.append({"day": str(day.date()), "value": round(float(value), 2),
-                        "spy": round(float(START_CAPITAL * c["SPY"] / closes["SPY"].iloc[0]), 2)})
+                        # SPY köps samtidigt som portföljen: på första dagens öppning, inte stängning.
+                        "spy": round(float(START_CAPITAL * c["SPY"] / opens["SPY"].iloc[0]), 2)})
     last_close = closes.iloc[-1] if len(closes) else pd.Series(dtype=float)
     holdings = sorted(({"ticker": t, "shares": round(n, 4), "value": round(float(n * last_close.get(t, np.nan)), 2)}
                        for t, n in shares.items() if np.isfinite(last_close.get(t, np.nan))), key=lambda h: -h["value"])
