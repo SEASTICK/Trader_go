@@ -59,3 +59,14 @@ def test_holdings_snapshot_without_prices(tmp_path, monkeypatch):
     assert len(s["managers"]) == 2 and cons["AAA"]["holders"] == ["Berkshire Hathaway"]
     assert s["recent_filings"][0]["filed"] == "2026-08-15" and s["recent_filings"][0]["in_portfolio"] is False
     assert (tmp_path / "app/data/investors13f.json").exists()
+
+
+def test_spy_is_bought_at_the_same_open_as_the_portfolio(world, monkeypatch):
+    """Granskningsfynd: SPY räknades från första dagens stängning men portföljen från öppningen."""
+    days = pd.bdate_range("2026-10-01", "2026-11-30", tz="UTC")
+    frame = lambda o, c: pd.DataFrame({"open": o, "high": c, "low": o, "close": c}, index=days)
+    frames = {"AAA": frame(100.0, 90.0), "SPY": frame(400.0, 360.0)}   # båda faller 10 % från öppning till stängning
+    monkeypatch.setattr(stocks, "load_prices", lambda t, d, opener=None, max_age_hours=None: frames.get(t))
+    s = paper13f.update(world, "2026-11-02", today=pd.Timestamp("2026-11-02", tz="UTC"))
+    assert s["history"][0]["spy"] == pytest.approx(90_000)
+    assert s["history"][0]["value"] == pytest.approx(90_000 * (1 - 0.001))
