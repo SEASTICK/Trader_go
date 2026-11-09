@@ -86,10 +86,9 @@ def _load_yahoo(ticker: str, data_dir: Path, opener=None, max_age_hours: float |
         try:
             raw = _open(urllib.request.Request(url, headers={"User-Agent": "TraderGo research"}), opener, tries=3)
         except urllib.error.HTTPError as exc:
-            if exc.code == 404:   # okänd eller avnoterad aktie: svaret är ett riktigt "finns inte"
-                raw = b'{"chart": {"result": null}}'
-            else:
-                raise PriceSourceUnavailable(f"Yahoo svarade {exc.code} för {ticker}") from exc
+            if exc.code == 404:   # okänd eller avnoterad aktie. Sparas inte, så att ett tillfälligt fel inte fastnar.
+                return None
+            raise PriceSourceUnavailable(f"Yahoo svarade {exc.code} för {ticker}") from exc
         except OSError as exc:
             raise PriceSourceUnavailable(f"Yahoo svarar inte för {ticker}: {exc}") from exc
         try:

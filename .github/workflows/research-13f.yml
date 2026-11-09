@@ -52,8 +52,8 @@ jobs:
             data/raw/house
             data/raw/stooq
             data/raw/yahoo
-          key: research-13f-${{ github.run_id }}
-          restore-keys: research-13f-
+          key: research-13f-v2-${{ github.run_id }}
+          restore-keys: research-13f-v2-
       - name: Kör hypotesen
         working-directory: engine
         run: |
@@ -74,7 +74,7 @@ jobs:
             data/raw/house
             data/raw/stooq
             data/raw/yahoo
-          key: research-13f-${{ github.run_id }}
+          key: research-13f-v2-${{ github.run_id }}
       - name: Lägg resultatet på en gren
         if: ${{ !inputs.data_only }}
         run: |

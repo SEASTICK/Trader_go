@@ -112,3 +112,16 @@ def test_yahoo_unknown_ticker_is_none_but_errors_are_not_cached(tmp_path, monkey
     with pytest.raises(stocks.PriceSourceUnavailable):
         stocks.load_prices("AAPL", tmp_path, html)
     assert not (tmp_path / "raw" / "yahoo" / "AAPL.json").exists()
+
+
+def test_yahoo_404_is_not_cached(tmp_path, monkeypatch):
+    import urllib.error
+    monkeypatch.delenv("TIINGO_API_KEY", raising=False)
+    monkeypatch.delenv("PRICE_SOURCE", raising=False)
+    calls = []
+    def missing(req):
+        calls.append(1)
+        raise urllib.error.HTTPError(req.full_url, 404, "Not Found", {}, None)
+    assert stocks.load_prices("GONE", tmp_path, missing) is None
+    assert stocks.load_prices("GONE", tmp_path, missing) is None
+    assert len(calls) == 2 and not (tmp_path / "raw" / "yahoo" / "GONE.json").exists()
