@@ -4,7 +4,7 @@
  "rules": "research/13f-protokoll.md",
  "start": "2026-11-05",
  "start_capital": 100000.0,
- "updated_at": "2026-11-09T17:10:07+00:00",
+ "updated_at": "2026-11-09T17:16:19+00:00",
  "managers": [
   "Berkshire Hathaway",
   "Baupost Group",
@@ -18,7 +18,7 @@
   "Duquesne Family Office"
  ],
  "value": 97978.49,
- "spy_value": 102568.9,
+ "spy_value": 98218.09,
  "holdings": [
   {
    "ticker": "AMZN",
@@ -345,17 +345,17 @@
   {
    "day": "2026-11-05",
    "value": 96090.63,
-   "spy": 100000.0
+   "spy": 95758.17
   },
   {
    "day": "2026-11-06",
    "value": 95784.2,
-   "spy": 100312.41
+   "spy": 96057.33
   },
   {
    "day": "2026-11-09",
    "value": 97978.49,
-   "spy": 102568.9
+   "spy": 98218.09
   }
  ],
  "events": []

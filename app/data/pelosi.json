@@ -1,7 +1,20 @@
 {
- "updated_at": "2026-11-09T17:07:49+00:00",
+ "updated_at": "2026-11-09T17:16:15+00:00",
  "start": "2026-11-05",
  "source": "House Clerk PTR",
  "rules": "research/pelosi-protokoll.md",
- "filings": []
+ "filings": [
+  {
+   "filed": "2026-11-06",
+   "doc_id": "20035780",
+   "trades": [
+    {
+     "ticker": "WBD",
+     "kind": "sell",
+     "asset": "ST",
+     "traded": "2026-10-07"
+    }
+   ]
+  }
+ ]
 }
