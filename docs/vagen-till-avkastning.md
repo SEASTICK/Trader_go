@@ -44,7 +44,7 @@ Att följa kända investerares redovisade innehav, i stället för egna signaler
 - **H-0017:** Nancy Pelosis redovisade affärer, `research/pelosi-protokoll.md`.
 - **Papper framåt:** 100 000 USD som följer de tio investerarna från 2026-11-05, sidan Investerare i appen.
 
-Alla tre väntar på en kurskälla, se [kurskalla.md](kurskalla.md). Båda urvalen är gjorda i efterhand, eftersom
+Kurserna kommer från Yahoo utan nyckel, se [kurskalla.md](kurskalla.md). Båda urvalen är gjorda i efterhand, eftersom
 investerarna är kända för att ha lyckats. Testen blir därför för optimistiska.
 
 ## Nästa idéer i kö (registreras en i taget, aldrig efter att ha sett resultatet)

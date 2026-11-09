@@ -1,27 +1,29 @@
-# Kurskälla för amerikanska aktier (Tiingo)
+# Kurskälla för amerikanska aktier
 
-Investerarspåret (H-0016, H-0017 och papperportföljen på sidan Investerare) behöver dagliga aktiekurser.
-Stooq blockerar automatiska hämtningar från molnservrar, och det kringgås inte. Tiingo har ett officiellt API
-med en gratis nyckel.
+Investerarspåret (H-0016, H-0017 och papperportföljen på sidan Investerare) behöver dagliga aktiekurser,
+justerade för split och utdelning. Ingen nyckel behövs, och ingen behöver göra något.
 
-## Det du gör en gång (cirka 3 minuter)
+| Ordning | Källa | När |
+|---|---|---|
+| 1 | Tiingo (officiellt API) | Bara om hemligheten `TIINGO_API_KEY` finns. Valfritt. |
+| 2 | Yahoo Finance chart-API | Standard. Ingen nyckel. |
+| 3 | Stooq | Bara med `PRICE_SOURCE=stooq`. Stooq blockerar molnservrar, och det kringgås inte. |
 
-1. Gå till **tiingo.com** → **Sign Up** och skapa ett gratiskonto.
-2. Logga in → klicka på ditt namn uppe till höger → **Account** → **API** → **Token**. Kopiera nyckeln.
-3. GitHub: **SEASTICK/Trader_go → Settings → Secrets and variables → Actions → New repository secret**.
-   - Name: `TIINGO_API_KEY`
-   - Secret: nyckeln
-   - **Add secret**
+Koden finns i `engine/traderlab/data/stocks.py`.
 
-Klistra aldrig in nyckeln i en chatt eller i en fil i repot.
+## Om Yahoo
 
-## Vad som händer sedan
+- Yahoos API är inofficiellt. Det kan ändras eller strypas utan förvarning.
+- Svarar Yahoo med en spärr eller en felsida avbryts körningen (`PriceSourceUnavailable`). Inget kringgås och
+  inget felaktigt sparas.
+- Kurserna justeras för utdelning med Yahoos justerade stängning, och samma faktor läggs på öppning, hög och låg.
+- Avnoterade bolag saknas ofta. Det gör testen för optimistiska, och andelen vikt utan kurs redovisas.
+- H-0017:s protokoll anger Stooq som källa. Eftersom Stooq är blockerat används Yahoo för både portfölj och SPY,
+  och avvikelsen skrivs i resultatraden.
 
-- **Actions → Research 13F → Run workflow**, hypotes `H-0016`: kör 13F-testet. Gratisnivån tillåter 50 anrop
-  i timmen, så första körningen tar några timmar (cirka 390 aktier). Kurserna sparas i en cache, och en körning
-  som avbryts fortsätter där den slutade nästa gång.
-- Samma sak med hypotes `H-0017` för Pelosi.
-- **Paper 13F** körs varje lördag och uppdaterar papperportföljen på sidan Investerare.
+## Vad som händer
 
-Resultaten hamnar på grenen `bot/h-0016-resultat` respektive `bot/h-0017-resultat` och granskas innan de förs in
-i registret.
+- **Paper 13F** körs varje lördag. Den uppdaterar vad investerarna äger, Pelosis nya affärer och
+  papperportföljen på 100 000 USD.
+- **Actions → Research 13F → Run workflow** med hypotes `H-0016` eller `H-0017` kör testen. Resultaten hamnar
+  på grenen `bot/h-0016-resultat` respektive `bot/h-0017-resultat` och granskas innan de förs in i registret.

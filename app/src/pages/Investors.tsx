@@ -115,7 +115,7 @@ export default function Investors() {
       )}
 
       <section className="card table-card">
-        <div className="card-head"><div><h2>Nancy Pelosi</h2><p className="muted">Nya redovisade aktieaffärer från {pel.start} (House PTR). Affärer redovisas upp till 45 dagar i efterhand. Testet H-0017 väntar på kurskällan.</p></div></div>
+        <div className="card-head"><div><h2>Nancy Pelosi</h2><p className="muted">Nya redovisade aktieaffärer från {pel.start} (House PTR). Affärer redovisas upp till 45 dagar i efterhand. Testet H-0017 körs med samma kurser som papperportföljen.</p></div></div>
         {pel.filings.length === 0 ? <div className="empty">Inga nya redovisningar sedan {pel.start}.</div> : pel.filings.map((f) => (
           <div key={f.doc_id} className={f.filed > seenBefore ? "inv-event new" : "inv-event"}>
             <div><b>Redovisning {f.filed}</b>{f.filed > seenBefore && <span className="inv-new">Ny</span>}</div>
