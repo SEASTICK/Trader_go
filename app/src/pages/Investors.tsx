@@ -12,11 +12,13 @@ type Paper = {
   holdings: Holding[]; history: { day: string; value: number; spy: number }[]; events: Event[];
 };
 const p = paper as unknown as Paper;
+type Manager = { manager: string; filed: string; period: string; top10: { ticker: string | null; name: string; weight: number }[] };
 type Snapshot = {
   updated_at: string;
-  managers: { manager: string; filed: string; period: string; top10: { ticker: string | null; name: string; weight: number }[] }[];
+  managers: Manager[];
+  others?: Manager[];
   consensus: { ticker: string | null; name: string; weight: number; holders: string[] }[];
-  recent_filings: { manager: string; filed: string; period: string }[];
+  recent_filings: { manager: string; filed: string; period: string; in_portfolio?: boolean }[];
 };
 const sn = snap as unknown as Snapshot;
 type Pelosi = { updated_at: string | null; start: string; filings: { filed: string; doc_id: string; trades: { ticker: string; kind: string; asset: string; traded: string }[] }[] };
@@ -25,6 +27,10 @@ const latestFiling = [sn.recent_filings[0]?.filed ?? "", pel.filings[0]?.filed ?
 const usd = (v: number) => `${Math.round(v).toLocaleString("sv-SE")} USD`;
 const pct = (v: number) => `${v >= 0 ? "+" : ""}${(v * 100).toFixed(2).replace(".", ",")} %`;
 export const SEEN_KEY = "trader_go.seenFilings";
+/** En 13F äldre än 200 dagar räknas som inaktuell (samma gräns som i research/13f-protokoll.md). */
+export function isStale(filed: string, today = new Date()): boolean {
+  return (today.getTime() - new Date(filed).getTime()) / 86400000 > 200;
+}
 
 /** Antal redovisningar som kommit sedan användaren senast öppnade sidan (för "ping" i menyn). */
 export function unseenFilings(): number {
@@ -45,6 +51,23 @@ export default function Investors() {
   useEffect(() => {
     try { if (latestFiling) localStorage.setItem(SEEN_KEY, latestFiling); } catch { /* ignoreras */ }
   }, []);
+  const managerRow = (m: Manager) => (
+    <div key={m.manager} className={openMgr === m.manager ? "hyp open" : "hyp"}>
+      <button type="button" className="hyp-row inv-mgr" onClick={() => setOpenMgr(openMgr === m.manager ? null : m.manager)} aria-expanded={openMgr === m.manager}>
+        <b>{m.manager}</b>
+        <span className="muted">{m.top10.slice(0, 3).map((t) => t.ticker ?? t.name).join(", ")} …</span>
+        <span className="muted" title={`Avser kvartalet som slutar ${m.period}`}>inlämnad {m.filed}{isStale(m.filed) ? " (gammal)" : ""}</span>
+      </button>
+      {openMgr === m.manager && (
+        <div className="inv-mgr-detail">
+          {m.top10.map((t) => (
+            <div key={(t.ticker ?? "") + t.name} className="inv-row cons"><b>{t.ticker ?? "–"}</b><span className="muted">{t.name}</span>
+              <span>{(t.weight * 100).toFixed(1).replace(".", ",")} %</span><span /></div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
   const started = p.history.length > 0;
   const ret = p.value / p.start_capital - 1;
   const spyRet = p.spy_value / p.start_capital - 1;
@@ -81,24 +104,15 @@ export default function Investors() {
 
       <section className="card table-card">
         <div className="card-head"><div><h2>Investerarna</h2><p className="muted">Klicka för att se varje investerares tio största innehav enligt senaste 13F.</p></div></div>
-        {sn.managers.map((m) => (
-          <div key={m.manager} className={openMgr === m.manager ? "hyp open" : "hyp"}>
-            <button type="button" className="hyp-row inv-mgr" onClick={() => setOpenMgr(openMgr === m.manager ? null : m.manager)} aria-expanded={openMgr === m.manager}>
-              <b>{m.manager}</b>
-              <span className="muted">{m.top10.slice(0, 3).map((t) => t.ticker ?? t.name).join(", ")} …</span>
-              <span className="muted">avser {m.period}, inlämnad {m.filed}</span>
-            </button>
-            {openMgr === m.manager && (
-              <div className="inv-mgr-detail">
-                {m.top10.map((t) => (
-                  <div key={(t.ticker ?? "") + t.name} className="inv-row cons"><b>{t.ticker ?? "–"}</b><span className="muted">{t.name}</span>
-                    <span>{(t.weight * 100).toFixed(1).replace(".", ",")} %</span><span /></div>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
+        {sn.managers.map(managerRow)}
       </section>
+
+      {(sn.others ?? []).length > 0 && (
+        <section className="card table-card">
+          <div className="card-head"><div><h2>Fler kända investerare</h2><p className="muted">Visas bara, så att du kan jämföra. De ingår inte i papperportföljen eller i testet H-0016.</p></div></div>
+          {(sn.others ?? []).map(managerRow)}
+        </section>
+      )}
 
       <section className="card table-card">
         <div className="card-head"><div><h2>Nancy Pelosi</h2><p className="muted">Nya redovisade aktieaffärer från {pel.start} (House PTR). Affärer redovisas upp till 45 dagar i efterhand. Testet H-0017 väntar på kurskällan.</p></div></div>
@@ -113,10 +127,10 @@ export default function Investors() {
 
       <div className="split">
         <section className="card table-card">
-          <div className="card-head"><div><h2>Senaste redovisningar</h2><p className="muted">13F lämnas senast 45 dagar efter varje kvartal. En ny flyttar portföljen nästa handelsdag.</p></div></div>
+          <div className="card-head"><div><h2>Senaste redovisningar</h2><p className="muted">13F lämnas senast 45 dagar efter varje kvartal. En ny från de tio flyttar portföljen nästa handelsdag.</p></div></div>
           {sn.recent_filings.slice(0, 12).map((f) => (
             <div key={f.manager + f.filed} className={f.filed > seenBefore ? "inv-event new" : "inv-event"}>
-              <div><b>{f.manager}</b>{f.filed > seenBefore && <span className="inv-new">Ny</span>}<span className="muted"> · inlämnad {f.filed}, avser {f.period}</span></div>
+              <div><b>{f.manager}</b>{f.filed > seenBefore && <span className="inv-new">Ny</span>}<span className="muted"> · inlämnad {f.filed}, avser {f.period}{f.in_portfolio === false ? " · visas bara" : ""}</span></div>
             </div>
           ))}
         </section>
