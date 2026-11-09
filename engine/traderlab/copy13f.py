@@ -29,7 +29,8 @@ TOP = 10
 def manager_events(cik: int, data_dir: Path) -> list[tuple[pd.Timestamp, dict[str, float]]]:
     """(inlämningsdag, topp-10-vikter per CUSIP) för varje ursprunglig 13F-HR före slutprovet."""
     out = []
-    for f in sec13f.list_filings(cik, data_dir):
+    # Samma inlämningsdag: den med senast avsedda kvartal kommer sist och gäller (den nyaste bilden av innehaven).
+    for f in sorted(sec13f.list_filings(cik, data_dir), key=lambda f: (f.filed, f.period or "")):
         if not ("2013-07-01" <= f.filed < END):
             continue
         w = sec13f.top_weights(sec13f.holdings(f, data_dir), TOP)
@@ -43,7 +44,8 @@ def build_weights(events: dict[int, list], tickers: dict[str, str | None], opens
     """Målvikter per beslutsdag. Beslutsdagen är första handelsdag på eller efter inlämningsdagen; fyllning sker
     vid nästa öppning (portfolio.run). Innehav utan kurs den dagen tas bort och förvaltarens vikt fördelas om."""
     days = opens.index
-    flat = sorted((d, cik, w) for cik, evs in events.items() for d, w in evs)
+    # Sortera på dag och förvaltare; ordningen inom samma dag och förvaltare behålls (vikterna jämförs aldrig).
+    flat = sorted(((d, cik, w) for cik, evs in events.items() for d, w in evs), key=lambda e: (e[0], e[1]))
     latest: dict[int, tuple[pd.Timestamp, dict]] = {}
     rows, log = {}, []
     for filed, cik, w in flat:

@@ -36,3 +36,21 @@ def test_stale_manager_drops_out():
     events = {1: [(o.index[0], {"c1": 1.0})], 2: [(o.index[250], {"c2": 1.0})]}
     w, _ = copy13f.build_weights(events, {"c1": "AAA", "c2": "BBB"}, o)
     assert w.iloc[-1]["AAA"] == 0 and w.iloc[-1]["BBB"] == 1
+
+
+def test_two_filings_same_day_last_one_wins():
+    """Körfel på riktiga data: två redovisningar samma dag från samma förvaltare kraschade sorteringen."""
+    o = opens(["AAA", "BBB"])
+    d = pd.Timestamp("2024-01-03", tz="UTC")
+    events = {1: [(d, {"c1": 1.0}), (d, {"c2": 1.0})]}
+    w, _ = copy13f.build_weights(events, {"c1": "AAA", "c2": "BBB"}, o)
+    assert w.iloc[-1]["BBB"] == 1 and w.iloc[-1]["AAA"] == 0
+
+
+def test_manager_events_put_latest_period_last(monkeypatch):
+    from traderlab.data import sec13f
+    fs = [sec13f.Filing(1, "b", "2015-02-14", "2014-12-31"), sec13f.Filing(1, "a", "2015-02-14", "2014-09-30")]
+    monkeypatch.setattr(sec13f, "list_filings", lambda cik, d, opener=None, refresh=False: fs)
+    monkeypatch.setattr(sec13f, "holdings", lambda f, d, opener=None: {f.accession: {"name": "X", "value": 1.0, "shares": 1}})
+    ev = copy13f.manager_events(1, None)
+    assert [list(w) for _, w in ev] == [["a"], ["b"]]

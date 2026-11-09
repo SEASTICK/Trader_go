@@ -28,7 +28,8 @@ def _latest_filings(data_dir: Path, since: str) -> list[tuple[pd.Timestamp, int,
     """Alla ursprungliga 13F-HR inlämnade från `since` (tidigare kvartal behövs som utgångsläge)."""
     out = []
     for cik in MANAGERS:
-        for f in sec13f.list_filings(cik, data_dir, refresh=True):
+        # Samma inlämningsdag: senast avsedda kvartal sist, så att det gäller (som i copy13f).
+        for f in sorted(sec13f.list_filings(cik, data_dir, refresh=True), key=lambda f: (f.filed, f.period or "")):
             if f.filed >= since:
                 rows = sec13f.holdings(f, data_dir)
                 out.append((pd.Timestamp(f.filed, tz="UTC"), cik, f.accession, rows))
