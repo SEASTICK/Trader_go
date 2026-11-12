@@ -532,7 +532,33 @@ def binance_cost_articles(opener=default_opener, pause: float = 3.0, max_article
     return {"catalogs": per_catalog, "matching_titles": len(rows), "titles": rows, "read": sum(1 for r in out if r["characters"]), "articles": out}
 
 
-SOURCES = {"binance_cost_articles": binance_cost_articles, "binance_articles_pit": binance_articles_pit, "binance_announcements": binance_announcements, "binance": binance, "binance_api": binance_api, "binance_docs": binance_docs, "binance_docs_text": lambda opener=default_opener: binance_docs(opener, full_text=True), "deribit": deribit, "bitmex_api": bitmex_api, "bitmex_files": lambda opener=None: bitmex_files(),
+def binance_cost_retry(opener=default_opener, pause: float = 8.0) -> dict:
+    """Läser om de artiklar i cost1-rapporten som fick HTTP 429, med lång paus mellan anropen."""
+    repo = Path(__file__).resolve().parents[3]
+    files = sorted((repo / "research" / "coverage").glob("basis-sources-cost1-*.json"))
+    if not files:
+        raise FileNotFoundError("ingen cost1-rapport")
+    arts = json.loads(files[-1].read_text(encoding="utf-8"))["sources"]["binance_cost_articles"]["articles"]
+    out = []
+    for a in arts:
+        if a.get("characters"):
+            continue
+        row = {k: a[k] for k in ("code", "title", "released", "kind", "catalog")}
+        for attempt in range(6):
+            try:
+                row["text"] = _page_text(opener(ANN_ARTICLE.format(code=a["code"]), tries=2).decode("utf-8", "replace"))
+                row.pop("text_error", None)
+                break
+            except urllib.error.HTTPError as exc:
+                row["text_error"] = f"HTTP {exc.code}"
+                time.sleep(pause * (attempt + 1))
+        row["characters"] = len(row.get("text", ""))
+        out.append(row)
+        time.sleep(pause)
+    return {"retried": len(out), "read": sum(1 for r in out if r["characters"]), "articles": out}
+
+
+SOURCES = {"binance_cost_retry": binance_cost_retry, "binance_cost_articles": binance_cost_articles, "binance_articles_pit": binance_articles_pit, "binance_announcements": binance_announcements, "binance": binance, "binance_api": binance_api, "binance_docs": binance_docs, "binance_docs_text": lambda opener=default_opener: binance_docs(opener, full_text=True), "deribit": deribit, "bitmex_api": bitmex_api, "bitmex_files": lambda opener=None: bitmex_files(),
            "bybit": bybit, "bitstamp": bitstamp, "fred": fred, "fred_text": fred_text, "okx": okx}
 
 
