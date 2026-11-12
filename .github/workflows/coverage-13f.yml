@@ -1,0 +1,51 @@
+# Täckningsdiagnos för H-0016: varför saknar vissa aktier kurs? Inget resultat, inga order.
+# Läser SEC-filer och Yahoo-svar och lägger rapporten på grenen bot/h-0016-tackning.
+name: Coverage 13F
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: research-13f
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: bash
+    env:
+      SEC_CONTACT: philipsjoqvist20@gmail.com
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q -r engine/requirements.txt
+      - name: Hämta cache (SEC-filer och tidigare Yahoo-svar)
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            data/raw/sec
+            data/raw/yahoo
+          key: coverage-13f-${{ github.run_id }}
+          restore-keys: research-13f-v2-
+      - name: Diagnos
+        working-directory: engine
+        run: python -m traderlab.coverage13f | tee ../run.log
+      - name: Lägg rapporten på en gren
+        run: |
+          git config user.name "tradergo-research-bot"
+          git config user.email "tradergo-research-bot@users.noreply.github.com"
+          git checkout -b bot/h-0016-tackning
+          git add research/coverage/
+          git commit -m "Täckningsdiagnos H-0016 (körning ${{ github.run_id }})"
+          git push -f origin bot/h-0016-tackning
+          tail -2 run.log >> "$GITHUB_STEP_SUMMARY"
