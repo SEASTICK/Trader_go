@@ -163,3 +163,25 @@ def test_announcements_filtrerar_och_läser_relevanta_artiklar():
     assert out["matching_titles"] == 1 and out["read"] == 1
     art = out["articles"][0]
     assert art["released"] == "2020-09-13" and any("10 USD" in e for e in art["excerpts"])
+
+
+def test_cost_articles_väljer_avgifts_och_marginalmeddelanden_före_2025():
+    import json as _json
+    from traderlab.data import basis_sources as bs
+
+    def opener(url, headers=None, tries=4):
+        if "list/query" in url:
+            page = int(url.split("pageNo=")[1].split("&")[0])
+            if "catalogId=49" in url and page == 1:
+                arts = [{"title": "Binance Futures Updates Trading Fees for COIN-M Futures Contracts (2023-09-26)", "code": "fee", "releaseDate": 1695000000000},
+                        {"title": "Updates to Maintenance Margin of Binance Futures Coin-Margined Contracts", "code": "mm", "releaseDate": 1614556800000},
+                        {"title": "Binance Futures Updates Trading Fees for COIN-M Futures Contracts (2025-02-01)", "code": "late", "releaseDate": 1738368000000},
+                        {"title": "Binance Will List FOO", "code": "x", "releaseDate": 1600000000000}]
+                return _json.dumps({"data": {"catalogs": [{"articles": arts}]}}).encode()
+            return _json.dumps({"data": {"catalogs": [{"articles": []}]}}).encode()
+        body = _json.dumps({"node": "root", "child": [{"node": "text", "text": "Taker 0.050%"}]})
+        return _json.dumps({"data": {"body": body}}).encode()
+
+    out = bs.binance_cost_articles(opener, pause=0)
+    assert [r["code"] for r in out["titles"]] == ["fee", "mm"] or {r["code"] for r in out["titles"]} == {"fee", "mm"}
+    assert out["read"] == 2 and all("Taker" in a["text"] for a in out["articles"])
