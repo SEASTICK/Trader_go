@@ -485,7 +485,54 @@ def binance_articles_pit(opener=default_opener, pause: float = 3.0) -> dict:
     return {"picked": len(picked), "read": sum(1 for r in out if r["characters"]), "articles": out}
 
 
-SOURCES = {"binance_articles_pit": binance_articles_pit, "binance_announcements": binance_announcements, "binance": binance, "binance_api": binance_api, "binance_docs": binance_docs, "binance_docs_text": lambda opener=default_opener: binance_docs(opener, full_text=True), "deribit": deribit, "bitmex_api": bitmex_api, "bitmex_files": lambda opener=None: bitmex_files(),
+COST_COINM = re.compile(r"(?i)(maintenance margin|margin tiers?|fee).*(coin-?m|coin-margined|quarterly)|(coin-?m|coin-margined).*(fee|margin tier|maintenance margin)")
+COST_SPOT = re.compile(r"(?i)\b(spot|trading) fees?\b|fee schedule|fee structure|fee tier|zero[- ]fee|0[- ]fee|fee[- ]free|maker.*taker|fee discount|bnb.*discount|vip.*(fee|level|tier)")
+
+
+def binance_cost_articles(opener=default_opener, pause: float = 3.0, max_articles: int = 70) -> dict:
+    """Listar Binance-meddelanden (före 2025) om COIN-M-avgifter och marginaltabeller samt om spot-avgifter, och läser
+    hela texten i dem. Titlar för spot-avgifter listas alltid; texten läses för COIN-M-träffarna först och därefter spot."""
+    found, per_catalog = {}, {}
+    for cat in ANN_CATALOGS:
+        pages = 0
+        for page in range(1, 400):
+            try:
+                data = json.loads(opener(ANN_LIST.format(cat=cat, page=page)))["data"]
+            except Exception as exc:   # noqa: BLE001
+                per_catalog[cat] = {"pages": pages, "stopped": f"{type(exc).__name__}: {str(exc)[:80]}"}
+                break
+            arts = (data.get("catalogs") or [{}])[0].get("articles") or data.get("articles") or []
+            if not arts:
+                per_catalog[cat] = {"pages": pages, "stopped": "tom sida"}
+                break
+            pages = page
+            for a in arts:
+                released = datetime.fromtimestamp(a["releaseDate"] / 1000, timezone.utc).strftime("%Y-%m-%d")
+                if released < "2025-01-01" and (COST_COINM.search(a["title"]) or COST_SPOT.search(a["title"])):
+                    found[a["code"]] = {"code": a["code"], "title": a["title"], "catalog": cat, "released": released,
+                                        "kind": "coinm" if COST_COINM.search(a["title"]) else "spot"}
+    rows = sorted(found.values(), key=lambda r: (r["kind"], r["released"]))
+    out = []
+    for r in rows[:max_articles]:
+        row = dict(r)
+        for attempt in range(5):
+            try:
+                row["text"] = _page_text(opener(ANN_ARTICLE.format(code=r["code"]), tries=2).decode("utf-8", "replace"))
+                row.pop("text_error", None)
+                break
+            except urllib.error.HTTPError as exc:
+                row["text_error"] = f"HTTP {exc.code}"
+                time.sleep(pause * (attempt + 2))
+            except Exception as exc:   # noqa: BLE001
+                row["text_error"] = f"{type(exc).__name__}: {str(exc)[:80]}"
+                break
+        row["characters"] = len(row.get("text", ""))
+        out.append(row)
+        time.sleep(pause)
+    return {"catalogs": per_catalog, "matching_titles": len(rows), "titles": rows, "read": sum(1 for r in out if r["characters"]), "articles": out}
+
+
+SOURCES = {"binance_cost_articles": binance_cost_articles, "binance_articles_pit": binance_articles_pit, "binance_announcements": binance_announcements, "binance": binance, "binance_api": binance_api, "binance_docs": binance_docs, "binance_docs_text": lambda opener=default_opener: binance_docs(opener, full_text=True), "deribit": deribit, "bitmex_api": bitmex_api, "bitmex_files": lambda opener=None: bitmex_files(),
            "bybit": bybit, "bitstamp": bitstamp, "fred": fred, "fred_text": fred_text, "okx": okx}
 
 
