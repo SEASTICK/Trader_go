@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { groupRegistry, missingPrices, parseRegistry } from "./registry";
+import { groupRegistry, missingPrices, NO_RUN_TEXT, parseRegistry } from "./registry";
 
 const MD = `# Register
 
@@ -35,10 +35,12 @@ describe("groupRegistry", () => {
 | H-0013 | 2026-11-03 | g | Fas 2, spår A med skärpta krav. Spelbok. | BTC | – | Alla fem krav fallerade. Netto −10,86 %, t −1,8023 mot 2,67; Sharpe −0,77 | REJECT |
 | H-0021 | 2026-11-12 | h | Spår A. Investeringsidé. Mer. | USA | – | | |
 | H-0021 | 2026-11-12 | i | OGILTIG (datakravet). Spår A. | USA | – | Genomsnittlig vikt utan kurs 14,8 % (gräns 10 %). För information: t 0,18 (krav 2,81). | OGILTIG |
+| H-0022 | 2026-11-12 | j | Spår C. Kassa-och-termin på sju altcoins. Mer. | COIN-M | t ≥ 3,42 | | |
+| H-0022 | 2026-11-12 | k | OGILTIG (ingen körning: datakrav 4 kan inte uppfyllas). Spår C. | COIN-M | – | Datadiagnos, inte ett strategiutfall. Högst 9 mot kravet 10 cykler. | OGILTIG |
 `;
   const hs = groupRegistry(parseRegistry(md));
   it("slår ihop rader per id och tar senaste giltiga beslut", () => {
-    expect(hs.map((h) => h.id)).toEqual(["H-0003", "H-0014", "H-0016", "H-0013", "H-0021"]);
+    expect(hs.map((h) => h.id)).toEqual(["H-0003", "H-0014", "H-0016", "H-0013", "H-0021", "H-0022"]);
     const h3 = hs[0];
     expect(h3.decision).toBe("REJECT");
     expect(h3.t).toBe(2.19); expect(h3.krav).toBe(2.33);
@@ -58,5 +60,25 @@ describe("groupRegistry", () => {
     expect(missingPrices(h21.result)).toEqual({ share: 14.8, limit: 10 });
     expect(hs[0].invalid).toBe(false);   // H-0003: OGILTIG och sedan REJECT
     expect(hs[2].invalid).toBe(false);   // aldrig körd
+  });
+  it("ogiltig utan körning (H-0022) visas som ogiltig, räknas inte som körning och är ingen avvisad eller pågående hypotes", () => {
+    const h22 = hs[5];
+    expect(h22.invalid).toBe(true); expect(h22.noRun).toBe(true);
+    expect(h22.decision).toBeNull(); expect(h22.t).toBeNull(); expect(h22.krav).toBeNull();
+    expect(h22.runs).toBe(0);                                  // ingen körning gjordes
+    expect(h22.result).toContain("Datadiagnos");
+    expect(h22.title).toBe("Kassa-och-termin på sju altcoins");
+    expect(NO_RUN_TEXT).toMatch(/Ingen körning har gjorts/);
+    expect(NO_RUN_TEXT).toMatch(/ingen strategiavkastning, inget t-värde och ingen beta/);
+    expect(NO_RUN_TEXT).toMatch(/datadiagnos, inte ett resultat/);
+    expect(hs[4].noRun).toBe(false);                           // H-0021 var en riktig körning som blev ogiltig
+  });
+  it("registrets H-0022 i det riktiga registret är ogiltig utan körning, inte pågående och inte avvisad", async () => {
+    const { readFileSync } = await import("node:fs");
+    const real = groupRegistry(parseRegistry(readFileSync(new URL("../../../research/registry.md", import.meta.url), "utf-8")));
+    const h = real.find((x) => x.id === "H-0022")!;
+    expect(h.invalid).toBe(true); expect(h.noRun).toBe(true); expect(h.decision).toBeNull(); expect(h.runs).toBe(0);
+    expect(h.result).toMatch(/Ingen körning har gjorts/);
+    expect(h.result).toMatch(/9 mot kravet 10/);
   });
 });
