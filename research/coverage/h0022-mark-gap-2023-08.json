@@ -1,0 +1,722 @@
+{
+ "kind": "h0022-mark-gap-2023-08",
+ "note": "Verifierade dagsfiler för markpris 2023-08-28..31 och grannedagar. Inga priser analyserade.",
+ "files": {
+  "ADAUSD_230929-1d-2023-08-26.zip": "2be63b0ec1838bf3e42da6c02a24dbd49fe64782204983f4e9d55f3fb69ca12f",
+  "ADAUSD_230929-1d-2023-08-27.zip": "ba7e9f8731583e60e439dea3e9f629eafe5827c838a18c0f86d85e26c5d7c5ff",
+  "ADAUSD_230929-1d-2023-08-28.zip": "7b6b18f806b6927ef714c8bc2bb008fc6f477a8672c19a4078c86a17f09dc61b",
+  "ADAUSD_230929-1d-2023-08-29.zip": "d4c676a25dcf81e74bc90acd485d79b3078fdab05bff2c1194d0502b48ed2ac9",
+  "ADAUSD_230929-1d-2023-08-30.zip": "9d4b6055fd525ce9f0e38eb2dc11811919a817ed58674e59b99c94dc3de10b11",
+  "ADAUSD_230929-1d-2023-08-31.zip": "345f058fc73454fb887d622977c958b01d997961c8e85b48f49c6cc9a55ffa47",
+  "ADAUSD_230929-1d-2023-09-01.zip": "68a5657938b7bd4fe2236857c12b020630c8d4becefaa7036f7b16e09f0ef59f",
+  "ADAUSD_230929-1d-2023-09-02.zip": "93bc2a3e3e25294fdb03f2ae753b32ae6020ce61b010f6b9ee042bd55283caa5",
+  "BCHUSD_230929-1d-2023-08-26.zip": "a925090ce59702d418e3b946ac5b205ac271f7564ea8de62487264babfcbf968",
+  "BCHUSD_230929-1d-2023-08-27.zip": "a496aa296d96ba90b3cfca0e1d309ca41d2570bff02aa28febecd9b0fb2ea976",
+  "BCHUSD_230929-1d-2023-08-28.zip": "0896f4cf5b7c586155efb4f3d53761845fd1c1fc6ccba781f1b3d3be0bfa82ea",
+  "BCHUSD_230929-1d-2023-08-29.zip": "dc1f6991c58594cd40d7bb6e4426a530aafabeca5cf976bfd2785d249ef8a473",
+  "BCHUSD_230929-1d-2023-08-30.zip": "031abd0d75a5aea3646a96f1b690e2fa0eb34cd15cc1cf28689620a2898e54e2",
+  "BCHUSD_230929-1d-2023-08-31.zip": "0e09839219a14512a8d5452e17321e78481b77055d6cd51434d5395a9d59308b",
+  "BCHUSD_230929-1d-2023-09-01.zip": "dc530e74a806760ee5c16d82c32da022c3d689986fa830fc99bdd9075cd30814",
+  "BCHUSD_230929-1d-2023-09-02.zip": "08a4a35d27fcf0f7acdcaea6ce2fea32f7aa167b5edd809c43a040051ccde0ce",
+  "BNBUSD_230929-1d-2023-08-26.zip": "928097d15c79aa151047b56587a27b8ca13104aa89a683a43b2cbc1319c4960f",
+  "BNBUSD_230929-1d-2023-08-27.zip": "65094372bb607eeee60c47b17fa1060eb7ca6a664d700121ab3cef0a9b39e891",
+  "BNBUSD_230929-1d-2023-08-28.zip": "42295aa648e3c421beb2f572af60de5267f5687932d4da363b57d0e50c46decb",
+  "BNBUSD_230929-1d-2023-08-29.zip": "3e30347a20be3433cb8838a3708a2e0ab330c4a8e6281795e517dd22d665bb0e",
+  "BNBUSD_230929-1d-2023-08-30.zip": "903185813b769d70a8a717d7aab1d4ab5f65bff6c08345d750a52b6fe40565f0",
+  "BNBUSD_230929-1d-2023-08-31.zip": "e36d4d894c7968186cc5f89017cac36b48aa9475083c53a0183dd64ba56732e9",
+  "BNBUSD_230929-1d-2023-09-01.zip": "58e8b1fe6dabb58ff193791af5b610840911a9797dbd115eb0d7e154d4ab6031",
+  "BNBUSD_230929-1d-2023-09-02.zip": "b641b6ba410aa8966fc49f8c78ff19a184c1d85b4a4347192ed7d15086313046",
+  "DOTUSD_230929-1d-2023-08-26.zip": "283475d91e31c36ae79f0e974355f6fe78fbaaba23fc91d19fe1f1bd99a31fa4",
+  "DOTUSD_230929-1d-2023-08-27.zip": "66ddf3d6211cf671f7754cd82726ff24e8a0929ad003682be067611f3d9b5492",
+  "DOTUSD_230929-1d-2023-08-28.zip": "3e4ca0386c98e8cd43c545003b4fa13d0f005db539f53d6190864a45aa30e67d",
+  "DOTUSD_230929-1d-2023-08-29.zip": "220939add5c1e6e8bab5fc7ca2be692b7e4da82207303a516070b0e16920f2fd",
+  "DOTUSD_230929-1d-2023-08-30.zip": "aae24c18176f9af7446d5fd8b71a0ded6ce3903dcd19b307d0b2fa00e0a34b7c",
+  "DOTUSD_230929-1d-2023-08-31.zip": "59fa88b237eef292bb06869c01f4598b55f6ed2370ecb8eb913d698928c6c460",
+  "DOTUSD_230929-1d-2023-09-01.zip": "2ec6e1d8fc19327cbb46e12d559d3f3e0aeb3a6075200f73dbf260ff980bb56f",
+  "DOTUSD_230929-1d-2023-09-02.zip": "84d49f585c19c2596c9f65560a39805d84ec80a3d7ea4cb17067cf0e988d51ff",
+  "LINKUSD_230929-1d-2023-08-26.zip": "2ce0e8d7faa262f5f639dca9573719899ca70252f92792ad22f4ad5c6710ec8c",
+  "LINKUSD_230929-1d-2023-08-27.zip": "bed8fdd7280fecd7d9b0d2caf6ddc394042d15f26ccb0bb8ca121f3efdf26b14",
+  "LINKUSD_230929-1d-2023-08-28.zip": "3e142130a8eb1d141e13c44269ce18e5c0992c38eeaaac148f539f095490779d",
+  "LINKUSD_230929-1d-2023-08-29.zip": "81add46b8e9b2aabf21bbbd56deced7e4ac2d0c4e2ceb2c48bc61a11babf7226",
+  "LINKUSD_230929-1d-2023-08-30.zip": "f64ce9805b0931afda0bc2a35b2fbe0fcbc79815032169f3d65410122f5d01be",
+  "LINKUSD_230929-1d-2023-08-31.zip": "c6d937baf1e8e16342f76112fc86cf131572b73c8a401e4d2c755ce4c7d55467",
+  "LINKUSD_230929-1d-2023-09-01.zip": "53b7232ed258b28d332f957c86d46a141630e5889b708dfecf846dbadd11f563",
+  "LINKUSD_230929-1d-2023-09-02.zip": "d4e15a91d00512c9601b6c98aafffad0c9c306fc8ddc5d557592e2b0dc7355ab",
+  "LTCUSD_230929-1d-2023-08-26.zip": "f6fd36a8d4e68a4fd2318ac41646c84aefee0bd11a5fd9e437743ef2b7bdc582",
+  "LTCUSD_230929-1d-2023-08-27.zip": "1d51c56ba54f75092d569303ebb63ad4bcb53129e271f6932c84dc5c5373c347",
+  "LTCUSD_230929-1d-2023-08-28.zip": "bf98295a94e4c5e139942b13e90c20e215527ff9a67376287f0a65efd86fb976",
+  "LTCUSD_230929-1d-2023-08-29.zip": "4880e3563fddc6a9ccb579af4c8a54f744ef6ed78c9ada437164d3ae850b4968",
+  "LTCUSD_230929-1d-2023-08-30.zip": "59b7c0cdb060f0f9bca18e7fe5bd385a152d96a6bc1bd4409199604b4b162889",
+  "LTCUSD_230929-1d-2023-08-31.zip": "185d27ba13decc68f4d56592ffb33a7cbe13a978288a3469087935b034f3a065",
+  "LTCUSD_230929-1d-2023-09-01.zip": "1db0d27b651e3323bf39214fbcf89be1662d61f511f03f826567fd736e727e41",
+  "LTCUSD_230929-1d-2023-09-02.zip": "33296495018e73cf5a72bd24c8a84969813125de3abdcc9ff9a998a881edbbc5",
+  "XRPUSD_230929-1d-2023-08-26.zip": "570745f39229190457ead63521571d7e7955bdccb1cde9a5aeb1123453246cc9",
+  "XRPUSD_230929-1d-2023-08-27.zip": "66e0b677a326b2de05f3eba761677eb90725a9465f7d929b24428351c73a51c8",
+  "XRPUSD_230929-1d-2023-08-28.zip": "a1d2cd0b287b9af826b3666c483739a5af2adc9a1714042ee865714146784984",
+  "XRPUSD_230929-1d-2023-08-29.zip": "bd8b81b5d78e209f01fd3f506e05c1d5f9e092dbd55f340a757275d0ec876dbf",
+  "XRPUSD_230929-1d-2023-08-30.zip": "68b6f222b16ee8a1cbc17ce9aec81643d0df817494b3bb798cb19e1c5d141c8b",
+  "XRPUSD_230929-1d-2023-08-31.zip": "a5f299d8ac08e3de5ec3313de55d7a3c3ee2c7973bd0e66e84210be44a71c2e0",
+  "XRPUSD_230929-1d-2023-09-01.zip": "a1bc99c5f96ed709266c3ab94f0e0b221811894dfbba58313dfe35a23481ee55",
+  "XRPUSD_230929-1d-2023-09-02.zip": "91b2809cbfe6df96d6332bc33c0438ee670f619d3f05cf41bbce15fb98efea0f"
+ },
+ "checks": {
+  "ADAUSD_230929": {
+   "2023-08-26": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-28": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-29": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-30": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-31": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-09-01": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-09-02": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   }
+  },
+  "BCHUSD_230929": {
+   "2023-08-26": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-28": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-29": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-30": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-31": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-09-01": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-09-02": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   }
+  },
+  "BNBUSD_230929": {
+   "2023-08-26": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-28": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-29": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-30": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-31": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-09-01": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-09-02": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   }
+  },
+  "DOTUSD_230929": {
+   "2023-08-26": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-28": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-29": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-30": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-31": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-09-01": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-09-02": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   }
+  },
+  "LINKUSD_230929": {
+   "2023-08-26": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-28": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-29": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-30": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-31": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-09-01": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-09-02": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   }
+  },
+  "LTCUSD_230929": {
+   "2023-08-26": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-28": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-29": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-30": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-31": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-09-01": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-09-02": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   }
+  },
+  "XRPUSD_230929": {
+   "2023-08-26": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-28": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-29": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-30": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-08-31": {
+    "status": "ok",
+    "in_monthly": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null
+   },
+   "2023-09-01": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-09-02": {
+    "status": "ok",
+    "in_monthly": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   }
+  }
+ }
+}

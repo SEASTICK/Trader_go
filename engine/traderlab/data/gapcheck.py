@@ -34,8 +34,9 @@ OUT = Path("research/coverage")
 
 
 def daily_url(market: str, symbol: str, day: str) -> str:
-    kind = "futures/cm" if market == "cm" else "spot"
-    return f"{BASE}/{kind}/daily/klines/{symbol}/1d/{symbol}-1d-{day}.zip"
+    kind = "futures/cm" if market in ("cm", "cm-mark") else "spot"
+    segment = "markPriceKlines" if market == "cm-mark" else "klines"
+    return f"{BASE}/{kind}/daily/{segment}/{symbol}/1d/{symbol}-1d-{day}.zip"
 
 
 def fetch_verified(url: str, dest: Path, opener=default_opener) -> dict:
@@ -159,7 +160,7 @@ def combined(monthly: pd.DataFrame, data_dir: Path, market: str, sym: str, manif
     `manifest`, (c) tidsstämpel, OHLC och volym är giltiga, och (d) grannkontrollen är uppfylld: varje grannedag som
     månadsfilen har måste finnas som verifierad dagsfil och vara exakt lika med månadsfilen. Annars kastas
     `UnverifiedGapFill`, och ingen serie returneras. En gapdag utan dagsfil förblir en lucka (inget fylls)."""
-    sub = "cm-daily" if market == "cm" else "spot-daily"
+    sub = {"cm": "cm-daily", "cm-mark": "cm-mark-daily"}.get(market, "spot-daily")
     folder = data_dir / "raw" / "binance" / sub / sym / "1d"
 
     def path(day: str) -> Path:

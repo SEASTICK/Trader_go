@@ -20,7 +20,7 @@ import pandas as pd
 from ..bars import COLUMNS, interval_delta
 
 BASE = "https://data.binance.vision/data"
-MARKETS = {"spot": "spot", "um": "futures/um", "cm": "futures/cm"}  # um = USDⓈ-M-terminer, cm = COIN-M-terminer
+MARKETS = {"spot": "spot", "um": "futures/um", "cm": "futures/cm", "cm-mark": "futures/cm"}  # um = USDⓈ-M-terminer, cm = COIN-M-terminer, cm-mark = COIN-M markprisstaplar
 
 Opener = Callable[[str], bytes]
 
@@ -38,7 +38,8 @@ def months(start: str, end: str) -> list[str]:
 
 def kline_url(market: str, symbol: str, interval: str, month: str) -> str:
     interval_delta(interval)
-    return f"{BASE}/{MARKETS[market]}/monthly/klines/{symbol}/{interval}/{symbol}-{interval}-{month}.zip"
+    segment = "markPriceKlines" if market.endswith("-mark") else "klines"
+    return f"{BASE}/{MARKETS[market]}/monthly/{segment}/{symbol}/{interval}/{symbol}-{interval}-{month}.zip"
 
 
 def funding_url(symbol: str, month: str) -> str:
