@@ -164,7 +164,7 @@ def main() -> None:
     import csv
     with (out / "coinm-pit-series.csv").open("w", newline="", encoding="utf-8") as fh:
         cols = sorted({k for r in rows for k in r})
-        w = csv.DictWriter(fh, fieldnames=cols)
+        w = csv.DictWriter(fh, fieldnames=cols, lineterminator="\n")
         w.writeheader()
         w.writerows(rows)
     (out / "coinm-pit-events.json").write_text(json.dumps(events, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
