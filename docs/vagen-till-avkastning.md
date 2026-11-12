@@ -1,7 +1,7 @@
 # Vägen till en app som ger positiv avkastning
 
 Ingen kan lova positiv avkastning. Det vi kan styra är att leta på rätt ställen, mäta ärligt och bara
-släppa igenom det som klarar varje grind. Hittills: alla 19 avgjorda hypoteser är `REJECT` (H-0001–H-0015 och H-0017–H-0020). H-0016 har en registrerad `OGILTIG` körning (för stor andel av vikten utan kurs) och inget beslut, läget 2026-11-12.
+släppa igenom det som klarar varje grind. Läget 2026-11-12: alla 19 avgjorda hypoteser är `REJECT` (H-0001–H-0015 och H-0017–H-0020). Tre försök blev `OGILTIGA` och har inget beslut: H-0016 (för många kurser saknas), H-0021 (datahål under hållna positioner) och H-0022 (testets eget datakrav kan inte uppfyllas, ingen körning gjordes). H-0023 är förregistrerad men inte körd. Inget av dem ger någon avkastning att lita på.
 
 Produktens faser och den bekräftade målbilden beskrivs i [färdplanen](fardplan.md). Grindarna nedan gäller validering av strategier och ger ingen aktivering av livehandel.
 
@@ -42,8 +42,9 @@ Att följa kända investerares redovisade innehav, i stället för egna signaler
 
 - **H-0016:** tio kända investerares 13F-innehav (Berkshire m.fl.), `research/13f-protokoll.md`. **Ogiltig, inget
   beslut.** Protokollet kräver att minst 90 % av vikten har kurs. Körningen 2026-11-12 hade 14,8 % utan kurs (gräns
-  10 %), mest avnoterade och uppköpta bolag som Yahoo inte har. Siffrorna i registret är bara diagnostik. En omkörning
-  med rättad kurshämtning pågår och är inte avgjord. Täckningsdiagnosen ligger på grenen `bot/h-0016-tackning`.
+  10 %), mest avnoterade och uppköpta bolag som Yahoo inte har. Omkörningen efter rättad kurshämtning gav exakt samma
+  siffra: luckorna beror på källan, inte på ett fel i hämtningen. Inga luckor har fyllts med gissningar. Siffrorna i
+  registret är bara diagnostik. Täckningsdiagnosen finns i `research/coverage/H-0016-coverage-20261112T113940Z.json`.
 - **H-0017:** Nancy Pelosis redovisade affärer, `research/pelosi-protokoll.md`. **REJECT**: t 1,43 mot kravet 2,75,
   och Sharpe 0,97 mot SPY:s 1,01. Mer avkastning än SPY men också mer risk.
 - **Papper framåt:** 100 000 USD som följer de tio investerarna från 2026-11-05, sidan Investerare i appen. Det är en
@@ -53,10 +54,22 @@ Att följa kända investerares redovisade innehav, i stället för egna signaler
 Kurserna kommer från Yahoo utan nyckel, se [kurskalla.md](kurskalla.md). Båda urvalen är gjorda i efterhand, eftersom
 investerarna är kända för att ha lyckats. Testen blir därför för optimistiska.
 
+## Försök efter H-0020 (läget 2026-11-12)
+
+Alla tre är försök att komma närmare målet, och inget av dem har visat avkastning.
+
+- **H-0021, tidsseriemomentum över många mynt:** `OGILTIG`. I 37 hållna övergångar saknades nästa dags kurs: 32 positioner vid en oförklarad lucka i datan
+  (2022-02-26 till 02-28) och 5 serier som tar slut utan en källa som säger varför. Då går testet inte att avgöra, och inga prestandasiffror togs fram.
+  Det kan göras om först när luckorna har en förklarande källa.
+- **H-0022, kassa-och-termin på sju altcoins:** `OGILTIG`, ingen körning gjordes. Datagranskningen visade att den serie man rullar in i är för tunt handlad: högst
+  9 av 13 kvartal kan ha minst fyra mynt, medan testets eget krav var 10. Det är en diagnos av data, inte ett resultat. Ingen avkastning har räknats.
+- **H-0023, samma idé med en annan tidtabell (förregistrerad, inte körd):** man går in efter att det förra kontraktet löpt ut, i den då närmaste serien, i stället för
+  veckan före. Tidtabellen valdes efter att vi sett H-0022:s volymproblem, och datagranskningen klarar kravet på exakt gränsen: 10 av 13 kvartal (kravet är minst 10 av 13), utan marginal. Testet kan därför fortfarande bli
+  `OGILTIGT`. H-0020 (samma grundidé på BTC och ETH) är `REJECT`. Se `research/h0023-protokoll.md`. Ingen avkastning har räknats och inget löfte ges.
+
 ## Nästa idéer i kö (registreras en i taget, aldrig efter att ha sett resultatet)
 
 - Kombination av flera godkända, okorrelerade strategier, först när minst två klarat grind 3.
-- Tidsseriemomentum över många mynt (varje mynt long eller short efter sin egen trend), spår A/B.
 
 ## Det som inte görs
 

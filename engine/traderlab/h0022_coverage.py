@@ -68,6 +68,24 @@ def cycle_calendar(rows: list[dict], schedule: str = "h0022") -> list[dict]:
     return cycles
 
 
+def cycle_windows(cycles: list[dict]) -> list[tuple[str, str]]:
+    """Tidsintervallet `(F_k, T_k)` för varje cykels avkastning (portföljen och BTC mäts över samma intervall, 00:00 UTC).
+
+    `T_k` är nästa cykels inträde `F_{k+1}` för alla cykler utom den sista, vars slutpunkt är dess eget utträde `X_n` (sista utträdet, 2024-09-20 00:00 UTC
+    i båda tidtabellerna). Ingen `F_{n+1}` och inga data efter `X_n` behövs. För tidtabellen `h0022` sammanfaller `F_{k+1}` med `X_k`."""
+    out = []
+    for i, c in enumerate(cycles):
+        end = cycles[i + 1]["fill"] if i + 1 < len(cycles) else c["exit"]
+        out.append((c["fill"], end))
+    return out
+
+
+def paired_observations(windows: list[tuple[str, str]], portfolio_value: dict[str, float], btc_open: dict[str, float]) -> list[tuple[float, float]]:
+    """Ett par `(portföljavkastning, BTC-avkastning)` per cykel över samma intervall `(F_k, T_k)`. Slår bara upp värdena på intervallens
+    start- och slutdagar (00:00 UTC): saknas en av dem kastas KeyError, och inget annat datum läses. Syntetiskt provbart (tests/test_h0023_protokoll.py)."""
+    return [(portfolio_value[b] / portfolio_value[a] - 1, btc_open[b] / btc_open[a] - 1) for a, b in windows]
+
+
 def _days(a: str, b: str) -> list[str]:
     """Kalenderdagar från a till och med b (ISO)."""
     d, out = dt.date.fromisoformat(a), []
