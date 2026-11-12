@@ -1,0 +1,17 @@
+{
+ "hypothesis_id": "H-0021",
+ "registry_commit": "b03a5d3058ded97727fdbffc44abb2f3a3feebab",
+ "phase": "tsmom",
+ "track": "A",
+ "run_at": "2026-11-12T14:01:12+00:00",
+ "attempts": 21,
+ "universe_size": 85,
+ "with_data": 85,
+ "simulated": false,
+ "valid": false,
+ "invalid_reasons": [
+  "Nästa öppning saknas för hållen position i 37 fall (avnotering eller oförklarad datalucka), första: [('2021-12-19', 'BZRXUSDT', -0.006385188406443376), ('2022-02-25', 'FILUSDT', 0.011537202957013602), ('2022-02-25', 'FLMUSDT', 0.010921496291670316), ('2022-02-25', 'FTMUSDT', -0.007206862167329058), ('2022-02-25', 'GRTUSDT', 0.010594478869730205)]"
+ ],
+ "decision": "OGILTIG",
+ "note": "Datakravet i research/tsmom-protokoll.md är inte uppfyllt. Inget beslut, aldrig MORE_RESEARCH."
+}
