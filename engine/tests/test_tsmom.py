@@ -111,6 +111,25 @@ def test_random_sign_control_keeps_gross_and_cap():
     assert np.allclose(live.abs().sum(axis=1), 1.0) and (live.abs().max(axis=1) <= 0.10 + 1e-9).all()
 
 
+def test_exactly_zero_signal_gives_no_position_in_both_portfolio_and_random_control():
+    """Granskningsfynd: slumpkontrollen gav ett slumpat tecken åt ett mynt med exakt noll signal."""
+    closes, dvol = _panel()
+    days = closes.index[closes.index.dayofweek == 6]
+    t = days[days > closes.index[0] + pd.Timedelta(days=150)][0]
+    pos = closes.index.get_loc(t)
+    col = "C20USDT"
+    closes.iloc[pos - 1, closes.columns.get_loc(col)] = closes.iloc[pos - 29, closes.columns.get_loc(col)]
+    assert tsmom.signal(closes).loc[t, col] == 0.0 and tsmom.volatility(closes).loc[t, col] > 0   # noll signal, giltig vol
+    main = tsmom.weights(closes, dvol)
+    assert main.loc[t, col] == 0.0 and (main.loc[t] != 0).sum() >= 10   # övriga mynt har fortfarande positioner
+    for seed in range(5):
+        rnd = tsmom.weights(closes, dvol, np.random.default_rng(seed))
+        assert rnd.loc[t, col] == 0.0
+        # Samma portfölj med slumpade tecken: samma mynt och samma storlekar, bara tecknen skiljer sig.
+        assert ((rnd != 0) == (main != 0)).all().all()
+        assert np.allclose(rnd.abs(), main.abs())
+
+
 def test_basket_is_long_only_equal_weight():
     closes, dvol = _panel()
     b = tsmom.basket_weights(closes, dvol)

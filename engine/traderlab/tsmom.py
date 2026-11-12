@@ -68,8 +68,11 @@ def weights(closes: pd.DataFrame, dvol: pd.DataFrame, random_signs: np.random.Ge
     days = xs.rebalance_days(closes.index)
     elig = xsbig.eligible(closes, dvol).loc[days]
     sig = np.sign(signal(closes).loc[days])
-    if random_signs is not None:   # slumpkontroll: samma portfölj men slumpade tecken
-        sig = pd.DataFrame(random_signs.choice([-1.0, 1.0], size=sig.shape), index=sig.index, columns=sig.columns).where(sig.notna())
+    if random_signs is not None:
+        # Slumpkontroll: samma portfölj men slumpade tecken. Bara mynt med en icke-noll signal får ett slumpat tecken;
+        # exakt noll eller saknad signal ger ingen position, precis som i huvudportföljen.
+        had_signal = sig.notna() & (sig != 0)
+        sig = pd.DataFrame(random_signs.choice([-1.0, 1.0], size=sig.shape), index=sig.index, columns=sig.columns).where(had_signal)
     vol = volatility(closes).loc[days]
     w = pd.DataFrame(0.0, index=days, columns=closes.columns)
     for t in days:
