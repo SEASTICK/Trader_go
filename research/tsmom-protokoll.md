@@ -40,7 +40,7 @@ alltså före den här hypotesen. Ingen annan lookback testas.
 | Positionsstorlek | w = tecken / σ, normaliserat så att summan av absolutvikterna är exakt 1 (brutto 1×, ingen hävstång). Ingen enskild vikt över 10 %: överskottet fördelas proportionellt på övriga, och upprepas tills ingen överskrider. Färre än 10 valbara mynt med signal ger platt. Nettoexponeringen varierar fritt mellan −1 och +1. |
 | Ombalansering | Varje söndag (UTC) vid stängning, fyllning vid måndagens öppning. Mellan ombalanseringar driver vikterna med priset. |
 | Kostnader | 25 bp per sida på omsatt belopp (avgift 10, halv spread 5, glidning 10), samma som H-0018. Stress 2,5 gånger. Finansieringsränta per kontrakt betalas eller tas emot på hållen position. |
-| Likvidation och konkurs | Ingen hävstång och högst 10 % per mynt, så ingen enskild position kan ensam tömma kontot på en vecka. En per-position-likvidationsmodell ingår **inte**. Konkurs (kapital ≤ 0) är slutgiltig i motorn. Största enskilda veckorörelse mot en position redovisas. |
+| Likvidation och konkurs | **Låst modell (isolerad marginal, 1× per position).** Varje position har insatsen w × kapital vid veckans ingång (måndagens öppning). Underhållsmarginalen antas vara 5 % av positionens värde, vilket är högt för att täcka småmynt. En position likvideras när dagsstapelns **high** (short) eller **low** (long) ligger 95 % mot positionen från ingångskursen: short vid high ≥ 1,95 × ingångskurs, long vid low ≤ 0,05 × ingångskurs. Vid likvidation förloras **hela insatsen** (w × kapital), positionen stängs för resten av veckan och kan inte återhämta sig om kursen vänder, och den öppnas på nytt först vid nästa söndagsombalansering. Marginalen återställs varje vecka. Konkurs (kapital ≤ 0) är slutgiltig. Antal likvidationer och förlusten av dem redovisas. |
 | Jämförelse 1 | Köp-och-behåll i BTCUSDT spot (1d) över samma dagar, enligt spår A. |
 | Jämförelse 2 (skärpning) | Likaviktad **long-only**-korg av samma valbara mynt med samma söndagsombalansering och samma kostnader. Den visar om trendföljandet tillför något utöver att vara long marknaden. |
 | Slumpkontroll | Samma portfölj med slumpade tecken (fast frö 0). t ska ligga nära noll. |
@@ -50,6 +50,7 @@ alltså före den här hypotesen. Ingen annan lookback testas.
 1. Finansieringsränta finns för varje hållen position och dag (`portfolio.funding_gaps` ger inga luckor).
 2. Inga arkiv från slutprovet har öppnats (kontrolleras av test).
 3. Minst 30 valbara mynt som median över söndagarna.
+4. Likvidationsmodellen ovan är implementerad i motorn och varje hållen position har dagsstaplar med high och low under hela veckan. Saknas modellen eller någon stapel är körningen `OGILTIG` och kan **aldrig** ge `MORE_RESEARCH`. En simulering som låter en likviderad short överleva godkänns alltså inte.
 
 Luckor fylls aldrig med sista kända värde eller ersättare. Ogiltig körning redovisas som en ny rad, och försöket räknas.
 
@@ -75,14 +76,27 @@ intervall för Sharpe och slumpkontrollens t.
 - Perioden 2021–2024 innehåller en stark uppgång (2021), en lång nedgång (2022) och en återhämtning. Resultatet kan
   bero på få regimer och på ett fåtal tillfällen.
 - Nettoexponeringen följer marknaden: portföljen kan vara kraftigt long i en toppfas och förlora när trenden vänder.
-- Shortpositioner i småmynt kan ha större glidning än 10 bp och kan klämmas (short squeeze). En
-  per-position-likvidationsmodell saknas, och blankning antas möjlig till terminspris.
+- Shortpositioner i småmynt kan ha större glidning än 10 bp och kan klämmas (short squeeze). Blankning antas möjlig
+  till terminspris. Likvidation modelleras med en enkel regel (se tabellen): verklig marginal hos Binance beror på
+  kontrakt, storlek och marginalläge (korsad eller isolerad), och likvidationen sker till en kurs som inte är exakt
+  gränsen. Reglerna kan ha ändrats under perioden, och modellen är bara en approximation.
 - Kontrakt som avnoteras faller ofta kraftigt före avnoteringen. Det ingår, men stängningen sker på sista
   öppningen (Edwins fynd P2 är inte åtgärdat).
 - Yahoo och aktiekurser berörs inte. All data kommer från Binances arkiv.
+
+## Rättelse före registrering (2026-11-12)
+
+Ett första utkast av raden "Likvidation och konkurs" sa att högst 10 % per mynt gör att ingen enskild position kan
+tömma kontot på en vecka. Det stämde inte för en short: den förlorar hela sin insats om priset stiger mer än cirka
+10 gånger, och en termin kan likvideras dessförinnan av marginalreglerna. Brutto 1× utesluter inte risken. Granskningen
+(Codex, PR #108) påpekade felet. Raden är ersatt av den låsta likvidationsmodellen ovan, och datakrav 4 gör att
+resultatet inte kan godkännas på en simulering som låter en likviderad short överleva. Rättelsen gjordes före merge
+och före någon körning. H-0021 har inte körts.
 
 ## Före körning
 
 Motorkoden skrivs i en separat PR och granskas innan något körs. Den ska återanvända `portfolio.py` (konkurs är
 absorberande, `funding_gaps` stoppar körningen) och läsare med periodgränser, och ha test för look-ahead, för
-slutprovsskyddet och för vikterna (brutto 1, tak 10 %).
+slutprovsskyddet och för vikterna (brutto 1, tak 10 %). Dessutom ett riktat syntetiskt test av likvidationen: en
+shortad kurs som stiger kraftigt under veckan (till exempel till 2 gånger ingångskursen) och sedan faller tillbaka ska
+ge förlust av hela insatsen och ingen återhämtning, och en kurs som stiger mindre än gränsen ska inte likvideras.
