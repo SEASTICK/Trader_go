@@ -157,7 +157,29 @@ def deribit(opener=default_opener, currencies=("BTC", "ETH"), pause: float = 0.2
 
 # ------------------------------------------------------------------ BitMEX (publikt API och publik datalagring)
 
-def bitmex(opener=default_opener, pause: float = 2.5) -> dict:
+def _head(url: str) -> tuple[int, int | None]:
+    """(statuskod, längd) för en HEAD-förfrågan, utan att hämta filen."""
+    req = urllib.request.Request(url, method="HEAD", headers={"User-Agent": "TraderGo research (data survey)"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return r.status, int(r.headers.get("Content-Length") or 0) or None
+
+
+def bitmex_files(head=_head) -> dict:
+    """Finns BitMEX publika dagsfiler med alla affärer (inklusive utgångna terminer)? Bara förekomst och storlek."""
+    out = {}
+    for day in ("20170331", "20200327", "20241227"):
+        url = f"https://s3-eu-west-1.amazonaws.com/public.bitmex.com/data/trade/{day}.csv.gz"
+        try:
+            status, length = head(url)
+            out[day] = {"available": status == 200, "bytes": length}
+        except Exception as exc:   # noqa: BLE001
+            out[day] = {"available": False, "error": f"{type(exc).__name__}: {str(exc)[:100]}"}
+    return {"public_trade_files": out,
+            "note": "Affärsfiler, inte dagsstaplar: dagsstaplar för daterade terminer måste byggas ur alla affärer."}
+
+
+def bitmex_api(opener=default_opener, pause: float = 2.5) -> dict:
+    """Publika API:et (kan svara 403 från vissa servrar; det kringgås aldrig)."""
     flt = urllib.parse.quote(json.dumps({"typ": "FFCCSX"}))
     rows = json.loads(opener(f"https://www.bitmex.com/api/v1/instrument?filter={flt}&columns=symbol,rootSymbol,expiry,listing,state,underlying&count=500"))
     rows = [r for r in rows if r.get("expiry")]
@@ -175,16 +197,89 @@ def bitmex(opener=default_opener, pause: float = 2.5) -> dict:
         bars = json.loads(opener(q))
         sample = {"instrument": r["symbol"], "listing": r.get("listing"), "expiry": r["expiry"], "daily_bars": len(bars),
                   "first_bar": bars[0]["timestamp"] if bars else None, "last_bar": bars[-1]["timestamp"] if bars else None}
-    s3 = {}
-    for day in ("20170331", "20200327"):
-        try:
-            data = opener(f"https://s3-eu-west-1.amazonaws.com/public.bitmex.com/data/trade/{day}.csv.gz")
-            s3[day] = {"available": True, "bytes": len(data)}
-        except Exception as exc:   # noqa: BLE001
-            s3[day] = {"available": False, "error": f"{type(exc).__name__}: {str(exc)[:100]}"}
     return {"dated_contracts_by_root": {k: {"contracts": len(v), "first_expiry": v[0]["expiry"][:10], "last_expiry": v[-1]["expiry"][:10]}
-                                        for k, v in by_root.items()},
-            "sample_daily_coverage": sample, "public_trade_files": s3}
+                                        for k, v in by_root.items()}, "sample_daily_coverage": sample}
+
+
+# ------------------------------------------------------------------ Binance COIN-M: täckning och handelsbarhet
+
+CM_UNDERLYINGS = ("BTC", "ETH", "ADA", "BCH", "BN", "DOT", "LINK", "LTC", "XRP")   # minst 20 daterade kontrakt vardera
+CONTRACT_USD = {"BTC": 100.0}                                                       # övriga 10 USD per kontrakt (Binance dokumentation, ej hämtad här)
+CM_START, CM_END = "2020-08", "2024-12"                                             # månader som hämtas. Slutprovet (2025+) hämtas aldrig.
+FRONT_MIN_DAYS = 14                                                                  # som H-0020: närmaste kontrakt med mer än 14 dagar kvar
+
+
+def _cm(survey: dict) -> dict:
+    """COIN-M-delen ur Binance-kartläggningen (antingen hela rapporten eller bara binance-källan)."""
+    src = survey.get("sources", {}).get("binance", survey)
+    return src["cm_dated_futures"]["underlyings"]
+
+
+def fetch_cm(data_dir: Path, survey: dict, workers: int = 6) -> None:
+    """Hämtar dagsfiler (1d) för COIN-M-kontrakten i `survey` (binance.cm_dated_futures), bara till och med 2024-12."""
+    import threading
+    from concurrent.futures import ThreadPoolExecutor
+
+    from . import binance as bn
+    lock, orig = threading.Lock(), bn._append_manifest
+
+    def locked(*a, **k):
+        with lock:
+            return orig(*a, **k)
+    bn._append_manifest = locked
+    names = [c["contract"] for u in CM_UNDERLYINGS for c in _cm(survey)[u]["coverage"] if c["expiry"] < "2026-01-01"]
+
+    def one(n):
+        for attempt in range(4):
+            try:
+                bn.fetch("cm", n, "1d", CM_START, CM_END, data_dir)
+                return
+            except OSError:
+                time.sleep(3 * (attempt + 1))
+    try:
+        with ThreadPoolExecutor(workers) as ex:
+            list(ex.map(one, names))
+    finally:
+        bn._append_manifest = orig
+
+
+def cm_liquidity(data_dir: Path, survey: dict) -> dict:
+    """Per underliggande: kontrakt, dagsstaplar, luckor och handelsbarhet för det närmaste kontraktet (volym i USD)."""
+    import numpy as np
+    import pandas as pd
+
+    from . import binance as bn
+    lo, hi = pd.Timestamp("2020-09-01", tz="UTC"), pd.Timestamp("2025-01-01", tz="UTC")
+    out = {}
+    for und in CM_UNDERLYINGS:
+        size = CONTRACT_USD.get(und, 10.0)
+        frames, per_contract = {}, []
+        for c in _cm(survey)[und]["coverage"]:
+            try:
+                df = bn.load("cm", c["contract"], "1d", data_dir, start=lo, end=hi)
+            except FileNotFoundError:
+                per_contract.append({"contract": c["contract"], "bars": 0})
+                continue
+            full = (df.index[-1] - df.index[0]).days + 1
+            frames[c["contract"]] = df
+            per_contract.append({"contract": c["contract"], "bars": len(df), "first_bar": str(df.index[0].date()),
+                                 "last_bar": str(df.index[-1].date()), "missing_days": int(full - len(df)),
+                                 "zero_volume_days": int((df["volume"] == 0).sum())})
+        # Närmaste kontrakt med mer än 14 dagar kvar, per dag: dagens volym i USD (kontrakt × kontraktsstorlek).
+        days = sorted({d for df in frames.values() for d in df.index})
+        front_usd = []
+        for d in days:
+            live = [(pd.Timestamp(expiry_date(n.rsplit("_", 1)[1]), tz="UTC"), n) for n, df in frames.items() if d in df.index]
+            live = sorted(x for x in live if (x[0] - d).days > FRONT_MIN_DAYS)
+            if live:
+                front_usd.append(float(frames[live[0][1]].at[d, "volume"]) * size)
+        a = np.array(front_usd) if front_usd else np.array([0.0])
+        out[und] = {"contracts": len(per_contract), "contracts_with_data": len(frames), "bars": int(sum(x["bars"] for x in per_contract)),
+                    "missing_days": int(sum(x.get("missing_days", 0) for x in per_contract)),
+                    "front_contract_days": len(front_usd), "front_median_daily_usd_volume": float(np.median(a)),
+                    "front_p10_daily_usd_volume": float(np.percentile(a, 10)), "front_share_zero_volume_days": float((a == 0).mean()),
+                    "assumed_contract_size_usd": size, "contracts_detail": per_contract}
+    return out
 
 
 # ------------------------------------------------------------------ Bybit, Bitstamp, FRED, OKX
@@ -197,13 +292,20 @@ def bybit(opener=default_opener) -> dict:
 
 
 def bitstamp(opener=default_opener) -> dict:
-    d = json.loads(opener("https://www.bitstamp.net/api/v2/ohlc/btcusd/?step=86400&limit=3&start=1300000000"))["data"]["ohlc"]
-    return {"btcusd_first_daily_bar_from_start_2011": _ts(int(d[0]["timestamp"]) * 1000) if d else None}
+    raw = json.loads(opener("https://www.bitstamp.net/api/v2/ohlc/btcusd/?step=86400&limit=3&start=1315872000"))
+    d = (raw.get("data") or {}).get("ohlc") or []
+    return {"btcusd_first_daily_bar_from_2011-09-13": _ts(int(d[0]["timestamp"]) * 1000) if d else None, "bars_returned": len(d)}
 
 
 def fred(opener=default_opener) -> dict:
     rows = opener("https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTB3").decode().strip().splitlines()[1:]
     return {"series": "DTB3 (3-månaders amerikansk statsväxel)", "first": rows[0].split(",")[0], "last": rows[-1].split(",")[0], "rows": len(rows)}
+
+
+def fred_text(opener=default_opener) -> dict:
+    """Samma serie som ren text, om csv-sidan inte svarar."""
+    lines = [l for l in opener("https://fred.stlouisfed.org/data/DTB3.txt").decode().splitlines() if re.match(r"^\d{4}-\d{2}-\d{2}", l)]
+    return {"series": "DTB3 (3-månaders amerikansk statsväxel)", "first": lines[0].split()[0], "last": lines[-1].split()[0], "rows": len(lines)}
 
 
 def okx(opener=default_opener) -> dict:
@@ -215,7 +317,8 @@ def okx(opener=default_opener) -> dict:
     return {"live_dated_contracts_btc_usd": len(live), "expired_contract_candles": old if isinstance(old, str) else len(old)}
 
 
-SOURCES = {"binance": binance, "deribit": deribit, "bitmex": bitmex, "bybit": bybit, "bitstamp": bitstamp, "fred": fred, "okx": okx}
+SOURCES = {"binance": binance, "deribit": deribit, "bitmex_api": bitmex_api, "bitmex_files": lambda opener=None: bitmex_files(),
+           "bybit": bybit, "bitstamp": bitstamp, "fred": fred, "fred_text": fred_text, "okx": okx}
 
 
 def survey(sources: list[str], opener=default_opener) -> dict:

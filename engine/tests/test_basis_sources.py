@@ -77,6 +77,14 @@ def test_bitmex_parser_groups_by_root_and_reports_public_trade_files():
         if url.endswith("20170331.csv.gz"):
             raise OSError("nej")
         return b"gz"
-    r = b.bitmex(opener, pause=0)
+    r = b.bitmex_api(opener, pause=0)
     assert r["dated_contracts_by_root"]["XBT"]["contracts"] == 2 and r["sample_daily_coverage"]["daily_bars"] == 3
-    assert r["public_trade_files"]["20170331"]["available"] is False and r["public_trade_files"]["20200327"]["available"] is True
+
+
+def test_bitmex_files_report_availability_and_failures():
+    def head(url):
+        if "20170331" in url:
+            raise OSError("403")
+        return 200, 123
+    r = b.bitmex_files(head)["public_trade_files"]
+    assert r["20170331"]["available"] is False and r["20200327"] == {"available": True, "bytes": 123}
