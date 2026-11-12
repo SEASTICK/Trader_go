@@ -300,9 +300,15 @@ DOC_PAGES = {
     "developers_exchange_information": "https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Exchange-Information",
     "faq_pnl": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=3a55a23768cb416fb404f06ffedde4b2",
     "faq_margin_liquidation": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=be2c7d9d95b04a7e8044ed02dd7dfe5c",
+    "faq_margin_liquidation_in": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=ceccfcfb4e3a45e3b48b0b1bb1a8ae46",
+    "faq_delivery_settlement": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=a3401595e1734084959c61491bc0dbe3",
+    "guide_coinm_2020": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=d33f37e2c7fe4da3b35ffc904e8fbab5",
+    "explainer_coinm_2021": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=85eac2bba0b342819122dc9bd4745e9b",
+    "announcement_fee_change_2023": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=f4433fc2964b4c92998132f433edff7c",
 }
 DOC_KEYWORDS = ("contractSize", "deliveryDate", "CURRENT_QUARTER", "delist", "Contract Multiplier", "Unrealized", "unrealized", "Realized",
-                "Mark Price", "Maintenance Margin", "Liquidation Price", "Margin Ratio", "Cross", "Isolated", "COIN-margined", "COIN-M")
+                "Mark Price", "Maintenance Margin", "Liquidation Price", "Margin Ratio", "Cross", "Isolated", "COIN-margined", "COIN-M",
+                "Settlement Price", "settlement price", "Delivery", "delivery", "Contract Size", "contract size", "Index Price", "maker", "Maker", "taker", "Taker")
 
 
 def _node_text(obj) -> str:
@@ -338,7 +344,7 @@ def _page_text(raw: str) -> str:
     return _strip(raw)
 
 
-def binance_docs(opener=default_opener, window: int = 260, max_hits: int = 3) -> dict:
+def binance_docs(opener=default_opener, window: int = 260, max_hits: int = 3, full_text: bool = False) -> dict:
     """Hämtar Binances egna dokumentationssidor och sparar korta utdrag (ren text) runt nyckelorden, så att
     faktapåståenden kan beläggas med primär källa. Svarar en sida med fel (till exempel 451) redovisas det, och inget gissas."""
     out = {}
@@ -355,6 +361,8 @@ def binance_docs(opener=default_opener, window: int = 260, max_hits: int = 3) ->
             if idxs:
                 hits[kw] = [text[max(0, i - window):i + window].strip() for i in idxs]
         out[name] = {"url": url, "readable": True, "characters": len(text), "excerpts": hits}
+        if full_text:   # bara för läsning av granskaren, checkas inte in
+            out[name]["text"] = text
     return out
 
 
@@ -393,7 +401,7 @@ def okx(opener=default_opener) -> dict:
     return {"live_dated_contracts_btc_usd": len(live), "expired_contract_candles": old if isinstance(old, str) else len(old)}
 
 
-SOURCES = {"binance": binance, "binance_api": binance_api, "binance_docs": binance_docs, "deribit": deribit, "bitmex_api": bitmex_api, "bitmex_files": lambda opener=None: bitmex_files(),
+SOURCES = {"binance": binance, "binance_api": binance_api, "binance_docs": binance_docs, "binance_docs_text": lambda opener=default_opener: binance_docs(opener, full_text=True), "deribit": deribit, "bitmex_api": bitmex_api, "bitmex_files": lambda opener=None: bitmex_files(),
            "bybit": bybit, "bitstamp": bitstamp, "fred": fred, "fred_text": fred_text, "okx": okx}
 
 
