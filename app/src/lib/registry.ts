@@ -30,7 +30,14 @@ export type Hypothesis = {
   decision: string | null; result: string | null; t: number | null; krav: number | null; criteria: string; runs: number;
   /** Senaste körningen blev OGILTIG och hypotesen har inget giltigt beslut. Siffrorna i resultatet är då bara diagnostik. */
   invalid: boolean;
+  /** Ogiltig utan att någon körning gjorts: protokollets eget datakrav kan inte uppfyllas. Resultatet är då en datadiagnos, inget strategiutfall. */
+  noRun: boolean;
 };
+
+/** Förklaring i vyn när en hypotes är ogiltig utan att någon körning gjorts. */
+export const NO_RUN_HEADING = "Ogiltig utan körning, inget beslut";
+export const NO_RUN_TEXT = "Testets eget datakrav kan inte uppfyllas, så det kan inte ge ett giltigt utfall. Ingen körning har gjorts, och ingen strategiavkastning, inget t-värde och ingen beta har räknats. Slutprovet är oläst. Texten nedan är en datadiagnos, inte ett resultat.";
+const NO_RUN = /^OGILTIG \(ingen körning/;
 
 /** "Genomsnittlig vikt utan kurs 14,8 % (gräns 10 %)" ur resultattexten: [andel, gräns] i procent, annars null. */
 export function missingPrices(result: string | null): { share: number; limit: number } | null {
@@ -57,18 +64,21 @@ export function groupRegistry(reg: Registry): Hypothesis[] {
     if (!h) {
       const track = (text.match(/[Ss]pår ([ABC])/)?.[1] ?? "A") as "A" | "B" | "C";
       h = { id: r.id, date: r.cells["datum"] ?? "", title: shortTitle(text), statement: text, market: r.cells["marknad"] ?? "",
-            track, decision: null, result: null, t: null, krav: null, criteria: r.cells["beslutskriterier"] ?? "", runs: 0, invalid: false };
+            track, decision: null, result: null, t: null, krav: null, criteria: r.cells["beslutskriterier"] ?? "", runs: 0, invalid: false, noRun: false };
       out.set(r.id, h);
     }
-    if (isResult) h.runs += 1;
+    const noRun = NO_RUN.test(text);
+    if (isResult && !noRun) h.runs += 1;       // en ogiltig rad utan körning är ingen körning
     const d = r.cells["beslut"];
     if (d === "OGILTIG" && !h.decision) {
       // Ogiltig körning utan giltigt beslut: visas som ogiltig, aldrig som avgjord. Ett senare beslut skriver över.
       h.invalid = true;
+      h.noRun = noRun;
       h.result = r.cells["resultat"] ?? null;
     }
     if (d && d !== "OGILTIG") {
       h.invalid = false;
+      h.noRun = false;
       h.decision = d;
       h.result = r.cells["resultat"] ?? null;
       // "t 1,43 (krav 2,71)" eller "t −1,8023 mot 2,67".

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import registryMd from "../../../research/registry.md?raw";
 import { Segmented, StatusDot } from "../components/ui";
-import { groupRegistry, missingPrices, parseRegistry } from "../lib/registry";
+import { groupRegistry, missingPrices, NO_RUN_HEADING, NO_RUN_TEXT, parseRegistry } from "../lib/registry";
 import { tKrav } from "../lib/stats";
 
 const f = (n: number) => n.toFixed(2).replace(".", ",");
@@ -46,7 +46,10 @@ export default function Hypotheses() {
               <div className="hyp-detail">
                 <div><span className="k">Hypotes, registrerad {h.date}</span><p>{h.statement}</p></div>
                 {h.criteria && h.criteria !== "Se registreringen" && <div><span className="k">Krav, bestämda i förväg</span><p>{h.criteria}</p></div>}
-                {h.invalid && (() => {
+                {h.invalid && h.noRun && (
+                  <div><span className="k">{NO_RUN_HEADING}</span><p>{NO_RUN_TEXT}</p></div>
+                )}
+                {h.invalid && !h.noRun && (() => {
                   const m = missingPrices(h.result);
                   return (
                     <div><span className="k">Ogiltig körning, inget beslut</span>
@@ -54,7 +57,7 @@ export default function Hypotheses() {
                         Siffrorna nedan är bara diagnostik och räknas inte som ett resultat.</p></div>
                   );
                 })()}
-                <div><span className="k">{h.invalid ? "Registrets text (diagnostik)" : "Resultat"}</span><p>{(h.result ?? "Inte kört än.").replace(/\*\*/g, "")}</p></div>
+                <div><span className="k">{h.invalid ? (h.noRun ? "Datadiagnos (inget strategiutfall)" : "Registrets text (diagnostik)") : "Resultat"}</span><p>{(h.result ?? "Inte kört än.").replace(/\*\*/g, "")}</p></div>
                 {h.runs > 1 && <p className="muted">{h.runs} körningar i registret. Alla finns kvar, även ogiltiga.</p>}
               </div>
             )}
