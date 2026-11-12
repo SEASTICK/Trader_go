@@ -32,7 +32,7 @@ jobs:
           python-version: "3.12"
       - name: Kartlägg källor
         working-directory: engine
-        run: python -m traderlab.data.basis_sources --sources binance_docs_text --tag runner6 | tee ../survey.log
+        run: python -m traderlab.data.basis_sources --sources binance_docs_text --tag runner7 | tee ../survey.log
       - name: Lägg rapporten på en gren
         run: |
           git config user.name "tradergo-research-bot"

@@ -302,6 +302,8 @@ DOC_PAGES = {
     "faq_margin_liquidation": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=be2c7d9d95b04a7e8044ed02dd7dfe5c",
     "faq_margin_liquidation_in": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=ceccfcfb4e3a45e3b48b0b1bb1a8ae46",
     "faq_delivery_settlement": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=a3401595e1734084959c61491bc0dbe3",
+    "guide_coinm_2020": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=d33f37e2c7fe4da3b35ffc904e8fbab5",
+    "explainer_coinm_2021": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=85eac2bba0b342819122dc9bd4745e9b",
     "announcement_fee_change_2023": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=f4433fc2964b4c92998132f433edff7c",
 }
 DOC_KEYWORDS = ("contractSize", "deliveryDate", "CURRENT_QUARTER", "delist", "Contract Multiplier", "Unrealized", "unrealized", "Realized",
