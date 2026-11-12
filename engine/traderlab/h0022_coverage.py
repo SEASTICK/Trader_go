@@ -36,14 +36,26 @@ def _day(ts) -> str:
     return pd.Timestamp(ts).date().isoformat()
 
 
-def cycle_calendar(rows: list[dict]) -> list[dict]:
-    """Cykelkalendern ur protokollet (research/h0022-protokoll.md), genererad ur universumtabellen: inga priser."""
+SCHEDULES = ("h0022", "rullning_b")
+
+
+def cycle_calendar(rows: list[dict], schedule: str = "h0022") -> list[dict]:
+    """Cykelkalendern ur universumtabellen: inga priser.
+
+    `h0022` (protokollet): utträde och nytt inträde vid samma öppning sju dagar före förfall, serien med förfall `E_k`.
+    `rullning_b` (kandidat, research/rullning-b-kandidat.md): beslut på förfallsdagen `E_{k-1}`, fyllning nästa 00:00 UTC, serien med förfall `E_k`,
+    utträde sju dagar före `E_k`. Första beslutsdagen är densamma (2021-03-26)."""
+    if schedule not in SCHEDULES:
+        raise ValueError(schedule)
     expiries = [e for e in sorted({r["expiry"] for r in rows if r["in_target_seven"]}) if "2021-06-25" <= e <= LAST_EXPIRY]
-    cycles, prev_exit = [], None
+    cycles, prev_exit, prev_expiry = [], None, dt.date.fromisoformat(FIRST_DECISION)
     for k, e in enumerate(expiries, 1):
         expiry = dt.date.fromisoformat(e)
         x = exit_day(expiry)
-        if prev_exit is None:
+        if schedule == "rullning_b":
+            decision = prev_expiry
+            fill = entry_fill_utc(decision).date()
+        elif prev_exit is None:
             decision = dt.date.fromisoformat(FIRST_DECISION)
             fill = entry_fill_utc(decision).date()
         else:
@@ -52,7 +64,7 @@ def cycle_calendar(rows: list[dict]) -> list[dict]:
         valid = sorted({r["underlying"] for r in universe_at(rows, decision.isoformat()) if r["expiry"] == e})
         cycles.append({"cycle": k, "expiry": e, "decision": decision.isoformat(), "fill": fill.isoformat(), "exit": x.isoformat(),
                        "valid_coins": valid, "flat": not valid})
-        prev_exit = x
+        prev_exit, prev_expiry = x, expiry
     return cycles
 
 
@@ -304,13 +316,13 @@ def files_used(data_dir: Path, market: str, sym: str) -> list[Path]:
     return [p for p in sorted(folder.glob(f"{sym}-1d-*.zip")) if "2021-03" <= p.stem[-7:] <= "2024-09"]
 
 
-def run_audit(repo: Path) -> dict:
+def run_audit(repo: Path, schedule: str = "h0022") -> dict:
     data_dir = repo / "data"
     rows = json.loads((repo / "research" / "universe" / "coinm-pit-series.json").read_text(encoding="utf-8"))["series"]
     sizes = {r["contract"]: r for r in json.loads((repo / "research" / "universe" / "coinm-implied-contract-size.json").read_text(encoding="utf-8"))["series"]}
     manifest = gapcheck.load_manifest(repo)
     mark_manifest = load_mark_manifest(repo)
-    cycles = cycle_calendar(rows)
+    cycles = cycle_calendar(rows, schedule)
     audits, notes, files = [], [], {}
     spot_cache: dict[str, tuple] = {}
     for c in cycles:
@@ -341,7 +353,7 @@ def run_audit(repo: Path) -> dict:
     for rel in sorted(files):
         verification[rel] = verify_file(data_dir / rel)
     bad = {k: v for k, v in verification.items() if not v["ok"]}
-    return {"kind": "h0022-data-coverage", "note": "Möjlig täckning före strategimotor. Ingen basis, avkastning, t-statistik eller beta beräknad; inga 2025+-arkiv öppnade.",
+    return {"kind": "h0022-data-coverage" if schedule == "h0022" else f"{schedule}-data-coverage", "schedule": schedule, "note": "Möjlig täckning före strategimotor. Ingen basis, avkastning, t-statistik eller beta beräknad; inga 2025+-arkiv öppnade.",
             "data_window": [str(DATA_START.date()), str(DATA_END.date()) + " (exklusiv)"],
             "cycles": cycles, "audits": audits, "coverage": possible_coverage(audits, cycles),
             "files": {k: v["sha256"] for k, v in verification.items()}, "checksum_failures": bad}
@@ -352,20 +364,22 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--fetch", action="store_true")
     ap.add_argument("--tables", action="store_true", help="skriv bara tabellerna ur den sparade JSON-filen")
+    ap.add_argument("--schedule", default="h0022", choices=SCHEDULES)
     a = ap.parse_args()
     repo = Path(__file__).resolve().parents[2]
+    name = "h0022-datatackning" if a.schedule == "h0022" else "rullning-b-datatackning"
     if a.tables:
-        print(write_report_tables(repo))
+        print(write_report_tables(repo, a.schedule))
         return
     rows = json.loads((repo / "research" / "universe" / "coinm-pit-series.json").read_text(encoding="utf-8"))["series"]
     if a.fetch:
-        plan = fetch_plan(cycle_calendar(rows))
+        plan = fetch_plan(cycle_calendar(rows, a.schedule))
         missing = run_fetch(repo / "data", plan)
         gap_series = series_missing_gap(repo / "data", plan["mark"])
         print(json.dumps({"mark_serier": len(plan["mark"]), "spot": len(plan["spot"]), "missing": missing,
                           "mark_gap": fetch_mark_gap(repo, gap_series) if gap_series else "inga markprisluckor"}, ensure_ascii=False))
-    out = run_audit(repo)
-    path = repo / "research" / "coverage" / "h0022-datatackning.json"
+    out = run_audit(repo, a.schedule)
+    path = repo / "research" / "coverage" / f"{name}.json"
     path.write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     print(json.dumps(out["coverage"], ensure_ascii=False)[:1500])
     print("checksummafel:", len(out["checksum_failures"]), path)
@@ -414,10 +428,13 @@ def render_report(rep: dict) -> str:
     return "\n\n".join([t1, t2, t3, t4, t5])
 
 
-def write_report_tables(repo: Path) -> Path:
-    rep = json.loads((repo / "research" / "coverage" / "h0022-datatackning.json").read_text(encoding="utf-8"))
-    out = repo / "research" / "universe" / "h0022-datatackning-tabeller.md"
-    out.write_text("# H-0022 datatäckning: tabeller (genererade, ändras inte för hand)\n\nGenererade av `python -m traderlab.h0022_coverage --tables` ur `research/coverage/h0022-datatackning.json`.\n\n" + render_report(rep) + "\n", encoding="utf-8")
+def write_report_tables(repo: Path, schedule: str = "h0022") -> Path:
+    name = "h0022-datatackning" if schedule == "h0022" else "rullning-b-datatackning"
+    rep = json.loads((repo / "research" / "coverage" / f"{name}.json").read_text(encoding="utf-8"))
+    out = repo / "research" / "universe" / f"{name}-tabeller.md"
+    title = "H-0022 datatäckning" if schedule == "h0022" else "Rullning B datatäckning"
+    flag = "" if schedule == "h0022" else " --schedule rullning_b"
+    out.write_text(f"# {title}: tabeller (genererade, ändras inte för hand)\n\nGenererade av `python -m traderlab.h0022_coverage --tables{flag}` ur `research/coverage/{name}.json`.\n\n" + render_report(rep) + "\n", encoding="utf-8")
     return out
 
 
