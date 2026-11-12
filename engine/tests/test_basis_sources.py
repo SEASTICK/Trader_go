@@ -107,3 +107,20 @@ def test_binance_api_probe_reports_blocks_per_contract():
     r = b.binance_api(opener)["gap_fill_probe"]
     assert r["BTCUSD_230929"] == {"bars": 2, "first": "2023-08-28", "last": "2023-08-29"}
     assert "451" in r["ETHUSD_230929"]["error"]
+
+
+def test_report_tables_are_built_from_the_report_files():
+    from traderlab.data import basis_report as r
+    binance = {"um_dated_futures": {"underlyings": {"BTC": {"contracts": 2, "first_expiry": "2021-03-26", "last_expiry": "2021-06-25", "contracts_with_missing_months": []}}},
+               "cm_dated_futures": {"underlyings": {"ADA": {"contracts": 3, "first_expiry": "2020-09-25", "last_expiry": "2021-03-26", "contracts_with_missing_months": ["x"]}}},
+               "spot_reference": {"BTC": {"first_month": "2017-08"}, "ADA": {}}}
+    t = r.dated_table(binance)
+    assert "| USDⓈ-M | BTC | 2 | 2021-03-26 | 2021-06-25 | 0 | 2017-08 |" in t
+    assert "| COIN-M | ADA | 3 | 2020-09-25 | 2021-03-26 | 1 | – |" in t
+    liq = {u: {"contracts_with_data": 1, "bars": 10, "missing_days": 0, "front_contract_days": 5, "front_median_daily_usd_volume": 1_234_567.0,
+               "front_p10_daily_usd_volume": 1000.0, "front_share_zero_volume_days": 0.0} for u in b.CM_UNDERLYINGS}
+    assert "1 234 567" in r.liquidity_table(liq)
+    reps = [{"sources": {"okx": {"reachable": True, "live_dated_contracts_btc_usd": 11, "expired_contract_candles": 0},
+                          "bitmex": {"reachable": False, "error": "HTTPError: 403"}}}]
+    st = r.sources_table(reps)
+    assert "| bitmex | nej | HTTPError: 403 |" in st and "0 dagsstaplar för utgånget kontrakt" in st
