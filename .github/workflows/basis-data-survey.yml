@@ -1,0 +1,44 @@
+# Kartläggning av källor för en oberoende uppföljning av basis-idén (research/coverage/basis-sources-*.json).
+# GitHubs servrar når källor som Claudes sandlåda inte når (Deribit, BitMEX, Bybit, Bitstamp, FRED, OKX).
+# Hämtar bara kontraktslistor och täckning, inga priser för analys, inget backtest, ingen order. Lägger rapporten på bot/basis-data-survey.
+name: Basis data survey
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/basis-data]
+    paths: [".github/workflows/basis-data-survey.yml"]
+
+concurrency:
+  group: basis-data-survey
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  survey:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Kartlägg källor
+        working-directory: engine
+        run: python -m traderlab.data.basis_sources --sources binance_docs --tag runner5 | tee ../survey.log
+      - name: Lägg rapporten på en gren
+        run: |
+          git config user.name "tradergo-research-bot"
+          git config user.email "tradergo-research-bot@users.noreply.github.com"
+          git checkout -b bot/basis-data-survey
+          git add research/coverage/
+          git commit -m "Kartläggning av basis-källor (körning ${{ github.run_id }})"
+          git push -f origin bot/basis-data-survey
+          tail -2 survey.log >> "$GITHUB_STEP_SUMMARY"

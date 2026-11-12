@@ -1,0 +1,1635 @@
+{
+ "BTC": {
+  "contracts": 26,
+  "contracts_with_data": 20,
+  "bars": 3320,
+  "missing_days": 8,
+  "front_contract_days": 1579,
+  "front_median_daily_usd_volume": 137065900.0,
+  "front_p10_daily_usd_volume": 27827860.0,
+  "front_share_zero_volume_days": 0.0,
+  "assumed_contract_size_usd": 100.0,
+  "contracts_detail": [
+   {
+    "contract": "BTCUSD_200925",
+    "bars": 134,
+    "first_bar": "2020-09-01",
+    "last_bar": "2021-01-12",
+    "missing_days": 0,
+    "zero_volume_days": 109
+   },
+   {
+    "contract": "BTCUSD_201225",
+    "bars": 134,
+    "first_bar": "2020-09-01",
+    "last_bar": "2021-01-12",
+    "missing_days": 0,
+    "zero_volume_days": 18
+   },
+   {
+    "contract": "BTCUSD_210326",
+    "bars": 183,
+    "first_bar": "2020-09-25",
+    "last_bar": "2021-03-26",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BTCUSD_210625",
+    "bars": 183,
+    "first_bar": "2020-12-25",
+    "last_bar": "2021-06-25",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BTCUSD_210924",
+    "bars": 183,
+    "first_bar": "2021-03-26",
+    "last_bar": "2021-09-24",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BTCUSD_211231",
+    "bars": 190,
+    "first_bar": "2021-06-25",
+    "last_bar": "2021-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BTCUSD_220325",
+    "bars": 183,
+    "first_bar": "2021-09-24",
+    "last_bar": "2022-03-25",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BTCUSD_220624",
+    "bars": 176,
+    "first_bar": "2021-12-31",
+    "last_bar": "2022-06-24",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BTCUSD_220930",
+    "bars": 190,
+    "first_bar": "2022-03-25",
+    "last_bar": "2022-09-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BTCUSD_221230",
+    "bars": 190,
+    "first_bar": "2022-06-24",
+    "last_bar": "2022-12-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BTCUSD_230331",
+    "bars": 183,
+    "first_bar": "2022-09-30",
+    "last_bar": "2023-03-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BTCUSD_230630",
+    "bars": 183,
+    "first_bar": "2022-12-30",
+    "last_bar": "2023-06-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BTCUSD_230929",
+    "bars": 185,
+    "first_bar": "2023-03-31",
+    "last_bar": "2023-10-05",
+    "missing_days": 4,
+    "zero_volume_days": 6
+   },
+   {
+    "contract": "BTCUSD_231229",
+    "bars": 190,
+    "first_bar": "2023-06-30",
+    "last_bar": "2024-01-09",
+    "missing_days": 4,
+    "zero_volume_days": 11
+   },
+   {
+    "contract": "BTCUSD_240329",
+    "bars": 183,
+    "first_bar": "2023-09-29",
+    "last_bar": "2024-03-29",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BTCUSD_240628",
+    "bars": 183,
+    "first_bar": "2023-12-29",
+    "last_bar": "2024-06-28",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BTCUSD_240927",
+    "bars": 183,
+    "first_bar": "2024-03-29",
+    "last_bar": "2024-09-27",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BTCUSD_241227",
+    "bars": 183,
+    "first_bar": "2024-06-28",
+    "last_bar": "2024-12-27",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BTCUSD_250328",
+    "bars": 96,
+    "first_bar": "2024-09-27",
+    "last_bar": "2024-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BTCUSD_250627",
+    "bars": 5,
+    "first_bar": "2024-12-27",
+    "last_bar": "2024-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BTCUSD_250926",
+    "bars": 0
+   },
+   {
+    "contract": "BTCUSD_251226",
+    "bars": 0
+   },
+   {
+    "contract": "BTCUSD_260327",
+    "bars": 0
+   },
+   {
+    "contract": "BTCUSD_260626",
+    "bars": 0
+   },
+   {
+    "contract": "BTCUSD_260925",
+    "bars": 0
+   },
+   {
+    "contract": "BTCUSD_261225",
+    "bars": 0
+   }
+  ]
+ },
+ "ETH": {
+  "contracts": 26,
+  "contracts_with_data": 20,
+  "bars": 3320,
+  "missing_days": 8,
+  "front_contract_days": 1579,
+  "front_median_daily_usd_volume": 76528040.0,
+  "front_p10_daily_usd_volume": 15108420.000000002,
+  "front_share_zero_volume_days": 0.0,
+  "assumed_contract_size_usd": 10.0,
+  "contracts_detail": [
+   {
+    "contract": "ETHUSD_200925",
+    "bars": 134,
+    "first_bar": "2020-09-01",
+    "last_bar": "2021-01-12",
+    "missing_days": 0,
+    "zero_volume_days": 109
+   },
+   {
+    "contract": "ETHUSD_201225",
+    "bars": 134,
+    "first_bar": "2020-09-01",
+    "last_bar": "2021-01-12",
+    "missing_days": 0,
+    "zero_volume_days": 18
+   },
+   {
+    "contract": "ETHUSD_210326",
+    "bars": 183,
+    "first_bar": "2020-09-25",
+    "last_bar": "2021-03-26",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ETHUSD_210625",
+    "bars": 183,
+    "first_bar": "2020-12-25",
+    "last_bar": "2021-06-25",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ETHUSD_210924",
+    "bars": 183,
+    "first_bar": "2021-03-26",
+    "last_bar": "2021-09-24",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ETHUSD_211231",
+    "bars": 190,
+    "first_bar": "2021-06-25",
+    "last_bar": "2021-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ETHUSD_220325",
+    "bars": 183,
+    "first_bar": "2021-09-24",
+    "last_bar": "2022-03-25",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ETHUSD_220624",
+    "bars": 176,
+    "first_bar": "2021-12-31",
+    "last_bar": "2022-06-24",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ETHUSD_220930",
+    "bars": 190,
+    "first_bar": "2022-03-25",
+    "last_bar": "2022-09-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ETHUSD_221230",
+    "bars": 190,
+    "first_bar": "2022-06-24",
+    "last_bar": "2022-12-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ETHUSD_230331",
+    "bars": 183,
+    "first_bar": "2022-09-30",
+    "last_bar": "2023-03-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ETHUSD_230630",
+    "bars": 183,
+    "first_bar": "2022-12-30",
+    "last_bar": "2023-06-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ETHUSD_230929",
+    "bars": 185,
+    "first_bar": "2023-03-31",
+    "last_bar": "2023-10-05",
+    "missing_days": 4,
+    "zero_volume_days": 6
+   },
+   {
+    "contract": "ETHUSD_231229",
+    "bars": 190,
+    "first_bar": "2023-06-30",
+    "last_bar": "2024-01-09",
+    "missing_days": 4,
+    "zero_volume_days": 11
+   },
+   {
+    "contract": "ETHUSD_240329",
+    "bars": 183,
+    "first_bar": "2023-09-29",
+    "last_bar": "2024-03-29",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ETHUSD_240628",
+    "bars": 183,
+    "first_bar": "2023-12-29",
+    "last_bar": "2024-06-28",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ETHUSD_240927",
+    "bars": 183,
+    "first_bar": "2024-03-29",
+    "last_bar": "2024-09-27",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ETHUSD_241227",
+    "bars": 183,
+    "first_bar": "2024-06-28",
+    "last_bar": "2024-12-27",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ETHUSD_250328",
+    "bars": 96,
+    "first_bar": "2024-09-27",
+    "last_bar": "2024-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ETHUSD_250627",
+    "bars": 5,
+    "first_bar": "2024-12-27",
+    "last_bar": "2024-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ETHUSD_250926",
+    "bars": 0
+   },
+   {
+    "contract": "ETHUSD_251226",
+    "bars": 0
+   },
+   {
+    "contract": "ETHUSD_260327",
+    "bars": 0
+   },
+   {
+    "contract": "ETHUSD_260626",
+    "bars": 0
+   },
+   {
+    "contract": "ETHUSD_260925",
+    "bars": 0
+   },
+   {
+    "contract": "ETHUSD_261225",
+    "bars": 0
+   }
+  ]
+ },
+ "ADA": {
+  "contracts": 21,
+  "contracts_with_data": 20,
+  "bars": 3315,
+  "missing_days": 8,
+  "front_contract_days": 1579,
+  "front_median_daily_usd_volume": 1307640.0,
+  "front_p10_daily_usd_volume": 189592.0,
+  "front_share_zero_volume_days": 0.0,
+  "assumed_contract_size_usd": 10.0,
+  "contracts_detail": [
+   {
+    "contract": "ADAUSD_200925",
+    "bars": 134,
+    "first_bar": "2020-09-01",
+    "last_bar": "2021-01-12",
+    "missing_days": 0,
+    "zero_volume_days": 109
+   },
+   {
+    "contract": "ADAUSD_201225",
+    "bars": 129,
+    "first_bar": "2020-09-06",
+    "last_bar": "2021-01-12",
+    "missing_days": 0,
+    "zero_volume_days": 18
+   },
+   {
+    "contract": "ADAUSD_210326",
+    "bars": 183,
+    "first_bar": "2020-09-25",
+    "last_bar": "2021-03-26",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ADAUSD_210625",
+    "bars": 183,
+    "first_bar": "2020-12-25",
+    "last_bar": "2021-06-25",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ADAUSD_210924",
+    "bars": 183,
+    "first_bar": "2021-03-26",
+    "last_bar": "2021-09-24",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ADAUSD_211231",
+    "bars": 190,
+    "first_bar": "2021-06-25",
+    "last_bar": "2021-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ADAUSD_220325",
+    "bars": 183,
+    "first_bar": "2021-09-24",
+    "last_bar": "2022-03-25",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ADAUSD_220624",
+    "bars": 176,
+    "first_bar": "2021-12-31",
+    "last_bar": "2022-06-24",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ADAUSD_220930",
+    "bars": 190,
+    "first_bar": "2022-03-25",
+    "last_bar": "2022-09-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ADAUSD_221230",
+    "bars": 190,
+    "first_bar": "2022-06-24",
+    "last_bar": "2022-12-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ADAUSD_230331",
+    "bars": 183,
+    "first_bar": "2022-09-30",
+    "last_bar": "2023-03-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ADAUSD_230630",
+    "bars": 183,
+    "first_bar": "2022-12-30",
+    "last_bar": "2023-06-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ADAUSD_230929",
+    "bars": 185,
+    "first_bar": "2023-03-31",
+    "last_bar": "2023-10-05",
+    "missing_days": 4,
+    "zero_volume_days": 6
+   },
+   {
+    "contract": "ADAUSD_231229",
+    "bars": 190,
+    "first_bar": "2023-06-30",
+    "last_bar": "2024-01-09",
+    "missing_days": 4,
+    "zero_volume_days": 11
+   },
+   {
+    "contract": "ADAUSD_240329",
+    "bars": 183,
+    "first_bar": "2023-09-29",
+    "last_bar": "2024-03-29",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ADAUSD_240628",
+    "bars": 183,
+    "first_bar": "2023-12-29",
+    "last_bar": "2024-06-28",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ADAUSD_240927",
+    "bars": 183,
+    "first_bar": "2024-03-29",
+    "last_bar": "2024-09-27",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ADAUSD_241227",
+    "bars": 183,
+    "first_bar": "2024-06-28",
+    "last_bar": "2024-12-27",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ADAUSD_250328",
+    "bars": 96,
+    "first_bar": "2024-09-27",
+    "last_bar": "2024-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ADAUSD_250627",
+    "bars": 5,
+    "first_bar": "2024-12-27",
+    "last_bar": "2024-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "ADAUSD_250926",
+    "bars": 0
+   }
+  ]
+ },
+ "BCH": {
+  "contracts": 20,
+  "contracts_with_data": 19,
+  "bars": 3024,
+  "missing_days": 8,
+  "front_contract_days": 1486,
+  "front_median_daily_usd_volume": 1178315.0,
+  "front_p10_daily_usd_volume": 92250.0,
+  "front_share_zero_volume_days": 0.0,
+  "assumed_contract_size_usd": 10.0,
+  "contracts_detail": [
+   {
+    "contract": "BCHUSD_201225",
+    "bars": 41,
+    "first_bar": "2020-12-03",
+    "last_bar": "2021-01-12",
+    "missing_days": 0,
+    "zero_volume_days": 18
+   },
+   {
+    "contract": "BCHUSD_210326",
+    "bars": 114,
+    "first_bar": "2020-12-03",
+    "last_bar": "2021-03-26",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BCHUSD_210625",
+    "bars": 183,
+    "first_bar": "2020-12-25",
+    "last_bar": "2021-06-25",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BCHUSD_210924",
+    "bars": 183,
+    "first_bar": "2021-03-26",
+    "last_bar": "2021-09-24",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BCHUSD_211231",
+    "bars": 190,
+    "first_bar": "2021-06-25",
+    "last_bar": "2021-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BCHUSD_220325",
+    "bars": 183,
+    "first_bar": "2021-09-24",
+    "last_bar": "2022-03-25",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BCHUSD_220624",
+    "bars": 176,
+    "first_bar": "2021-12-31",
+    "last_bar": "2022-06-24",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BCHUSD_220930",
+    "bars": 190,
+    "first_bar": "2022-03-25",
+    "last_bar": "2022-09-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BCHUSD_221230",
+    "bars": 190,
+    "first_bar": "2022-06-24",
+    "last_bar": "2022-12-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BCHUSD_230331",
+    "bars": 183,
+    "first_bar": "2022-09-30",
+    "last_bar": "2023-03-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BCHUSD_230630",
+    "bars": 183,
+    "first_bar": "2022-12-30",
+    "last_bar": "2023-06-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BCHUSD_230929",
+    "bars": 185,
+    "first_bar": "2023-03-31",
+    "last_bar": "2023-10-05",
+    "missing_days": 4,
+    "zero_volume_days": 6
+   },
+   {
+    "contract": "BCHUSD_231229",
+    "bars": 190,
+    "first_bar": "2023-06-30",
+    "last_bar": "2024-01-09",
+    "missing_days": 4,
+    "zero_volume_days": 11
+   },
+   {
+    "contract": "BCHUSD_240329",
+    "bars": 183,
+    "first_bar": "2023-09-29",
+    "last_bar": "2024-03-29",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BCHUSD_240628",
+    "bars": 183,
+    "first_bar": "2023-12-29",
+    "last_bar": "2024-06-28",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BCHUSD_240927",
+    "bars": 183,
+    "first_bar": "2024-03-29",
+    "last_bar": "2024-09-27",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BCHUSD_241227",
+    "bars": 183,
+    "first_bar": "2024-06-28",
+    "last_bar": "2024-12-27",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BCHUSD_250328",
+    "bars": 96,
+    "first_bar": "2024-09-27",
+    "last_bar": "2024-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BCHUSD_250627",
+    "bars": 5,
+    "first_bar": "2024-12-27",
+    "last_bar": "2024-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BCHUSD_250926",
+    "bars": 0
+   }
+  ]
+ },
+ "BNB": {
+  "contracts": 25,
+  "contracts_with_data": 19,
+  "bars": 3082,
+  "missing_days": 8,
+  "front_contract_days": 1515,
+  "front_median_daily_usd_volume": 2925610.0,
+  "front_p10_daily_usd_volume": 477104.0,
+  "front_share_zero_volume_days": 0.0,
+  "assumed_contract_size_usd": 10.0,
+  "contracts_detail": [
+   {
+    "contract": "BNBUSD_201225",
+    "bars": 70,
+    "first_bar": "2020-11-04",
+    "last_bar": "2021-01-12",
+    "missing_days": 0,
+    "zero_volume_days": 18
+   },
+   {
+    "contract": "BNBUSD_210326",
+    "bars": 143,
+    "first_bar": "2020-11-04",
+    "last_bar": "2021-03-26",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BNBUSD_210625",
+    "bars": 183,
+    "first_bar": "2020-12-25",
+    "last_bar": "2021-06-25",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BNBUSD_210924",
+    "bars": 183,
+    "first_bar": "2021-03-26",
+    "last_bar": "2021-09-24",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BNBUSD_211231",
+    "bars": 190,
+    "first_bar": "2021-06-25",
+    "last_bar": "2021-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BNBUSD_220325",
+    "bars": 183,
+    "first_bar": "2021-09-24",
+    "last_bar": "2022-03-25",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BNBUSD_220624",
+    "bars": 176,
+    "first_bar": "2021-12-31",
+    "last_bar": "2022-06-24",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BNBUSD_220930",
+    "bars": 190,
+    "first_bar": "2022-03-25",
+    "last_bar": "2022-09-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BNBUSD_221230",
+    "bars": 190,
+    "first_bar": "2022-06-24",
+    "last_bar": "2022-12-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BNBUSD_230331",
+    "bars": 183,
+    "first_bar": "2022-09-30",
+    "last_bar": "2023-03-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BNBUSD_230630",
+    "bars": 183,
+    "first_bar": "2022-12-30",
+    "last_bar": "2023-06-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BNBUSD_230929",
+    "bars": 185,
+    "first_bar": "2023-03-31",
+    "last_bar": "2023-10-05",
+    "missing_days": 4,
+    "zero_volume_days": 6
+   },
+   {
+    "contract": "BNBUSD_231229",
+    "bars": 190,
+    "first_bar": "2023-06-30",
+    "last_bar": "2024-01-09",
+    "missing_days": 4,
+    "zero_volume_days": 11
+   },
+   {
+    "contract": "BNBUSD_240329",
+    "bars": 183,
+    "first_bar": "2023-09-29",
+    "last_bar": "2024-03-29",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BNBUSD_240628",
+    "bars": 183,
+    "first_bar": "2023-12-29",
+    "last_bar": "2024-06-28",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BNBUSD_240927",
+    "bars": 183,
+    "first_bar": "2024-03-29",
+    "last_bar": "2024-09-27",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BNBUSD_241227",
+    "bars": 183,
+    "first_bar": "2024-06-28",
+    "last_bar": "2024-12-27",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BNBUSD_250328",
+    "bars": 96,
+    "first_bar": "2024-09-27",
+    "last_bar": "2024-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BNBUSD_250627",
+    "bars": 5,
+    "first_bar": "2024-12-27",
+    "last_bar": "2024-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "BNBUSD_250926",
+    "bars": 0
+   },
+   {
+    "contract": "BNBUSD_251226",
+    "bars": 0
+   },
+   {
+    "contract": "BNBUSD_260327",
+    "bars": 0
+   },
+   {
+    "contract": "BNBUSD_260626",
+    "bars": 0
+   },
+   {
+    "contract": "BNBUSD_260925",
+    "bars": 0
+   },
+   {
+    "contract": "BNBUSD_261225",
+    "bars": 0
+   }
+  ]
+ },
+ "DOT": {
+  "contracts": 20,
+  "contracts_with_data": 19,
+  "bars": 3082,
+  "missing_days": 8,
+  "front_contract_days": 1515,
+  "front_median_daily_usd_volume": 954410.0,
+  "front_p10_daily_usd_volume": 78260.0,
+  "front_share_zero_volume_days": 0.0,
+  "assumed_contract_size_usd": 10.0,
+  "contracts_detail": [
+   {
+    "contract": "DOTUSD_201225",
+    "bars": 70,
+    "first_bar": "2020-11-04",
+    "last_bar": "2021-01-12",
+    "missing_days": 0,
+    "zero_volume_days": 18
+   },
+   {
+    "contract": "DOTUSD_210326",
+    "bars": 143,
+    "first_bar": "2020-11-04",
+    "last_bar": "2021-03-26",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "DOTUSD_210625",
+    "bars": 183,
+    "first_bar": "2020-12-25",
+    "last_bar": "2021-06-25",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "DOTUSD_210924",
+    "bars": 183,
+    "first_bar": "2021-03-26",
+    "last_bar": "2021-09-24",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "DOTUSD_211231",
+    "bars": 190,
+    "first_bar": "2021-06-25",
+    "last_bar": "2021-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "DOTUSD_220325",
+    "bars": 183,
+    "first_bar": "2021-09-24",
+    "last_bar": "2022-03-25",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "DOTUSD_220624",
+    "bars": 176,
+    "first_bar": "2021-12-31",
+    "last_bar": "2022-06-24",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "DOTUSD_220930",
+    "bars": 190,
+    "first_bar": "2022-03-25",
+    "last_bar": "2022-09-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "DOTUSD_221230",
+    "bars": 190,
+    "first_bar": "2022-06-24",
+    "last_bar": "2022-12-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "DOTUSD_230331",
+    "bars": 183,
+    "first_bar": "2022-09-30",
+    "last_bar": "2023-03-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "DOTUSD_230630",
+    "bars": 183,
+    "first_bar": "2022-12-30",
+    "last_bar": "2023-06-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "DOTUSD_230929",
+    "bars": 185,
+    "first_bar": "2023-03-31",
+    "last_bar": "2023-10-05",
+    "missing_days": 4,
+    "zero_volume_days": 6
+   },
+   {
+    "contract": "DOTUSD_231229",
+    "bars": 190,
+    "first_bar": "2023-06-30",
+    "last_bar": "2024-01-09",
+    "missing_days": 4,
+    "zero_volume_days": 11
+   },
+   {
+    "contract": "DOTUSD_240329",
+    "bars": 183,
+    "first_bar": "2023-09-29",
+    "last_bar": "2024-03-29",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "DOTUSD_240628",
+    "bars": 183,
+    "first_bar": "2023-12-29",
+    "last_bar": "2024-06-28",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "DOTUSD_240927",
+    "bars": 183,
+    "first_bar": "2024-03-29",
+    "last_bar": "2024-09-27",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "DOTUSD_241227",
+    "bars": 183,
+    "first_bar": "2024-06-28",
+    "last_bar": "2024-12-27",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "DOTUSD_250328",
+    "bars": 96,
+    "first_bar": "2024-09-27",
+    "last_bar": "2024-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "DOTUSD_250627",
+    "bars": 5,
+    "first_bar": "2024-12-27",
+    "last_bar": "2024-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "DOTUSD_250926",
+    "bars": 0
+   }
+  ]
+ },
+ "LINK": {
+  "contracts": 21,
+  "contracts_with_data": 20,
+  "bars": 3315,
+  "missing_days": 8,
+  "front_contract_days": 1579,
+  "front_median_daily_usd_volume": 1105210.0,
+  "front_p10_daily_usd_volume": 219438.0,
+  "front_share_zero_volume_days": 0.0,
+  "assumed_contract_size_usd": 10.0,
+  "contracts_detail": [
+   {
+    "contract": "LINKUSD_200925",
+    "bars": 134,
+    "first_bar": "2020-09-01",
+    "last_bar": "2021-01-12",
+    "missing_days": 0,
+    "zero_volume_days": 109
+   },
+   {
+    "contract": "LINKUSD_201225",
+    "bars": 129,
+    "first_bar": "2020-09-06",
+    "last_bar": "2021-01-12",
+    "missing_days": 0,
+    "zero_volume_days": 18
+   },
+   {
+    "contract": "LINKUSD_210326",
+    "bars": 183,
+    "first_bar": "2020-09-25",
+    "last_bar": "2021-03-26",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LINKUSD_210625",
+    "bars": 183,
+    "first_bar": "2020-12-25",
+    "last_bar": "2021-06-25",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LINKUSD_210924",
+    "bars": 183,
+    "first_bar": "2021-03-26",
+    "last_bar": "2021-09-24",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LINKUSD_211231",
+    "bars": 190,
+    "first_bar": "2021-06-25",
+    "last_bar": "2021-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LINKUSD_220325",
+    "bars": 183,
+    "first_bar": "2021-09-24",
+    "last_bar": "2022-03-25",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LINKUSD_220624",
+    "bars": 176,
+    "first_bar": "2021-12-31",
+    "last_bar": "2022-06-24",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LINKUSD_220930",
+    "bars": 190,
+    "first_bar": "2022-03-25",
+    "last_bar": "2022-09-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LINKUSD_221230",
+    "bars": 190,
+    "first_bar": "2022-06-24",
+    "last_bar": "2022-12-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LINKUSD_230331",
+    "bars": 183,
+    "first_bar": "2022-09-30",
+    "last_bar": "2023-03-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LINKUSD_230630",
+    "bars": 183,
+    "first_bar": "2022-12-30",
+    "last_bar": "2023-06-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LINKUSD_230929",
+    "bars": 185,
+    "first_bar": "2023-03-31",
+    "last_bar": "2023-10-05",
+    "missing_days": 4,
+    "zero_volume_days": 6
+   },
+   {
+    "contract": "LINKUSD_231229",
+    "bars": 190,
+    "first_bar": "2023-06-30",
+    "last_bar": "2024-01-09",
+    "missing_days": 4,
+    "zero_volume_days": 11
+   },
+   {
+    "contract": "LINKUSD_240329",
+    "bars": 183,
+    "first_bar": "2023-09-29",
+    "last_bar": "2024-03-29",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LINKUSD_240628",
+    "bars": 183,
+    "first_bar": "2023-12-29",
+    "last_bar": "2024-06-28",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LINKUSD_240927",
+    "bars": 183,
+    "first_bar": "2024-03-29",
+    "last_bar": "2024-09-27",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LINKUSD_241227",
+    "bars": 183,
+    "first_bar": "2024-06-28",
+    "last_bar": "2024-12-27",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LINKUSD_250328",
+    "bars": 96,
+    "first_bar": "2024-09-27",
+    "last_bar": "2024-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LINKUSD_250627",
+    "bars": 5,
+    "first_bar": "2024-12-27",
+    "last_bar": "2024-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LINKUSD_250926",
+    "bars": 0
+   }
+  ]
+ },
+ "LTC": {
+  "contracts": 20,
+  "contracts_with_data": 19,
+  "bars": 3028,
+  "missing_days": 8,
+  "front_contract_days": 1488,
+  "front_median_daily_usd_volume": 2448995.0,
+  "front_p10_daily_usd_volume": 317031.0000000001,
+  "front_share_zero_volume_days": 0.0,
+  "assumed_contract_size_usd": 10.0,
+  "contracts_detail": [
+   {
+    "contract": "LTCUSD_201225",
+    "bars": 43,
+    "first_bar": "2020-12-01",
+    "last_bar": "2021-01-12",
+    "missing_days": 0,
+    "zero_volume_days": 18
+   },
+   {
+    "contract": "LTCUSD_210326",
+    "bars": 116,
+    "first_bar": "2020-12-01",
+    "last_bar": "2021-03-26",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LTCUSD_210625",
+    "bars": 183,
+    "first_bar": "2020-12-25",
+    "last_bar": "2021-06-25",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LTCUSD_210924",
+    "bars": 183,
+    "first_bar": "2021-03-26",
+    "last_bar": "2021-09-24",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LTCUSD_211231",
+    "bars": 190,
+    "first_bar": "2021-06-25",
+    "last_bar": "2021-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LTCUSD_220325",
+    "bars": 183,
+    "first_bar": "2021-09-24",
+    "last_bar": "2022-03-25",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LTCUSD_220624",
+    "bars": 176,
+    "first_bar": "2021-12-31",
+    "last_bar": "2022-06-24",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LTCUSD_220930",
+    "bars": 190,
+    "first_bar": "2022-03-25",
+    "last_bar": "2022-09-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LTCUSD_221230",
+    "bars": 190,
+    "first_bar": "2022-06-24",
+    "last_bar": "2022-12-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LTCUSD_230331",
+    "bars": 183,
+    "first_bar": "2022-09-30",
+    "last_bar": "2023-03-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LTCUSD_230630",
+    "bars": 183,
+    "first_bar": "2022-12-30",
+    "last_bar": "2023-06-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LTCUSD_230929",
+    "bars": 185,
+    "first_bar": "2023-03-31",
+    "last_bar": "2023-10-05",
+    "missing_days": 4,
+    "zero_volume_days": 6
+   },
+   {
+    "contract": "LTCUSD_231229",
+    "bars": 190,
+    "first_bar": "2023-06-30",
+    "last_bar": "2024-01-09",
+    "missing_days": 4,
+    "zero_volume_days": 11
+   },
+   {
+    "contract": "LTCUSD_240329",
+    "bars": 183,
+    "first_bar": "2023-09-29",
+    "last_bar": "2024-03-29",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LTCUSD_240628",
+    "bars": 183,
+    "first_bar": "2023-12-29",
+    "last_bar": "2024-06-28",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LTCUSD_240927",
+    "bars": 183,
+    "first_bar": "2024-03-29",
+    "last_bar": "2024-09-27",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LTCUSD_241227",
+    "bars": 183,
+    "first_bar": "2024-06-28",
+    "last_bar": "2024-12-27",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LTCUSD_250328",
+    "bars": 96,
+    "first_bar": "2024-09-27",
+    "last_bar": "2024-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LTCUSD_250627",
+    "bars": 5,
+    "first_bar": "2024-12-27",
+    "last_bar": "2024-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "LTCUSD_250926",
+    "bars": 0
+   }
+  ]
+ },
+ "XRP": {
+  "contracts": 25,
+  "contracts_with_data": 19,
+  "bars": 3030,
+  "missing_days": 8,
+  "front_contract_days": 1489,
+  "front_median_daily_usd_volume": 1868540.0,
+  "front_p10_daily_usd_volume": 224102.0,
+  "front_share_zero_volume_days": 0.0,
+  "assumed_contract_size_usd": 10.0,
+  "contracts_detail": [
+   {
+    "contract": "XRPUSD_201225",
+    "bars": 44,
+    "first_bar": "2020-11-30",
+    "last_bar": "2021-01-12",
+    "missing_days": 0,
+    "zero_volume_days": 18
+   },
+   {
+    "contract": "XRPUSD_210326",
+    "bars": 117,
+    "first_bar": "2020-11-30",
+    "last_bar": "2021-03-26",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "XRPUSD_210625",
+    "bars": 183,
+    "first_bar": "2020-12-25",
+    "last_bar": "2021-06-25",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "XRPUSD_210924",
+    "bars": 183,
+    "first_bar": "2021-03-26",
+    "last_bar": "2021-09-24",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "XRPUSD_211231",
+    "bars": 190,
+    "first_bar": "2021-06-25",
+    "last_bar": "2021-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "XRPUSD_220325",
+    "bars": 183,
+    "first_bar": "2021-09-24",
+    "last_bar": "2022-03-25",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "XRPUSD_220624",
+    "bars": 176,
+    "first_bar": "2021-12-31",
+    "last_bar": "2022-06-24",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "XRPUSD_220930",
+    "bars": 190,
+    "first_bar": "2022-03-25",
+    "last_bar": "2022-09-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "XRPUSD_221230",
+    "bars": 190,
+    "first_bar": "2022-06-24",
+    "last_bar": "2022-12-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "XRPUSD_230331",
+    "bars": 183,
+    "first_bar": "2022-09-30",
+    "last_bar": "2023-03-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "XRPUSD_230630",
+    "bars": 183,
+    "first_bar": "2022-12-30",
+    "last_bar": "2023-06-30",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "XRPUSD_230929",
+    "bars": 185,
+    "first_bar": "2023-03-31",
+    "last_bar": "2023-10-05",
+    "missing_days": 4,
+    "zero_volume_days": 6
+   },
+   {
+    "contract": "XRPUSD_231229",
+    "bars": 190,
+    "first_bar": "2023-06-30",
+    "last_bar": "2024-01-09",
+    "missing_days": 4,
+    "zero_volume_days": 11
+   },
+   {
+    "contract": "XRPUSD_240329",
+    "bars": 183,
+    "first_bar": "2023-09-29",
+    "last_bar": "2024-03-29",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "XRPUSD_240628",
+    "bars": 183,
+    "first_bar": "2023-12-29",
+    "last_bar": "2024-06-28",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "XRPUSD_240927",
+    "bars": 183,
+    "first_bar": "2024-03-29",
+    "last_bar": "2024-09-27",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "XRPUSD_241227",
+    "bars": 183,
+    "first_bar": "2024-06-28",
+    "last_bar": "2024-12-27",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "XRPUSD_250328",
+    "bars": 96,
+    "first_bar": "2024-09-27",
+    "last_bar": "2024-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "XRPUSD_250627",
+    "bars": 5,
+    "first_bar": "2024-12-27",
+    "last_bar": "2024-12-31",
+    "missing_days": 0,
+    "zero_volume_days": 0
+   },
+   {
+    "contract": "XRPUSD_250926",
+    "bars": 0
+   },
+   {
+    "contract": "XRPUSD_251226",
+    "bars": 0
+   },
+   {
+    "contract": "XRPUSD_260327",
+    "bars": 0
+   },
+   {
+    "contract": "XRPUSD_260626",
+    "bars": 0
+   },
+   {
+    "contract": "XRPUSD_260925",
+    "bars": 0
+   },
+   {
+    "contract": "XRPUSD_261225",
+    "bars": 0
+   }
+  ]
+ }
+}

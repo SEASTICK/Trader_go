@@ -20,7 +20,7 @@ import pandas as pd
 from ..bars import COLUMNS, interval_delta
 
 BASE = "https://data.binance.vision/data"
-MARKETS = {"spot": "spot", "um": "futures/um"}  # um = USDⓈ-M-terminer
+MARKETS = {"spot": "spot", "um": "futures/um", "cm": "futures/cm"}  # um = USDⓈ-M-terminer, cm = COIN-M-terminer
 
 Opener = Callable[[str], bytes]
 
