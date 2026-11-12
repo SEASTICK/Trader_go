@@ -38,6 +38,8 @@ def sources_table(reports: list[dict]) -> str:
             elif name == "bitstamp":
                 first = body.get("btcusd_first_daily_bar_from_2011-09-13") or body.get("btcusd_first_daily_bar_from_start_2011")
                 what = f"BTC/USD dagsstaplar från {first}" if first else "tomt svar (första provet hade fel startdatum)"
+            elif name == "binance_docs":
+                what = "; ".join(f"{k}: " + (f"läsbar ({x['characters']} tecken)" if x.get("readable") else f"ej läsbar ({x.get('error', '')[:30]})") for k, x in body.items())
             elif name == "binance_api":
                 what = "; ".join(f"{s}: " + (f"{x['bars']} staplar" if "bars" in x else x["error"][:40]) for s, x in body["gap_fill_probe"].items())
             else:
@@ -68,6 +70,17 @@ def liquidity_table(liq: dict) -> str:
     return "\n".join(rows)
 
 
+def example_table() -> str:
+    """Spot + invers COIN-M-short hållen till förfall, i mynt och USD (traderlab.basis_example)."""
+    from ..basis_example import hold_to_expiry
+    rows = ["| Fall | Kurs vid förfall | Mynt vid förfall | USD-värde | Avkastning på spot-kostnaden | Marginalkvot |", "|---|---|---|---|---|---|"]
+    for label, x in (("10 mynt, 102 kontrakt (exakt säkring)", 10), ("7 mynt, 71 kontrakt (heltalsavrundning)", 7)):
+        r = hold_to_expiry(x, 100, 102, 10, [150, 100, 50])
+        for o in r["outcomes"]:
+            rows.append(f"| {label} | {o.price_at_expiry:.0f} | {o.coins:.3f} | {o.usd_value:.2f} | {o.return_on_cost:.2%} | {o.margin_ratio_at_expiry:.3f} |".replace(".", ","))
+    return "\n".join(rows)
+
+
 def main() -> None:
     folder = Path(__file__).resolve().parents[3] / "research" / "coverage"
     reports = _load(folder, "basis-sources-*.json")
@@ -76,6 +89,7 @@ def main() -> None:
     print("## Källprov\n\n" + sources_table(reports))
     print("\n## Daterade terminer hos Binance\n\n" + dated_table(binance))
     print("\n## Handelsbarhet, COIN-M (närmaste kontrakt med mer än 14 dagar kvar, volym i USD)\n\n" + liquidity_table(liq))
+    print("\n## Numeriskt exempel: spot + invers short\n\n" + example_table())
 
 
 if __name__ == "__main__":

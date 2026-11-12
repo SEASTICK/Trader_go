@@ -29,3 +29,10 @@ def test_hedge_ratio_below_one_makes_the_result_follow_the_price():
     half = e.hold_to_expiry(10, 100, 102, 10, [150, 50], contracts=51)   # halv säkring
     assert exact["outcomes"][0].usd_value == pytest.approx(exact["outcomes"][1].usd_value)
     assert half["outcomes"][0].usd_value > half["outcomes"][1].usd_value + 100
+
+
+def test_example_table_is_generated_from_the_function():
+    from traderlab.data import basis_report as r
+    t = r.example_table()
+    assert "| 10 mynt, 102 kontrakt (exakt säkring) | 150 | 6,800 | 1020,00 | 2,00% | 1,000 |" in t
+    assert "heltalsavrundning" in t

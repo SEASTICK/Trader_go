@@ -4,39 +4,92 @@ Skriven 2026-11-12 på uppdrag av granskaren (Codex, PR #110/#111). **Inget back
 basisnivåer är beräknade, och slutprovet 2025+ är inte hämtat.** Det enda som mätts är kontraktslistor, månadsfilernas
 täckning, luckor och daglig volym. H-0020 är fortfarande `REJECT` (t 2,41 mot 2,81) och dess låsta trösklar är orörda.
 
+**Rättelse (2026-11-12, efter granskning av PR #112):** en första version påstod att säkringen är ”deltaneutral i
+myntets egen enhet” och att ett avtalat förfall gör att ”inga avnoteringar uppstår”. Båda påståendena var för starka och
+är ersatta nedan. En COIN-M-short har invers PnL i mynt, så säkringen låser **USD-värdet** och inte antalet mynt, och
+arkivet visar att Binance har upphört att lista nya kvartalskontrakt för flera underliggande.
+
 ## Svar
 
-**Ja, men bara i begränsad mening, och med tre villkor.**
+**Ja, men bara i begränsad mening, och med fyra villkor.**
 
-- **Ja** för ett *delvis* oberoende test: dagsdata för daterade COIN-M-terminer finns gratis för sju underliggande
-  tillgångar som H-0020 aldrig använde (ADA, BCH, BNB, DOT, LINK, LTC, XRP), 19 till 20 kontrakt vardera med data före
-  2025 (förfall sedan 2020-09 respektive 2020-12), utan saknade månadsfiler, med spot-referens för alla.
+- **Ja** för ett *delvis* oberoende test av en **USD-säkrad** kassa-och-termin: dagsdata för daterade COIN-M-terminer
+  finns gratis för sju underliggande som H-0020 aldrig använde (ADA, BCH, BNB, DOT, LINK, LTC, XRP), 19 till 20 kontrakt
+  vardera med data före 2025, utan saknade månadsfiler, med spot-referens för alla.
 - **Nej** för ett *helt* oberoende test: ingen gratiskälla ger en annan period eller annan börs med historik (se källprov).
-  Samma börs, samma period och samma marknads belåningsutbud gör att baserna på olika mynt hänger ihop. Sju
-  underliggande är inte sju oberoende satsningar.
-- **Villkor 1, kostnader:** inga historiska spreadar eller orderböcker finns gratis. Kostnaderna måste därför bestämmas
-  i förväg som en konservativ regel som beror på volymen, och kan inte kalibreras mot verkliga spreadar.
+  Samma börs och period gör att baserna på olika mynt hänger ihop. Sju underliggande är inte sju oberoende satsningar.
+- **Villkor 1, kostnader:** inga historiska spreadar finns gratis, och avgifterna är inte verifierade mot primär källa.
+  Kostnaderna måste därför bestämmas i förväg som en konservativ regel som beror på volymen.
 - **Villkor 2, datalucka:** alla COIN-M-kontrakt som levde 2023-08-28 till 2023-08-31 saknar dessa fyra dagar. Binance
-  officiella API svarar 451 från GitHubs servrar och kan inte fylla dem (kringgås inte). Ett protokoll måste före
-  körning ange hur en lucka behandlas. Annars blir körningen `OGILTIG` enligt den fail-closed-regel som infördes i
-  PR #111.
+  API svarar 451 från GitHubs servrar och kan inte fylla dem (kringgås inte). Ett protokoll måste före körning ange hur
+  en lucka behandlas, annars blir körningen `OGILTIG` enligt fail-closed-regeln från PR #111.
 - **Villkor 3, kapacitet:** de sju har ungefär 0,9 till 2,9 miljoner USD i mediandagsvolym i närmaste kontrakt och
   78 000 till 477 000 USD på sämsta tiondelen av dagarna. Ett test är genomförbart bara med små belopp.
+- **Villkor 4, förtida upphörande:** produktlinjer har upphört i arkivet (se Risker). Ett protokoll måste ange vad som
+  gäller om ett kontrakt inte kan rullas eller avslutas, utan efterhandsurval av underliggande.
+
+## Säkringens ekonomi (rättad)
+
+**Primära källor (lästa).** Binances egna hjälpartiklar om PnL och om marginal, hämtade från Binances publika
+artikel-API på GitHubs servrar (de två sidor som granskaren länkade till). Utdragen finns i
+`research/coverage/basis-sources-runner5-*.json` (`faq_pnl`, `faq_margin_liquidation`). Sidorna visar inget datum i texten.
+
+- ”A BTC COIN-M Futures contract is denominated, collateralized, and settled in Bitcoin … Each BTC COIN-M contract represents 100 USD and as such, USD is the counter currency.”
+- ”Unrealized PNL = Contract Size * Contract Multiplier * Absolute value of Position * Direction of Order * (1 / Entry Price - 1 / Mark Price)”
+- Binances eget exempel för en short: ”((1 / Futures Entry Price) - (1 / Futures Exit Price)) * (Contract Size * -1) ((1/50,000) - (1/45,500)) * (100 contracts * 100 USD * -1) = 0.0198 BTC”. Kursen faller och shorten **ökar antalet mynt**.
+- ”unrealized profit and loss are calculated based on the Mark Price, while realized profit and loss are calculated based on the Last Price.”
+- ”In Cross Margin Mode, margin can only be shared with the same type of asset. For example, all BTC in the COIN-M Futures Wallet can be used for all BTC-based contracts (including perpetual and delivery) within Cross Margin Mode.” Initial Margin Rate = 1 / Leverage.
+- ”All of your margin balance may be liquidated in the event of adverse price movement.”
+
+**Vad det betyder.** En invers short har resultatet n · kontraktsstorlek · (1/F1 − 1/F0) i **mynt**. Att äga X mynt (som
+också är marginalen) och sälja n kontrakt med n · storlek = X · F0 låser alltså **USD-värdet X · F0**, medan antalet
+mynt ändras med kursen. Det är en USD-säkring (och därmed en lås-in av premien i USD), inte en konstant myntposition.
+Matematiken stämmer under antaganden som exemplet visar: konvergens vid förfall (F1 = S1), heltalskontrakt, inga
+avgifter (inte verifierade) och ingen förtida likvidation. Utfallen beror på hur väl kontrakten täcker positionen.
+
+**Numeriskt exempel** (beräknat av `traderlab.basis_example`, testat): spot 100, terminspris 102 (premie 2 %).
+
+| Fall | Kurs vid förfall | Mynt vid förfall | USD-värde | Avkastning på spot-kostnaden | Marginalkvot |
+|---|---|---|---|---|---|
+| 10 mynt, 102 kontrakt (exakt säkring) | 150 | 6,800 | 1020,00 | 2,00% | 1,000 |
+| 10 mynt, 102 kontrakt (exakt säkring) | 100 | 10,200 | 1020,00 | 2,00% | 1,000 |
+| 10 mynt, 102 kontrakt (exakt säkring) | 50 | 20,400 | 1020,00 | 2,00% | 1,000 |
+| 7 mynt, 71 kontrakt (heltalsavrundning) | 150 | 4,773 | 715,88 | 2,27% | 1,008 |
+| 7 mynt, 71 kontrakt (heltalsavrundning) | 100 | 7,139 | 713,92 | 1,99% | 1,006 |
+| 7 mynt, 71 kontrakt (heltalsavrundning) | 50 | 14,239 | 711,96 | 1,71% | 1,003 |
+
+- Exakt säkring: USD-värdet blir 1 020 oavsett kurs (premien 2 % på spot-kostnaden 1 000), men antalet mynt är 6,8, 10,2
+  eller 20,4. Marginalkvoten (equity i mynt delat med positionens värde i mynt) är 1,0 i alla fall, vilket är 1× täckning.
+- Heltalsavrundning: 7 mynt kräver 71,4 kontrakt, och 71 lämnar en rest. USD-utfallet följer då kursen något (715,88 mot
+  711,96 mellan kurserna 150 och 50). Små positioner i dyra kontrakt (10 USD per kontrakt) ger relativt stor avrundning.
+- En halv säkring skulle följa kursen kraftigt (testat). Hedge-kvoten är alltså en parameter som ett protokoll måste låsa.
 
 ## Vald riktning (en)
 
-**Myntmarginerad kassa-och-termin över de sju nya underliggande på Binance COIN-M (daterade kvartalsterminer), med
+**USD-säkrad kassa-och-termin över de sju nya underliggande på Binance COIN-M (daterade kvartalsterminer), med
 spot-referens, 2020-12 till 2024-12 och slutprovet 2025+ orört.**
 
-Ekonomisk motivering: en daterad termin som handlas över spot ersätter dem som vill ha belånad exponering, och
-premien försvinner vid förfall. En myntmarginerad säkring (äg myntet, sälj terminen) är deltaneutral i myntets egen
-enhet och behöver inget stabilmyntsben, och förfallet är avtalat, så inga avnoteringar uppstår som i H-0021.
-H-0020:s problem var få satsningar och låg avkastning efter kostnader, och fler underliggande ger fler cykler.
-Vad som inte avgörs här: tröskel för att gå in, positionsstorlek, kostnadsregel och hantering av luckan. De ska
-bestämmas i ett protokoll före körning, av extern grund och inte utifrån H-0020:s utfall.
+Ekonomisk motivering: en daterad termin som handlas över spot ersätter dem som vill ha belånad exponering, och premien
+konvergerar mot noll vid förfall. Säkringen i exemplet låser premien i USD vid ingången, och mer än ett par underliggande
+ger fler cykler än H-0020. **Det är en motivering, inte ett belägg:** premiens storlek efter kostnader är exakt det som
+inte är mätt här och som testet ska pröva. Vad som inte avgörs här: tröskel för att gå in, positionsstorlek och hedge-kvot,
+kostnadsregel, hantering av luckan och av förtida upphörande. De ska bestämmas i ett protokoll före körning, av extern
+grund och inte utifrån H-0020:s utfall.
 
 Inte vald: COIN-M BTC och ETH (samma underliggande och period som H-0020, alltså inte oberoende), BTC/ETH i USDⓈ-M
 (redan använda), och alla andra källor (se nedan).
+
+## Risker som ett protokoll måste hantera utan efterhandsurval
+
+| Risk | Belägg | Vad protokollet måste ange i förväg |
+|---|---|---|
+| **Förtida upphörande av produktlinje** | I arkivet har EOS, ETC, FIL och TRX bara två kontrakt (2020-12-25 och 2021-03-26), och ADA, BCH, DOT, LINK och LTC har inget kontrakt med förfall efter 2025-09-26, medan BTC, ETH, BNB och XRP fortsätter till 2026-12. Orsaken är **inte verifierad** mot någon primär källa (utvecklardokumentationen gav 0 tecken). | Vilka underliggande som ingår bestäms av en regel före körning (till exempel minst ett visst antal kontrakt i arkivet vid beslutstillfället), aldrig av vad som senare hänt. Hur ett kontrakt som inte kan rullas stängs, och att en sådan händelse inte får värderas med en kurs som inte gick att handla till (jämför H-0021, PR #111). |
+| **Basisrisk före förfall** | Orealiserat resultat räknas på Mark Price och realiserat på Last Price (Binance). Terminspriset kan avvika från spot innan förfall. | Hur positionen värderas under livet (mark mot spot), och att utfallet bara redovisas vid förfall eller rullning enligt en förhandsregel. |
+| **Marginal och likvidation** | Binance använder en ”Maintenance Margin model” med nivåer på sidan ”Leverage & Margin”, som **inte är läst**. Likvidationsregeln och underhållsmarginalen är därför inte verifierade. | Ett eget, konservativt likvidationsantagande med tydlig etikett (som i H-0021:s protokoll), eller en bedömning av avståndet till likvidation vid 1× täckning. Exemplets marginalkvot 1,0 är min egen räkning och **inte verifierad** mot Binances regler. |
+| **Heltalskontrakt** | Kontraktsstorlek är 100 USD för BTC (bekräftad). Övriga **10 USD är inte bekräftat**. | Hur många kontrakt som säljs (avrundning) och att resten redovisas som kvarvarande prisexponering. |
+| **Datalucka 2023-08-28 till 2023-08-31** | Alla COIN-M-kontrakt som levde då saknar fyra dagar. Binance API svarar 451. | Hur positioner som hålls över luckan värderas, utan att fylla med sista kända värde. Annars `OGILTIG`. |
+| **Staplar efter förfall** | Kontrakt har staplar med noll volym efter förfallodagen (till exempel BTCUSD_230929 till 2023-10-05). | Att staplar efter förfallodagen ignoreras. |
+| **Börs- och platsrisk** | API:et svarade 451 från GitHubs servrar. Motpartsrisk finns inte i ett backtest. | Att resultatet inte säger något om en viss användares tillgång eller om motparten. |
 
 ## Vad som redan setts
 
@@ -73,6 +126,8 @@ workflowet `.github/workflows/basis-data-survey.yml` (övriga källor, på GitHu
 | bitmex_api | nej | HTTPError: HTTP Error 403: Forbidden |
 | binance_api | ja | BTCUSD_230929: HTTPError: HTTP Error 451: ; ETHUSD_230929: HTTPError: HTTP Error 451:  |
 | fred_text | nej | TimeoutError: The read operation timed out |
+| binance_docs | ja | delivery_api_docs: läsbar (64 tecken); faq_pnl: läsbar (18625 tecken); faq_margin_liquidation: läsbar (17192 tecken) |
+| binance_docs | ja | developers_exchange_information: läsbar (0 tecken); faq_pnl: läsbar (5312 tecken); faq_margin_liquidation: läsbar (4618 tecken) |
 
 ## Daterade terminer hos Binance
 
@@ -110,7 +165,6 @@ workflowet `.github/workflows/basis-data-survey.yml` (övriga källor, på GitHu
 | LTC | 19 | 3028 | 8 | 1488 | 2 448 995 | 317 031 | 0.0% |
 | XRP | 19 | 3030 | 8 | 1489 | 1 868 540 | 224 102 | 0.0% |
 
-
 ## Tolkning av källproven
 
 | Källa | Slutsats |
@@ -121,18 +175,28 @@ workflowet `.github/workflows/basis-data-survey.yml` (övriga källor, på GitHu
 | OKX | **Inte genomförbar.** Inga dagsstaplar för utgånget kontrakt via det publika API:et. |
 | Bybit | **Inte tillräcklig.** Bara affärsfiler (inga dagsstaplar). Provet visade 789 symboler med datum i namnet, men inte hur långt bak historiken går, så ingen längre historik kan antas. |
 | BitMEX | **Inte nåbar.** Både API och publika datafiler svarade 403 från GitHubs servrar. Det kringgås inte. |
+| Binance FAQ (PnL, marginal) | **Läsbar** via Binances publika artikel-API från GitHubs servrar (5 312 och 4 618 tecken). Det är källan till formlerna nedan. Utvecklardokumentationen (kontraktsstorlek, förfallsfält, avnotering) gav 0 tecken (sidan bygger på JavaScript) och är **inte läst**. |
 | Binance API (för att fylla luckan) | **Inte nåbar.** 451 (spärrad plats) från GitHubs servrar. |
 | Bitstamp | Spot-historik för BTC/USD från 2011-09, men det finns ingen gratis terminshistorik att para med. |
 | FRED (statsväxelränta) | **Inte nåbar** från GitHubs servrar (tidsgräns). H-0020:s fasta tröskel på 3 % per år har ingen extern källa i den här granskningen. |
 
-## Kostnader och marginal: vad som inte gick att verifiera
+## Verifierat och inte verifierat
 
-Följande är **inte hämtat och inte verifierat härifrån** och ska kontrolleras mot Binances dokumentation före ett protokoll:
-avgifter för spot och COIN-M (grundnivå), kontraktsstorlekar (BTC 100 USD och övriga 10 USD är antaget i volymmåttet),
-marginalkrav och likvidationsregler för COIN-M, och eventuella begränsningar för användare i vissa länder (API:et gav 451
-från GitHubs servrar, vilket också visar att tillgängligheten beror på plats). Spreadar och orderböcker finns inte gratis
-för historiska daterade kontrakt. Volym i USD är därför det enda handelsbarhetsmåttet, och det säger inget om hur stor
-glidningen blir.
+| Uppgift | Status |
+|---|---|
+| COIN-M är denominerad, säkrad med marginal och avräknad i mynt; BTC-kontrakt är 100 USD | **Verifierat** (Binances hjälpartikel) |
+| PnL-formel för invers kontrakt, inklusive exempel för en short | **Verifierat** (samma artikel) |
+| Orealiserat resultat på Mark Price, realiserat på Last Price | **Verifierat** |
+| Korsad marginal delas mellan kontrakt av samma mynt, Initial Margin Rate = 1 / hävstång | **Verifierat** |
+| Kontraktsstorlek för övriga mynt (10 USD) | **Inte verifierat** (bara BTC står i artikeln). Antaget i volymmåttet. |
+| Avgifter för spot och COIN-M (grundnivå) | **Inte verifierat.** Avgiftssidan är inte läst. |
+| Underhållsmarginalnivåer, likvidationsregel, hävstångstrappor | **Inte verifierat.** Sidan ”Leverage & Margin” är inte läst. |
+| Avräkningspris, förfallotid, och regler för att Binance kan avsluta eller avnotera kontrakt | **Inte verifierat.** Utvecklardokumentationen gav 0 tecken. |
+| Historiska spreadar och orderböcker för daterade kontrakt | **Inte tillgängligt gratis** |
+| Statsväxelränta (FRED) | **Inte nåbar** från GitHubs servrar |
+
+Det som inte är verifierat måste läsas från Binances primära sidor, av någon med åtkomst till dem, innan ett protokoll låser
+kostnader, marginal eller kontraktsstorlekar. Sidorna blockeras för Claudes webbhämtare (DNS) och från Claudes sandlåda.
 
 ## Datakvalitet värd att veta
 
@@ -147,5 +211,6 @@ glidningen blir.
 - Nedladdade data: COIN-M 1d-staplar för de nio underliggande med minst 20 kontrakt, månader 2020-08 till 2024-12
   (1 118 filer, inga från 2025 eller senare). De är checksummeverifierade av `binance.fetch` och noterade i `data/MANIFEST.md`.
 - Mätt: antal staplar, saknade dagar, nollvolymdagar och volym i USD för närmaste kontrakt med mer än 14 dagar kvar.
-- Inte mätt: avkastning, basis, signaler eller något som liknar ett backtest.
+- Inte mätt: avkastning, basis, signaler eller något som liknar ett backtest. Exemplet ovan är algebra med påhittade
+  priser och använder ingen data.
 - Inget av detta ändrar H-0020, H-0021 eller något protokoll.
