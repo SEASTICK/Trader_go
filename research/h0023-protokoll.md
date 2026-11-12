@@ -44,13 +44,13 @@ Beslut: **ett ärligt, men knappt genomförbart, test går att låsa.** Ingen ny
 | Priser | Fyllning vid dagsstapelns öppning: fältet `open` i 1d-stapeln för terminsserien (last price) och för spot `<MYNT>USDT`, **samma `open_time`** för båda benen, vid inträde och utträde. Spot och termin har **separata** priser (`spot0`, `fut0`, `fut_exit`, `spot_exit`). Ingen annan stapel eller prisfält får väljas, och utträdesstapeln kan inte flyttas efter att utfallet setts. |
 | Markprisdagar | Riskstoppet läser dagligt högsta markpris för **varje hållen dag från inträdesdagen till och med dagen före utträdesdagen** (`basis_costs.held_mark_days`). Utträdesdagens stapel läses inte (positionen stängs vid dess öppning). Ett stopp stängs vid nästa öppning; på sista markprisdagen är nästa öppning utträdesöppningen, men stoppet räknas ändå som utlöst. |
 | Hela kapitalet och coin-marginalen (per position) | Positionens storlek `A` kommer från kassaboken nedan (oförändrad från H-0022). Mynt köps för `A` (avgift och glidning ingår), läggs som marginal, kontrakt säljs avrundat **ned** efter öppningsavgiften (effektiv hävstång ≤ 1), PnL i mynt = n · 10 · (1/`fut_exit` − 1/`fut0`), avgifter dras i mynt, slutvärde i USD först när spot säljs. Beräknas med `basis_costs.pre_expiry_cycle`. |
-| Kassabok (självfinansierande, låst) | **Startkapital 140 000 USD kontanter** vid första fyllningen (2021-03-27). Sju platser, en per mynt. Vid **varje** cykelstart (inträdet `F_k`) har alla positioner från föregående cykel redan stängts vid `X_{k-1}`, åtta dagar tidigare, så portföljen är ren USD-kassa `V` (kontanter utan ränta under väntan). Storlek per plats: `A = min(V / 7, likviditetstak)` om myntet är valbart, annars 0; är `A` under **10 000 USD** blir platsen platt. Summan av alla `A` är högst `V`, så kassan räcker alltid och ingen position kräver tillskott. Insatsen `A` lämnar kassan vid inträdet och slutvärdet (USD efter spot-sälj) kommer tillbaka vid utträdet. **Vinster återinvesteras** vid nästa cykelstart genom `V/7`; **överskott** (platta platser, platser begränsade av likviditetstaket) ligger kvar som kontanter **utan ränta** tills dess. Förluster minskar `V` och därmed nästa cykels `A`. Inga externa tillskott, inga uttag, ingen prioritering behövs (ingen brist uppstår), inget efterhandsval. Cykelavkastningen `r_k = V_slut / V_start − 1` mäts från `F_k` till `F_{k+1}` (kontanterna är oförändrade under de åtta dagarna, så det är samma värde som direkt efter utträdet). Specifikationen är `basis_costs.ledger_run`. |
+| Kassabok (självfinansierande, låst) | **Startkapital 140 000 USD kontanter** vid första fyllningen (2021-03-27). Sju platser, en per mynt. Vid **varje** cykelstart (inträdet `F_k`) har alla positioner från föregående cykel redan stängts vid `X_{k-1}`, åtta dagar tidigare, så portföljen är ren USD-kassa `V` (kontanter utan ränta under väntan). Storlek per plats: `A = min(V / 7, likviditetstak)` om myntet är valbart, annars 0; är `A` under **10 000 USD** blir platsen platt. Summan av alla `A` är högst `V`, så kassan räcker alltid och ingen position kräver tillskott. Insatsen `A` lämnar kassan vid inträdet och slutvärdet (USD efter spot-sälj) kommer tillbaka vid utträdet. **Vinster återinvesteras** vid nästa cykelstart genom `V/7`; **överskott** (platta platser, platser begränsade av likviditetstaket) ligger kvar som kontanter **utan ränta** tills dess. Förluster minskar `V` och därmed nästa cykels `A`. Inga externa tillskott, inga uttag, ingen prioritering behövs (ingen brist uppstår), inget efterhandsval. Cykelavkastningen `r_k = V(T_k) / V(F_k) − 1` mäts över intervallet `(F_k, T_k)`, där `T_k = F_{k+1}` för cykel 1 till 13 och **`T_14 = X_14 = 2024-09-20 00:00 UTC`** (det sista utträdet) för cykel 14. Ingen `F_15` och inga data efter `X_14` behövs. Kontanterna är oförändrade under de åtta dagarna mellan `X_k` och `F_{k+1}`, så `V(T_k)` är samma värde som direkt efter utträdet (`V_slut`). Specifikationen är `basis_costs.ledger_run`. |
 | Kostnader | Spot 0,100 %, termin taker 0,050 % (hela perioden, konservativt), glidning 5 bp per ben, fyra ben = **50 bp** per cykel vid noll basis. **Stress 2,5×** (alla fyra komponenter) = 125 bp (bokfört 124,2 bp: kostnaderna är andelar av ett krympande värde, så budgeten är en övre gräns inom 1 bp). Ingen BNB-rabatt, inga maker-order. |
 | Markprisbaserat riskstopp | Varje hållen dag: marginalkvot (`basis_costs.margin_ratio`) vid dagens **högsta markpris** (markPriceKlines), underhållsnivå antagen **50 %**. Är kvoten ≥ **0,8** någon dag stängs båda benen vid nästa öppning (full kostnad) och myntet är platt resten av cykeln. Stoppet redovisas, och varje utlöst stopp ger **REJECT** (kriterium 5). Saknas markpris för en hållen dag är körningen `OGILTIG`. |
 | Likviditetstak och minsta storlek | Positionen får vara högst **2 %** av seriens medianvolym (kassabokens tak) i USD över de senaste 20 verifierade handelsdagarna till och med beslutsdagen (volym i kontrakt × 10 USD). Färre än 20 handelsdagar eller överskriden gräns: platt. Minsta position 10 000 USD per mynt (ett kontrakt högst 0,1 %). |
 | Kontraktsstorlek | Serien måste ha härledd median mellan 9,5 och 10,5 USD (`coinm-implied-contract-size.json`), annars platt (0 av 135 idag). |
 | Jämförelse 1 (kontanter) | Årlig avkastning (CAGR) för **kassabokens totalvärde** `(V_slut / 140 000)^(365/1273) − 1`, över hela spannet 2021-03-27 till 2024-09-20 (1 273 dagar, inklusive platta perioder) ska överstiga **3 %**, samma gräns som i H-0020 (ungefär snittet för amerikanska 3-månadersväxlar 2021–2024; gränsen är ett förhandslåst närmevärde och inte en ny datahämtning). Annars är kontanter bättre. |
-| Jämförelse 2 (marknadsneutral) | Beta mot BTCUSDT spot, regressionen på kvartalscyklernas avkastning (BTC spot, öppning till öppning, samma datum), n = 14. |
+| Jämförelse 2 (marknadsneutral) | Beta mot BTCUSDT spot, regressionen på kvartalscyklernas avkastning: portföljens `r_k` och BTC:s `open(T_k) / open(F_k) − 1` över **samma intervall** `(F_k, T_k)` (spot `BTCUSDT`, `open` i 1d-stapeln 00:00 UTC), n = 14. Tidsintervallen finns i kalendertabellen nedan (`h0022_coverage.cycle_windows`). |
 | Slumpkontroll | Inte tillämpbar (positionen är utan riktningsval). I stället redovisas *noll-basis-kostnaden* (50 bp) som referens för alla cyklers kostnad. |
 
 ## Cykelkalender (låst)
@@ -58,22 +58,22 @@ Beslut: **ett ärligt, men knappt genomförbart, test går att låsa.** Ingen ny
 Genererad ur universumtabellen (`coinm-pit-series.json`) och `universe_at`; inga priser används. Beslut på föregående förfallsdag, inträde nästa dag, utträde sju kalenderdagar före serien förfall.
 Cykel 2 är platt för alla mynt eftersom 0924-serien 2021 saknar daterad annons. Sista beslutsdag är 2024-06-28 (inom det biasfria fönstret 2021-03-26 till 2024-08-13).
 
-| Cykel | Serie (förfall) | Beslutsdag (stängning, förfallsdagen före) | Inträde (fyllning 00:00 UTC) | Utträde (fyllning 00:00 UTC, kalenderdag förfall − 7) | Valbara underliggande vid beslutsdagen | Dagar i position | Kontanter före inträde (dagar) |
-|---|---|---|---|---|---|---|---|
-| 1 | 2021-06-25 | 2021-03-26 | 2021-03-27 | 2021-06-18 | alla sju | 83 | – |
-| 2 | 2021-09-24 | 2021-06-25 | 2021-06-26 | 2021-09-17 | **ingen (serien saknar daterad annons): platt** | 83 | 8 |
-| 3 | 2021-12-31 | 2021-09-24 | 2021-09-25 | 2021-12-24 | alla sju | 90 | 8 |
-| 4 | 2022-03-25 | 2021-12-31 | 2022-01-01 | 2022-03-18 | alla sju | 76 | 8 |
-| 5 | 2022-06-24 | 2022-03-25 | 2022-03-26 | 2022-06-17 | alla sju | 83 | 8 |
-| 6 | 2022-09-30 | 2022-06-24 | 2022-06-25 | 2022-09-23 | alla sju | 90 | 8 |
-| 7 | 2022-12-30 | 2022-09-30 | 2022-10-01 | 2022-12-23 | alla sju | 83 | 8 |
-| 8 | 2023-03-31 | 2022-12-30 | 2022-12-31 | 2023-03-24 | alla sju | 83 | 8 |
-| 9 | 2023-06-30 | 2023-03-31 | 2023-04-01 | 2023-06-23 | alla sju | 83 | 8 |
-| 10 | 2023-09-29 | 2023-06-30 | 2023-07-01 | 2023-09-22 | alla sju | 83 | 8 |
-| 11 | 2023-12-29 | 2023-09-29 | 2023-09-30 | 2023-12-22 | alla sju | 83 | 8 |
-| 12 | 2024-03-29 | 2023-12-29 | 2023-12-30 | 2024-03-22 | alla sju | 83 | 8 |
-| 13 | 2024-06-28 | 2024-03-29 | 2024-03-30 | 2024-06-21 | alla sju | 83 | 8 |
-| 14 | 2024-09-27 | 2024-06-28 | 2024-06-29 | 2024-09-20 | alla sju | 83 | 8 |
+| Cykel | Serie (förfall) | Beslutsdag (stängning, förfallsdagen före) | Inträde `F_k` (fyllning 00:00 UTC) | Utträde `X_k` (fyllning 00:00 UTC, kalenderdag förfall − 7) | Slutpunkt `T_k` för cykelavkastning och BTC | Valbara underliggande vid beslutsdagen | Dagar i position | Kontanter före inträde (dagar) |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 2021-06-25 | 2021-03-26 | 2021-03-27 | 2021-06-18 | 2021-06-26 | alla sju | 83 | – |
+| 2 | 2021-09-24 | 2021-06-25 | 2021-06-26 | 2021-09-17 | 2021-09-25 | **ingen (serien saknar daterad annons): platt** | 83 | 8 |
+| 3 | 2021-12-31 | 2021-09-24 | 2021-09-25 | 2021-12-24 | 2022-01-01 | alla sju | 90 | 8 |
+| 4 | 2022-03-25 | 2021-12-31 | 2022-01-01 | 2022-03-18 | 2022-03-26 | alla sju | 76 | 8 |
+| 5 | 2022-06-24 | 2022-03-25 | 2022-03-26 | 2022-06-17 | 2022-06-25 | alla sju | 83 | 8 |
+| 6 | 2022-09-30 | 2022-06-24 | 2022-06-25 | 2022-09-23 | 2022-10-01 | alla sju | 90 | 8 |
+| 7 | 2022-12-30 | 2022-09-30 | 2022-10-01 | 2022-12-23 | 2022-12-31 | alla sju | 83 | 8 |
+| 8 | 2023-03-31 | 2022-12-30 | 2022-12-31 | 2023-03-24 | 2023-04-01 | alla sju | 83 | 8 |
+| 9 | 2023-06-30 | 2023-03-31 | 2023-04-01 | 2023-06-23 | 2023-07-01 | alla sju | 83 | 8 |
+| 10 | 2023-09-29 | 2023-06-30 | 2023-07-01 | 2023-09-22 | 2023-09-30 | alla sju | 83 | 8 |
+| 11 | 2023-12-29 | 2023-09-29 | 2023-09-30 | 2023-12-22 | 2023-12-30 | alla sju | 83 | 8 |
+| 12 | 2024-03-29 | 2023-12-29 | 2023-12-30 | 2024-03-22 | 2024-03-30 | alla sju | 83 | 8 |
+| 13 | 2024-06-28 | 2024-03-29 | 2024-03-30 | 2024-06-21 | 2024-06-29 | alla sju | 83 | 8 |
+| 14 | 2024-09-27 | 2024-06-28 | 2024-06-29 | 2024-09-20 | 2024-09-20 (= `X_14`, sista utträdet) | alla sju | 83 | 8 |
 
 Antal cykler **n = 14** (13 med positioner, 1 platt). Hela spannet är 1 273 dagar (3,49 år), detsamma som i H-0022.
 
@@ -108,13 +108,13 @@ Kontroller som motorn måste uppfylla: summan av `A` är aldrig större än `V`;
 Samma som H-0022. Positionerna för de sju mynten rör sig ihop (samma börs, samma regim, samma kalender), och cyklerna är kvartal. Dagsavkastningen i en säkrad kassa-och-termin är nästan en jämn
 upplupen basis, så ett dagligt t-värde vore kraftigt överskattat jämfört med de **14** oberoende utfallen. Därför är beslutsstatistiken lagd på cykelnivå:
 
-* En observation per cykel, **ur kassaboken**: `r_k = V_slut / V_start − 1` för cykel k (hela portföljen; platta platser och kontanter ger 0 för sin del; den platta cykeln 2 ger exakt 0). Samma `r_k` används för t, beta och CAGR.
+* En observation per cykel, **ur kassaboken**: `r_k = V(T_k) / V(F_k) − 1` (= `V_slut / V_start − 1`) för cykel k över intervallet `(F_k, T_k)` (hela portföljen; platta platser och kontanter ger 0 för sin del; den platta cykeln 2 ger exakt 0). Samma `r_k` används för t, beta och CAGR.
 * t = medelvärde(`r_k`) / (std(`r_k`) / √14), med n−1 = 13 frihetsgrader.
 * Kravet är **max(2,85; Student-t-kvantilen med 13 frihetsgrader för p = 0,05/23)** = max(2,85; **3,45**) = **3,45** (3,4452 med fyra decimaler). 2,85 är Bonferronikravet för N = 23
   (`python -m traderlab krav 23`, 2,8518); 3,45 är det strängare kravet för så få observationer (`scipy.stats.t.ppf(1 − 0,05/23, 13)`). Båda är beräknade utan att något utfall lästs.
 * Redovisas utan att styra beslutet: bootstrap-intervall för medelavkastningen (cyklerna omsamplas, 10 000 dragningar, fast frö 0), antal positiva cykler, per mynt och per år, in- och utträdesbasis,
   och ett dagligt Newey-West-t som är **uttryckligen inte beslutsgrundande**.
-* Beta mot BTC beräknas på samma 14 cykler (BTC spot, `open` till `open` över samma `F_k` till `F_{k+1}`) och redovisas med konfidensintervall; kriteriet nedan använder punktskattningen.
+* Beta mot BTC beräknas på samma 14 cykler: portföljen och BTC mäts över exakt samma intervall `(F_k, T_k)` (`T_14 = X_14 = 2024-09-20 00:00 UTC`), 14 entydiga och jämförbara par (`h0022_coverage.paired_observations`), och redovisas med konfidensintervall; kriteriet nedan använder punktskattningen.
 
 Ett positivt resultat med så få oberoende utfall är svagt bevis även om kriterierna klaras: det betyder bara att idén får granskas och prövas på den orörda perioden och på papper.
 
@@ -139,6 +139,7 @@ Godkänt betyder bara att idén får granskas och sedan testas på slutprovet (2
 5. Inga arkiv från 2025-01-01 eller senare har öppnats (test).
 6. Universumtabellen är den som ligger på huvudgrenen vid registreringen (`research/universe/coinm-pit-series.json`) och cykelkalendern nedan reproduceras exakt med `h0022_coverage.cycle_calendar(rows, "rullning_b")` (test).
 7. Luckor fylls aldrig med sista kända värde eller ersättare. En ogiltig körning redovisas som en ny rad och försöket räknas.
+8. För beta: en verifierad `BTCUSDT`-spotstapel med `open_time` exakt 00:00:00 UTC finns för varje `F_k` och varje `T_k` (14 + 14 datum; `T_k = F_{k+1}` för k < 14 och `T_14 = X_14`). Saknas någon är körningen `OGILTIG`. Inga datum efter 2024-09-20 behövs för beta eller kassabok.
 
 ## Kända antaganden och svagheter (skrivna i förväg)
 
