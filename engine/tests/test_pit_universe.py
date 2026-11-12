@@ -42,7 +42,8 @@ def _obs(u, expiry, first, last, bars=50):
     return {"contract": f"{u}USD_{expiry[2:4]}{expiry[5:7]}{expiry[8:]}", "underlying": u, "expiry": expiry, "ordinary_expiry_rule": True,
             "first_bar": first, "last_bar": last, "first_traded_bar": first, "last_traded_bar": last, "bars": bars,
             "missing_days_between": 0, "zero_volume_bars": 0, "left_censored": False, "right_censored": False,
-            "ended_before_expiry": False, "bars_after_expiry": 0}
+            "ended_before_expiry": False, "bars_after_expiry": 0, "traded_runs": [[first, last]], "missing_days": [],
+            "zero_volume_days": [], "daily_filled_days": [], "gap_fill_unverified": False}
 
 
 def _events():
@@ -80,3 +81,59 @@ def test_överlevnadsbias_sju_ensamma_är_efterhandsurval_till_sista_förfallet_
     assert hindsight_free_window(rows) == ("2021-03-26", "2024-08-14")
     assert hindsight_selection(rows, "2024-08-14", SEVEN)                     # SOL har lanserats och saknas i urvalet
     assert not hindsight_selection(rows, "2024-08-14", SEVEN + ("SOL",))
+
+
+def test_lucka_i_serien_gör_inte_dagen_valbar_fast_den_ligger_mellan_första_och_sista():
+    o = _obs("ADA", "2023-09-29", "2023-03-31", "2023-09-29")
+    o.update({"traded_runs": [["2023-03-31", "2023-08-27"], ["2023-09-01", "2023-09-29"]],
+              "missing_days": ["2023-08-28", "2023-08-29", "2023-08-30", "2023-08-31"], "gap_fill_unverified": True})
+    ev = [{"code": "x", "released": "2023-03-29", "title": "t", "underlyings": ["ADA"], "series": [{"mmdd": "0929", "expiry": "2023-09-29"}], "not_listed": []}]
+    rows = build_series(ev, [o])
+    assert universe_at(rows, "2023-08-29", SEVEN) == []
+    assert universe_at(rows, "2023-08-27", SEVEN) != [] and universe_at(rows, "2023-09-01", SEVEN) != []
+    rep = universe_report(rows, "2023-08-29")
+    assert rep["active_without_verified_bar"] == [{"underlying": "ADA", "expiry": "2023-09-29", "reason": "data_gap_unverified"}]
+
+
+def test_nollvolymdag_inne_i_serien_är_inte_en_observerad_handel():
+    o = _obs("ADA", "2021-03-26", "2020-09-25", "2021-03-26")
+    o.update({"traded_runs": [["2020-09-25", "2020-10-09"], ["2020-10-11", "2021-03-26"]], "zero_volume_days": ["2020-10-10"]})
+    ev = [{"code": "x", "released": "2020-09-24", "title": "t", "underlyings": ["ADA"], "series": [{"mmdd": "0326", "expiry": "2021-03-26"}], "not_listed": []}]
+    rows = build_series(ev, [o])
+    assert universe_at(rows, "2020-10-10", SEVEN) == []
+    assert universe_report(rows, "2020-10-10")["active_without_verified_bar"][0]["reason"] == "zero_volume"
+
+
+def _frame(days, vols):
+    import pandas as pd
+    idx = pd.DatetimeIndex([pd.Timestamp(d, tz="UTC") for d in days])
+    return pd.DataFrame({"open": 1.0, "high": 1.0, "low": 1.0, "close": 1.0, "volume": vols}, index=idx)
+
+
+def test_observed_markerar_saknad_dag_och_nollvolym_och_fyller_bara_med_verifierad_dagsstapel(monkeypatch, tmp_path):
+    from traderlab import pit_observed as po
+    base = _frame(["2023-08-26", "2023-08-27", "2023-09-01", "2023-09-02", "2023-09-03"], [5, 5, 0, 5, 5])
+    monkeypatch.setattr(po.binance, "load", lambda *a, **k: base.copy())
+    monkeypatch.setattr(po.gapcheck, "load_manifest", lambda repo: {})
+
+    def refuse(monthly, *a, **k):
+        raise po.gapcheck.UnverifiedGapFill("test")
+    monkeypatch.setattr(po.gapcheck, "combined", refuse)
+    o = po.observed("ADAUSD_230929", tmp_path / "data")
+    assert o["gap_fill_unverified"] and o["daily_filled_days"] == []
+    assert o["missing_days"] == ["2023-08-28", "2023-08-29", "2023-08-30", "2023-08-31"]
+    assert o["zero_volume_days"] == ["2023-09-01"]
+    assert o["traded_runs"] == [["2023-08-26", "2023-08-27"], ["2023-09-02", "2023-09-03"]]
+
+    def fill(monthly, *a, **k):
+        out = monthly.copy()
+        out["source"] = "monthly"
+        add = _frame(["2023-08-28", "2023-08-29", "2023-08-30", "2023-08-31"], [7, 7, 7, 7])
+        add["source"] = "daily"
+        import pandas as pd
+        return pd.concat([out, add]).sort_index()
+    monkeypatch.setattr(po.gapcheck, "combined", fill)
+    o = po.observed("ADAUSD_230929", tmp_path / "data")
+    assert not o["gap_fill_unverified"] and o["missing_days"] == []
+    assert o["daily_filled_days"] == ["2023-08-28", "2023-08-29", "2023-08-30", "2023-08-31"]
+    assert o["traded_runs"] == [["2023-08-26", "2023-08-31"], ["2023-09-02", "2023-09-03"]]      # 09-01 har nollvolym: aldrig handlad

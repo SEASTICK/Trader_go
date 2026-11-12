@@ -14,8 +14,10 @@ avkastning och ingen basis har räknats eller använts för urval.
 | `engine/traderlab/pit_universe.py`, `pit_observed.py` | Koden som bygger tabellen (`python -m traderlab.pit_universe`), med tester i `engine/tests/test_pit_universe.py` |
 
 `universe_at(rader, dag)` är **fail-closed**. En serie är valbar en beslutsdag först när den både var offentligt meddelad och
-faktiskt handlades: daterad annons ≤ dagen, första handlade stapel ≤ dagen, dagen ≤ sista handlade stapel, förfall > dagen,
-granskad data finns och serien är inte uttryckligen `not_listed`. Annonserade men ännu ohandlade serier (119 av de 135
+faktiskt handlades: daterad annons ≤ dagen, förfall > dagen, granskad data finns, serien är inte uttryckligen `not_listed`
+och **en verifierad stapel med volym > 0 finns just den dagen** (`traded_runs`). Intervallet mellan första och sista handlade
+stapel räcker inte: en dag som saknas eller har nollvolym innanför intervallet är aldrig valbar, och `universe_report` redovisar
+den under `active_without_verified_bar` med orsak (`data_gap`, `data_gap_unverified`, `zero_volume`). Annonserade men ännu ohandlade serier (119 av de 135
 har första handel efter annonsen), serier utan hämtad data och serier utan daterad annons returneras aldrig.
 `universe_report(rader, dag)` visar dessutom vad som hölls utanför och om urvalet är ett efterhandsurval den dagen.
 Exempel (de sju, bara valbara serier): 2020-07-25 → 0 (ADA/LINK 0925 är annonserade men datan börjar först 2020-08-01, så de
@@ -51,8 +53,11 @@ listningen sker efter att den föregående serien löpt ut.
   (sista stapel med volym) separat.
 * **Censurering:** ADA/LINK 0925 börjar före vår datastart 2020-08-01 (vänstercensurerade). 14 serier (förfall
   2025-03-28 och 2025-06-27) slutar i data 2024-12-31 och är högercensurerade (verkligt förfall senare).
-* **Luckor:** 14 serier (0929 och 1229 2023, sju vardera) saknar 2023-08-28..31; åtgärdbar enligt
-  `research/cm-lucka-2023-08.md` men inte lagad i den här tabellen.
+* **Luckor:** 14 serier (0929 och 1229 2023, sju vardera) saknar 2023-08-28..31 i månadsfilerna. Dagarna är fyllda med
+  **verifierade** dagsstaplar ur dagsarkivet (#113: checksumma, SHA-256 mot manifestet, grannkontroll, `gapcheck.combined`) och
+  markerade per serie i `daily_filled_days` (4 dagar vardera). Går verifieringen inte igenom lämnas luckan öppen
+  (`gap_fill_unverified`, `missing_days`) och dagen är inte valbar. Nollvolym- och saknade dagar innanför intervallet: 0 serier
+  efter fyllnaden. Nollvolymstaplar före första handel och efter förfall räknas aldrig som observerad handel.
 * **Avnoteringar:** i katalog 161 före 2025 finns inga avnoteringsmeddelanden för kvartalskontrakten i de sju. De
   COIN-M-avnoteringar som finns gäller terminer utan förfall (LUNA, CRV, GALA, ZIL, VET, KNC, ICX, XTZ, ROSE, APE). Det
   gäller titlar i tre kataloger och är inte ett bevis för att inget annat hände.
@@ -86,7 +91,7 @@ Det är ett **uttryckligt antagande**, inte verifierat för respektive kontrakt 
 | Kategori | Serier | Följd för ett framtida test |
 |---|---|---|
 | Kan väljas vid beslutsdagen | 128 serier med daterad annons och staplar, från och med sin första handlade stapel | Ja, om universumet byggs med `universe_at` och beslutsdagen ligger i det biasfria fönstret 2021-03-26 till 2024-08-13 |
-| Osäkra | 7 serier (förfall 2021-09-24) utan daterad annons; alla 135 på grund av antagen kontraktsstorlek; 14 serier med augustiluckan; ADA/LINK 0925 vänstercensurerade; 14 högercensurerade serier | Kräver extra belägg eller uttryckligt undantag |
+| Osäkra | 7 serier (förfall 2021-09-24) utan daterad annons; alla 135 på grund av antagen kontraktsstorlek; 14 serier där augustiluckan är fylld ur dagsarkivet (proveniens markerad); ADA/LINK 0925 vänstercensurerade; 14 högercensurerade serier | Kräver extra belägg eller uttryckligt undantag |
 | Måste stoppa testet (fail-closed) | Beslutsdag före 2021-03-26 om EOS/ETC/FIL/TRX utelämnas, eller från 2024-08-14 om SOL utelämnas; en serie som är annonserad men ännu inte handlad; en serie utan daterad annons; en serie vars kontraktsstorlek ändrats; en lucka i markpris eller kurs som inte kan lagas | OGILTIG, inte MORE_RESEARCH |
 
 ## Kvarvarande luckor (avgränsade)

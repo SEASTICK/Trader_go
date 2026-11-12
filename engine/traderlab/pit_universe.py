@@ -108,6 +108,7 @@ def build_series(events: list[dict], obs: list[dict]) -> list[dict]:
                "data_checked": o is not None}
         if o:
             row.update({k: o[k] for k in ("first_traded_bar", "last_traded_bar", "bars", "missing_days_between", "zero_volume_bars",
+                                          "traded_runs", "missing_days", "zero_volume_days", "daily_filled_days", "gap_fill_unverified",
                                           "left_censored", "right_censored", "ended_before_expiry", "bars_after_expiry")})
             first = o["first_traded_bar"]
             row["days_from_announcement_to_first_trade"] = (
@@ -134,11 +135,32 @@ def _status(row: dict, ev: dict | None, o: dict | None) -> str:
 SOL_LAUNCH = "2024-08-14"     # SOLUSD COIN-M kvartal lanserades (meddelande d823b1df…, 2024-08-08): finns inte i de sju
 
 
+def _has_traded_bar(r: dict, day: str) -> bool:
+    """Sant bara om en verifierad stapel med volym > 0 finns *den dagen*. Intervallet mellan första och sista räcker inte:
+    saknade dagar och nollvolymdagar innanför intervallet ger falskt, och en dag fylld ur dagsarkivet räknas bara om den
+    verifierats (gapcheck.combined)."""
+    return any(a <= day <= b for a, b in r.get("traded_runs") or [])
+
+
 def _tradable(r: dict, day: str) -> bool:
-    """Valbar först när serien både var offentligt meddelad och faktiskt handlades vid beslutsdagen (verifierad observation)."""
+    """Valbar först när serien var offentligt meddelad och en verifierad handelsstapel finns beslutsdagen."""
     return bool(r.get("data_checked") and r["status"] == "announced_and_observed" and r["announced_on"]
-                and r["announced_on"] <= day and r.get("first_traded_bar") and r["first_traded_bar"] <= day
-                and r.get("last_traded_bar") and day <= r["last_traded_bar"] and r["expiry"] > day)
+                and r["announced_on"] <= day and r["expiry"] > day and _has_traded_bar(r, day))
+
+
+def no_verified_bar_reason(r: dict, day: str) -> str | None:
+    """Varför en annonserad, aktiv serie ändå inte är valbar `day`: lucka, nollvolym eller oprövad luckfyllnad."""
+    if not (r.get("data_checked") and r["announced_on"] and r["announced_on"] <= day < r["expiry"]):
+        return None
+    if r.get("first_traded_bar") and day < r["first_traded_bar"]:
+        return "not_yet_traded"
+    if _has_traded_bar(r, day):
+        return None
+    if day in (r.get("missing_days") or []):
+        return "data_gap_unverified" if r.get("gap_fill_unverified") else "data_gap"
+    if day in (r.get("zero_volume_days") or []):
+        return "zero_volume"
+    return "no_traded_bar"
 
 
 def universe_at(rows: list[dict], day: str, underlyings: tuple[str, ...] = SEVEN) -> list[dict]:
@@ -155,9 +177,11 @@ def universe_report(rows: list[dict], day: str, underlyings: tuple[str, ...] = S
     sel = [r for r in rows if r["underlying"] in underlyings]
     return {
         "day": day, "tradable": chosen,
-        "announced_not_yet_traded": [r for r in sel if r["announced_on"] and r["announced_on"] <= day and r["expiry"] > day
-                                     and (r["underlying"], r["expiry"]) not in keys and r.get("data_checked")
-                                     and r.get("first_traded_bar") and r["first_traded_bar"] > day],
+        "announced_not_yet_traded": [r for r in sel if no_verified_bar_reason(r, day) == "not_yet_traded"],
+        # Aktiva, annonserade serier utan verifierad handelsstapel just den dagen: stoppar ett test som kräver dem
+        "active_without_verified_bar": [{"underlying": r["underlying"], "expiry": r["expiry"], "reason": no_verified_bar_reason(r, day)}
+                                        for r in sel if (r["underlying"], r["expiry"]) not in keys
+                                        and no_verified_bar_reason(r, day) not in (None, "not_yet_traded")],
         "announced_without_checked_data": [r for r in rows if r["announced_on"] and r["announced_on"] <= day < r["expiry"]
                                            and not r.get("data_checked")],
         # Fyra underliggande (EOS, ETC, FIL, TRX) var aktiva t.o.m. 2021-03-26: de sju ensamma är då ett efterhandsurval.
@@ -209,7 +233,7 @@ def main() -> None:
         cols = sorted({k for r in rows for k in r})
         w = csv.DictWriter(fh, fieldnames=cols, lineterminator="\n")
         w.writeheader()
-        w.writerows(rows)
+        w.writerows({k: (json.dumps(v) if isinstance(v, list) else v) for k, v in r.items()} for r in rows)
     (out / "coinm-pit-events.json").write_text(json.dumps(events, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     print(json.dumps(summary(rows), ensure_ascii=False, indent=1))
 
