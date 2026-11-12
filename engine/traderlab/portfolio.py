@@ -27,6 +27,7 @@ class PortfolioResult:
     total_costs: float
     total_funding: float      # betald (+) eller mottagen (-), i andel av startkapitalet
     stops: list = field(default_factory=list)   # likvidationsstopp: (dag, instrument, förlust i andel av kapitalet)
+    gaps: list = field(default_factory=list)    # hållen position där nästa öppning saknas: (dag, instrument, vikt)
 
     @property
     def bar_returns(self) -> pd.Series:
@@ -48,13 +49,18 @@ def funding_per_day(index: pd.DatetimeIndex, funding: dict[str, pd.Series], colu
 
 def run(opens: pd.DataFrame, weights: pd.DataFrame, costs: CostModel,
         funding: dict[str, pd.Series] | None = None, *, highs: pd.DataFrame | None = None,
-        lows: pd.DataFrame | None = None, stop: float | None = None) -> PortfolioResult:
+        lows: pd.DataFrame | None = None, stop: float | None = None, strict_gaps: bool = False) -> PortfolioResult:
     """Kör portföljen. Med `stop` (till exempel 0,05) och dagens high/low gäller det förenklade likvidationsstoppet i
     research/tsmom-protokoll.md: varje position har insatsen I = vikt × kapital vid ombalanseringen (ingångskurs =
     fyllningens öppning). Positionens equity är I plus orealiserat resultat. Den stoppas när equity har fallit till
     `stop` × I, alltså short vid high ≥ (2 − stop) × ingångskurs och long vid low ≤ stop × ingångskurs. Vid stopp förloras
     hela positionens equity (insatsen), positionen stängs och kan inte återhämtas förrän nästa ombalansering.
-    Saknas high eller low för en hållen position ger det ValueError (ogiltig körning), aldrig en tyst lucka."""
+    Saknas high eller low för en hållen position ger det ValueError (ogiltig körning), aldrig en tyst lucka.
+
+    Saknas **nästa öppning** för en hållen position (avnotering eller dataavbrott) värderas den sista stapeln till
+    avkastning 0 och positionen stängs till senast kända öppning. Det är en retroaktiv och för gynnsam fyllning som inte
+    gick att handla till. Fallen samlas alltid i `PortfolioResult.gaps`, och med `strict_gaps=True` avbryts körningen med
+    ValueError i stället (fail-closed), eftersom en lucka aldrig får fyllas med sista kända värde."""
     if stop is not None and (highs is None or lows is None):
         raise ValueError("Likvidationsstopp kräver high och low.")
     opens = opens.sort_index()
@@ -68,6 +74,7 @@ def run(opens: pd.DataFrame, weights: pd.DataFrame, costs: CostModel,
     entry = np.full(len(cols), np.nan)   # ingångskurs vid senaste ombalansering
     n0 = np.zeros(len(cols))             # insats (ingångsnotional) per position
     stops: list = []
+    gaps: list = []
     tgt = target.to_numpy(dtype=float)
     has_row = ~np.all(np.isnan(tgt), axis=1)
     rate = costs.per_side
@@ -103,6 +110,9 @@ def run(opens: pd.DataFrame, weights: pd.DataFrame, costs: CostModel,
         # Avkastning från öppning i till öppning i+1. Saknas nästa öppning används ingen rörelse (stängs i morgon).
         r = np.where(np.isfinite(o[i]) & np.isfinite(o[i + 1]), o[i + 1] / o[i] - 1, 0.0)
         f = float(np.dot(notional, np.nan_to_num(fund[i])))
+        no_next = (notional != 0) & np.isfinite(o[i]) & ~np.isfinite(o[i + 1])
+        if no_next.any():
+            gaps += [(str(idx[i].date()), cols[k], float(notional[k] / max(equity, 1e-12))) for k in np.where(no_next)[0]]
         hit = np.zeros(len(cols), dtype=bool)
         if stop is not None:
             held = (notional != 0) & np.isfinite(o[i])
@@ -129,9 +139,13 @@ def run(opens: pd.DataFrame, weights: pd.DataFrame, costs: CostModel,
             has_row[i:] = False
         eq_out[i] = equity
     sl = slice(0, n - 1)
-    return PortfolioResult(pd.Series(eq_out[sl], index=idx[sl], name="equity"),
+    result = PortfolioResult(pd.Series(eq_out[sl], index=idx[sl], name="equity"),
                            pd.DataFrame(w_out[sl], index=idx[sl], columns=cols),
-                           pd.Series(turn_out[sl], index=idx[sl], name="turnover"), tc, tf, stops)
+                           pd.Series(turn_out[sl], index=idx[sl], name="turnover"), tc, tf, stops, gaps)
+    if strict_gaps and gaps:
+        raise ValueError(f"Nästa öppning saknas för hållen position i {len(gaps)} fall "
+                         f"(avnotering eller oförklarad datalucka), första: {gaps[:5]}")
+    return result
 
 
 def funding_gaps(held: pd.DataFrame, funding: dict[str, pd.Series]) -> dict[str, int]:
