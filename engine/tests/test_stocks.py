@@ -125,3 +125,15 @@ def test_yahoo_404_is_not_cached(tmp_path, monkeypatch):
     assert stocks.load_prices("GONE", tmp_path, missing) is None
     assert stocks.load_prices("GONE", tmp_path, missing) is None
     assert len(calls) == 2 and not (tmp_path / "raw" / "yahoo" / "GONE.json").exists()
+
+
+def test_yahoo_empty_answers_are_never_cached(tmp_path, monkeypatch):
+    import pytest
+    monkeypatch.delenv("TIINGO_API_KEY", raising=False)
+    monkeypatch.delenv("PRICE_SOURCE", raising=False)
+    answers = {"BK": b'{"chart": {"result": null, "error": {"code": "Too Many Requests", "description": "x"}}}',
+               "GONE": b'{"chart": {"result": null, "error": {"code": "Not Found", "description": "x"}}}'}
+    with pytest.raises(stocks.PriceSourceUnavailable):
+        stocks.load_prices("BK", tmp_path, lambda req: answers["BK"])
+    assert stocks.load_prices("GONE", tmp_path, lambda req: answers["GONE"]) is None
+    assert not list((tmp_path / "raw" / "yahoo").glob("*.json"))
