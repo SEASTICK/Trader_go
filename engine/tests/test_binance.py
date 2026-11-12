@@ -88,3 +88,9 @@ def test_bounded_load_never_opens_holdout_archives(tmp_path):
     assert len(binance.load_funding("BTCUSDT", tmp_path, **bounds)) == 1
     with pytest.raises(ValueError, match="UTC"):
         binance.load("um", "BTCUSDT", "4h", tmp_path, start="2024-01-01")
+
+
+def test_markpris_url_skiljer_sig_fran_kline_url():
+    from traderlab.data import binance as b
+    assert b.kline_url("cm-mark", "ADAUSD_201225", "1d", "2020-11").endswith("futures/cm/monthly/markPriceKlines/ADAUSD_201225/1d/ADAUSD_201225-1d-2020-11.zip")
+    assert "/klines/" in b.kline_url("cm", "ADAUSD_201225", "1d", "2020-11")
