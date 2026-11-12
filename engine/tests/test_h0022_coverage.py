@@ -174,3 +174,33 @@ def test_en_off_midnight_stapel_på_en_oväsentlig_dag_ändrar_inte_fullständig
     fut = _shift_day(fut, "2022-01-05", 1)                            # långt före beslutsdagen: ingen krävd dag
     a = hc.audit_coin_cycle(cycle=c, fut=fut, mark=mark, spot=spot, implied_size_median=10.0)
     assert a["data_complete"] and a["open_time_aligned_fill_exit"] and a["off_midnight_bars"] == {}
+
+
+# ------------------------------------------------------------------ Rullning B: kandidattidtabellen (research/rullning-b-kandidat.md)
+def test_rullning_b_kalendern_följer_den_låsta_regeln_beslut_på_förfallsdagen_fyllning_nästa_dag_utträde_sju_dagar_före_förfall():
+    rows = json.loads((REPO / "research" / "universe" / "coinm-pit-series.json").read_text(encoding="utf-8"))["series"]
+    cal = hc.cycle_calendar(rows, "rullning_b")
+    h22 = hc.cycle_calendar(rows, "h0022")
+    assert len(cal) == 14 and [c["expiry"] for c in cal] == [c["expiry"] for c in h22]
+    assert cal[0]["decision"] == "2021-03-26" and cal[0]["fill"] == "2021-03-27"          # samma första cykel som H-0022
+    for prev, c in zip(cal, cal[1:]):
+        assert c["decision"] == prev["expiry"]                                            # beslut på föregående förfallsdag (fredag)
+        assert dt.date.fromisoformat(c["fill"]) == dt.date.fromisoformat(prev["expiry"]) + dt.timedelta(days=1)
+        assert dt.date.fromisoformat(c["expiry"]) - dt.date.fromisoformat(c["exit"]) == dt.timedelta(days=7)
+        assert dt.date.fromisoformat(c["decision"]).weekday() == 4
+        assert c["decision"] <= "2024-08-13"                                              # biasfritt fönster (SOL lanserades 2024-08-14)
+    assert [c["cycle"] for c in cal if c["flat"]] == [2]                                  # 0924-serien 2021 utan daterad annons: platt
+    assert hc.cycle_calendar(rows) == h22                                                  # H-0022:s kalender är oförändrad
+    with pytest.raises(ValueError):
+        hc.cycle_calendar(rows, "annan")
+
+
+def test_incheckad_rullning_b_rapport_är_komplett_och_följer_beslutsregeln():
+    rep = json.loads((REPO / "research" / "coverage" / "rullning-b-datatackning.json").read_text(encoding="utf-8"))
+    assert rep["schedule"] == "rullning_b" and len(rep["audits"]) == 91 and rep["checksum_failures"] == {}
+    assert all(a["data_complete"] and a["open_time_aligned_fill_exit"] and a["off_midnight_bars"] == {} for a in rep["audits"])
+    assert rep["coverage"]["ogiltig_om_handlad"] == []
+    r = rep["coverage"]["minsta_storlek_10000"]
+    # låst beslutsregel: ja om minst 46 mynt-cykler OCH minst 10 av 13 cykler med minst fyra mynt (och 0 OGILTIG)
+    assert r["krav_uppfyllda"] == (r["mynt_cykler_mojliga"] >= 46 and r["cykler_med_minst_4_mynt"] >= 10)
+    assert not any(re.search(r"2025-\d\d|2026-\d\d", k) for k in rep["files"] if k.startswith("data/raw/binance"))
