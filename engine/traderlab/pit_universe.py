@@ -131,10 +131,52 @@ def _status(row: dict, ev: dict | None, o: dict | None) -> str:
     return "announced_not_checked"
 
 
+SOL_LAUNCH = "2024-08-14"     # SOLUSD COIN-M kvartal lanserades (meddelande d823b1df…, 2024-08-08): finns inte i de sju
+
+
+def _tradable(r: dict, day: str) -> bool:
+    """Valbar först när serien både var offentligt meddelad och faktiskt handlades vid beslutsdagen (verifierad observation)."""
+    return bool(r.get("data_checked") and r["status"] == "announced_and_observed" and r["announced_on"]
+                and r["announced_on"] <= day and r.get("first_traded_bar") and r["first_traded_bar"] <= day
+                and r.get("last_traded_bar") and day <= r["last_traded_bar"] and r["expiry"] > day)
+
+
 def universe_at(rows: list[dict], day: str, underlyings: tuple[str, ...] = SEVEN) -> list[dict]:
-    """Serier som hade kunnat väljas vid beslutsdagen `day`: meddelade senast då och inte utgångna."""
-    return [r for r in rows if r["underlying"] in underlyings and r["announced_on"] and r["announced_on"] <= day
-            and r["expiry"] > day and r["status"] not in ("not_listed",)]
+    """Serier som kunde väljas vid beslutsdagen `day`, fail-closed: annonserade OCH redan handlade (första handlade stapel
+    senast `day`), med granskad data, inte uttryckligen ej listade och inte utgångna. Annonserade men ännu ohandlade serier,
+    serier utan granskad data och serier utan daterad annons returneras aldrig."""
+    return [r for r in rows if r["underlying"] in underlyings and _tradable(r, day)]
+
+
+def universe_report(rows: list[dict], day: str, underlyings: tuple[str, ...] = SEVEN) -> dict:
+    """Som universe_at, men visar också vad som hölls utanför och om urvalet är ett efterhandsurval vid `day`."""
+    chosen = universe_at(rows, day, underlyings)
+    keys = {(r["underlying"], r["expiry"]) for r in chosen}
+    sel = [r for r in rows if r["underlying"] in underlyings]
+    return {
+        "day": day, "tradable": chosen,
+        "announced_not_yet_traded": [r for r in sel if r["announced_on"] and r["announced_on"] <= day and r["expiry"] > day
+                                     and (r["underlying"], r["expiry"]) not in keys and r.get("data_checked")
+                                     and r.get("first_traded_bar") and r["first_traded_bar"] > day],
+        "announced_without_checked_data": [r for r in rows if r["announced_on"] and r["announced_on"] <= day < r["expiry"]
+                                           and not r.get("data_checked")],
+        # Fyra underliggande (EOS, ETC, FIL, TRX) var aktiva t.o.m. 2021-03-26: de sju ensamma är då ett efterhandsurval.
+        "hindsight_selection": hindsight_selection(rows, day, underlyings),
+    }
+
+
+def hindsight_selection(rows: list[dict], day: str, underlyings: tuple[str, ...] = SEVEN) -> bool:
+    """Sant om en aktiv COIN-M-kvartalsserie hos en underliggande utanför urvalet fanns vid `day` (förutom BTC och ETH, som
+    utesluts i förväg och inte av överlevnad). Gäller de fyra som försvann och SOL från lanseringen."""
+    dropped = any(r["underlying"] in VANISHED and r["underlying"] not in underlyings and r["announced_on"]
+                  and r["announced_on"] <= day < r["expiry"] for r in rows)
+    return dropped or (day >= SOL_LAUNCH and "SOL" not in underlyings)
+
+
+def hindsight_free_window(rows: list[dict]) -> tuple[str, str]:
+    """Första beslutsdag utan efterhandsurval (efter sista aktiva förfall hos de fyra) och sista dag före SOL:s lansering."""
+    last_vanished = max(r["expiry"] for r in rows if r["underlying"] in VANISHED and r["announced_on"])
+    return last_vanished, SOL_LAUNCH
 
 
 def summary(rows: list[dict]) -> dict:
@@ -159,6 +201,7 @@ def main() -> None:
     out.mkdir(parents=True, exist_ok=True)
     (out / "coinm-pit-series.json").write_text(json.dumps({
         "kind": "coinm-pit-universe", "cutoff": CUTOFF, "summary": summary(rows),
+        "hindsight_free_window": list(hindsight_free_window(rows)),
         "note": "Kontraktsstorlek är ett antagande (generell regel). Inget 2025+ och inget prisurval.", "series": rows},
         ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
     import csv

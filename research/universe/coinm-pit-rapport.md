@@ -13,9 +13,14 @@ avkastning och ingen basis har räknats eller använts för urval.
 | `research/coverage/basis-sources-ann1-*.json`, `…pit1-*.json` | Rådata: de 1 378 titlar i Binance-katalogerna 48, 49 och 161 som matchade ett ordfilter (COIN-M, quarterly, delivery, delist m.fl.) och hela texten i 24 listningsmeddelanden |
 | `engine/traderlab/pit_universe.py`, `pit_observed.py` | Koden som bygger tabellen (`python -m traderlab.pit_universe`), med tester i `engine/tests/test_pit_universe.py` |
 
-`universe_at(rader, dag)` ger de serier som hade kunnat väljas en given beslutsdag: meddelade senast den dagen och inte
-utgångna. Exempel (bara de sju, bara daterade serier): 2020-08-15 → 2 serier (ADA, LINK); 2020-11-10 → 8 (ADA, BNB, DOT,
-LINK); 2020-12-10 → 14 (alla sju, två serier var); 2022-06-01 och 2024-12-01 → 14.
+`universe_at(rader, dag)` är **fail-closed**. En serie är valbar en beslutsdag först när den både var offentligt meddelad och
+faktiskt handlades: daterad annons ≤ dagen, första handlade stapel ≤ dagen, dagen ≤ sista handlade stapel, förfall > dagen,
+granskad data finns och serien är inte uttryckligen `not_listed`. Annonserade men ännu ohandlade serier (119 av de 135
+har första handel efter annonsen), serier utan hämtad data och serier utan daterad annons returneras aldrig.
+`universe_report(rader, dag)` visar dessutom vad som hölls utanför och om urvalet är ett efterhandsurval den dagen.
+Exempel (de sju, bara valbara serier): 2020-07-25 → 0 (ADA/LINK 0925 är annonserade men datan börjar först 2020-08-01, så de
+utesluts konservativt); 2020-08-15 → 2 (ADA, LINK); 2020-11-10 → 8; 2020-12-01 → 12 (BCH 1225/0326 är annonserade 2020-11-30
+men första handel är 2020-12-03, så de är inte med förrän då); 2020-12-03 → 14; 2021-03-26 → 7; 2024-12-01 → 14.
 
 ## Daterade källor (primärkälla: Binance-meddelanden)
 
@@ -52,14 +57,22 @@ listningen sker efter att den föregående serien löpt ut.
   COIN-M-avnoteringar som finns gäller terminer utan förfall (LUNA, CRV, GALA, ZIL, VET, KNC, ICX, XTZ, ROSE, APE). Det
   gäller titlar i tre kataloger och är inte ett bevis för att inget annat hände.
 
-## Överlevnadsbias: de fyra som försvann
+## Överlevnadsbias: de sju är ett efterhandsurval före 2021-03-26
 
 EOS, ETC, FIL och TRX fick 1225- och 0326-serier (annonser 2020-11-30 och 2020-12-07) men **listades uttryckligen inte**
-för 0625: meddelandet 2020-12-25 anger "ETC, TRX, EOS and FIL quarterly 0625 contracts will not be listed". Fyra av elva
-underliggande försvann alltså efter ett halvår. De är med i tabellen (`in_target_seven` = falskt, `data_checked` = falskt,
-ingen data hämtad). Ett universum som bara innehåller de sju, vid en beslutsdag före 2020-12-25, är därför valt i
-efterhand. Ett framtida test måste antingen börja 2020-12-25 eller senare, eller inkludera de fyra fram till 2021-03-26
-(med data som ännu inte hämtats).
+för 0625: meddelandet 2020-12-25 anger "ETC, TRX, EOS and FIL quarterly 0625 contracts will not be listed". De hade
+alltså aktiva serier fram till sista förfallet **2021-03-26**. Så länge de var aktiva är de sju ensamma ett efterhandsurval
+(valt bland dem som fortsatte), inte ett punkt-i-tid-universum. Den tidigare gränsen 2020-12-25 i en tidigare version av
+rapporten var för tidig och är rättad. De fyra ligger i tabellen (`in_target_seven` = falskt, `data_checked` = falskt, ingen
+data hämtad) och `universe_report` flaggar `hindsight_selection` = sant för varje dag då en av dem hade en aktiv serie.
+
+Ytterligare ett urval gäller i andra änden: SOLUSD COIN-M-kvartal lanserades 2024-08-14 (meddelande 2024-08-08) och ingår inte
+i de sju. BTC och ETH är uteslutna i förväg (de är inte nya underliggande), inte på grund av överlevnad.
+
+**Biasfritt fönster för de sju: beslutsdag från och med 2021-03-26 till och med 2024-08-13** (`hindsight_free_window` i
+koden). Utanför det fönstret krävs antingen ett komplett universum (de fyra hämtade och inkluderade före 2021-03-26, SOL
+inkluderad från 2024-08-14) eller att testet stoppas. I fönstret listar alla funna meddelanden (2020-12-25 till 2024-06-19) exakt BTC, ETH och de sju, så ingen annan altcoin-kandidat
+är bortvald i dem. Meddelandet för 0924-serien (2021) saknas, så för den serien går det inte att kontrollera.
 
 ## Kontraktsstorlek: antagande, inte fakta
 
@@ -72,9 +85,9 @@ Det är ett **uttryckligt antagande**, inte verifierat för respektive kontrakt 
 
 | Kategori | Serier | Följd för ett framtida test |
 |---|---|---|
-| Kan väljas vid beslutsdagen | 128 serier med daterad annons och staplar | Ja, om beslutsdagen ≥ annonsdatum och universumet byggs med `universe_at` |
+| Kan väljas vid beslutsdagen | 128 serier med daterad annons och staplar, från och med sin första handlade stapel | Ja, om universumet byggs med `universe_at` och beslutsdagen ligger i det biasfria fönstret 2021-03-26 till 2024-08-13 |
 | Osäkra | 7 serier (förfall 2021-09-24) utan daterad annons; alla 135 på grund av antagen kontraktsstorlek; 14 serier med augustiluckan; ADA/LINK 0925 vänstercensurerade; 14 högercensurerade serier | Kräver extra belägg eller uttryckligt undantag |
-| Måste stoppa testet (fail-closed) | Beslutsdag före 2020-12-25 om EOS/ETC/FIL/TRX utelämnas; en serie utan daterad annons; en serie vars kontraktsstorlek ändrats; en lucka i markpris eller kurs som inte kan lagas | OGILTIG, inte MORE_RESEARCH |
+| Måste stoppa testet (fail-closed) | Beslutsdag före 2021-03-26 om EOS/ETC/FIL/TRX utelämnas, eller från 2024-08-14 om SOL utelämnas; en serie som är annonserad men ännu inte handlad; en serie utan daterad annons; en serie vars kontraktsstorlek ändrats; en lucka i markpris eller kurs som inte kan lagas | OGILTIG, inte MORE_RESEARCH |
 
 ## Kvarvarande luckor (avgränsade)
 
@@ -83,8 +96,9 @@ Det är ett **uttryckligt antagande**, inte verifierat för respektive kontrakt 
 3. Marginaltabeller: meddelandena 2020-12-22 (FIL, ETC, TRX, EOS) och 2023-05-31 (flera COIN-M) innehåller tabeller för vissa
    kontrakt. De är en möjlig källa för blockerare 3 i `h0022-forutsattningar.md` men ingår inte här.
 4. Avräkningsfönstret (timmesmedel i guiden 2020 mot 30 minuter i nuvarande FAQ) är fortfarande oklart.
-5. EOS/ETC/FIL/TRX-data (om testet ska inkludera dem).
+5. EOS/ETC/FIL/TRX-data (krävs för beslutsdagar före 2021-03-26) och SOL-data (krävs från 2024-08-14).
 
 ## Status
 
-Ingen hypotesregistrering, inget backtest, inga order. `research/registry.md` är oförändrad.
+Ingen hypotesregistrering, inget backtest, inga order. `research/registry.md` är oförändrad. Rapporten gäller de sju; den är inte
+ett komplett COIN-M-universum.

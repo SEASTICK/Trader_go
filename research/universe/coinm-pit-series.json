@@ -17,6 +17,10 @@
    "XRP": "2020-11-30"
   }
  },
+ "hindsight_free_window": [
+  "2021-03-26",
+  "2024-08-14"
+ ],
  "note": "Kontraktsstorlek är ett antagande (generell regel). Inget 2025+ och inget prisurval.",
  "series": [
   {

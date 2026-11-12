@@ -1,7 +1,8 @@
 import datetime as dt
 
 from traderlab.pit_observed import expiry_of, is_last_friday_of_quarter_month
-from traderlab.pit_universe import SEVEN, build_series, parse_event, resolve_expiry, universe_at
+from traderlab.pit_universe import (SEVEN, build_series, hindsight_free_window, hindsight_selection, parse_event, resolve_expiry,
+                                    universe_at, universe_report)
 
 
 def test_titel_med_flera_underliggande_och_två_serier():
@@ -37,10 +38,45 @@ def test_förfall_sista_fredagen_och_uppslag():
     assert resolve_expiry("0326", "2020-09-24") == dt.date(2021, 3, 26)
 
 
-def test_universum_vid_tidpunkt_använder_bara_redan_meddelade_serier():
-    ev = [{"code": "a", "released": "2020-11-03", "title": "t", "underlyings": ["BNB"], "series": [{"mmdd": "1225", "expiry": "2020-12-25"}], "not_listed": []},
-          {"code": "b", "released": "2020-12-25", "title": "t", "underlyings": ["BNB"], "series": [{"mmdd": "0625", "expiry": "2021-06-25"}], "not_listed": ["EOS"]}]
-    rows = build_series(ev, [])
-    assert [r["expiry"] for r in universe_at(rows, "2020-12-01", SEVEN)] == ["2020-12-25"]    # 0625 var inte meddelad ännu
-    assert [r["expiry"] for r in universe_at(rows, "2020-12-26", SEVEN)] == ["2021-06-25"]    # 1225 hade löpt ut
-    assert any(r["underlying"] == "EOS" and r["status"] == "not_listed" for r in build_series(ev, []))
+def _obs(u, expiry, first, last, bars=50):
+    return {"contract": f"{u}USD_{expiry[2:4]}{expiry[5:7]}{expiry[8:]}", "underlying": u, "expiry": expiry, "ordinary_expiry_rule": True,
+            "first_bar": first, "last_bar": last, "first_traded_bar": first, "last_traded_bar": last, "bars": bars,
+            "missing_days_between": 0, "zero_volume_bars": 0, "left_censored": False, "right_censored": False,
+            "ended_before_expiry": False, "bars_after_expiry": 0}
+
+
+def _events():
+    return [{"code": "a", "released": "2020-11-30", "title": "t", "underlyings": ["BCH", "EOS"], "series": [{"mmdd": "1225", "expiry": "2020-12-25"}, {"mmdd": "0326", "expiry": "2021-03-26"}], "not_listed": []},
+            {"code": "b", "released": "2020-12-25", "title": "t", "underlyings": ["BCH"], "series": [{"mmdd": "0625", "expiry": "2021-06-25"}], "not_listed": ["EOS"]}]
+
+
+def test_annonserad_men_ännu_ohandlad_serie_är_inte_valbar():
+    rows = build_series(_events(), [_obs("BCH", "2020-12-25", "2020-12-03", "2020-12-25"), _obs("BCH", "2021-03-26", "2020-12-03", "2021-03-26")])
+    assert universe_at(rows, "2020-12-01", SEVEN) == []                       # annonserad 2020-11-30, första handel 2020-12-03
+    assert {r["expiry"] for r in universe_at(rows, "2020-12-03", SEVEN)} == {"2020-12-25", "2021-03-26"}
+    rep = universe_report(rows, "2020-12-01")
+    assert len(rep["announced_not_yet_traded"]) == 2 and rep["tradable"] == []
+
+
+def test_serie_utan_granskad_data_eller_not_listed_returneras_aldrig():
+    rows = build_series(_events(), [])                    # ingen observerad data alls
+    assert universe_at(rows, "2020-12-10", ("BCH", "EOS", "ETC")) == []
+    assert any(r["underlying"] == "EOS" and r["status"] == "not_listed" for r in rows)
+    rows = build_series(_events(), [_obs("BCH", "2021-06-25", "2020-12-26", "2021-06-25")])
+    assert [r["underlying"] for r in universe_at(rows, "2021-01-05", ("BCH", "EOS"))] == ["BCH"]
+
+
+def test_utgången_serie_och_dag_efter_sista_handlade_stapel_är_inte_valbara():
+    rows = build_series(_events(), [_obs("BCH", "2020-12-25", "2020-12-03", "2020-12-25")])
+    assert universe_at(rows, "2020-12-25", SEVEN) == []                       # förfallodagen: serien är slut
+    assert universe_at(rows, "2020-12-24", SEVEN) != []
+
+
+def test_överlevnadsbias_sju_ensamma_är_efterhandsurval_till_sista_förfallet_hos_de_fyra():
+    rows = build_series(_events(), [_obs("BCH", "2021-06-25", "2020-12-26", "2021-06-25")])
+    assert hindsight_selection(rows, "2020-12-10", SEVEN)                     # EOS har 1225/0326-serier aktiva
+    assert hindsight_selection(rows, "2021-03-25", SEVEN)
+    assert not hindsight_selection(rows, "2021-03-26", SEVEN)                 # EOS 0326 har löpt ut
+    assert hindsight_free_window(rows) == ("2021-03-26", "2024-08-14")
+    assert hindsight_selection(rows, "2024-08-14", SEVEN)                     # SOL har lanserats och saknas i urvalet
+    assert not hindsight_selection(rows, "2024-08-14", SEVEN + ("SOL",))
