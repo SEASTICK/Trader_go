@@ -124,3 +124,19 @@ def test_report_tables_are_built_from_the_report_files():
                           "bitmex": {"reachable": False, "error": "HTTPError: 403"}}}]
     st = r.sources_table(reps)
     assert "| bitmex | nej | HTTPError: 403 |" in st and "0 dagsstaplar för utgånget kontrakt" in st
+
+
+def test_binance_docs_returns_excerpts_and_reports_unreadable_pages():
+    import urllib.error
+
+    def opener(url):
+        if "binance-docs" in url:
+            return b"<html><script>var a=1;</script><p>The contractSize is 100 for BTC. Liquidation uses the mark price.</p></html>"
+        if "3a55" in url:
+            return json.dumps({"data": {"body": "<p>Unrealized PnL of a short in coin terms</p>"}}).encode()
+        raise urllib.error.HTTPError(url, 451, "restricted", {}, None)
+    r = b.binance_docs(opener, window=30)
+    assert r["delivery_api_docs"]["readable"] and "contractSize" in r["delivery_api_docs"]["excerpts"]
+    assert "var a=1" not in json.dumps(r["delivery_api_docs"])
+    assert r["faq_pnl"]["readable"] and "PnL" in r["faq_pnl"]["excerpts"]
+    assert r["faq_margin_liquidation"]["readable"] is False and "451" in r["faq_margin_liquidation"]["error"]

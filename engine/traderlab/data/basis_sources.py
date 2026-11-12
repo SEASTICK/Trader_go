@@ -296,6 +296,45 @@ def binance_api(opener=default_opener) -> dict:
     return {"gap_fill_probe": out}
 
 
+DOC_PAGES = {
+    "delivery_api_docs": "https://binance-docs.github.io/apidocs/delivery/en/",
+    "faq_pnl": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=3a55a23768cb416fb404f06ffedde4b2",
+    "faq_margin_liquidation": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=be2c7d9d95b04a7e8044ed02dd7dfe5c",
+}
+DOC_KEYWORDS = ("contractSize", "deliveryDate", "CURRENT_QUARTER", "delist", "liquidat", "maintenance margin", "mark price",
+                "unrealized", "PnL", "Pnl", "cross margin", "isolated")
+
+
+def _strip(html: str) -> str:
+    text = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", html, flags=re.S | re.I)
+    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", text))
+
+
+def binance_docs(opener=default_opener, window: int = 220, max_hits: int = 3) -> dict:
+    """Hämtar Binances egna dokumentationssidor och sparar korta utdrag runt nyckelorden, så att faktapåståenden kan
+    beläggas med primär källa. Svarar en sida med fel (till exempel 451) redovisas det, och inget gissas."""
+    out = {}
+    for name, url in DOC_PAGES.items():
+        try:
+            raw = opener(url).decode("utf-8", "replace")
+        except Exception as exc:   # noqa: BLE001
+            out[name] = {"url": url, "readable": False, "error": f"{type(exc).__name__}: {str(exc)[:100]}"}
+            continue
+        if raw.lstrip().startswith("{"):
+            try:
+                raw = json.dumps(json.loads(raw).get("data") or {}, ensure_ascii=False)
+            except ValueError:
+                pass
+        text = _strip(raw)
+        hits = {}
+        for kw in DOC_KEYWORDS:
+            idxs = [m.start() for m in re.finditer(re.escape(kw), text)][:max_hits]
+            if idxs:
+                hits[kw] = [text[max(0, i - window):i + window].strip() for i in idxs]
+        out[name] = {"url": url, "readable": True, "characters": len(text), "excerpts": hits}
+    return out
+
+
 # ------------------------------------------------------------------ Bybit, Bitstamp, FRED, OKX
 
 def bybit(opener=default_opener) -> dict:
@@ -331,7 +370,7 @@ def okx(opener=default_opener) -> dict:
     return {"live_dated_contracts_btc_usd": len(live), "expired_contract_candles": old if isinstance(old, str) else len(old)}
 
 
-SOURCES = {"binance": binance, "binance_api": binance_api, "deribit": deribit, "bitmex_api": bitmex_api, "bitmex_files": lambda opener=None: bitmex_files(),
+SOURCES = {"binance": binance, "binance_api": binance_api, "binance_docs": binance_docs, "deribit": deribit, "bitmex_api": bitmex_api, "bitmex_files": lambda opener=None: bitmex_files(),
            "bybit": bybit, "bitstamp": bitstamp, "fred": fred, "fred_text": fred_text, "okx": okx}
 
 
