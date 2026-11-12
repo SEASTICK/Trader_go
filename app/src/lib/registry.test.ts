@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { groupRegistry, parseRegistry } from "./registry";
+import { groupRegistry, missingPrices, parseRegistry } from "./registry";
 
 const MD = `# Register
 
@@ -33,10 +33,12 @@ describe("groupRegistry", () => {
 | H-0014 | 2026-11-02 | e | Resultat. Spår C. | 11 mynt | – | t −1,43 (krav 2,71). | REJECT |
 | H-0016 | 2026-11-04 | f | Fas 3, spår B. Ny idé. | BTC | – | | |
 | H-0013 | 2026-11-03 | g | Fas 2, spår A med skärpta krav. Spelbok. | BTC | – | Alla fem krav fallerade. Netto −10,86 %, t −1,8023 mot 2,67; Sharpe −0,77 | REJECT |
+| H-0021 | 2026-11-12 | h | Spår A. Investeringsidé. Mer. | USA | – | | |
+| H-0021 | 2026-11-12 | i | OGILTIG (datakravet). Spår A. | USA | – | Genomsnittlig vikt utan kurs 14,8 % (gräns 10 %). För information: t 0,18 (krav 2,81). | OGILTIG |
 `;
   const hs = groupRegistry(parseRegistry(md));
   it("slår ihop rader per id och tar senaste giltiga beslut", () => {
-    expect(hs.map((h) => h.id)).toEqual(["H-0003", "H-0014", "H-0016", "H-0013"]);
+    expect(hs.map((h) => h.id)).toEqual(["H-0003", "H-0014", "H-0016", "H-0013", "H-0021"]);
     const h3 = hs[0];
     expect(h3.decision).toBe("REJECT");
     expect(h3.t).toBe(2.19); expect(h3.krav).toBe(2.33);
@@ -49,5 +51,12 @@ describe("groupRegistry", () => {
     expect(hs[1].t).toBe(-1.43);
     expect(hs[2].track).toBe("B"); expect(hs[2].decision).toBeNull();
     expect(hs[3].t).toBe(-1.8023); expect(hs[3].krav).toBe(2.67); expect(hs[3].title).toBe("Spelbok");
+  });
+  it("ogiltig körning utan beslut visas som ogiltig, inte som avgjord, och senare beslut vinner", () => {
+    const h21 = hs[4];
+    expect(h21.invalid).toBe(true); expect(h21.decision).toBeNull(); expect(h21.t).toBeNull();
+    expect(missingPrices(h21.result)).toEqual({ share: 14.8, limit: 10 });
+    expect(hs[0].invalid).toBe(false);   // H-0003: OGILTIG och sedan REJECT
+    expect(hs[2].invalid).toBe(false);   // aldrig körd
   });
 });

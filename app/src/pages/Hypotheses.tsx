@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react";
 import registryMd from "../../../research/registry.md?raw";
 import { Segmented, StatusDot } from "../components/ui";
-import { groupRegistry, parseRegistry } from "../lib/registry";
+import { groupRegistry, missingPrices, parseRegistry } from "../lib/registry";
 import { tKrav } from "../lib/stats";
 
 const f = (n: number) => n.toFixed(2).replace(".", ",");
 const reg = parseRegistry(registryMd);
-const FILTERS = ["Alla", "Avvisade", "Pågår", "Vidare"] as const;
+const FILTERS = ["Alla", "Avvisade", "Pågår", "Ogiltiga", "Vidare"] as const;
 type Filter = (typeof FILTERS)[number];
 const MÅL_NAMN: Record<string, string> = { A: "Slå marknaden", B: "Lägre risk", C: "Marknadsneutral" };
 
@@ -17,7 +17,8 @@ export default function Hypotheses() {
   const [open, setOpen] = useState<string | null>(null);
   const [n, setN] = useState(Math.max(1, reg.attempts));
   const shown = all.filter((h) => filter === "Alla" ? true : filter === "Avvisade" ? h.decision === "REJECT"
-    : filter === "Pågår" ? !h.decision : h.decision === "MORE_RESEARCH" || h.decision === "READY_FOR_PAPER");
+    : filter === "Pågår" ? !h.decision && !h.invalid : filter === "Ogiltiga" ? h.invalid
+    : h.decision === "MORE_RESEARCH" || h.decision === "READY_FOR_PAPER");
   const avvisade = all.filter((h) => h.decision === "REJECT").length;
   const vidare = all.filter((h) => h.decision === "MORE_RESEARCH" || h.decision === "READY_FOR_PAPER").length;
   return (
@@ -39,13 +40,21 @@ export default function Hypotheses() {
               <span className="hyp-title">{h.title}<span className="muted"> · {h.market}</span></span>
               <span className="hyp-goal" title={MÅL_NAMN[h.track]}>{h.track}</span>
               <span className="hyp-t">{h.t === null ? "" : <>t {f(h.t)} <i>/ {f(h.krav ?? 0)}</i></>}</span>
-              <span className="hyp-dec">{h.decision ? <StatusDot status={h.decision} /> : <span className="muted">Pågår</span>}</span>
+              <span className="hyp-dec">{h.decision ? <StatusDot status={h.decision} /> : h.invalid ? <StatusDot status="OGILTIG" /> : <span className="muted">Pågår</span>}</span>
             </button>
             {open === h.id && (
               <div className="hyp-detail">
                 <div><span className="k">Hypotes, registrerad {h.date}</span><p>{h.statement}</p></div>
                 {h.criteria && h.criteria !== "Se registreringen" && <div><span className="k">Krav, bestämda i förväg</span><p>{h.criteria}</p></div>}
-                <div><span className="k">Resultat</span><p>{h.result ?? "Inte kört än."}</p></div>
+                {h.invalid && (() => {
+                  const m = missingPrices(h.result);
+                  return (
+                    <div><span className="k">Ogiltig körning, inget beslut</span>
+                      <p>Datakravet uppfylls inte{m ? <>: <b>{String(m.share).replace(".", ",")} % av vikten saknar kurs</b>, gränsen i förväg är {m.limit} %</> : ""}.
+                        Siffrorna nedan är bara diagnostik och räknas inte som ett resultat.</p></div>
+                  );
+                })()}
+                <div><span className="k">{h.invalid ? "Registrets text (diagnostik)" : "Resultat"}</span><p>{(h.result ?? "Inte kört än.").replace(/\*\*/g, "")}</p></div>
                 {h.runs > 1 && <p className="muted">{h.runs} körningar i registret. Alla finns kvar, även ogiltiga.</p>}
               </div>
             )}
