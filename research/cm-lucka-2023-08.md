@@ -73,10 +73,16 @@ Tabellerna skapas av `python -m traderlab.data.gapcheck` (från `engine/`, hämt
 
 - Varje stapel i den sammanslagna serien bär `source` = `monthly` eller `daily` (`traderlab.data.gapcheck.combined`).
   Månadsfilen vinner alltid där den har en stapel, och en dagsstapel läggs bara in för en dag som månadsfilen saknar.
+- **`combined()` är fail-closed.** Varje dagsstapel verifieras på nytt vid sammanslagningen och annars kastas
+  `UnverifiedGapFill` (ingen serie returneras): (a) den sparade `.CHECKSUM` måste finnas och stämma, (b) filens SHA-256 måste
+  stämma med ett manifest över verifierade filer (`load_manifest`, byggt ur den incheckade rapportfilen, så att en fil som
+  bytts ut tillsammans med sin checksumma också fångas), (c) tidsstämpel, OHLC och volym måste vara giltiga, och
+  (d) grannkontrollen måste vara uppfylld: varje granne som månadsfilen har måste finnas som verifierad dagsfil och vara exakt
+  lika med månadsfilen. En gapdag utan dagsfil förblir en lucka. Testat för varje felfall.
 - Varje dagsfil är hämtad från `https://data.binance.vision/data/<marknad>/daily/klines/<symbol>/1d/<symbol>-1d-<datum>.zip`,
   verifierad mot `<fil>.CHECKSUM` och sparad under `data/raw/binance/cm-daily/` (COIN-M) och `data/raw/binance/spot-daily/` (spot).
   URL, SHA-256 och storlek per fil finns i rapportfilen. Månadsfilerna är noterade i `data/MANIFEST.md`.
-- En fil utan giltig checksumma sparas och används aldrig (testat).
+- En fil utan giltig checksumma sparas och används aldrig vid hämtningen, och vid sammanslagningen verifieras varje fil på nytt (testat).
 
 ## Förslag till fail-closed-regel i ett framtida protokoll
 

@@ -109,22 +109,80 @@ def _check_symbol(market: str, sym: str, monthly: pd.DataFrame, data_dir: Path, 
     return rows
 
 
-def combined(monthly: pd.DataFrame, data_dir: Path, market: str, sym: str) -> pd.DataFrame:
-    """Månadsstaplar plus verifierade dagsstaplar för gapdagarna, med proveniens per stapel (`source`).
-    En gapdag utan verifierad dagsfil förblir en lucka: inget fylls."""
+class UnverifiedGapFill(ValueError):
+    """En dagsstapel kan inte verifieras (checksumma, manifest, tidsstämpel/OHLC/volym eller grannkontroll). Sammanslagningen stoppas."""
+
+
+def manifest_from_report(rep: dict) -> dict[str, str]:
+    """{filnamn: sha256} för alla verifierade dagsfiler i en rapport (cm och spot). Rapporten är incheckad i Git och fungerar
+    därmed som en förtroendeankare som en senare körning kan jämföra de lokala filerna mot."""
+    out = {}
+    for group in ("cm", "spot"):
+        for days in rep.get(group, {}).values():
+            for day, r in days.items():
+                meta = r.get("daily", {}) if isinstance(r, dict) and not day.startswith("_") else {}
+                if meta.get("status") == "ok":
+                    out[meta["url"].rsplit("/", 1)[1]] = meta["sha256"]
+    return out
+
+
+def load_manifest(repo: Path) -> dict[str, str]:
+    return manifest_from_report(json.loads((repo / OUT / "cm-gap-2023-08.json").read_text(encoding="utf-8")))
+
+
+def _verified_bar(path: Path, day: str, manifest: dict[str, str]) -> pd.DataFrame:
+    """Läser en lokal dagsfil bara efter att den verifierats på nytt. Annars UnverifiedGapFill."""
+    checksum_path = path.with_name(path.name + ".CHECKSUM")
+    if not checksum_path.exists():
+        raise UnverifiedGapFill(f"{path.name}: sparad checksumma saknas")
+    raw = path.read_bytes()
+    try:
+        bn.verify_checksum(raw, checksum_path.read_bytes())
+    except ValueError as exc:
+        raise UnverifiedGapFill(f"{path.name}: {exc}") from exc
+    expected = manifest.get(path.name)
+    if expected is None:
+        raise UnverifiedGapFill(f"{path.name}: finns inte i manifestet över verifierade filer")
+    if hashlib.sha256(raw).hexdigest() != expected:
+        raise UnverifiedGapFill(f"{path.name}: SHA-256 stämmer inte med manifestet")
+    df = read_daily(path)
+    check = sanity(day, df)
+    if not check["ok"]:
+        raise UnverifiedGapFill(f"{path.name}: {check['problem'] or 'ogiltig stapel'}")
+    return df
+
+
+def combined(monthly: pd.DataFrame, data_dir: Path, market: str, sym: str, manifest: dict[str, str]) -> pd.DataFrame:
+    """Månadsstaplar plus **verifierade** dagsstaplar för gapdagarna, med proveniens per stapel (`source`).
+
+    Fail-closed. En dagsstapel läggs bara in om (a) dess sparade checksumma stämmer, (b) dess SHA-256 stämmer med
+    `manifest`, (c) tidsstämpel, OHLC och volym är giltiga, och (d) grannkontrollen är uppfylld: varje grannedag som
+    månadsfilen har måste finnas som verifierad dagsfil och vara exakt lika med månadsfilen. Annars kastas
+    `UnverifiedGapFill`, och ingen serie returneras. En gapdag utan dagsfil förblir en lucka (inget fylls)."""
     sub = "cm-daily" if market == "cm" else "spot-daily"
+    folder = data_dir / "raw" / "binance" / sub / sym / "1d"
+
+    def path(day: str) -> Path:
+        return folder / f"{sym}-1d-{day}.zip"
+
     out = monthly.copy()
     out["source"] = "monthly"
-    for day in GAP_DAYS:
-        ts = pd.Timestamp(day, tz="UTC")
-        path = data_dir / "raw" / "binance" / sub / sym / "1d" / f"{sym}-1d-{day}.zip"
-        if ts in out.index or not path.exists():
+    todo = [d for d in GAP_DAYS if pd.Timestamp(d, tz="UTC") not in monthly.index and path(d).exists()]
+    if not todo:
+        return out
+    for nd in NEIGHBOR_DAYS:   # grannkontrollen gäller så snart något ska fyllas
+        if pd.Timestamp(nd, tz="UTC") not in monthly.index:
             continue
-        df = read_daily(path)
-        if len(df) == 1 and df.index[0] == ts:
-            df = df.copy()
-            df["source"] = "daily"
-            out = pd.concat([out, df])
+        if not path(nd).exists():
+            raise UnverifiedGapFill(f"{path(nd).name}: grannedagens dagsfil saknas, så dagsarkivet kan inte jämföras med månadsfilen")
+        cmp = compare_with_monthly(_verified_bar(path(nd), nd, manifest), monthly, nd)
+        if cmp is None or not cmp["equal"]:
+            raise UnverifiedGapFill(f"{path(nd).name}: dagsfilen är inte lika med månadsfilen ({cmp['differences'] if cmp else 'ingen jämförelse'})")
+    for day in todo:
+        df = _verified_bar(path(day), day, manifest).copy()
+        df["source"] = "daily"
+        df["verified_sha256"] = manifest[path(day).name]
+        out = pd.concat([out, df])
     return out.sort_index()
 
 
@@ -154,8 +212,9 @@ def run(data_dir: Path, opener=default_opener, workers: int = 6) -> dict:
     with ThreadPoolExecutor(workers) as ex:
         cm_res = dict(zip(cm, ex.map(lambda s: _check_symbol("cm", s, cm[s], data_dir, opener, None), cm)))
         sp_res = dict(zip(SPOT_PAIRS, ex.map(lambda s: _check_symbol("spot", s, spot_monthly[s], data_dir, opener, None), SPOT_PAIRS)))
+    manifest = manifest_from_report({"cm": cm_res, "spot": sp_res})
     for sym, df in cm.items():   # serien efter att verifierade dagsstaplar lagts in, med proveniens
-        c = combined(df, data_dir, "cm", sym)
+        c = combined(df, data_dir, "cm", sym, manifest)
         exp = pd.Timestamp("20" + sym.rsplit("_", 1)[1], tz="UTC")
         span = c[c.index <= exp]
         full = pd.date_range(span.index[0], span.index[-1], freq="1D", tz="UTC")
