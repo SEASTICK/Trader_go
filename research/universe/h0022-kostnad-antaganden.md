@@ -20,7 +20,7 @@ Den största begränsningen är inte kostnaden utan statistisk styrka: det biasf
 | Spread/glidning | Ingen källa: bara dagsstaplar finns, ingen orderbokshistorik | Hela posten | **Antagande: 5 bp per ben** (spot-köp, termin-sälj, terminsutträde och spot-sälj) och **stresstest 2,5×** (12,5 bp per ben). Märkt som antagande, inte som mätning |
 | Marginal och likvidation | Marginalformel och exempel (FAQ), kvartalstabeller 2020-12-22 (EOS, ETC, FIL, TRX), 2021-04-05 (BTC, ETH), 2021-04-12 (BNB), 2022-12-29 (maxhävstång för alla sju: 20x → 11x), 2023-05-31 (ADA m.fl.). Högsta underhållsnivåer i tabellerna: 25 % (altcoin) och 50 % (BTC) | Underhållsmarginalen höjdes stegvis 2021-02 till 2021-05 för alla sju (meddelanden 2021-02-22, 03-01); stegen står bara på en Binance-sida som uppdaterades löpande och är inte arkiverad | Hävstång högst 1x (full myntmarginal). Underhållsnivå antas **50 %** för alla serier och perioder. Stopp om marginalkvoten når **80 %** (Binance rekommenderar under 80–90 %) |
 | Markpris | Orealiserad PnL på markpris, realiserad på senaste pris (FAQ). Markprisfiler (dagsstaplar) finns i arkivet för alla 135 serier (listningskontroll), och ett prov (ADAUSD_201225, 2020-11) laddades ner med giltig checksumma och rimliga staplar | Innehållet är bara provat på en serie; historisk markprisformel är inte belagd | Marginalkontrollen använder dagens högsta markpris; en saknad markprisdag ger OGILTIG |
-| Avräkning | Förfall sista fredagen 08:00 UTC; avräkningskurs ur indexpris | Fönstret: timmesmedel (guide 2020) mot 30 minuter (nuvarande FAQ) | Undvik helt: **förutbestämt utträde 7 kalenderdagar före förfall** (se nedan) |
+| Avräkning | Förfall sista fredagen 08:00 UTC; avräkningskurs ur indexpris | Fönstret: timmesmedel (guide 2020) mot 30 minuter (nuvarande FAQ) | Undvik helt: **förutbestämt utträde vid öppningen kalenderdagen sju dagar före förfall** (se nedan) |
 | Likviditet | Dagsstaplar: närmaste kontrakt, median 0,95–2,9 miljoner USD/dag och P10 78 000–477 000 USD/dag (se tabell) | Ingen orderbok, ingen djupmätning | Positionen får vara högst 2 % av seriens medianvolym över de senaste 20 dagarna, mätt till och med beslutsdagen |
 | Finansieringsränta | Daterade terminer har ingen | – | Ingen |
 | ADL, försäkringsfond, motpartsrisk | Inte modellerade | Hela posten | Redovisas som utanför modellen |
@@ -42,7 +42,7 @@ Serieräkningen är de 135 serier med data före 2025 från `coinm-pit-series.js
 ## Modellen (låst som förslag)
 
 Specifikationen finns som körbar kod med syntetiska tester i `engine/traderlab/basis_costs.py` och `tests/test_basis_costs.py`.
-**`pre_expiry_cycle` är förslaget** (utträde 7 dagar före förfall). `hold_cycle` är en **annan modell** (hållen till förfall med avräkning) och ska inte
+**`pre_expiry_cycle` är förslaget** (utträde vid öppningen sju kalenderdagar före förfall). `hold_cycle` är en **annan modell** (hållen till förfall med avräkning) och ska inte
 användas för förslaget.
 
 1. **Hela kapitalet och coin-marginalen räknas** (i `pre_expiry_cycle`, med separata spot- och terminspriser vid in- och utträde). Kapitalet C (USD) köper X mynt på spot (avgift och glidning ingår), mynten läggs
@@ -60,8 +60,10 @@ användas för förslaget.
 4. **Kostnadsbudget:** spot-köp 15 bp (10 avgift + 5 glidning), termin-sälj 10 bp, terminsutträde 10 bp, spot-sälj 15 bp = **50 bp per cykel**
    (avgifter 30 bp plus glidning 20 bp). Stresstest 2,5× = **125 bp**. Hållen till förfall: 45 bp, eftersom avräkningen bara kostar
    takeravgift. Siffrorna är kostnader, inte en prognos.
-5. **Förutbestämt utträde (`pre_expiry_cycle`):** stäng båda benen vid dagens slut **7 kalenderdagar före förfall**. Terminen köps tillbaka till
-   terminens senaste pris den dagen (`fut_exit`, inte en avräkningskurs) och spotbenet säljs till spotpriset den dagen (`spot_exit`), alla fyra
+5. **Förutbestämt utträde (`pre_expiry_cycle`):** stäng båda benen vid **öppningen 00:00 UTC kalenderdagen sju dagar före förfallsdagen** (176 timmar före förfall 08:00 UTC).
+   *Den tidigare formuleringen "vid dagens slut" i PR #116 var ett förslag och är ersatt av den här tidsregeln, som också är låst i `research/h0022-protokoll.md` (PR #118).*
+   Terminen köps tillbaka till
+   terminens last price (`open` i den dagens 1d-stapel, `fut_exit`, inte en avräkningskurs) och spotbenet säljs till spotens `open` samma stapel (`spot_exit`), alla fyra
    ben med takeravgift och glidning. PnL i mynt = n · storlek · (1/`fut_exit` − 1/`fut0`), utträdesavgiften dras i mynt på notionellt värde vid
    `fut_exit`. Rulla till nästa serie bara om den är valbar enligt `universe_at` den dagen. Utträdesdagen är fastlagd av kalendern, inte av pris.
    **Test:** utan avgifter är avkastningen exakt `(fut0/spot0) · (spot_exit/fut_exit) − 1` för olika prisvägar, och vid noll basis är den bokförda

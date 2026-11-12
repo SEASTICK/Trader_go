@@ -5,7 +5,7 @@ Inga marknadspriser används här och ingen avkastning har räknats på historik
    som urvalskriterium. COIN-M-klines har volym i *kontrakt* (kolumn 5) och i *mynt* (kolumn 7); kontraktsstorlek ≈ mynt · pris / kontrakt.
 2. Kostnadsbudget och mynt-bokföring som räknar hela kapitalet och coin-marginalen: spotbenet köps för kapitalet, mynten ligger som
    marginal, det inversa kontraktet säljs, och allt (avgifter, PnL, restmynt) bokförs i mynt. Två åtskilda modeller:
-   `pre_expiry_cycle` (förslaget: stängning 7 dagar före förfall, fyra ben med takeravgift och glidning, separata priser) och
+   `pre_expiry_cycle` (förslaget: stängning av positionen vid öppningen sju kalenderdagar före förfallsdagen, fyra ben med takeravgift och glidning, separata priser) och
    `hold_cycle` (en ANNAN modell: hållen till förfall med avräkning).
 """
 from __future__ import annotations
@@ -45,7 +45,7 @@ def round_trip_cost(*, spot_fee: float = SPOT_FEE, fut_taker: float = LOCKED_FUT
                     stress: float = 1.0, exit: str = "pre_expiry") -> dict:
     """Total kostnad (andel av positionens värde) för en cykel: spot-köp, termin-sälj, terminsutträde och spot-sälj.
 
-    `exit="pre_expiry"` (förslaget): terminen stängs 7 dagar före förfall med takeravgift **och** glidning. `exit="settlement"`:
+    `exit="pre_expiry"` (förslaget): terminen stängs vid öppningen sju kalenderdagar före förfallsdagen med takeravgift **och** glidning. `exit="settlement"`:
     hållen till förfall, då avräkningen kostar bara takeravgift (ingen glidning, men avräkningsfönstret är oklart)."""
     if exit not in ("pre_expiry", "settlement"):
         raise ValueError(exit)
@@ -91,7 +91,7 @@ class Cycle:
 
 def pre_expiry_cycle(*, capital_usd: float, spot0: float, fut0: float, fut_exit: float, spot_exit: float, contract_usd: float,
                      spot_fee: float = SPOT_FEE, fut_taker: float = LOCKED_FUT_TAKER, slippage: float = LOCKED_SLIPPAGE) -> Cycle:
-    """**Förslaget:** utträde före förfall (7 kalenderdagar), alltså en vanlig stängning och *inte* en avräkning.
+    """**Förslaget:** utträde före förfall (öppningen sju kalenderdagar före förfallsdagen, 176 timmar före förfall), alltså en vanlig stängning av positionen och *inte* en avräkning.
 
     Fyra affärsben, alla med takeravgift och glidning och med **separata priser**: spot-köp vid `spot0`, termin-sälj vid `fut0`,
     termin-återköp vid terminspriset på utträdesdagen `fut_exit` (senaste pris, inte avräkningskurs) och spot-sälj vid
@@ -214,3 +214,43 @@ def ledger_run(*, cycles: list[list[dict]], start_capital: float = LEDGER_START_
                     "v_end": v_end, "r": v_end / v_start - 1})
         value = v_end
     return {"cycles": out, "v_end": value, "total_return": value / start_capital - 1}
+
+
+# ------------------------------------------------------------------ tidsregel för in- och utträde (H-0022), låst i kalendern
+import datetime as _dt
+
+EXPIRY_UTC_HOUR = 8     # COIN-M-kvartal förfaller sista fredagen i kvartalsmånaden 08:00 UTC (Binance leverans-FAQ)
+EXIT_DAYS_BEFORE_EXPIRY = 7
+
+
+def exit_day(expiry: _dt.date) -> _dt.date:
+    """Utträdesdag: kalenderdagen sju dagar före förfallsdagen (en fredag). Regeln avser **kalenderdagen**, inte 168 timmar."""
+    return expiry - _dt.timedelta(days=EXIT_DAYS_BEFORE_EXPIRY)
+
+
+def exit_fill_utc(expiry: _dt.date) -> _dt.datetime:
+    """Exakt utträdestid: **öppningen 00:00 UTC** på utträdesdagen, alltså `open`-fältet i den dagens 1d-stapel för både terminen
+    (last price) och spoten. Det är 176 timmar före förfallet (förfall 08:00 UTC), inte 168, och inte dagens stängning."""
+    return _dt.datetime.combine(exit_day(expiry), _dt.time(0, 0), tzinfo=_dt.timezone.utc)
+
+
+def hours_before_expiry(expiry: _dt.date) -> float:
+    exp = _dt.datetime.combine(expiry, _dt.time(EXPIRY_UTC_HOUR, 0), tzinfo=_dt.timezone.utc)
+    return (exp - exit_fill_utc(expiry)).total_seconds() / 3600
+
+
+def entry_fill_utc(decision_day: _dt.date) -> _dt.datetime:
+    """Inträdestid: nästa dags öppning 00:00 UTC efter beslutsdagens stängning (`open` i nästa 1d-stapel). Vid rullning är beslutsdagen
+    dagen före föregående utträdesdag, så utträde och nytt inträde sker vid samma öppning."""
+    return _dt.datetime.combine(decision_day + _dt.timedelta(days=1), _dt.time(0, 0), tzinfo=_dt.timezone.utc)
+
+
+def held_mark_days(fill_day: _dt.date, expiry: _dt.date) -> list[_dt.date]:
+    """Dagar med markprisstapel som riskstoppet läser: från inträdesdagen till och med **dagen före utträdesdagen**. Utträdesdagens
+    stapel läses inte, eftersom positionen stängs vid dess öppning. Ett stopp på sista markprisdagen stänger vid utträdesöppningen
+    (samma tid som det ordinarie utträdet) men räknas ändå som utlöst."""
+    days, d = [], fill_day
+    while d < exit_day(expiry):
+        days.append(d)
+        d += _dt.timedelta(days=1)
+    return days

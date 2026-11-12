@@ -207,3 +207,44 @@ def test_ledger_ogiltig_platsantal_och_platt_cykel_ger_noll():
         ledger_run(cycles=[[_slot()] * 6])
     r = ledger_run(cycles=[[_slot(valid=False) for _ in range(7)]])
     assert r["cycles"][0]["r"] == 0.0 and r["v_end"] == 140000.0
+
+
+# ------------------------------------------------------------------ tidsregeln: öppning 00:00 UTC, 176 timmar före förfallet
+EXPIRIES = ["2021-06-25", "2021-09-24", "2021-12-31", "2022-03-25", "2022-06-24", "2022-09-30", "2022-12-30", "2023-03-31",
+            "2023-06-30", "2023-09-29", "2023-12-29", "2024-03-29", "2024-06-28", "2024-09-27"]
+
+
+def test_utträdet_är_öppningen_kalenderdagen_sju_dagar_före_förfall_inte_168_timmar_och_inte_stängning():
+    import datetime as dt
+    from traderlab.basis_costs import entry_fill_utc, exit_day, exit_fill_utc, hours_before_expiry
+    e = dt.date(2021, 6, 25)                                       # en fredag, förfall 08:00 UTC
+    assert exit_day(e) == dt.date(2021, 6, 18)
+    assert exit_fill_utc(e) == dt.datetime(2021, 6, 18, 0, 0, tzinfo=dt.timezone.utc)
+    assert hours_before_expiry(e) == 176.0 and hours_before_expiry(e) != 168.0
+    close_variant = dt.datetime(2021, 6, 19, 0, 0, tzinfo=dt.timezone.utc)                      # dagens stängning = nästa dags 00:00
+    assert (dt.datetime(2021, 6, 25, 8, 0, tzinfo=dt.timezone.utc) - close_variant).total_seconds() / 3600 == 152.0
+    assert close_variant != exit_fill_utc(e)
+    # rullning: beslut dagen före utträdesdagen, fyllning vid samma öppning som utträdet
+    assert entry_fill_utc(exit_day(e) - dt.timedelta(days=1)) == exit_fill_utc(e)
+    assert entry_fill_utc(dt.date(2021, 3, 26)) == dt.datetime(2021, 3, 27, 0, 0, tzinfo=dt.timezone.utc)
+
+
+def test_alla_fjorton_utträden_är_fredagar_176_timmar_före_förfallet():
+    import datetime as dt
+    from traderlab.basis_costs import exit_day, hours_before_expiry
+    for s in EXPIRIES:
+        e = dt.date.fromisoformat(s)
+        assert e.weekday() == 4 and exit_day(e).weekday() == 4
+        assert hours_before_expiry(e) == 176.0
+    assert len(EXPIRIES) == 14
+
+
+def test_sista_markprisdag_är_dagen_före_utträdesdagen():
+    import datetime as dt
+    from traderlab.basis_costs import held_mark_days
+    e = dt.date(2021, 6, 25)
+    days = held_mark_days(dt.date(2021, 3, 27), e)
+    assert days[0] == dt.date(2021, 3, 27) and days[-1] == dt.date(2021, 6, 17)
+    assert dt.date(2021, 6, 18) not in days                        # utträdesdagens stapel läses inte
+    assert len(days) == 83                                         # som kalendern: 2021-03-27 till 2021-06-18
+    assert held_mark_days(dt.date(2021, 6, 18), dt.date(2021, 9, 24))[-1] == dt.date(2021, 9, 16)
