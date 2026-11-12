@@ -88,3 +88,22 @@ def test_bitmex_files_report_availability_and_failures():
         return 200, 123
     r = b.bitmex_files(head)["public_trade_files"]
     assert r["20170331"]["available"] is False and r["20200327"] == {"available": True, "bytes": 123}
+
+
+def test_expiry_pattern_reads_bnb_as_bnb_not_bn_busd():
+    m = b.EXPIRY_RE.match("BNBUSD_201225")
+    assert m.group("base") == "BNB" and m.group("quote") == "USD"
+    assert b.EXPIRY_RE.match("BTCUSDT_210326").group("quote") == "USDT"
+    assert b.EXPIRY_RE.match("BTCUSD_PERP") is None
+
+
+def test_binance_api_probe_reports_blocks_per_contract():
+    import urllib.error
+
+    def opener(url):
+        if "BTCUSD" in url:
+            return json.dumps([[1693180800000], [1693267200000]]).encode()
+        raise urllib.error.HTTPError(url, 451, "restricted", {}, None)
+    r = b.binance_api(opener)["gap_fill_probe"]
+    assert r["BTCUSD_230929"] == {"bars": 2, "first": "2023-08-28", "last": "2023-08-29"}
+    assert "451" in r["ETHUSD_230929"]["error"]

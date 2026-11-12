@@ -1,0 +1,38 @@
+{
+ "kind": "basis-source-survey",
+ "run_at": "2026-11-12T14:26:17+00:00",
+ "note": "Kartläggning av täckning, inga priser hämtade för analys och inget backtest. Slutprov (2025+) läses inte.",
+ "sources": {
+  "bitmex_files": {
+   "reachable": true,
+   "public_trade_files": {
+    "20170331": {
+     "available": false,
+     "error": "HTTPError: HTTP Error 403: Forbidden"
+    },
+    "20200327": {
+     "available": false,
+     "error": "HTTPError: HTTP Error 403: Forbidden"
+    },
+    "20241227": {
+     "available": false,
+     "error": "HTTPError: HTTP Error 403: Forbidden"
+    }
+   },
+   "note": "Affärsfiler, inte dagsstaplar: dagsstaplar för daterade terminer måste byggas ur alla affärer."
+  },
+  "bitstamp": {
+   "reachable": true,
+   "btcusd_first_daily_bar_from_2011-09-13": "2011-09-13",
+   "bars_returned": 3
+  },
+  "fred_text": {
+   "reachable": false,
+   "error": "TimeoutError: The read operation timed out"
+  },
+  "bitmex_api": {
+   "reachable": false,
+   "error": "HTTPError: HTTP Error 403: Forbidden"
+  }
+ }
+}

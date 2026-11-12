@@ -23,7 +23,7 @@ from pathlib import Path
 
 LIST = "https://s3-ap-northeast-1.amazonaws.com/data.binance.vision?delimiter=/&prefix="
 MONTHS_RE = re.compile(r"-(\d{4})-(\d{2})\.zip$")
-EXPIRY_RE = re.compile(r"^(?P<base>[A-Z0-9]+?)(?P<quote>USDT|USD|BUSD)_(?P<ymd>\d{6})$")
+EXPIRY_RE = re.compile(r"^(?P<base>[A-Z0-9]+?)(?P<quote>USDT|USD)_(?P<ymd>\d{6})$")   # BNBUSD är BNB mot USD, inte BN mot BUSD
 
 
 def default_opener(url: str, headers: dict | None = None, tries: int = 4) -> bytes:
@@ -203,7 +203,7 @@ def bitmex_api(opener=default_opener, pause: float = 2.5) -> dict:
 
 # ------------------------------------------------------------------ Binance COIN-M: täckning och handelsbarhet
 
-CM_UNDERLYINGS = ("BTC", "ETH", "ADA", "BCH", "BN", "DOT", "LINK", "LTC", "XRP")   # minst 20 daterade kontrakt vardera
+CM_UNDERLYINGS = ("BTC", "ETH", "ADA", "BCH", "BNB", "DOT", "LINK", "LTC", "XRP")   # minst 20 daterade kontrakt vardera
 CONTRACT_USD = {"BTC": 100.0}                                                       # övriga 10 USD per kontrakt (Binance dokumentation, ej hämtad här)
 CM_START, CM_END = "2020-08", "2024-12"                                             # månader som hämtas. Slutprovet (2025+) hämtas aldrig.
 FRONT_MIN_DAYS = 14                                                                  # som H-0020: närmaste kontrakt med mer än 14 dagar kvar
@@ -282,6 +282,20 @@ def cm_liquidity(data_dir: Path, survey: dict) -> dict:
     return out
 
 
+def binance_api(opener=default_opener) -> dict:
+    """Kan Binances officiella API fylla arkivets lucka 2023-08-28 till 2023-08-31 för ett utgånget COIN-M-kontrakt?
+    (Från vissa platser svarar API:et 451; det kringgås aldrig.)"""
+    out = {}
+    for sym in ("BTCUSD_230929", "ETHUSD_230929"):
+        url = (f"https://dapi.binance.com/dapi/v1/klines?symbol={sym}&interval=1d&startTime=1693094400000&endTime=1693699200000")
+        try:
+            rows = json.loads(opener(url))
+            out[sym] = {"bars": len(rows), "first": _ts(rows[0][0]) if rows else None, "last": _ts(rows[-1][0]) if rows else None}
+        except Exception as exc:   # noqa: BLE001
+            out[sym] = {"error": f"{type(exc).__name__}: {str(exc)[:100]}"}
+    return {"gap_fill_probe": out}
+
+
 # ------------------------------------------------------------------ Bybit, Bitstamp, FRED, OKX
 
 def bybit(opener=default_opener) -> dict:
@@ -317,7 +331,7 @@ def okx(opener=default_opener) -> dict:
     return {"live_dated_contracts_btc_usd": len(live), "expired_contract_candles": old if isinstance(old, str) else len(old)}
 
 
-SOURCES = {"binance": binance, "deribit": deribit, "bitmex_api": bitmex_api, "bitmex_files": lambda opener=None: bitmex_files(),
+SOURCES = {"binance": binance, "binance_api": binance_api, "deribit": deribit, "bitmex_api": bitmex_api, "bitmex_files": lambda opener=None: bitmex_files(),
            "bybit": bybit, "bitstamp": bitstamp, "fred": fred, "fred_text": fred_text, "okx": okx}
 
 

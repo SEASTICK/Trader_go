@@ -1,7 +1,7 @@
 {
  "kind": "basis-source-survey",
- "run_at": "2026-11-12T14:16:47+00:00",
- "note": "Kartläggning av täckning, inga priser hämtade för analys och inget backtest. Slutprov (2025+) läses inte. Körd från Claudes sandlåda.",
+ "run_at": "2026-11-12T14:39:22+00:00",
+ "note": "Kartläggning av täckning, inga priser hämtade för analys och inget backtest. Slutprov (2025+) läses inte. Körd från Claudes sandlåda. Rättad version: BNB tolkas som BNB mot USD.",
  "sources": {
   "binance": {
    "reachable": true,
@@ -9,27 +9,11 @@
     "market": "um",
     "underlyings": {
      "BTC": {
-      "contracts": 27,
-      "first_expiry": "2021-01-29",
+      "contracts": 25,
+      "first_expiry": "2021-03-26",
       "last_expiry": "2027-03-26",
       "contracts_with_missing_months": [],
       "coverage": [
-       {
-        "contract": "BTCBUSD_210129",
-        "expiry": "2021-01-29",
-        "files": 1,
-        "first_month": "2021-01",
-        "last_month": "2021-01",
-        "missing_months": 0
-       },
-       {
-        "contract": "BTCBUSD_210226",
-        "expiry": "2021-02-26",
-        "files": 1,
-        "first_month": "2021-01",
-        "last_month": "2021-01",
-        "missing_months": 0
-       },
        {
         "contract": "BTCUSDT_210326",
         "expiry": "2021-03-26",
@@ -228,6 +212,30 @@
         "files": 2,
         "first_month": "2026-09",
         "last_month": "2026-10",
+        "missing_months": 0
+       }
+      ]
+     },
+     "BTCB": {
+      "contracts": 2,
+      "first_expiry": "2021-01-29",
+      "last_expiry": "2021-02-26",
+      "contracts_with_missing_months": [],
+      "coverage": [
+       {
+        "contract": "BTCBUSD_210129",
+        "expiry": "2021-01-29",
+        "files": 1,
+        "first_month": "2021-01",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCBUSD_210226",
+        "expiry": "2021-02-26",
+        "files": 1,
+        "first_month": "2021-01",
+        "last_month": "2021-01",
         "missing_months": 0
        }
       ]
@@ -789,7 +797,7 @@
        }
       ]
      },
-     "BN": {
+     "BNB": {
       "contracts": 25,
       "first_expiry": "2020-12-25",
       "last_expiry": "2026-12-25",
@@ -2348,14 +2356,20 @@
      "last_month": "2026-10",
      "missing_months": 0
     },
-    "BN": {
-     "files": 0
+    "BNB": {
+     "files": 108,
+     "first_month": "2017-11",
+     "last_month": "2026-10",
+     "missing_months": 0
     },
     "BTC": {
      "files": 111,
      "first_month": "2017-08",
      "last_month": "2026-10",
      "missing_months": 0
+    },
+    "BTCB": {
+     "files": 0
     },
     "DOT": {
      "files": 75,
