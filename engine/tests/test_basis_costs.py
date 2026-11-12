@@ -144,3 +144,153 @@ def test_pre_expiry_hävstång_högst_1_och_avrundningen_redovisas():
     assert c.contracts * 10.0 <= c.coins_bought * 102.0
     big = pre_expiry_cycle(capital_usd=BIG, spot0=100.0, fut0=102.0, fut_exit=90.0, spot_exit=88.0, contract_usd=10.0)
     assert abs(c.ret - big.ret) > 0.0005                     # litet kapital: avrundningsresten ger en märkbar avvikelse
+
+
+# ------------------------------------------------------------------ kassabok: två syntetiska cykler med vinst och förlust
+def _slot(valid=True, cap=float("inf"), spot0=100.0, fut0=104.0, fut_exit=100.5, spot_exit=100.0, contract_usd=10.0):
+    return dict(valid=valid, cap=cap, spot0=spot0, fut0=fut0, fut_exit=fut_exit, spot_exit=spot_exit, contract_usd=contract_usd)
+
+
+def _exempel():
+    c1 = [_slot() for _ in range(6)] + [_slot(fut0=100.0, fut_exit=103.0)]
+    c2 = [_slot(valid=False), _slot(cap=15000.0)] + [_slot() for _ in range(4)] + [_slot(fut0=100.0, fut_exit=104.0)]
+    return [c1, c2]
+
+
+def test_ledger_exempel_vinst_och_forlust_tva_cykler():
+    from traderlab.basis_costs import ledger_run
+    r = ledger_run(cycles=_exempel())
+    c1, c2 = r["cycles"]
+    assert c1["v_start"] == 140000.0 and c1["invested"] == pytest.approx(140000.0) and c1["cash_idle"] == pytest.approx(0.0, abs=1e-9)
+    assert [p["size"] for p in c1["positions"]] == [20000.0] * 7
+    assert [p["contracts"] for p in c1["positions"]] == [2074] * 6 + [1995]
+    assert c1["positions"][0]["usd_end"] == pytest.approx(20593.04, abs=0.005) and c1["positions"][6]["usd_end"] == pytest.approx(19320.63, abs=0.005)
+    assert c1["v_end"] == pytest.approx(142878.86, abs=0.01) and c1["r"] == pytest.approx(0.020563, abs=1e-6)
+    # cykel 2 börjar med cykel 1:s slutvärde (ingen extern tillförsel), V/7 återinvesterar vinsten
+    assert c2["v_start"] == pytest.approx(c1["v_end"])
+    sizes = [round(p["size"], 2) for p in c2["positions"]]
+    assert sizes == [0.0, 15000.0, 20411.27, 20411.27, 20411.27, 20411.27, 20411.27]
+    assert [p["contracts"] for p in c2["positions"]] == [0, 1556, 2117, 2117, 2117, 2117, 2036]
+    assert c2["invested"] == pytest.approx(117056.33, abs=0.01) and c2["cash_idle"] == pytest.approx(25822.53, abs=0.01)
+    assert c2["v_end"] == pytest.approx(144862.25, abs=0.01) and c2["r"] == pytest.approx(0.013882, abs=1e-6)
+    assert r["total_return"] == pytest.approx(0.034730, abs=1e-5)
+
+
+def test_ledger_invarianter_summan_av_positioner_aldrig_over_kassan_och_bokföringen_stämmer():
+    from traderlab.basis_costs import ledger_run
+    r = ledger_run(cycles=_exempel() * 3)
+    prev_end = None
+    for c in r["cycles"]:
+        assert c["invested"] <= c["v_start"] + 1e-9 and c["cash_idle"] >= -1e-9
+        proceeds = sum(p["usd_end"] for p in c["positions"])
+        assert c["v_end"] == pytest.approx(c["v_start"] - c["invested"] + proceeds)
+        assert c["r"] == pytest.approx(c["v_end"] / c["v_start"] - 1)
+        if prev_end is not None:
+            assert c["v_start"] == pytest.approx(prev_end)         # exakt kedjning, inga tillskott eller uttag
+        prev_end = c["v_end"]
+    assert r["v_end"] == pytest.approx(prev_end)
+
+
+def test_ledger_förlust_minskar_nästa_storlek_och_under_minsta_storlek_blir_platt():
+    from traderlab.basis_costs import ledger_run
+    loss = [_slot(fut0=100.0, fut_exit=140.0) for _ in range(7)]            # basis vidgas kraftigt: alla förlorar
+    r = ledger_run(cycles=[loss, [_slot() for _ in range(7)]], start_capital=140000.0)
+    assert r["cycles"][0]["r"] < -0.2
+    assert r["cycles"][1]["positions"][0]["size"] == pytest.approx(r["cycles"][1]["v_start"] / 7)       # mindre än 20 000
+    flat = ledger_run(cycles=[[_slot() for _ in range(7)]], start_capital=60000.0)                      # 60 000 / 7 < 10 000
+    assert flat["cycles"][0]["invested"] == 0.0 and flat["cycles"][0]["r"] == 0.0 and flat["v_end"] == 60000.0
+
+
+def test_ledger_ogiltig_platsantal_och_platt_cykel_ger_noll():
+    from traderlab.basis_costs import ledger_run
+    with pytest.raises(ValueError):
+        ledger_run(cycles=[[_slot()] * 6])
+    r = ledger_run(cycles=[[_slot(valid=False) for _ in range(7)]])
+    assert r["cycles"][0]["r"] == 0.0 and r["v_end"] == 140000.0
+
+
+# ------------------------------------------------------------------ tidsregeln: öppning 00:00 UTC, 176 timmar före förfallet
+EXPIRIES = ["2021-06-25", "2021-09-24", "2021-12-31", "2022-03-25", "2022-06-24", "2022-09-30", "2022-12-30", "2023-03-31",
+            "2023-06-30", "2023-09-29", "2023-12-29", "2024-03-29", "2024-06-28", "2024-09-27"]
+
+
+def test_utträdet_är_öppningen_kalenderdagen_sju_dagar_före_förfall_inte_168_timmar_och_inte_stängning():
+    import datetime as dt
+    from traderlab.basis_costs import entry_fill_utc, exit_day, exit_fill_utc, hours_before_expiry
+    e = dt.date(2021, 6, 25)                                       # en fredag, förfall 08:00 UTC
+    assert exit_day(e) == dt.date(2021, 6, 18)
+    assert exit_fill_utc(e) == dt.datetime(2021, 6, 18, 0, 0, tzinfo=dt.timezone.utc)
+    assert hours_before_expiry(e) == 176.0 and hours_before_expiry(e) != 168.0
+    close_variant = dt.datetime(2021, 6, 19, 0, 0, tzinfo=dt.timezone.utc)                      # dagens stängning = nästa dags 00:00
+    assert (dt.datetime(2021, 6, 25, 8, 0, tzinfo=dt.timezone.utc) - close_variant).total_seconds() / 3600 == 152.0
+    assert close_variant != exit_fill_utc(e)
+    # rullning: beslut dagen före utträdesdagen, fyllning vid samma öppning som utträdet
+    assert entry_fill_utc(exit_day(e) - dt.timedelta(days=1)) == exit_fill_utc(e)
+    assert entry_fill_utc(dt.date(2021, 3, 26)) == dt.datetime(2021, 3, 27, 0, 0, tzinfo=dt.timezone.utc)
+
+
+def test_alla_fjorton_utträden_är_fredagar_176_timmar_före_förfallet():
+    import datetime as dt
+    from traderlab.basis_costs import exit_day, hours_before_expiry
+    for s in EXPIRIES:
+        e = dt.date.fromisoformat(s)
+        assert e.weekday() == 4 and exit_day(e).weekday() == 4
+        assert hours_before_expiry(e) == 176.0
+    assert len(EXPIRIES) == 14
+
+
+def test_sista_markprisdag_är_dagen_före_utträdesdagen():
+    import datetime as dt
+    from traderlab.basis_costs import held_mark_days
+    e = dt.date(2021, 6, 25)
+    days = held_mark_days(dt.date(2021, 3, 27), e)
+    assert days[0] == dt.date(2021, 3, 27) and days[-1] == dt.date(2021, 6, 17)
+    assert dt.date(2021, 6, 18) not in days                        # utträdesdagens stapel läses inte
+    assert len(days) == 83                                         # som kalendern: 2021-03-27 till 2021-06-18
+    assert held_mark_days(dt.date(2021, 6, 18), dt.date(2021, 9, 24))[-1] == dt.date(2021, 9, 16)
+
+
+# ------------------------------------------------------------------ rullning: valet använder bara dagen före fyllningen
+def _serie(first="2021-03-01", last="2021-06-25", runs=None, announced="2021-02-20", expiry="2021-06-25", und="ADA"):
+    return {"underlying": und, "expiry": expiry, "announced_on": announced, "status": "announced_and_observed", "data_checked": True,
+            "first_traded_bar": first, "last_traded_bar": last, "traded_runs": runs if runs is not None else [[first, last]]}
+
+
+def test_rullningsbeslut_vid_0000_ändras_inte_av_utträdesdagens_saknade_eller_nollvolymstapel():
+    import datetime as dt
+    from traderlab.basis_costs import roll_decision_day, select_for_fill
+    fill = dt.date(2021, 6, 18)                                  # utträdesdag = fyllningsdag för nästa serie
+    assert roll_decision_day(fill) == dt.date(2021, 6, 17)
+    ok = _serie(runs=[["2021-03-01", "2021-06-25"]])
+    saknas = _serie(runs=[["2021-03-01", "2021-06-17"], ["2021-06-19", "2021-06-25"]])          # 06-18 saknas eller har nollvolym
+    assert select_for_fill([ok], "ADA", "2021-06-25", fill) is True
+    assert select_for_fill([saknas], "ADA", "2021-06-25", fill) is True                          # beslutet oförändrat: föregående dag är valbar
+    from traderlab.pit_universe import universe_at
+    assert universe_at([saknas], "2021-06-18", ("ADA",)) == []                                   # med fyllningsdagens data hade valet ändrats
+    # föregående dag saknar handel: platt, oavsett vad fyllningsdagen visar
+    ej = _serie(runs=[["2021-03-01", "2021-06-16"], ["2021-06-18", "2021-06-25"]])
+    assert select_for_fill([ej], "ADA", "2021-06-25", fill) is False
+
+
+def test_saknad_eller_nollvolym_fyllningsstapel_efter_beslut_är_ogiltig_inte_platt():
+    import datetime as dt
+    from traderlab.basis_costs import InvalidFill, select_for_fill, verify_fill_bar
+    fill = dt.date(2021, 6, 18)
+    r = _serie(runs=[["2021-03-01", "2021-06-17"], ["2021-06-19", "2021-06-25"]])
+    assert select_for_fill([r], "ADA", "2021-06-25", fill)                                        # valbar vid beslutet
+    with pytest.raises(InvalidFill):
+        verify_fill_bar(r, fill)                                                                   # men fyllningsstapeln saknas
+    verify_fill_bar(_serie(), fill)                                                                # finns: inget fel
+
+
+def test_likviditetstaket_använder_bara_dagar_till_och_med_beslutsdagen():
+    import datetime as dt
+    from traderlab.basis_costs import liquidity_cap_usd
+    fill = dt.date(2021, 6, 18)
+    vol = {(dt.date(2021, 5, 1) + dt.timedelta(days=i)).isoformat(): 1000.0 for i in range(48)}   # t.o.m. 2021-06-17
+    base = liquidity_cap_usd(vol, fill)
+    assert base == pytest.approx(0.02 * 1000.0 * 10.0)
+    vol["2021-06-18"] = 10_000_000.0                                                              # fyllningsdagens stapel: ignoreras
+    vol["2021-06-19"] = 0.0
+    assert liquidity_cap_usd(vol, fill) == base
+    assert liquidity_cap_usd({k: v for k, v in list(vol.items())[:10]}, fill) is None              # färre än 20 handelsdagar: platt

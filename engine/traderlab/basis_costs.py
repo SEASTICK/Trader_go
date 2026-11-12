@@ -5,7 +5,7 @@ Inga marknadspriser används här och ingen avkastning har räknats på historik
    som urvalskriterium. COIN-M-klines har volym i *kontrakt* (kolumn 5) och i *mynt* (kolumn 7); kontraktsstorlek ≈ mynt · pris / kontrakt.
 2. Kostnadsbudget och mynt-bokföring som räknar hela kapitalet och coin-marginalen: spotbenet köps för kapitalet, mynten ligger som
    marginal, det inversa kontraktet säljs, och allt (avgifter, PnL, restmynt) bokförs i mynt. Två åtskilda modeller:
-   `pre_expiry_cycle` (förslaget: stängning 7 dagar före förfall, fyra ben med takeravgift och glidning, separata priser) och
+   `pre_expiry_cycle` (förslaget: stängning av positionen vid öppningen sju kalenderdagar före förfallsdagen, fyra ben med takeravgift och glidning, separata priser) och
    `hold_cycle` (en ANNAN modell: hållen till förfall med avräkning).
 """
 from __future__ import annotations
@@ -45,7 +45,7 @@ def round_trip_cost(*, spot_fee: float = SPOT_FEE, fut_taker: float = LOCKED_FUT
                     stress: float = 1.0, exit: str = "pre_expiry") -> dict:
     """Total kostnad (andel av positionens värde) för en cykel: spot-köp, termin-sälj, terminsutträde och spot-sälj.
 
-    `exit="pre_expiry"` (förslaget): terminen stängs 7 dagar före förfall med takeravgift **och** glidning. `exit="settlement"`:
+    `exit="pre_expiry"` (förslaget): terminen stängs vid öppningen sju kalenderdagar före förfallsdagen med takeravgift **och** glidning. `exit="settlement"`:
     hållen till förfall, då avräkningen kostar bara takeravgift (ingen glidning, men avräkningsfönstret är oklart)."""
     if exit not in ("pre_expiry", "settlement"):
         raise ValueError(exit)
@@ -91,7 +91,7 @@ class Cycle:
 
 def pre_expiry_cycle(*, capital_usd: float, spot0: float, fut0: float, fut_exit: float, spot_exit: float, contract_usd: float,
                      spot_fee: float = SPOT_FEE, fut_taker: float = LOCKED_FUT_TAKER, slippage: float = LOCKED_SLIPPAGE) -> Cycle:
-    """**Förslaget:** utträde före förfall (7 kalenderdagar), alltså en vanlig stängning och *inte* en avräkning.
+    """**Förslaget:** utträde före förfall (öppningen sju kalenderdagar före förfallsdagen, 176 timmar före förfall), alltså en vanlig stängning av positionen och *inte* en avräkning.
 
     Fyra affärsben, alla med takeravgift och glidning och med **separata priser**: spot-köp vid `spot0`, termin-sälj vid `fut0`,
     termin-återköp vid terminspriset på utträdesdagen `fut_exit` (senaste pris, inte avräkningskurs) och spot-sälj vid
@@ -165,3 +165,129 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+# ------------------------------------------------------------------ självfinansierande USD-kassabok (H-0022)
+LEDGER_START_USD = 140_000.0   # utgångskapital; 7 platser à 20 000 USD ger utrymme för en halvering innan minsta storlek binder
+LEDGER_SLOTS = 7               # en plats per underliggande; platta platser står kvar som kontanter utan ränta
+LEDGER_MIN_SIZE = 10_000.0     # minsta position per mynt (ett kontrakt högst 0,1 %)
+LEDGER_LIQUIDITY_FRACTION = 0.02
+
+
+def ledger_run(*, cycles: list[list[dict]], start_capital: float = LEDGER_START_USD, slots: int = LEDGER_SLOTS,
+               min_size: float = LEDGER_MIN_SIZE, spot_fee: float = SPOT_FEE, fut_taker: float = LOCKED_FUT_TAKER,
+               slippage: float = LOCKED_SLIPPAGE) -> dict:
+    """Självfinansierande USD-kassabok från startkapitalet genom alla cykler. Inga externa tillskott, inget efterhandsval.
+
+    Varje cykel börjar med att **alla** positioner från föregående cykel stängts vid samma öppning, så portföljen är då ren kassa V.
+    Storlek per plats: `A = min(V / slots, cap)` om platsen är valbar (`valid`), annars 0; är `A` under `min_size` är platsen platt.
+    `cap` är likviditetstaket i USD (2 % av medianvolymen) och sätts av anroparen före cykeln. Summan av alla `A` är högst V, så
+    kassan kan aldrig bli för liten, och överskott (vinster, platta platser, begränsade platser) ligger kvar som kontanter utan ränta
+    tills nästa cykel där V/slots återinvesterar dem. Kostnaderna ligger i varje position (`pre_expiry_cycle`), så kassan minskar
+    exakt med insatsen A vid inträdet och ökar med slutvärdet (USD efter spot-sälj) vid utträdet.
+
+    Varje element i `cycles` är en lista med en dict per plats: `valid`, `cap`, och priserna `spot0`, `fut0`, `fut_exit`, `spot_exit`,
+    `contract_usd`. Returnerar per cykel startvärde, positioner, slutvärde och cykelavkastning r = V_slut / V_start − 1, samt
+    totalvärdet. Cykelavkastningen är den som används för t, beta och CAGR."""
+    value = start_capital
+    out = []
+    for slots_in_cycle in cycles:
+        if len(slots_in_cycle) != slots:
+            raise ValueError(f"{len(slots_in_cycle)} platser, väntade {slots}")
+        v_start, positions, invested, proceeds = value, [], 0.0, 0.0
+        for slot in slots_in_cycle:
+            size = min(v_start / slots, slot["cap"]) if slot["valid"] else 0.0
+            if size < min_size:
+                size = 0.0
+            if size == 0.0:
+                positions.append({"size": 0.0, "usd_end": 0.0, "ret": 0.0, "contracts": 0})
+                continue
+            c = pre_expiry_cycle(capital_usd=size, spot0=slot["spot0"], fut0=slot["fut0"], fut_exit=slot["fut_exit"],
+                                 spot_exit=slot["spot_exit"], contract_usd=slot["contract_usd"], spot_fee=spot_fee,
+                                 fut_taker=fut_taker, slippage=slippage)
+            positions.append({"size": size, "usd_end": c.usd_end, "ret": c.ret, "contracts": c.contracts})
+            invested += size
+            proceeds += c.usd_end
+        assert invested <= v_start + 1e-9, "kassan räcker alltid: summan av positionerna är högst V"
+        v_end = v_start - invested + proceeds
+        out.append({"v_start": v_start, "positions": positions, "invested": invested, "cash_idle": v_start - invested,
+                    "v_end": v_end, "r": v_end / v_start - 1})
+        value = v_end
+    return {"cycles": out, "v_end": value, "total_return": value / start_capital - 1}
+
+
+# ------------------------------------------------------------------ tidsregel för in- och utträde (H-0022), låst i kalendern
+import datetime as _dt
+
+EXPIRY_UTC_HOUR = 8     # COIN-M-kvartal förfaller sista fredagen i kvartalsmånaden 08:00 UTC (Binance leverans-FAQ)
+EXIT_DAYS_BEFORE_EXPIRY = 7
+
+
+def exit_day(expiry: _dt.date) -> _dt.date:
+    """Utträdesdag: kalenderdagen sju dagar före förfallsdagen (en fredag). Regeln avser **kalenderdagen**, inte 168 timmar."""
+    return expiry - _dt.timedelta(days=EXIT_DAYS_BEFORE_EXPIRY)
+
+
+def exit_fill_utc(expiry: _dt.date) -> _dt.datetime:
+    """Exakt utträdestid: **öppningen 00:00 UTC** på utträdesdagen, alltså `open`-fältet i den dagens 1d-stapel för både terminen
+    (last price) och spoten. Det är 176 timmar före förfallet (förfall 08:00 UTC), inte 168, och inte dagens stängning."""
+    return _dt.datetime.combine(exit_day(expiry), _dt.time(0, 0), tzinfo=_dt.timezone.utc)
+
+
+def hours_before_expiry(expiry: _dt.date) -> float:
+    exp = _dt.datetime.combine(expiry, _dt.time(EXPIRY_UTC_HOUR, 0), tzinfo=_dt.timezone.utc)
+    return (exp - exit_fill_utc(expiry)).total_seconds() / 3600
+
+
+def entry_fill_utc(decision_day: _dt.date) -> _dt.datetime:
+    """Inträdestid: nästa dags öppning 00:00 UTC efter beslutsdagens stängning (`open` i nästa 1d-stapel). Vid rullning är beslutsdagen
+    dagen före föregående utträdesdag, så utträde och nytt inträde sker vid samma öppning."""
+    return _dt.datetime.combine(decision_day + _dt.timedelta(days=1), _dt.time(0, 0), tzinfo=_dt.timezone.utc)
+
+
+def held_mark_days(fill_day: _dt.date, expiry: _dt.date) -> list[_dt.date]:
+    """Dagar med markprisstapel som riskstoppet läser: från inträdesdagen till och med **dagen före utträdesdagen**. Utträdesdagens
+    stapel läses inte, eftersom positionen stängs vid dess öppning. Ett stopp på sista markprisdagen stänger vid utträdesöppningen
+    (samma tid som det ordinarie utträdet) men räknas ändå som utlöst."""
+    days, d = [], fill_day
+    while d < exit_day(expiry):
+        days.append(d)
+        d += _dt.timedelta(days=1)
+    return days
+
+
+# ------------------------------------------------------------------ rullningsbeslut: bara data till och med dagen FÖRE fyllningen
+class InvalidFill(ValueError):
+    """Fyllningsstapeln saknas eller har ingen volym för en position som redan beslutats: körningen är OGILTIG, inte platt."""
+
+
+def roll_decision_day(fill_day: _dt.date) -> _dt.date:
+    """Beslutsdagen för en fyllning vid öppningen `fill_day` (00:00 UTC) är dagen före. Fyllningsdagens stapel är inte färdig vid beslutet."""
+    return fill_day - _dt.timedelta(days=1)
+
+
+def select_for_fill(rows: list[dict], underlying: str, expiry: str, fill_day: _dt.date) -> bool:
+    """Är serien valbar för en fyllning vid öppningen `fill_day`? Använder **bara** beslutsdagen (dagen före): `universe_at` med
+    annons, verifierad handelsstapel med volym och förfall efter beslutsdagen. Fyllningsdagens stapel används aldrig för valet."""
+    from .pit_universe import universe_at
+    decision = roll_decision_day(fill_day).isoformat()
+    return any(r["expiry"] == expiry for r in universe_at(rows, decision, (underlying,)))
+
+
+def liquidity_cap_usd(volume_contracts_by_day: dict[str, float], fill_day: _dt.date, *, contract_usd: float = 10.0,
+                      fraction: float = LEDGER_LIQUIDITY_FRACTION, window: int = 20) -> float | None:
+    """Likviditetstak i USD: `fraction` × medianen av volymen (kontrakt × `contract_usd`) över de senaste `window` handelsdagarna
+    (volym > 0) till och med beslutsdagen (dagen före fyllningen). Färre än `window` dagar ger None (platt). Fyllningsdagens och
+    senare dagars volym ignoreras helt."""
+    decision = roll_decision_day(fill_day).isoformat()
+    days = sorted(d for d, v in volume_contracts_by_day.items() if d <= decision and v > 0)
+    if len(days) < window:
+        return None
+    return fraction * statistics.median(volume_contracts_by_day[d] * contract_usd for d in days[-window:])
+
+
+def verify_fill_bar(row: dict, fill_day: _dt.date) -> None:
+    """Efter att ett mynt beslutats valbart måste fyllningsstapeln finnas med volym > 0. Annars `InvalidFill` (OGILTIG, inte platt)."""
+    from .pit_universe import has_traded_bar
+    if not has_traded_bar(row, fill_day.isoformat()):
+        raise InvalidFill(f"{row.get('underlying')} {row.get('expiry')}: ingen verifierad handelsstapel på fyllningsdagen {fill_day}")
