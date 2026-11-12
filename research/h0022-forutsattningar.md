@@ -6,7 +6,7 @@ tillräckligt. Den här filen redovisar vad som kontrollerats mot primärkällor
 **Beslut: ingen rad läggs i `research/registry.md`. N förblir 21.** Ingen avkastning, ingen basis och ingen hållperiod har
 räknats, och data från 2025 och senare är inte läst.
 
-Underlag: `research/coverage/basis-sources-runner6-20261112T153533Z.json` (hel artikeltext hämtad från en GitHub-runner,
+Underlag (uppdaterat efter Codex-granskning, PR #114): `research/coverage/basis-sources-runner6-20261112T153533Z.json` och `…runner7-20261112T154141Z.json` (hel artikeltext hämtad från en GitHub-runner,
 eftersom binance.com inte nås från utvecklingsmiljön), samt tidigare `research/basis-uppfoljning-data.md` och
 `research/cm-lucka-2023-08.md`.
 
@@ -14,9 +14,11 @@ eftersom binance.com inte nås från utvecklingsmiljön), samt tidigare `researc
 
 | Förutsättning | Källa | Gäller 2020–2024? |
 |---|---|---|
+| Generell regel: kvartalskontrakt = 100 USD (BTC) och **10 USD för altcoin-kontrakt** ("Contract Multiplier") | Binance-guide om kvartalsterminer, publicerad 2020-06-12 (d33f37e2…), hämtad via artikel-API:t | Regeln är daterad 2020, men sidan är uppdaterad 2026 och anger ingen kontraktslista eller ändringar över tid |
+| ETHUSD-kontrakt = 10 USD, BTCUSD = 100 USD (uttryckligt exempel med ETHUSD Quarterly 1225) | Binance-förklaring publicerad 2021-07-26 (85eac2bb…) | Ja för ETH, från 2021; sidan nämner inga andra underliggande |
 | BTCUSD-kontrakt = 100 USD, PnL i mynt = n · storlek · (1/inträde − 1/utträde) | Binance FAQ om PnL (artikel 3a55a237…) | Sidan är en nutida version; ingen historik för storleken är kontrollerad |
 | Kvartalskontrakt förfaller sista fredagen i mars/juni/sep/dec kl 08:00 UTC | Binance FAQ om leverans (a3401595…), exemplet BTCUSD 0925 = 2020-09-25 | Ja, exemplet är från 2020 |
-| Avräkningskurs = medel av indexpriset varje sekund 07:30–08:00 UTC (1 800 värden) | samma | Sidan är nutida; ingen datumangiven historik |
+| Avräkningskurs = medel av indexpriset varje sekund 07:30–08:00 UTC (1 800 värden) | samma | Sidan är nutida; guiden från 2020 säger i stället "index-based last-hour moving average" (se blockerare 7) |
 | Avräkningsavgift = takeravgiften; avräkning kan skjutas upp vid manipulation | samma | som ovan |
 | Orealiserad PnL räknas på Mark Price, och avgiften dras ur realiserad PnL | FAQ om PnL och leverans | som ovan |
 | COIN-M-avgift för vanlig användare ändrades 2023-09-26 04:00 UTC: maker 0,010 % → 0,020 %, taker 0,050 % → 0,050 % | Binance-meddelande 2023-09-18 (f4433fc2…) | Ja, datumsatt. Visar bara nivån *strax före* ändringen, inte när den började gälla |
@@ -25,10 +27,13 @@ eftersom binance.com inte nås från utvecklingsmiljön), samt tidigare `researc
 
 ## Vad som INTE är verifierat och därför blockerar en ärlig förregistrering
 
-1. **Kontraktstorlek för andra underliggande än BTC.** Antagandet 10 USD (ETH, ADA, BCH, BNB, DOT, LINK, LTC, XRP) saknar
-   primärkälla. Utvecklarsidan för Exchange Information levererade 0 tecken (sidan byggs med JavaScript), och live-API:t
-   svarar 451 från vår miljö (och ska inte kringgås). Utan storlek går inte heltalsavrundningen eller restexponeringen att
-   låsa. Det räcker för att stoppa ett test på "delvis nya underliggande".
+1. **Kontraktstorlek per underliggande och period för altcoin-kontrakten.** Den *generella* regeln (altcoin = 10 USD) och
+   ETH = 10 USD är nu belagda i primärkälla (se tabellen ovan). Det som **inte** är belagt är storleken för varje enskilt
+   kontrakt vi skulle handla, i synnerhet **ADA, BCH, BNB, DOT, LINK, LTC och XRP**: ingen primärkälla namnger dem, och
+   ingen källa visar att storleken var oförändrad under hela 2020–2024 (båda sidorna är nutida versioner). Utvecklarsidan
+   för Exchange Information (kontraktsfältet `contractSize`) renderades med 0 tecken, och live-API:t svarar 451 från vår
+   miljö (kringgås inte). Kvarvarande lucka: kontraktsspecifik, daterad storlek för de sju namnen. Den kan tas från
+   Binances listningsmeddelanden per kontrakt.
 2. **COIN-M-avgifter före 2023-09-26 och spotavgifter över tid.** Endast nivån strax före ändringen är känd; startdatum,
    VIP-nivåer och BNB-rabatt är okända. Spotavgifter 2020–2024 är inte hämtade alls.
 3. **Maintenance Margin-tabellerna (marginalnivåer per notional) per kontrakt och period.** FAQ:n ger formeln och *ett*
@@ -40,7 +45,10 @@ eftersom binance.com inte nås från utvecklingsmiljön), samt tidigare `researc
    orderbokshistorik är kontrollerad. En kostnadsmodell kan därför bara vara ett antagande, inte en mätning.
 6. **Point-in-time-universum.** Arkivet listar kontrakt som finns kvar som filer, inte vilka som var listade och handlade
    vid varje tidpunkt. Att välja underliggande efter vilka filer som finns 2025 vore just det urval Codex bett oss undvika.
-7. **Att sidorna är nutida.** Avräkning och likvidation är hämtade från sidor som själva säger att de kan vara inaktuella
+7. **Avräkningspriset är motsägelsefullt beskrivet.** Guiden från 2020 säger "index-based last-hour moving average price"
+   (timmesmedel), medan den nutida leverans-FAQ:n säger medel av indexpriset varje sekund de sista 30 minuterna. Vilken regel
+   som gällde vid vilket förfall 2020–2024 är ouppklarat och avgör avräkningskursen i en förfallsmodell.
+8. **Att sidorna är nutida.** Avräkning och likvidation är hämtade från sidor som själva säger att de kan vara inaktuella
    och som hänvisar till regler som träder i kraft 2026-01-05. De får inte användas som bevis för 2020–2024.
 
 ## Vad som skulle behövas för att kunna förregistrera
