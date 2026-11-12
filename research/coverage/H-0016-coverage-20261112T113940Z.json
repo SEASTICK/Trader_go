@@ -1,0 +1,3706 @@
+{
+ "hypothesis_id": "H-0016",
+ "kind": "coverage-diagnosis",
+ "filings": 431,
+ "run_at": "2026-11-12T11:39:40+00:00",
+ "summary": {
+  "fixad": {
+   "tickers": 305,
+   "avg_weight": 0.87645
+  },
+  "finns_inte": {
+   "tickers": 89,
+   "avg_weight": 0.10015
+  },
+  "ingen_ticker": {
+   "tickers": 2,
+   "avg_weight": 0.00523
+  },
+  "hade_kurs": {
+   "tickers": 13,
+   "avg_weight": 0.01815
+  }
+ },
+ "rows": [
+  {
+   "cusip": "037833100",
+   "ticker": "AAPL",
+   "name": "APPLE INC",
+   "avg_weight_in_filings": 0.03153,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "595112103",
+   "ticker": "MU",
+   "name": "MICRON TECHNOLOGY INC",
+   "avg_weight_in_filings": 0.02847,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "594918104",
+   "ticker": "MSFT",
+   "name": "MICROSOFT CORP",
+   "avg_weight_in_filings": 0.02737,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "02079K107",
+   "ticker": "GOOG",
+   "name": "ALPHABET INC",
+   "avg_weight_in_filings": 0.02606,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "023135106",
+   "ticker": "AMZN",
+   "name": "Amazon.com",
+   "avg_weight_in_filings": 0.02339,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "060505104",
+   "ticker": "BAC",
+   "name": "BANK AMER CORP",
+   "avg_weight_in_filings": 0.02204,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "30303M102",
+   "ticker": "META",
+   "name": "FACEBOOK INC",
+   "avg_weight_in_filings": 0.02166,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3642 dagar, 2012-05-18 till 2026-11-11"
+  },
+  {
+   "cusip": "084670702",
+   "ticker": "BRK-B",
+   "name": "BERKSHIRE HATHAWAY INC DEL",
+   "avg_weight_in_filings": 0.02,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "615369105",
+   "ticker": "MCO",
+   "name": "MOODYS CORP",
+   "avg_weight_in_filings": 0.01762,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "57636Q104",
+   "ticker": "MA",
+   "name": "MASTERCARD INC",
+   "avg_weight_in_filings": 0.01736,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "76131D103",
+   "ticker": "QSR",
+   "name": "RESTAURANT BRANDS INTL INC",
+   "avg_weight_in_filings": 0.01715,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "2997 dagar, 2014-12-11 till 2026-11-11"
+  },
+  {
+   "cusip": "03027X100",
+   "ticker": "AMT",
+   "name": "AMERICAN TOWER CORP NEW",
+   "avg_weight_in_filings": 0.01669,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "01609W102",
+   "ticker": "BABA",
+   "name": "ALIBABA GROUP HLDG LTD",
+   "avg_weight_in_filings": 0.01572,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3055 dagar, 2014-09-19 till 2026-11-11"
+  },
+  {
+   "cusip": "084670108",
+   "ticker": "BRK-A",
+   "name": "Berkshire Hathaway, Inc.",
+   "avg_weight_in_filings": 0.01529,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "143130102",
+   "ticker": "KMX",
+   "name": "CARMAX INC",
+   "avg_weight_in_filings": 0.01484,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "92552V100",
+   "ticker": "VSAT",
+   "name": "VIASAT INC",
+   "avg_weight_in_filings": 0.01392,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "949746101",
+   "ticker": "WFC",
+   "name": "WELLS FARGO & CO NEW",
+   "avg_weight_in_filings": 0.01383,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "191216100",
+   "ticker": "KO",
+   "name": "COCA COLA CO",
+   "avg_weight_in_filings": 0.01373,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "071813109",
+   "ticker": "BAX",
+   "name": "BAXTER INTL INC",
+   "avg_weight_in_filings": 0.01364,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "169656105",
+   "ticker": "CMG",
+   "name": "CHIPOTLE MEXICAN GRILL INC",
+   "avg_weight_in_filings": 0.01343,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "48251W104",
+   "ticker": "KKR",
+   "name": "KKR & CO L P DEL",
+   "avg_weight_in_filings": 0.01233,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "025816109",
+   "ticker": "AXP",
+   "name": "AMERICAN EXPRESS CO",
+   "avg_weight_in_filings": 0.0117,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "92826C839",
+   "ticker": "V",
+   "name": "VISA INC",
+   "avg_weight_in_filings": 0.01169,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "254687106",
+   "ticker": "DIS",
+   "name": "Disney",
+   "avg_weight_in_filings": 0.01117,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "02079K305",
+   "ticker": "GOOGL",
+   "name": "ALPHABET INC",
+   "avg_weight_in_filings": 0.01074,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "G0177J108",
+   "ticker": "AGN",
+   "name": "ALLERGAN PLC",
+   "avg_weight_in_filings": 0.01066,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "69331C108",
+   "ticker": "PCG",
+   "name": "PG&E CORP",
+   "avg_weight_in_filings": 0.01057,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "112585104",
+   "ticker": "BAM",
+   "name": "BROOKFIELD ASSET MGMT INC",
+   "avg_weight_in_filings": 0.01017,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "990 dagar, 2022-12-01 till 2026-11-11"
+  },
+  {
+   "cusip": "548661107",
+   "ticker": "LOW",
+   "name": "LOWES COS INC",
+   "avg_weight_in_filings": 0.00988,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "G5480U120",
+   "ticker": "LBTYK",
+   "name": "LIBERTY GLOBAL PLC",
+   "avg_weight_in_filings": 0.00918,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "12504L109",
+   "ticker": "CBRE",
+   "name": "CBRE GROUP INC",
+   "avg_weight_in_filings": 0.00913,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "500754106",
+   "ticker": "KHC",
+   "name": "KRAFT HEINZ CO",
+   "avg_weight_in_filings": 0.00896,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "2857 dagar, 2015-07-06 till 2026-11-11"
+  },
+  {
+   "cusip": "16411R208",
+   "ticker": "LNG",
+   "name": "CHENIERE ENERGY INC",
+   "avg_weight_in_filings": 0.00892,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "43300A203",
+   "ticker": "HLT",
+   "name": "HILTON WORLDWIDE HLDGS INC",
+   "avg_weight_in_filings": 0.00842,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3248 dagar, 2013-12-12 till 2026-11-11"
+  },
+  {
+   "cusip": "25243Q205",
+   "ticker": "DEO",
+   "name": "Diageo PLC",
+   "avg_weight_in_filings": 0.00811,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "437076102",
+   "ticker": "HD",
+   "name": "Home Depot",
+   "avg_weight_in_filings": 0.00801,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "172967424",
+   "ticker": "C",
+   "name": "CITIGROUP INC",
+   "avg_weight_in_filings": 0.00797,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "91911K102",
+   "ticker": "VRX",
+   "name": "VALEANT PHARMACEUTICALS INTL",
+   "avg_weight_in_filings": 0.00789,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "67103H107",
+   "ticker": "ORLY",
+   "name": "O REILLY AUTOMOTIVE INC NEW",
+   "avg_weight_in_filings": 0.00768,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "13645T100",
+   "ticker": "CP",
+   "name": "CANADIAN PAC RY LTD",
+   "avg_weight_in_filings": 0.00762,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "235851102",
+   "ticker": "DHR",
+   "name": "DANAHER CORP DEL",
+   "avg_weight_in_filings": 0.00746,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "570535104",
+   "ticker": "MKL",
+   "name": "MARKEL CORP",
+   "avg_weight_in_filings": 0.00687,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "44267D107",
+   "ticker": "HHC",
+   "name": "HOWARD HUGHES CORP",
+   "avg_weight_in_filings": 0.00681,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "009158106",
+   "ticker": "APD",
+   "name": "AIR PRODS & CHEMS INC",
+   "avg_weight_in_filings": 0.00663,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "776696106",
+   "ticker": "ROP",
+   "name": "ROPER INDS INC NEW",
+   "avg_weight_in_filings": 0.00661,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "79466L302",
+   "ticker": "CRM",
+   "name": "SALESFORCE COM INC",
+   "avg_weight_in_filings": 0.00619,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "278642103",
+   "ticker": "EBAY",
+   "name": "EBAY INC",
+   "avg_weight_in_filings": 0.00612,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "G81477104",
+   "ticker": "SINA",
+   "name": "Sina Corp",
+   "avg_weight_in_filings": 0.0061,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "G7945M107",
+   "ticker": "STX",
+   "name": "SEAGATE TECHNOLOGY PLC",
+   "avg_weight_in_filings": 0.00609,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "22266T109",
+   "ticker": "CPNG",
+   "name": "Coupang Inc",
+   "avg_weight_in_filings": 0.00599,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1426 dagar, 2021-03-11 till 2026-11-11"
+  },
+  {
+   "cusip": "872590104",
+   "ticker": "TMUS",
+   "name": "T MOBILE US INC",
+   "avg_weight_in_filings": 0.00589,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "00724F101",
+   "ticker": "ADBE",
+   "name": "ADOBE INC",
+   "avg_weight_in_filings": 0.00578,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "74736K101",
+   "ticker": "QRVO",
+   "name": "QORVO INC",
+   "avg_weight_in_filings": 0.00576,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1 dagar, 2026-10-02 till 2026-10-02"
+  },
+  {
+   "cusip": "260543103",
+   "ticker": "DOW",
+   "name": "DOW CHEM CO",
+   "avg_weight_in_filings": 0.00576,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1924 dagar, 2019-03-20 till 2026-11-11"
+  },
+  {
+   "cusip": "244199105",
+   "ticker": "DE",
+   "name": "John Deere",
+   "avg_weight_in_filings": 0.00557,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "337738108",
+   "ticker": "FI",
+   "name": "FISERV INC",
+   "avg_weight_in_filings": 0.00557,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "90130A200",
+   "ticker": "FOX",
+   "name": "TWENTY FIRST CENTY FOX INC",
+   "avg_weight_in_filings": 0.00551,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1929 dagar, 2019-03-13 till 2026-11-11"
+  },
+  {
+   "cusip": "459200101",
+   "ticker": "IBM",
+   "name": "INTERNATIONAL BUSINESS MACHS",
+   "avg_weight_in_filings": 0.00516,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "256746108",
+   "ticker": "DLTR",
+   "name": "DOLLAR TREE INC",
+   "avg_weight_in_filings": 0.00502,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "056752908",
+   "ticker": null,
+   "name": "Baidu Inc",
+   "avg_weight_in_filings": 0.0045,
+   "klass": "ingen_ticker",
+   "detail": "CUSIP saknar ticker i fails-to-deliver-kopplingen"
+  },
+  {
+   "cusip": "38259P508",
+   "ticker": "GOOGL",
+   "name": "GOOGLE INC",
+   "avg_weight_in_filings": 0.00443,
+   "cache_before": "data",
+   "klass": "hade_kurs",
+   "detail": "kurs fanns redan i cachen"
+  },
+  {
+   "cusip": "G7997R103",
+   "ticker": "STX",
+   "name": "SEAGATE TECHNOLOGY HLDNGS PL",
+   "avg_weight_in_filings": 0.00432,
+   "cache_before": "data",
+   "klass": "hade_kurs",
+   "detail": "kurs fanns redan i cachen"
+  },
+  {
+   "cusip": "617446448",
+   "ticker": "MS",
+   "name": "MORGAN STANLEY",
+   "avg_weight_in_filings": 0.00426,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "609207105",
+   "ticker": "MDLZ",
+   "name": "MONDELEZ INTL INC",
+   "avg_weight_in_filings": 0.00388,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "571903202",
+   "ticker": "MAR",
+   "name": "Marriott International",
+   "avg_weight_in_filings": 0.00383,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "018581108",
+   "ticker": "BFH",
+   "name": "ALLIANCE DATA SYSTEMS CORP",
+   "avg_weight_in_filings": 0.00365,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "45765U103",
+   "ticker": "NSIT",
+   "name": "INSIGHT ENTERPRISES INC",
+   "avg_weight_in_filings": 0.00357,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "G96629103",
+   "ticker": "WTW",
+   "name": "WILLIS TOWERS WATSON PLC LTD",
+   "avg_weight_in_filings": 0.00351,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "90130A101",
+   "ticker": "FOXA",
+   "name": "TWENTY FIRST CENTY FOX INC",
+   "avg_weight_in_filings": 0.0035,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1930 dagar, 2019-03-12 till 2026-11-11"
+  },
+  {
+   "cusip": "855244109",
+   "ticker": "SBUX",
+   "name": "STARBUCKS CORP",
+   "avg_weight_in_filings": 0.00341,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "913017109",
+   "ticker": "UTX",
+   "name": "UNITED TECHNOLOGIES CORP",
+   "avg_weight_in_filings": 0.00335,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "11271J107",
+   "ticker": "BN",
+   "name": "BROOKFIELD CORP",
+   "avg_weight_in_filings": 0.00329,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "72766Q105",
+   "ticker": "PAH",
+   "name": "PLATFORM SPECIALTY PRODS COR",
+   "avg_weight_in_filings": 0.00322,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "620076307",
+   "ticker": "MSI",
+   "name": "MOTOROLA SOLUTIONS, INC",
+   "avg_weight_in_filings": 0.00318,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "166764100",
+   "ticker": "CVX",
+   "name": "CHEVRON CORP NEW",
+   "avg_weight_in_filings": 0.00313,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "458140100",
+   "ticker": "INTC",
+   "name": "INTEL CORP",
+   "avg_weight_in_filings": 0.00313,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "057224107",
+   "ticker": "BHI",
+   "name": "BAKER HUGHES INC",
+   "avg_weight_in_filings": 0.00303,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "501889208",
+   "ticker": "LKQ",
+   "name": "LKQ CORP",
+   "avg_weight_in_filings": 0.003,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "194014106",
+   "ticker": "CFX",
+   "name": "COLFAX CORP",
+   "avg_weight_in_filings": 0.00297,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "67066G104",
+   "ticker": "NVDA",
+   "name": "NVIDIA CORPORATION",
+   "avg_weight_in_filings": 0.00295,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "931427108",
+   "ticker": "WBA",
+   "name": "Walgreens Boots Alliance Inc",
+   "avg_weight_in_filings": 0.00294,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "87165B103",
+   "ticker": "SYF",
+   "name": "SYNCHRONY FINL",
+   "avg_weight_in_filings": 0.0029,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3090 dagar, 2014-07-31 till 2026-11-11"
+  },
+  {
+   "cusip": "902973304",
+   "ticker": "USB",
+   "name": "US BANCORP DEL",
+   "avg_weight_in_filings": 0.00289,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "88338T104",
+   "ticker": "THRX",
+   "name": "THERAVANCE INC",
+   "avg_weight_in_filings": 0.00283,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "896522109",
+   "ticker": "TRN",
+   "name": "TRINITY INDS INC",
+   "avg_weight_in_filings": 0.00278,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "35137L105",
+   "ticker": "FOXA",
+   "name": "FOX CORP",
+   "avg_weight_in_filings": 0.00267,
+   "cache_before": "data",
+   "klass": "hade_kurs",
+   "detail": "kurs fanns redan i cachen"
+  },
+  {
+   "cusip": "03674X106",
+   "ticker": "AR",
+   "name": "ANTERO RES CORP",
+   "avg_weight_in_filings": 0.00265,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3292 dagar, 2013-10-10 till 2026-11-11"
+  },
+  {
+   "cusip": "031162100",
+   "ticker": "AMGN",
+   "name": "AMGEN INC",
+   "avg_weight_in_filings": 0.00264,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "018490102",
+   "ticker": "AGN",
+   "name": "ALLERGAN INC",
+   "avg_weight_in_filings": 0.00263,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "91324P102",
+   "ticker": "UNH",
+   "name": "United Health Group Inc",
+   "avg_weight_in_filings": 0.00256,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "464287234",
+   "ticker": "EEM",
+   "name": "ISHARES TR",
+   "avg_weight_in_filings": 0.00256,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "98138H101",
+   "ticker": "WDAY",
+   "name": "Workday Inc.",
+   "avg_weight_in_filings": 0.00252,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3540 dagar, 2012-10-12 till 2026-11-11"
+  },
+  {
+   "cusip": "053015103",
+   "ticker": "ADP",
+   "name": "AUTOMATIC DATA PROCESSING IN",
+   "avg_weight_in_filings": 0.0025,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "64110L106",
+   "ticker": "NFLX",
+   "name": "NETFLIX INC",
+   "avg_weight_in_filings": 0.00249,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "98978V103",
+   "ticker": "ZTS",
+   "name": "ZOETIS INC",
+   "avg_weight_in_filings": 0.00243,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3466 dagar, 2013-02-01 till 2026-11-11"
+  },
+  {
+   "cusip": "22160N109",
+   "ticker": "CSGP",
+   "name": "COSTAR GROUP INC",
+   "avg_weight_in_filings": 0.00241,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "835898107",
+   "ticker": "BID",
+   "name": "SOTHEBYS",
+   "avg_weight_in_filings": 0.00237,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "82 dagar, 2026-07-20 till 2026-11-11"
+  },
+  {
+   "cusip": "G61188127",
+   "ticker": "LBTYK",
+   "name": "LIBERTY GLOBAL LTD",
+   "avg_weight_in_filings": 0.00236,
+   "cache_before": "data",
+   "klass": "hade_kurs",
+   "detail": "kurs fanns redan i cachen"
+  },
+  {
+   "cusip": "91680M107",
+   "ticker": "UPST",
+   "name": "UPSTART HLDGS INC",
+   "avg_weight_in_filings": 0.00232,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1483 dagar, 2020-12-16 till 2026-11-11"
+  },
+  {
+   "cusip": "81730H109",
+   "ticker": "S",
+   "name": "SENTINELONE INC",
+   "avg_weight_in_filings": 0.00228,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1349 dagar, 2021-06-30 till 2026-11-11"
+  },
+  {
+   "cusip": "69318G106",
+   "ticker": "PBF",
+   "name": "PBF ENERGY INC",
+   "avg_weight_in_filings": 0.00223,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3499 dagar, 2012-12-13 till 2026-11-11"
+  },
+  {
+   "cusip": "674599105",
+   "ticker": "OXY",
+   "name": "OCCIDENTAL PETE CORP",
+   "avg_weight_in_filings": 0.00222,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "35671D857",
+   "ticker": "FCX",
+   "name": "Freeport-McMoRan Inc",
+   "avg_weight_in_filings": 0.00219,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "931142103",
+   "ticker": "WMT",
+   "name": "WAL MART STORES INC",
+   "avg_weight_in_filings": 0.00218,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "31620M106",
+   "ticker": "FIS",
+   "name": "FIDELITY NATL INFORMATION SV",
+   "avg_weight_in_filings": 0.00216,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "056752108",
+   "ticker": "BIDU",
+   "name": "Baidu Inc",
+   "avg_weight_in_filings": 0.00215,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "026874784",
+   "ticker": "AIG",
+   "name": "AMERICAN INTL GROUP INC",
+   "avg_weight_in_filings": 0.00214,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "00846U101",
+   "ticker": "A",
+   "name": "AGILENT TECHNOLOGIES INC",
+   "avg_weight_in_filings": 0.00212,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "070830104",
+   "ticker": "BBWI",
+   "name": "BATH & BODY WORKS INC",
+   "avg_weight_in_filings": 0.00212,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "532457108",
+   "ticker": "LLY",
+   "name": "Lilly Eli & Co",
+   "avg_weight_in_filings": 0.0021,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "931422109",
+   "ticker": "WAG",
+   "name": "Walgreen",
+   "avg_weight_in_filings": 0.00194,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "70450Y103",
+   "ticker": "PYPL",
+   "name": "PAYPAL HLDGS INC",
+   "avg_weight_in_filings": 0.00192,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "2857 dagar, 2015-07-06 till 2026-11-11"
+  },
+  {
+   "cusip": "78388J106",
+   "ticker": "SBAC",
+   "name": "SBA COMMUNICATIONS CORP",
+   "avg_weight_in_filings": 0.00191,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "923454102",
+   "ticker": "VRTV",
+   "name": "VERITIV CORP",
+   "avg_weight_in_filings": 0.00187,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "29273R109",
+   "ticker": "ETP",
+   "name": "ENERGY TRANSFER PRTNRS L P",
+   "avg_weight_in_filings": 0.00185,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "984332106",
+   "ticker": "YHOO",
+   "name": "YAHOO INC",
+   "avg_weight_in_filings": 0.00185,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "21036P108",
+   "ticker": "STZ",
+   "name": "CONSTELLATION BRANDS INC",
+   "avg_weight_in_filings": 0.00183,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "723787107",
+   "ticker": "PXD",
+   "name": "PIONEER NAT RES CO",
+   "avg_weight_in_filings": 0.0018,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "531229607",
+   "ticker": "LSXMK",
+   "name": "LIBERTY MEDIA CORP DEL",
+   "avg_weight_in_filings": 0.0018,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "96949L105",
+   "ticker": "WPZ",
+   "name": "WILLIAMS PARTNERS L P NEW",
+   "avg_weight_in_filings": 0.00179,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "071734107",
+   "ticker": "BHC",
+   "name": "BAUSCH HEALTH COS INC",
+   "avg_weight_in_filings": 0.00178,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "406216101",
+   "ticker": "HAL",
+   "name": "HALLIBURTON CO",
+   "avg_weight_in_filings": 0.00177,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "452327109",
+   "ticker": "ILMN",
+   "name": "ILLUMINA INC",
+   "avg_weight_in_filings": 0.00177,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "G0083B108",
+   "ticker": "B108PS",
+   "name": "ACTAVIS PLC",
+   "avg_weight_in_filings": 0.00176,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "718546104",
+   "ticker": "PSX",
+   "name": "PHILLIPS 66",
+   "avg_weight_in_filings": 0.00174,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3668 dagar, 2012-04-12 till 2026-11-11"
+  },
+  {
+   "cusip": "29273V100",
+   "ticker": "ET",
+   "name": "ENERGY TRANSFER LP",
+   "avg_weight_in_filings": 0.00174,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "021346101",
+   "ticker": "AABA",
+   "name": "ALTABA INC",
+   "avg_weight_in_filings": 0.00173,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "26078J100",
+   "ticker": "DWDP",
+   "name": "DOWDUPONT INC",
+   "avg_weight_in_filings": 0.00169,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "134429109",
+   "ticker": "CPB",
+   "name": "CAMPBELL SOUP CO",
+   "avg_weight_in_filings": 0.00165,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "268648102",
+   "ticker": "EMC",
+   "name": "E M C CORP MASS",
+   "avg_weight_in_filings": 0.00164,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "878 dagar, 2023-05-15 till 2026-11-11"
+  },
+  {
+   "cusip": "742718109",
+   "ticker": "PG",
+   "name": "PROCTER & GAMBLE CO",
+   "avg_weight_in_filings": 0.00163,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "78442P106",
+   "ticker": "SLM",
+   "name": "SLM CORP",
+   "avg_weight_in_filings": 0.00158,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "13646K108",
+   "ticker": "CP",
+   "name": "CANADIAN PACIFIC KANSAS CITY",
+   "avg_weight_in_filings": 0.00155,
+   "cache_before": "data",
+   "klass": "hade_kurs",
+   "detail": "kurs fanns redan i cachen"
+  },
+  {
+   "cusip": "55616P104",
+   "ticker": "M",
+   "name": "MACYS INC",
+   "avg_weight_in_filings": 0.00152,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "44267T102",
+   "ticker": "HHH",
+   "name": "HOWARD HUGHES HOLDINGS INC",
+   "avg_weight_in_filings": 0.00147,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "G96666105",
+   "ticker": "WSH",
+   "name": "WILLIS GROUP HOLDINGS PLC",
+   "avg_weight_in_filings": 0.00146,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "02005N100",
+   "ticker": "ALLY",
+   "name": "ALLY FINL INC",
+   "avg_weight_in_filings": 0.00145,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3218 dagar, 2014-01-28 till 2026-11-11"
+  },
+  {
+   "cusip": "21037T109",
+   "ticker": "CEG",
+   "name": "CONSTELLATION ENERGY CORP",
+   "avg_weight_in_filings": 0.00144,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1209 dagar, 2022-01-19 till 2026-11-11"
+  },
+  {
+   "cusip": "194162103",
+   "ticker": "CL",
+   "name": "COLGATE PALMOLIVE CO",
+   "avg_weight_in_filings": 0.00143,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "23918K108",
+   "ticker": "DVA",
+   "name": "DAVITA HEALTHCARE PARTNERS I",
+   "avg_weight_in_filings": 0.00142,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "073730103",
+   "ticker": "BEAM",
+   "name": "BEAM INC",
+   "avg_weight_in_filings": 0.00138,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1701 dagar, 2020-02-06 till 2026-11-11"
+  },
+  {
+   "cusip": "27579R104",
+   "ticker": "EWBC",
+   "name": "EAST WEST BANCORP INC",
+   "avg_weight_in_filings": 0.00137,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "303901102",
+   "ticker": "FRFHF",
+   "name": "Fairfax Financial Holdings Ltd",
+   "avg_weight_in_filings": 0.00136,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "247361702",
+   "ticker": "DAL",
+   "name": "DELTA AIR LINES INC DEL",
+   "avg_weight_in_filings": 0.00136,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "121220107",
+   "ticker": "BKW",
+   "name": "BURGER KING WORLDWIDE INC",
+   "avg_weight_in_filings": 0.00132,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "25754A201",
+   "ticker": "DPZ",
+   "name": "DOMINOS PIZZA INC",
+   "avg_weight_in_filings": 0.00131,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "26884L109",
+   "ticker": "EQT",
+   "name": "EQT CORP",
+   "avg_weight_in_filings": 0.0013,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "46625H100",
+   "ticker": "JPM",
+   "name": "JPMORGAN CHASE & CO",
+   "avg_weight_in_filings": 0.0013,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "013817101",
+   "ticker": "AA",
+   "name": "ALCOA INC",
+   "avg_weight_in_filings": 0.0013,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "878742204",
+   "ticker": "TECK",
+   "name": "Teck Resources Ltd",
+   "avg_weight_in_filings": 0.00125,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "30212P303",
+   "ticker": "EXPE",
+   "name": "EXPEDIA GROUP INC",
+   "avg_weight_in_filings": 0.00122,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "30231G102",
+   "ticker": "XOM",
+   "name": "EXXON MOBIL CORP",
+   "avg_weight_in_filings": 0.00121,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "31428X106",
+   "ticker": "FDX",
+   "name": "FEDEX CORP",
+   "avg_weight_in_filings": 0.00121,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "934423104",
+   "ticker": "WBD",
+   "name": "WARNER BROS DISCOVERY INC",
+   "avg_weight_in_filings": 0.00117,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1 dagar, 2026-10-05 till 2026-10-05"
+  },
+  {
+   "cusip": "513272104",
+   "ticker": "LW",
+   "name": "Lamb Weston Hldgs Inc",
+   "avg_weight_in_filings": 0.00114,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "2514 dagar, 2016-11-10 till 2026-11-11"
+  },
+  {
+   "cusip": "90353T100",
+   "ticker": "UBER",
+   "name": "UBER TECHNOLOGIES INC",
+   "avg_weight_in_filings": 0.0011,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1888 dagar, 2019-05-10 till 2026-11-11"
+  },
+  {
+   "cusip": "92840M102",
+   "ticker": "VST",
+   "name": "VISTRA CORP",
+   "avg_weight_in_filings": 0.00107,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "2540 dagar, 2016-10-05 till 2026-11-11"
+  },
+  {
+   "cusip": "650111107",
+   "ticker": "NYT",
+   "name": "NEW YORK TIMES CO",
+   "avg_weight_in_filings": 0.00105,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "04247X102",
+   "ticker": "AWI",
+   "name": "ARMSTRONG WORLD INDUSTRIES",
+   "avg_weight_in_filings": 0.00105,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "774341101",
+   "ticker": "COL",
+   "name": "ROCKWELL COLLINS INC",
+   "avg_weight_in_filings": 0.00105,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "45166R204",
+   "ticker": "IDIX",
+   "name": "IDENIX PHARMACEUTICALS INC",
+   "avg_weight_in_filings": 0.00104,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "538034109",
+   "ticker": "LYV",
+   "name": "LIVE NATION ENTERTAINMENT IN",
+   "avg_weight_in_filings": 0.00104,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "632307104",
+   "ticker": "NTRA",
+   "name": "Natera Inc",
+   "avg_weight_in_filings": 0.00104,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "2859 dagar, 2015-07-01 till 2026-11-11"
+  },
+  {
+   "cusip": "25490A309",
+   "ticker": "A309PS",
+   "name": "DIRECTV",
+   "avg_weight_in_filings": 0.00101,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "09062X103",
+   "ticker": "BIIB",
+   "name": "Biogen Idec Inc",
+   "avg_weight_in_filings": 0.00101,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "16119P108",
+   "ticker": "CHTR",
+   "name": "CHARTER COMMUNICATIONS INC N",
+   "avg_weight_in_filings": 0.00099,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "461202103",
+   "ticker": "INTU",
+   "name": "INTUIT",
+   "avg_weight_in_filings": 0.00099,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "78410G104",
+   "ticker": "SBAC",
+   "name": "SBA COMMUNICATIONS CORP",
+   "avg_weight_in_filings": 0.00098,
+   "cache_before": "data",
+   "klass": "hade_kurs",
+   "detail": "kurs fanns redan i cachen"
+  },
+  {
+   "cusip": "00287Y109",
+   "ticker": "ABBV",
+   "name": "AbbVie Inc.",
+   "avg_weight_in_filings": 0.00096,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3487 dagar, 2013-01-02 till 2026-11-11"
+  },
+  {
+   "cusip": "124857202",
+   "ticker": "CBS",
+   "name": "CBS CORP NEW",
+   "avg_weight_in_filings": 0.00095,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "N53745100",
+   "ticker": "LYB",
+   "name": "LyondellBasell Ind's NV",
+   "avg_weight_in_filings": 0.00094,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "055622104",
+   "ticker": "BP",
+   "name": "BP PLC",
+   "avg_weight_in_filings": 0.00094,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "09247X101",
+   "ticker": "BLK",
+   "name": "Blackrock Inc",
+   "avg_weight_in_filings": 0.00093,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "375558103",
+   "ticker": "GILD",
+   "name": "Gilead Sciences Inc.",
+   "avg_weight_in_filings": 0.00092,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "40415F101",
+   "ticker": "HDB",
+   "name": "HDFC Bank Ltd",
+   "avg_weight_in_filings": 0.00091,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "G3075P101",
+   "ticker": "ESGR",
+   "name": "ENSTAR GROUP LIMITED",
+   "avg_weight_in_filings": 0.00091,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "881624209",
+   "ticker": "TEVA",
+   "name": "TEVA PHARMACEUTICAL INDS LTD",
+   "avg_weight_in_filings": 0.00089,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "007903107",
+   "ticker": "AMD",
+   "name": "ADVANCED MICRO DEVICES INC",
+   "avg_weight_in_filings": 0.00089,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "722304102",
+   "ticker": "PDD",
+   "name": "PINDUODUO INC",
+   "avg_weight_in_filings": 0.00089,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "2086 dagar, 2018-07-26 till 2026-11-11"
+  },
+  {
+   "cusip": "19625W104",
+   "ticker": "CLNS",
+   "name": "COLONY NORTHSTAR INC",
+   "avg_weight_in_filings": 0.00088,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "G8807B106",
+   "ticker": "TBPH",
+   "name": "THERAVANCE BIOPHARMA INC",
+   "avg_weight_in_filings": 0.00088,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1 dagar, 2026-09-23 till 2026-09-23"
+  },
+  {
+   "cusip": "608190104",
+   "ticker": "MHK",
+   "name": "MOHAWK INDS INC",
+   "avg_weight_in_filings": 0.00088,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "067901108",
+   "ticker": "GOLD",
+   "name": "Barrick Gold Corp",
+   "avg_weight_in_filings": 0.00088,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3185 dagar, 2014-03-17 till 2026-11-11"
+  },
+  {
+   "cusip": "G25508105",
+   "ticker": "CRH",
+   "name": "CRH PLC",
+   "avg_weight_in_filings": 0.00087,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "449253103",
+   "ticker": "IAA",
+   "name": "IAA INC",
+   "avg_weight_in_filings": 0.00085,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "697435105",
+   "ticker": "PANW",
+   "name": "Palo Alto Networks Inc",
+   "avg_weight_in_filings": 0.00084,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3599 dagar, 2012-07-20 till 2026-11-11"
+  },
+  {
+   "cusip": "19247G107",
+   "ticker": "COHR",
+   "name": "Coherent Corp",
+   "avg_weight_in_filings": 0.00084,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "464287655",
+   "ticker": "IWM",
+   "name": "Ishares Tr",
+   "avg_weight_in_filings": 0.0008,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "887317303",
+   "ticker": "TWX",
+   "name": "TIME WARNER INC",
+   "avg_weight_in_filings": 0.0008,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "G6564A105",
+   "ticker": "NOMD",
+   "name": "NOMAD HLDGS LTD",
+   "avg_weight_in_filings": 0.00078,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "2983 dagar, 2015-01-02 till 2026-11-11"
+  },
+  {
+   "cusip": "92556H206",
+   "ticker": "PARA",
+   "name": "VIACOMCBS INC",
+   "avg_weight_in_filings": 0.00078,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1442 dagar, 2021-02-12 till 2026-11-11"
+  },
+  {
+   "cusip": "47215P106",
+   "ticker": "JD",
+   "name": "JD.COM INC",
+   "avg_weight_in_filings": 0.00076,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3138 dagar, 2014-05-22 till 2026-11-11"
+  },
+  {
+   "cusip": "01973R101",
+   "ticker": "ALSN",
+   "name": "ALLISON TRANSMISSION HOLDING",
+   "avg_weight_in_filings": 0.00074,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3687 dagar, 2012-03-15 till 2026-11-11"
+  },
+  {
+   "cusip": "020002101",
+   "ticker": "ALL",
+   "name": "ALLSTATE CORP",
+   "avg_weight_in_filings": 0.00073,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "492515101",
+   "ticker": "KERX",
+   "name": "KERYX BIOPHARMACEUTICALS INC",
+   "avg_weight_in_filings": 0.00073,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "78463V907",
+   "ticker": null,
+   "name": "SPDR Gold Trust",
+   "avg_weight_in_filings": 0.00073,
+   "klass": "ingen_ticker",
+   "detail": "CUSIP saknar ticker i fails-to-deliver-kopplingen"
+  },
+  {
+   "cusip": "26614N102",
+   "ticker": "DD",
+   "name": "DUPONT DE NEMOURS INC",
+   "avg_weight_in_filings": 0.00072,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "531229409",
+   "ticker": "LSXMA",
+   "name": "LIBERTY MEDIA CORP DEL",
+   "avg_weight_in_filings": 0.00072,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "48248M102",
+   "ticker": "KKR",
+   "name": "KKR & CO LP",
+   "avg_weight_in_filings": 0.00072,
+   "cache_before": "data",
+   "klass": "hade_kurs",
+   "detail": "kurs fanns redan i cachen"
+  },
+  {
+   "cusip": "G21810109",
+   "ticker": "CLVT",
+   "name": "CLARIVATE PLC",
+   "avg_weight_in_filings": 0.00071,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "2020 dagar, 2018-10-29 till 2026-11-11"
+  },
+  {
+   "cusip": "25470F302",
+   "ticker": "DISCK",
+   "name": "DISCOVERY COMMUNICATNS NEW",
+   "avg_weight_in_filings": 0.00071,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "008916108",
+   "ticker": "AGU",
+   "name": "AGRIUM INC",
+   "avg_weight_in_filings": 0.0007,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "370023103",
+   "ticker": "GGP",
+   "name": "GENERAL GROWTH PPTYS INC NEW",
+   "avg_weight_in_filings": 0.00069,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "48242W106",
+   "ticker": "KBR",
+   "name": "Kbr Inc",
+   "avg_weight_in_filings": 0.00069,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "741503403",
+   "ticker": "PCLN",
+   "name": "Priceline Grp Inc",
+   "avg_weight_in_filings": 0.00067,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "270 dagar, 2025-10-16 till 2026-11-11"
+  },
+  {
+   "cusip": "L8681T102",
+   "ticker": "SPOT",
+   "name": "SPOTIFY TECHNOLOGY S A",
+   "avg_weight_in_filings": 0.00067,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "2166 dagar, 2018-04-03 till 2026-11-11"
+  },
+  {
+   "cusip": "110122108",
+   "ticker": "BMY",
+   "name": "BRISTOL MYERS SQUIBB CO",
+   "avg_weight_in_filings": 0.00061,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "942622200",
+   "ticker": "WSO",
+   "name": "WATSCO INC",
+   "avg_weight_in_filings": 0.00061,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "980745103",
+   "ticker": "WWD",
+   "name": "Woodward Inc",
+   "avg_weight_in_filings": 0.0006,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "806857108",
+   "ticker": "SLB",
+   "name": "Schlumberger Ltd.",
+   "avg_weight_in_filings": 0.00059,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "40412C101",
+   "ticker": "HCA",
+   "name": "HCA HOLDINGS INC",
+   "avg_weight_in_filings": 0.00059,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "90184L102",
+   "ticker": "TWTR",
+   "name": "TWITTER INC",
+   "avg_weight_in_filings": 0.00059,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "256677105",
+   "ticker": "DG",
+   "name": "DOLLAR GEN CORP NEW",
+   "avg_weight_in_filings": 0.00058,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "963320106",
+   "ticker": "WHR",
+   "name": "WHIRLPOOL CORP",
+   "avg_weight_in_filings": 0.00058,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "531229789",
+   "ticker": "LSXMK",
+   "name": "LIBERTY MEDIA CORP DEL",
+   "avg_weight_in_filings": 0.00058,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "127686103",
+   "ticker": "CZR",
+   "name": "CAESARS ENTMT CORP",
+   "avg_weight_in_filings": 0.00058,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3054 dagar, 2014-09-22 till 2026-11-11"
+  },
+  {
+   "cusip": "00507V109",
+   "ticker": "ATVI",
+   "name": "ACTIVISION BLIZZARD INC",
+   "avg_weight_in_filings": 0.00057,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "125269100",
+   "ticker": "CF",
+   "name": "CF INDS HLDGS INC",
+   "avg_weight_in_filings": 0.00057,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "122017106",
+   "ticker": "BURL",
+   "name": "BURLINGTON STORES INC",
+   "avg_weight_in_filings": 0.00056,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3298 dagar, 2013-10-02 till 2026-11-11"
+  },
+  {
+   "cusip": "68389X105",
+   "ticker": "ORCL",
+   "name": "ORACLE CORP",
+   "avg_weight_in_filings": 0.00056,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "002824100",
+   "ticker": "ABT",
+   "name": "Abbott Labs",
+   "avg_weight_in_filings": 0.00056,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "948596101",
+   "ticker": "WB",
+   "name": "Weibo Corp",
+   "avg_weight_in_filings": 0.00055,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3162 dagar, 2014-04-17 till 2026-11-11"
+  },
+  {
+   "cusip": "988498101",
+   "ticker": "YUM",
+   "name": "YUM BRANDS INC",
+   "avg_weight_in_filings": 0.00054,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "690742101",
+   "ticker": "OC",
+   "name": "OWENS CORNING NEW",
+   "avg_weight_in_filings": 0.00054,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "693475105",
+   "ticker": "PNC",
+   "name": "PNC FINL SVCS GROUP INC",
+   "avg_weight_in_filings": 0.00053,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "46266C105",
+   "ticker": "IQV",
+   "name": "IQVIA HLDGS INC",
+   "avg_weight_in_filings": 0.0005,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3399 dagar, 2013-05-09 till 2026-11-11"
+  },
+  {
+   "cusip": "58733R102",
+   "ticker": "MELI",
+   "name": "Mercadolibre Inc",
+   "avg_weight_in_filings": 0.0005,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "92343V104",
+   "ticker": "VZ",
+   "name": "VERIZON COMMUNICATIONS INC",
+   "avg_weight_in_filings": 0.00049,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "40434L105",
+   "ticker": "HPQ",
+   "name": "HP INC",
+   "avg_weight_in_filings": 0.00048,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "81141R100",
+   "ticker": "SE",
+   "name": "Sea Ltd",
+   "avg_weight_in_filings": 0.00048,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "2277 dagar, 2017-10-20 till 2026-11-11"
+  },
+  {
+   "cusip": "460146103",
+   "ticker": "IP",
+   "name": "INTL PAPER CO",
+   "avg_weight_in_filings": 0.00048,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "778296103",
+   "ticker": "ROST",
+   "name": "ROSS STORES INC",
+   "avg_weight_in_filings": 0.00047,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "57060U100",
+   "ticker": "GDX",
+   "name": "Mkt Vectors Gld Miners ETF",
+   "avg_weight_in_filings": 0.00047,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "81369Y506",
+   "ticker": "XLE",
+   "name": "SELECT SECTOR SPDR TR",
+   "avg_weight_in_filings": 0.00047,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "874039100",
+   "ticker": "TSM",
+   "name": "TAIWAN SEMICONDUCTOR MFG LTD",
+   "avg_weight_in_filings": 0.00047,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "718172109",
+   "ticker": "PM",
+   "name": "Philip Morris Int'l Inc.",
+   "avg_weight_in_filings": 0.00047,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "032654105",
+   "ticker": "ADI",
+   "name": "ANALOG DEVICES INC",
+   "avg_weight_in_filings": 0.00047,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "151020104",
+   "ticker": "CELG",
+   "name": "Celgene Corp",
+   "avg_weight_in_filings": 0.00047,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "654106103",
+   "ticker": "NKE",
+   "name": "NIKE INC",
+   "avg_weight_in_filings": 0.00045,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "73935A104",
+   "ticker": "QQQ",
+   "name": "POWERSHARES QQQ TRUST",
+   "avg_weight_in_filings": 0.00045,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "24703L103",
+   "ticker": "DVMT",
+   "name": "DELL TECHNOLOGIES INC",
+   "avg_weight_in_filings": 0.00045,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "369604301",
+   "ticker": "GE",
+   "name": "General Electric Co",
+   "avg_weight_in_filings": 0.00044,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "285512109",
+   "ticker": "EA",
+   "name": "Electronic Arts Inc",
+   "avg_weight_in_filings": 0.00044,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1 dagar, 2026-08-04 till 2026-08-04"
+  },
+  {
+   "cusip": "26875P101",
+   "ticker": "EOG",
+   "name": "EOG Resources Inc.",
+   "avg_weight_in_filings": 0.00042,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "369604103",
+   "ticker": "GE",
+   "name": "General Electric Co",
+   "avg_weight_in_filings": 0.00041,
+   "cache_before": "data",
+   "klass": "hade_kurs",
+   "detail": "kurs fanns redan i cachen"
+  },
+  {
+   "cusip": "45866F104",
+   "ticker": "ICE",
+   "name": "INTERCONTINENTAL EXCHANGE IN",
+   "avg_weight_in_filings": 0.00041,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "844741108",
+   "ticker": "LUV",
+   "name": "SOUTHWEST AIRLS CO",
+   "avg_weight_in_filings": 0.0004,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "707569109",
+   "ticker": "PENN",
+   "name": "Penn Natl Gaming Inc",
+   "avg_weight_in_filings": 0.0004,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "771049103",
+   "ticker": "RBLX",
+   "name": "ROBLOX CORP",
+   "avg_weight_in_filings": 0.00039,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1427 dagar, 2021-03-10 till 2026-11-11"
+  },
+  {
+   "cusip": "55354G100",
+   "ticker": "MSCI",
+   "name": "MSCI INC",
+   "avg_weight_in_filings": 0.00039,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "H1467J104",
+   "ticker": "CB",
+   "name": "CHUBB LIMITED",
+   "avg_weight_in_filings": 0.00038,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "N6596X109",
+   "ticker": "NXPI",
+   "name": "NXP SEMICONDUCTORS N V",
+   "avg_weight_in_filings": 0.00038,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "30734W109",
+   "ticker": "FPAC",
+   "name": "FAR PT ACQUISITION CORP",
+   "avg_weight_in_filings": 0.00037,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "064058100",
+   "ticker": "BK",
+   "name": "BANK OF NEW YORK MELLON CORP",
+   "avg_weight_in_filings": 0.00037,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "22943F100",
+   "ticker": "CTRP",
+   "name": "Ctrip.com Int'l Ltd",
+   "avg_weight_in_filings": 0.00037,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "89374L104",
+   "ticker": "TBIO",
+   "name": "TRANSLATE BIO INC",
+   "avg_weight_in_filings": 0.00036,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1357 dagar, 2021-06-18 till 2026-11-11"
+  },
+  {
+   "cusip": "69608A108",
+   "ticker": "PLTR",
+   "name": "Palantir Technologies Inc",
+   "avg_weight_in_filings": 0.00036,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1537 dagar, 2020-09-30 till 2026-11-11"
+  },
+  {
+   "cusip": "640268108",
+   "ticker": "NKTR",
+   "name": "Nektar Therapeutics",
+   "avg_weight_in_filings": 0.00036,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "92537N108",
+   "ticker": "VRT",
+   "name": "Vertiv Holdings Co",
+   "avg_weight_in_filings": 0.00036,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "2081 dagar, 2018-08-02 till 2026-11-11"
+  },
+  {
+   "cusip": "G5480U104",
+   "ticker": "LBTYA",
+   "name": "LIBERTY GLOBAL PLC",
+   "avg_weight_in_filings": 0.00035,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "459506101",
+   "ticker": "IFF",
+   "name": "INTERNATIONAL FLAVORS&FRAGRA",
+   "avg_weight_in_filings": 0.00034,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "46982L108",
+   "ticker": "J",
+   "name": "JACOBS SOLUTIONS INC",
+   "avg_weight_in_filings": 0.00034,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "78409V104",
+   "ticker": "SPGI",
+   "name": "S&P GLOBAL INC",
+   "avg_weight_in_filings": 0.00034,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "670100205",
+   "ticker": "NVO",
+   "name": "NOVO-NORDISK A S",
+   "avg_weight_in_filings": 0.00034,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "G6964L107",
+   "ticker": "PSFE",
+   "name": "PAYSAFE LIMITED",
+   "avg_weight_in_filings": 0.00033,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1530 dagar, 2020-10-09 till 2026-11-11"
+  },
+  {
+   "cusip": "78467J100",
+   "ticker": "SSNC",
+   "name": "SS&C TECHNOLOGIES HLDGS INC",
+   "avg_weight_in_filings": 0.00033,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "65249B109",
+   "ticker": "NWSA",
+   "name": "News Corp New",
+   "avg_weight_in_filings": 0.00031,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3371 dagar, 2013-06-19 till 2026-11-11"
+  },
+  {
+   "cusip": "444859102",
+   "ticker": "HUM",
+   "name": "HUMANA INC",
+   "avg_weight_in_filings": 0.00031,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "29278N103",
+   "ticker": "ETP",
+   "name": "ENERGY TRANSFER PARTNERS LP",
+   "avg_weight_in_filings": 0.00031,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "37045V100",
+   "ticker": "GM",
+   "name": "GENERAL MTRS CO",
+   "avg_weight_in_filings": 0.00031,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "69047Q102",
+   "ticker": "OVV",
+   "name": "OVINTIV INC",
+   "avg_weight_in_filings": 0.0003,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "512807108",
+   "ticker": "LRCX",
+   "name": "LAM RESEARCH CORP",
+   "avg_weight_in_filings": 0.0003,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "05722G100",
+   "ticker": "BKR",
+   "name": "BAKER HUGHES A GE CO",
+   "avg_weight_in_filings": 0.00029,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "046513107",
+   "ticker": "ATRA",
+   "name": "ATARA BIOTHERAPEUTICS INC",
+   "avg_weight_in_filings": 0.00029,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3036 dagar, 2014-10-16 till 2026-11-11"
+  },
+  {
+   "cusip": "19626G108",
+   "ticker": "CLNY",
+   "name": "COLONY CAP INC NEW",
+   "avg_weight_in_filings": 0.00028,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "883556102",
+   "ticker": "TMO",
+   "name": "THERMO FISHER SCIENTIFIC INC",
+   "avg_weight_in_filings": 0.00028,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "969457100",
+   "ticker": "WMB",
+   "name": "WILLIAMS COS INC DEL",
+   "avg_weight_in_filings": 0.00027,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "58933Y105",
+   "ticker": "MRK",
+   "name": "MERCK & CO INC",
+   "avg_weight_in_filings": 0.00027,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "95082P105",
+   "ticker": "WCC",
+   "name": "WESCO INTL INC",
+   "avg_weight_in_filings": 0.00027,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "531229813",
+   "ticker": "LSXMA",
+   "name": "LIBERTY MEDIA CORP DEL",
+   "avg_weight_in_filings": 0.00027,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "958102105",
+   "ticker": "WDC",
+   "name": "WESTERN DIGITAL CORP",
+   "avg_weight_in_filings": 0.00027,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "71531R109",
+   "ticker": "PSTH",
+   "name": "PERSHING SQUARE TONTINE HLDG",
+   "avg_weight_in_filings": 0.00026,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "146869102",
+   "ticker": "CVNA",
+   "name": "Carvana Co",
+   "avg_weight_in_filings": 0.00026,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "2399 dagar, 2017-04-28 till 2026-11-11"
+  },
+  {
+   "cusip": "85570W100",
+   "ticker": "TSG",
+   "name": "STARS GROUP INC",
+   "avg_weight_in_filings": 0.00025,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "126408103",
+   "ticker": "CSX",
+   "name": "CSX CORP",
+   "avg_weight_in_filings": 0.00024,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "87612E106",
+   "ticker": "TGT",
+   "name": "Target Corp",
+   "avg_weight_in_filings": 0.00024,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "971378104",
+   "ticker": "WSC",
+   "name": "Willscot Mobil Mini Hldng Co",
+   "avg_weight_in_filings": 0.00023,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "2770 dagar, 2015-11-05 till 2026-11-11"
+  },
+  {
+   "cusip": "366505204",
+   "ticker": "GTXAP",
+   "name": "GARRETT MOTION INC",
+   "avg_weight_in_filings": 0.00023,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "654110105",
+   "ticker": "NKLA",
+   "name": "NIKOLA CORP",
+   "avg_weight_in_filings": 0.00023,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "09857L108",
+   "ticker": "BKNG",
+   "name": "Booking Holdings Inc",
+   "avg_weight_in_filings": 0.00023,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "13321L108",
+   "ticker": "CCJ",
+   "name": "Cameco Corp",
+   "avg_weight_in_filings": 0.00022,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "284131208",
+   "ticker": "ELN",
+   "name": "ELAN PLC",
+   "avg_weight_in_filings": 0.00022,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "38259P706",
+   "ticker": "GOOG",
+   "name": "Google Inc",
+   "avg_weight_in_filings": 0.00022,
+   "cache_before": "data",
+   "klass": "hade_kurs",
+   "detail": "kurs fanns redan i cachen"
+  },
+  {
+   "cusip": "89055F103",
+   "ticker": "BLD",
+   "name": "TOPBUILD CORP",
+   "avg_weight_in_filings": 0.00022,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "594901100",
+   "ticker": "MCRS",
+   "name": "MICROS SYSTEMS INC",
+   "avg_weight_in_filings": 0.00022,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "15135B101",
+   "ticker": "CNC",
+   "name": "CENTENE CORP DEL",
+   "avg_weight_in_filings": 0.00021,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "893641100",
+   "ticker": "TDG",
+   "name": "TRANSDIGM GROUP INC",
+   "avg_weight_in_filings": 0.00021,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "G61188101",
+   "ticker": "LBTYA",
+   "name": "LIBERTY GLOBAL LTD",
+   "avg_weight_in_filings": 0.00021,
+   "cache_before": "data",
+   "klass": "hade_kurs",
+   "detail": "kurs fanns redan i cachen"
+  },
+  {
+   "cusip": "192446102",
+   "ticker": "CTSH",
+   "name": "Cognizant Tech Sol'ns Corp",
+   "avg_weight_in_filings": 0.00021,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "81369Y605",
+   "ticker": "XLF",
+   "name": "Select Sector Spdr Tr",
+   "avg_weight_in_filings": 0.0002,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "981558109",
+   "ticker": "WP",
+   "name": "WORLDPAY INC",
+   "avg_weight_in_filings": 0.0002,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "09075E100",
+   "ticker": "BIVV",
+   "name": "BIOVERATIV INC",
+   "avg_weight_in_filings": 0.00019,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "G3421J106",
+   "ticker": "FERG",
+   "name": "FERGUSON PLC NEW",
+   "avg_weight_in_filings": 0.00019,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "G50871105",
+   "ticker": "JAZZ",
+   "name": "JAZZ PHARMACEUTICALS PLC",
+   "avg_weight_in_filings": 0.00019,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "81369Y704",
+   "ticker": "XLI",
+   "name": "Select Sector Spdr Tr",
+   "avg_weight_in_filings": 0.00019,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "464287556",
+   "ticker": "IBB",
+   "name": "ISHARES TR",
+   "avg_weight_in_filings": 0.00018,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "755111507",
+   "ticker": "RTN",
+   "name": "Raytheon Co",
+   "avg_weight_in_filings": 0.00018,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "81762P102",
+   "ticker": "NOW",
+   "name": "Servicenow Inc",
+   "avg_weight_in_filings": 0.00018,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3613 dagar, 2012-06-29 till 2026-11-11"
+  },
+  {
+   "cusip": "49456B101",
+   "ticker": "KMI",
+   "name": "Kinder Morgan Inc Del",
+   "avg_weight_in_filings": 0.00018,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "75513E101",
+   "ticker": "RTX",
+   "name": "RAYTHEON TECHNOLOGIES CORP",
+   "avg_weight_in_filings": 0.00017,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "708160106",
+   "ticker": "JCPNQ",
+   "name": "PENNEY J C INC",
+   "avg_weight_in_filings": 0.00017,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "779376102",
+   "ticker": "ROVI",
+   "name": "ROVI CORP",
+   "avg_weight_in_filings": 0.00017,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "983793100",
+   "ticker": "XPO",
+   "name": "XPO LOGISTICS INC",
+   "avg_weight_in_filings": 0.00017,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "842587107",
+   "ticker": "SO",
+   "name": "Southern Co",
+   "avg_weight_in_filings": 0.00017,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "26441C204",
+   "ticker": "DUK",
+   "name": "Duke Energy Corp",
+   "avg_weight_in_filings": 0.00017,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "78464A870",
+   "ticker": "XBI",
+   "name": "Spdr Ser Tr",
+   "avg_weight_in_filings": 0.00017,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "22160K105",
+   "ticker": "COST",
+   "name": "Costco Wholesale Corp",
+   "avg_weight_in_filings": 0.00017,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "G2110R114",
+   "ticker": "R114PS",
+   "name": "CHIPMOS TECH BERMUDA LTD",
+   "avg_weight_in_filings": 0.00016,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "83406F102",
+   "ticker": "SOFI",
+   "name": "SOFI TECHNOLOGIES INC",
+   "avg_weight_in_filings": 0.00016,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1472 dagar, 2021-01-04 till 2026-11-11"
+  },
+  {
+   "cusip": "G1151C101",
+   "ticker": "ACN",
+   "name": "ACCENTURE PLC IRELAND",
+   "avg_weight_in_filings": 0.00016,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "68404L201",
+   "ticker": "OPCH",
+   "name": "Option Care Health Inc",
+   "avg_weight_in_filings": 0.00015,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "20030N101",
+   "ticker": "CMCSA",
+   "name": "Comcast Corp New",
+   "avg_weight_in_filings": 0.00015,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "90341W108",
+   "ticker": "LCC",
+   "name": "US Airways Group Inc.",
+   "avg_weight_in_filings": 0.00015,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "00206R102",
+   "ticker": "T",
+   "name": "AT&T INC",
+   "avg_weight_in_filings": 0.00015,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "747525103",
+   "ticker": "QCOM",
+   "name": "QUALCOMM INC",
+   "avg_weight_in_filings": 0.00015,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "23804L103",
+   "ticker": "DDOG",
+   "name": "Datadog Inc",
+   "avg_weight_in_filings": 0.00015,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1797 dagar, 2019-09-19 till 2026-11-11"
+  },
+  {
+   "cusip": "46429B598",
+   "ticker": "INDA",
+   "name": "Ishares Tr",
+   "avg_weight_in_filings": 0.00015,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3715 dagar, 2012-02-03 till 2026-11-11"
+  },
+  {
+   "cusip": "42805T105",
+   "ticker": "HTZ",
+   "name": "HERTZ GLOBAL HOLDINGS INC",
+   "avg_weight_in_filings": 0.00015,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1348 dagar, 2021-07-01 till 2026-11-11"
+  },
+  {
+   "cusip": "78464A698",
+   "ticker": "KRE",
+   "name": "Spdr Ser Tr",
+   "avg_weight_in_filings": 0.00015,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "86732Y109",
+   "ticker": "SUNEQ",
+   "name": "SUNEDISON INC",
+   "avg_weight_in_filings": 0.00014,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "032511107",
+   "ticker": "APC",
+   "name": "ANADARKO PETE CORP",
+   "avg_weight_in_filings": 0.00014,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "189 dagar, 2026-02-12 till 2026-11-11"
+  },
+  {
+   "cusip": "172967226",
+   "ticker": "CWSA",
+   "name": "CITIGROUP INC",
+   "avg_weight_in_filings": 0.00014,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "92345Y106",
+   "ticker": "VRSK",
+   "name": "VERISK ANALYTICS INC",
+   "avg_weight_in_filings": 0.00014,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "Y09827109",
+   "ticker": "AVGO",
+   "name": "Broadcom Ltd",
+   "avg_weight_in_filings": 0.00014,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "81211K100",
+   "ticker": "SEE",
+   "name": "SEALED AIR CORP NEW",
+   "avg_weight_in_filings": 0.00014,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "655664100",
+   "ticker": "JWN",
+   "name": "Nordstrom Inc",
+   "avg_weight_in_filings": 0.00014,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "05352A100",
+   "ticker": "AVTR",
+   "name": "AVANTOR INC",
+   "avg_weight_in_filings": 0.00014,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1883 dagar, 2019-05-17 till 2026-11-11"
+  },
+  {
+   "cusip": "82481R106",
+   "ticker": "SHPG",
+   "name": "SHIRE PLC",
+   "avg_weight_in_filings": 0.00014,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "655044105",
+   "ticker": "NBL",
+   "name": "Noble Energy Inc",
+   "avg_weight_in_filings": 0.00014,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "67020Y100",
+   "ticker": "NUAN",
+   "name": "Nuance Communications Inc",
+   "avg_weight_in_filings": 0.00013,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "16117M305",
+   "ticker": "CHTR",
+   "name": "Charter Comm's Inc",
+   "avg_weight_in_filings": 0.00013,
+   "cache_before": "data",
+   "klass": "hade_kurs",
+   "detail": "kurs fanns redan i cachen"
+  },
+  {
+   "cusip": "22266L106",
+   "ticker": "COUP",
+   "name": "Coupa Software Inc",
+   "avg_weight_in_filings": 0.00013,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "580037109",
+   "ticker": "MDR",
+   "name": "McDermott Int'l Inc",
+   "avg_weight_in_filings": 0.00013,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "500255104",
+   "ticker": "KSS",
+   "name": "KOHLS CORP",
+   "avg_weight_in_filings": 0.00013,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "912909108",
+   "ticker": "X",
+   "name": "UNITED STATES STL CORP NEW",
+   "avg_weight_in_filings": 0.00013,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "629377508",
+   "ticker": "NRG",
+   "name": "NRG ENERGY INC",
+   "avg_weight_in_filings": 0.00012,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "750086100",
+   "ticker": "RAX",
+   "name": "RACKSPACE HOSTING INC",
+   "avg_weight_in_filings": 0.00012,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "61166W101",
+   "ticker": "MON",
+   "name": "MONSANTO CO NEW",
+   "avg_weight_in_filings": 0.00012,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "66987E206",
+   "ticker": "NG",
+   "name": "NOVAGOLD RES INC",
+   "avg_weight_in_filings": 0.00012,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "59522J103",
+   "ticker": "MAA",
+   "name": "Mid-Amer Apt Cmntys Inc",
+   "avg_weight_in_filings": 0.00012,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "69351T106",
+   "ticker": "PPL",
+   "name": "PPL Corp",
+   "avg_weight_in_filings": 0.00012,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "66705Y104",
+   "ticker": "NSAM",
+   "name": "NORTHSTAR ASSET MGMT GROUP I",
+   "avg_weight_in_filings": 0.00012,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "713448108",
+   "ticker": "PEP",
+   "name": "Pepsico Inc.",
+   "avg_weight_in_filings": 0.00012,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "38141G104",
+   "ticker": "GS",
+   "name": "GOLDMAN SACHS GROUP INC",
+   "avg_weight_in_filings": 0.00012,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "88104R100",
+   "ticker": "TERP",
+   "name": "TERRAFORM PWR INC",
+   "avg_weight_in_filings": 0.00012,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "87236Y108",
+   "ticker": "AMTD",
+   "name": "TD AMERITRADE HLDG CORP",
+   "avg_weight_in_filings": 0.00011,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1829 dagar, 2019-08-05 till 2026-11-11"
+  },
+  {
+   "cusip": "717081103",
+   "ticker": "PFE",
+   "name": "PFIZER INC",
+   "avg_weight_in_filings": 0.00011,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "680665205",
+   "ticker": "OLN",
+   "name": "OLIN CORP",
+   "avg_weight_in_filings": 0.00011,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "26969P108",
+   "ticker": "EXP",
+   "name": "EAGLE MATLS INC",
+   "avg_weight_in_filings": 0.00011,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "260003108",
+   "ticker": "DOV",
+   "name": "DOVER CORP",
+   "avg_weight_in_filings": 0.00011,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "G3643J108",
+   "ticker": "FLUT",
+   "name": "FLUTTER ENTMT PLC",
+   "avg_weight_in_filings": 0.00011,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "039653100",
+   "ticker": "ACA",
+   "name": "ARCOSA INC",
+   "avg_weight_in_filings": 0.00011,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "69 dagar, 2026-07-17 till 2026-10-22"
+  },
+  {
+   "cusip": "464287184",
+   "ticker": "FXI",
+   "name": "ISHARES TR",
+   "avg_weight_in_filings": 0.00011,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "40416M105",
+   "ticker": "HDS",
+   "name": "HD SUPPLY HLDGS INC",
+   "avg_weight_in_filings": 0.00011,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "N7902X106",
+   "ticker": "ST",
+   "name": "SENSATA TECHNOLOGIES HLDG NV",
+   "avg_weight_in_filings": 0.00011,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "03524A108",
+   "ticker": "BUD",
+   "name": "ANHEUSER BUSCH INBEV SA/NV",
+   "avg_weight_in_filings": 0.00011,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "55087P104",
+   "ticker": "LYFT",
+   "name": "LYFT INC",
+   "avg_weight_in_filings": 0.00011,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1917 dagar, 2019-03-29 till 2026-11-11"
+  },
+  {
+   "cusip": "647581206",
+   "ticker": "EDU",
+   "name": "NEW ORIENTAL ED & TECHNOLOGY",
+   "avg_weight_in_filings": 0.0001,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "45781M101",
+   "ticker": "INVA",
+   "name": "INNOVIVA INC",
+   "avg_weight_in_filings": 0.0001,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "23331A109",
+   "ticker": "DHI",
+   "name": "D R HORTON INC",
+   "avg_weight_in_filings": 0.0001,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "80004C101",
+   "ticker": "SNDK",
+   "name": "SanDisk Corp",
+   "avg_weight_in_filings": 0.0001,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "439 dagar, 2025-02-13 till 2026-11-11"
+  },
+  {
+   "cusip": "737446104",
+   "ticker": "POST",
+   "name": "Post Hldgs Inc.",
+   "avg_weight_in_filings": 0.0001,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3720 dagar, 2012-01-27 till 2026-11-11"
+  },
+  {
+   "cusip": "872540109",
+   "ticker": "TJX",
+   "name": "TJX COS INC NEW",
+   "avg_weight_in_filings": 0.0001,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "261608103",
+   "ticker": "DRC",
+   "name": "DRESSER-RAND GROUP INC",
+   "avg_weight_in_filings": 0.0001,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "15135U109",
+   "ticker": "CVE",
+   "name": "CENOVUS ENERGY INC",
+   "avg_weight_in_filings": 0.0001,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "Y8213L102",
+   "ticker": "SEMI",
+   "name": "SUNEDISON SEMICONDUCTOR LTD",
+   "avg_weight_in_filings": 0.0001,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1160 dagar, 2022-03-30 till 2026-11-11"
+  },
+  {
+   "cusip": "824348106",
+   "ticker": "SHW",
+   "name": "SHERWIN WILLIAMS CO",
+   "avg_weight_in_filings": 0.0001,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "58155Q103",
+   "ticker": "MCK",
+   "name": "MCKESSON CORP",
+   "avg_weight_in_filings": 0.0001,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "46120E602",
+   "ticker": "ISRG",
+   "name": "Intuitive Surgical Inc",
+   "avg_weight_in_filings": 0.0001,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "65248E104",
+   "ticker": "NWSA",
+   "name": "NEWS CORP",
+   "avg_weight_in_filings": 9e-05,
+   "cache_before": "data",
+   "klass": "hade_kurs",
+   "detail": "kurs fanns redan i cachen"
+  },
+  {
+   "cusip": "666807102",
+   "ticker": "NOC",
+   "name": "Northrop Grumman Corp",
+   "avg_weight_in_filings": 9e-05,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "675746309",
+   "ticker": "OCN",
+   "name": "OCWEN FINL CORP",
+   "avg_weight_in_filings": 9e-05,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "74624M102",
+   "ticker": "PSTG",
+   "name": "Pure Storage Inc.",
+   "avg_weight_in_filings": 9e-05,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "22788C105",
+   "ticker": "CRWD",
+   "name": "Crowdstrike Hldgs Inc",
+   "avg_weight_in_filings": 9e-05,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1866 dagar, 2019-06-12 till 2026-11-11"
+  },
+  {
+   "cusip": "92332V107",
+   "ticker": "VTYX",
+   "name": "VENTYX BIOSCIENCES INC",
+   "avg_weight_in_filings": 9e-05,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "886547108",
+   "ticker": "TIF",
+   "name": "TIFFANY &amp; CO NEW",
+   "avg_weight_in_filings": 8e-05,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "904311107",
+   "ticker": "UAA",
+   "name": "Under Armour, Inc",
+   "avg_weight_in_filings": 8e-05,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "229678107",
+   "ticker": "CBST",
+   "name": "Cubist Pharms Inc.",
+   "avg_weight_in_filings": 8e-05,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "88732J207",
+   "ticker": "TWC",
+   "name": "TIME WARNER CABLE INC",
+   "avg_weight_in_filings": 7e-05,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "83200N103",
+   "ticker": "SMAR",
+   "name": "Smartsheet Inc",
+   "avg_weight_in_filings": 7e-05,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "046353108",
+   "ticker": "AZN",
+   "name": "Astrazeneca PLC",
+   "avg_weight_in_filings": 7e-05,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "92189F718",
+   "ticker": "OIH",
+   "name": "VANECK VECTORS ETF TR",
+   "avg_weight_in_filings": 6e-05,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "Y0486S104",
+   "ticker": "AVGO",
+   "name": "AVAGO TECHNOLOGIES LTD",
+   "avg_weight_in_filings": 6e-05,
+   "cache_before": "data",
+   "klass": "hade_kurs",
+   "detail": "kurs fanns redan i cachen"
+  },
+  {
+   "cusip": "34986J105",
+   "ticker": "FWP",
+   "name": "FORWARD PHARMA A/S",
+   "avg_weight_in_filings": 6e-05,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "70432V102",
+   "ticker": "PAYC",
+   "name": "PAYCOM SOFTWARE INC",
+   "avg_weight_in_filings": 6e-05,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3164 dagar, 2014-04-15 till 2026-11-11"
+  },
+  {
+   "cusip": "02217A102",
+   "ticker": "AMPS",
+   "name": "ALTUS POWER INC",
+   "avg_weight_in_filings": 4e-05,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "31620R105",
+   "ticker": "FNF",
+   "name": "FIDELITY NATIONAL FINANCIAL",
+   "avg_weight_in_filings": 4e-05,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "531229722",
+   "ticker": "LLYVK",
+   "name": "LIBERTY MEDIA CORP DEL",
+   "avg_weight_in_filings": 4e-05,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "822 dagar, 2023-08-04 till 2026-11-11"
+  },
+  {
+   "cusip": "749941100",
+   "ticker": "RFMD",
+   "name": "RF MICRODEVICES INC",
+   "avg_weight_in_filings": 4e-05,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "831865209",
+   "ticker": "AOS",
+   "name": "SMITH A O CORP",
+   "avg_weight_in_filings": 4e-05,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "03748R101",
+   "ticker": "AIV",
+   "name": "APARTMENT INVT & MGMT CO",
+   "avg_weight_in_filings": 3e-05,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "78574H104",
+   "ticker": "SOC",
+   "name": "SABLE OFFSHORE CORP",
+   "avg_weight_in_filings": 3e-05,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "1400 dagar, 2021-04-19 till 2026-11-11"
+  },
+  {
+   "cusip": "531229748",
+   "ticker": "LLYVA",
+   "name": "LIBERTY MEDIA CORP DEL",
+   "avg_weight_in_filings": 2e-05,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "822 dagar, 2023-08-04 till 2026-11-11"
+  },
+  {
+   "cusip": "12514G108",
+   "ticker": "CDW",
+   "name": "CDW CORP",
+   "avg_weight_in_filings": 1e-05,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3365 dagar, 2013-06-27 till 2026-11-11"
+  },
+  {
+   "cusip": "812215200",
+   "ticker": "SEG",
+   "name": "SEAPORT ENTMT GROUP INC",
+   "avg_weight_in_filings": 1e-05,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "575 dagar, 2024-07-30 till 2026-11-11"
+  },
+  {
+   "cusip": "09260D107",
+   "ticker": "BX",
+   "name": "BLACKSTONE GROUP INC",
+   "avg_weight_in_filings": 1e-05,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  },
+  {
+   "cusip": "437306103",
+   "ticker": "HME",
+   "name": "HOME PROPERTIES INC",
+   "avg_weight_in_filings": 1e-05,
+   "cache_before": null,
+   "klass": "finns_inte",
+   "detail": "Yahoo svarar Not Found"
+  },
+  {
+   "cusip": "700517105",
+   "ticker": "PK",
+   "name": "PARK HOTELS RESORTS INC",
+   "avg_weight_in_filings": 0.0,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "2478 dagar, 2017-01-04 till 2026-11-11"
+  },
+  {
+   "cusip": "57686G105",
+   "ticker": "MATX",
+   "name": "MATSON INC",
+   "avg_weight_in_filings": 0.0,
+   "cache_before": null,
+   "klass": "fixad",
+   "detail": "3737 dagar, 2012-01-03 till 2026-11-11"
+  }
+ ],
+ "note": "Diagnos, inget resultat. Luckor räknas kvar i täckningen."
+}
