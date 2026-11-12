@@ -401,7 +401,57 @@ def okx(opener=default_opener) -> dict:
     return {"live_dated_contracts_btc_usd": len(live), "expired_contract_candles": old if isinstance(old, str) else len(old)}
 
 
-SOURCES = {"binance": binance, "binance_api": binance_api, "binance_docs": binance_docs, "binance_docs_text": lambda opener=default_opener: binance_docs(opener, full_text=True), "deribit": deribit, "bitmex_api": bitmex_api, "bitmex_files": lambda opener=None: bitmex_files(),
+# ------------------------------------------------------------------ Binance-meddelanden om COIN-M-kontrakt
+
+ANN_LIST = "https://www.binance.com/bapi/composite/v1/public/cms/article/list/query?type=1&catalogId={cat}&pageNo={page}&pageSize=50"
+ANN_ARTICLE = "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode={code}"
+ANN_CATALOGS = (48, 49, 161)          # nya listningar, senaste nyheter, avnoteringar
+ANN_TITLE = re.compile(r"(?i)coin-?m(argined)?|quarterly|delivery|delist|settle|futures contract|perpetual contract")
+ANN_COINS = ("ADA", "BCH", "BNB", "DOT", "LINK", "LTC", "XRP", "EOS", "ETC", "FIL", "TRX", "ETH", "BTC")
+ANN_SIZE = re.compile(r"(?i)contract (size|multiplier)|multiplier|USD per contract|each contract|worth \d+ ?USD|\d+ ?USD")
+
+
+def binance_announcements(opener=default_opener, max_pages: int = 300, max_articles: int = 120) -> dict:
+    """Listar Binance-meddelanden (titel, kod, publiceringsdatum) som rör COIN-M/kvartalskontrakt och
+    läser texten i dem som handlar om lansering/avnotering av de aktuella underliggande."""
+    found, per_catalog = {}, {}
+    for cat in ANN_CATALOGS:
+        pages = 0
+        for page in range(1, max_pages + 1):
+            try:
+                data = json.loads(opener(ANN_LIST.format(cat=cat, page=page)))["data"]
+            except Exception as exc:   # noqa: BLE001
+                per_catalog[cat] = {"pages": pages, "stopped": f"{type(exc).__name__}: {str(exc)[:80]}"}
+                break
+            articles = (data.get("catalogs") or [{}])[0].get("articles") or data.get("articles") or []
+            if not articles:
+                per_catalog[cat] = {"pages": pages, "stopped": "tom sida"}
+                break
+            pages = page
+            for a in articles:
+                title = a.get("title", "")
+                if ANN_TITLE.search(title):
+                    found[a["code"]] = {"code": a["code"], "title": title, "catalog": cat,
+                                        "released": datetime.fromtimestamp(a["releaseDate"] / 1000, timezone.utc).strftime("%Y-%m-%d")}
+        else:
+            per_catalog[cat] = {"pages": pages, "stopped": "max_pages"}
+    rows = sorted(found.values(), key=lambda r: r["released"])
+    relevant = [r for r in rows if re.search(r"(?i)coin-?m|quarterly|delivery|delist", r["title"])
+                and any(re.search(rf"\b{c}(USD)?\b", r["title"]) for c in ANN_COINS)
+                or re.search(r"(?i)coin-?m.*(quarterly|delivery|fee)|quarterly.*(launch|delivery)", r["title"])][:max_articles]
+    for r in relevant:
+        try:
+            text = _page_text(opener(ANN_ARTICLE.format(code=r["code"]), tries=2).decode("utf-8", "replace"))
+        except Exception as exc:   # noqa: BLE001
+            r["text_error"] = f"{type(exc).__name__}: {str(exc)[:80]}"
+            continue
+        r["characters"] = len(text)
+        r["excerpts"] = [text[max(0, m.start() - 160): m.end() + 200] for m in list(ANN_SIZE.finditer(text))[:3]]
+        r["text_head"] = text[:700]
+    return {"catalogs": per_catalog, "matching_titles": len(rows), "titles": rows, "read": len(relevant), "articles": relevant}
+
+
+SOURCES = {"binance_announcements": binance_announcements, "binance": binance, "binance_api": binance_api, "binance_docs": binance_docs, "binance_docs_text": lambda opener=default_opener: binance_docs(opener, full_text=True), "deribit": deribit, "bitmex_api": bitmex_api, "bitmex_files": lambda opener=None: bitmex_files(),
            "bybit": bybit, "bitstamp": bitstamp, "fred": fred, "fred_text": fred_text, "okx": okx}
 
 
