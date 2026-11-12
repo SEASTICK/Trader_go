@@ -11,21 +11,28 @@ positionen long, annars short. Storleken sätts så att varje mynt bidrar lika m
 long än short, och tvärtom. Frågan är om trendföljande över många mynt ger bättre riskjusterad avkastning än
 köp-och-behåll i BTC, efter kostnader, och inte bara följer marknaden.
 
-## Forskningsgrund (parametrar bestäms av litteraturen, optimeras inte)
+## Forskningsgrund och vad den inte visar
 
-Källorna anges efter min kännedom och har inte kunnat kontrolleras mot originaltexterna härifrån. Granskaren bör
-göra det.
+Källorna anges efter min kännedom och Codex har granskat deras beskrivningar. De ger idéer och riktning, men **ingen av
+dem har validerat just den här specifikationen**: 28 dagars tidsseriemomentum på kryptoterminer.
 
 - Moskowitz, Ooi och Pedersen (2012), *Time series momentum*, Journal of Financial Economics: positionens tecken
-  följer tecknet på den egna avkastningen över tidigare period, och positionen skalas efter förväntad volatilitet så
-  att varje tillgång bidrar lika mycket risk.
-- Hurst, Ooi och Pedersen (2017), *A century of evidence on trend-following investing*: samma idé över mycket lång
-  historia och många marknader.
-- Liu, Tsyvinski och Wu (2022), *Common risk factors in cryptocurrency*, Journal of Finance: momentum i krypto på
-  horisonter om cirka 1 till 4 veckor.
+  följer tecknet på den egna avkastningen, och positionen skalas efter volatilitet. Deras huvudsignal är **12 månader**
+  och gäller **andra terminsmarknader** (råvaror, valutor, obligationer, aktieindex), inte krypto.
+- Hurst, Ooi och Pedersen (2017), *A century of evidence on trend-following investing*: trendföljande över lång
+  historia och många marknader, också utanför krypto.
+- Liu, Tsyvinski och Wu (2022), *Common risk factors in cryptocurrency*, Journal of Finance: studerar främst
+  **tvärsnittsmomentum** (rankning mellan mynt, kort på de svagaste och long på de starkaste) på horisonter om
+  cirka 1 till 4 veckor. Det är inte tidsseriemomentum.
 
-Av det följer valen nedan. Lookback 28 dagar är densamma som i H-0014 och H-0018 och fastställdes redan 2026-11-02,
-alltså före den här hypotesen. Ingen annan lookback testas.
+**Vad som är låst och varför.** Lookback 28 dagar är ett **förhandslåst designval och en extrapolering**, inte en
+parameter som dessa arbeten har validerat för H-0021. Den är samma horisont som H-0014 och H-0018 (fastställd
+2026-11-02, före den här hypotesen) och ligger inom intervallet 1 till 4 veckor som kryptolitteraturen beskriver för
+tvärsnitt. Volatilitetsskalningen (60 dagar) är en konventionell förhandsregel i anslutning till
+Moskowitz–Ooi–Pedersen. Ingen annan lookback testas, och inget väljs om efter resultat. Valet bygger på samma
+prisdata som redan setts i H-0014, H-0015, H-0018 och H-0019, vilket är ett beroende som erkänns i
+"Kända svagheter" nedan. Att idén stöds av litteraturen för andra marknader och för tvärsnitt i krypto är därför
+motiv för att pröva den, inte belägg för att den fungerar.
 
 ## Regler (låsta)
 
@@ -70,6 +77,8 @@ intervall för Sharpe och slumpkontrollens t.
 
 ## Kända svagheter, skrivna i förväg
 
+- **Specifikationen är inte validerad av litteraturen** (se Forskningsgrund): 28 dagar är en extrapolering från
+  H-0014:s horisont och från tvärsnittsstudier i krypto.
 - **Samma prisdata är redan sedd** i H-0014, H-0015, H-0018 och H-0019. Signalen är en variant av H-0014 och förväntas
   vara korrelerad med den. Idén valdes efter att tvärsnittsvarianterna fått REJECT, så den är en uppföljning och inte
   ett oberoende test. Därför räknas den som ett nytt försök och kravet stiger.
