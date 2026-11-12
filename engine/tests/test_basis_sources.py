@@ -130,13 +130,15 @@ def test_binance_docs_returns_excerpts_and_reports_unreadable_pages():
     import urllib.error
 
     def opener(url):
-        if "binance-docs" in url:
-            return b"<html><script>var a=1;</script><p>The contractSize is 100 for BTC. Liquidation uses the mark price.</p></html>"
+        if "developers.binance.com" in url:
+            return b"<html><script>var a=1;</script><p>The contractSize is 100 for BTC. Liquidation uses the Mark Price.</p></html>"
         if "3a55" in url:
-            return json.dumps({"data": {"body": "<p>Unrealized PnL of a short in coin terms</p>"}}).encode()
+            body = json.dumps([{"node": "element", "child": [{"node": "text", "text": "Unrealized PnL of a short"}, {"node": "text", "text": "&nbsp;is in coin"}]}])
+            return json.dumps({"data": {"body": body}}).encode()
         raise urllib.error.HTTPError(url, 451, "restricted", {}, None)
     r = b.binance_docs(opener, window=30)
-    assert r["delivery_api_docs"]["readable"] and "contractSize" in r["delivery_api_docs"]["excerpts"]
-    assert "var a=1" not in json.dumps(r["delivery_api_docs"])
-    assert r["faq_pnl"]["readable"] and "PnL" in r["faq_pnl"]["excerpts"]
+    assert r["developers_exchange_information"]["readable"] and "contractSize" in r["developers_exchange_information"]["excerpts"]
+    assert "var a=1" not in json.dumps(r["developers_exchange_information"])
+    assert r["faq_pnl"]["readable"] and "Unrealized" in r["faq_pnl"]["excerpts"]
+    assert "node" not in r["faq_pnl"]["excerpts"]["Unrealized"][0]   # ren text, inga JSON-tecken
     assert r["faq_margin_liquidation"]["readable"] is False and "451" in r["faq_margin_liquidation"]["error"]

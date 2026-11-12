@@ -297,22 +297,50 @@ def binance_api(opener=default_opener) -> dict:
 
 
 DOC_PAGES = {
-    "delivery_api_docs": "https://binance-docs.github.io/apidocs/delivery/en/",
+    "developers_exchange_information": "https://developers.binance.com/docs/derivatives/coin-margined-futures/market-data/rest-api/Exchange-Information",
     "faq_pnl": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=3a55a23768cb416fb404f06ffedde4b2",
     "faq_margin_liquidation": "https://www.binance.com/bapi/composite/v1/public/cms/article/detail/query?articleCode=be2c7d9d95b04a7e8044ed02dd7dfe5c",
 }
-DOC_KEYWORDS = ("contractSize", "deliveryDate", "CURRENT_QUARTER", "delist", "liquidat", "maintenance margin", "mark price",
-                "unrealized", "PnL", "Pnl", "cross margin", "isolated")
+DOC_KEYWORDS = ("contractSize", "deliveryDate", "CURRENT_QUARTER", "delist", "Contract Multiplier", "Unrealized", "unrealized", "Realized",
+                "Mark Price", "Maintenance Margin", "Liquidation Price", "Margin Ratio", "Cross", "Isolated", "COIN-margined", "COIN-M")
+
+
+def _node_text(obj) -> str:
+    """Löper igenom Binances artikelträd (`{"node": ..., "text"/"child": ...}`) och samlar ren text."""
+    if isinstance(obj, list):
+        return " ".join(_node_text(x) for x in obj)
+    if isinstance(obj, dict):
+        if obj.get("node") == "text":
+            return obj.get("text", "")
+        return _node_text(obj.get("child", []))
+    return ""
 
 
 def _strip(html: str) -> str:
     text = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", html, flags=re.S | re.I)
-    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", text))
+    text = re.sub(r"<[^>]+>", " ", text).replace("&nbsp;", " ")
+    return re.sub(r"\s+", " ", text)
 
 
-def binance_docs(opener=default_opener, window: int = 220, max_hits: int = 3) -> dict:
-    """Hämtar Binances egna dokumentationssidor och sparar korta utdrag runt nyckelorden, så att faktapåståenden kan
-    beläggas med primär källa. Svarar en sida med fel (till exempel 451) redovisas det, och inget gissas."""
+def _page_text(raw: str) -> str:
+    if raw.lstrip().startswith("{"):
+        try:
+            data = json.loads(raw).get("data") or {}
+            body = data.get("body")
+            if isinstance(body, str):
+                try:
+                    return re.sub(r"\s+", " ", _node_text(json.loads(body))).strip()
+                except ValueError:
+                    return _strip(body)
+            return re.sub(r"\s+", " ", json.dumps(data, ensure_ascii=False))
+        except ValueError:
+            pass
+    return _strip(raw)
+
+
+def binance_docs(opener=default_opener, window: int = 260, max_hits: int = 3) -> dict:
+    """Hämtar Binances egna dokumentationssidor och sparar korta utdrag (ren text) runt nyckelorden, så att
+    faktapåståenden kan beläggas med primär källa. Svarar en sida med fel (till exempel 451) redovisas det, och inget gissas."""
     out = {}
     for name, url in DOC_PAGES.items():
         try:
@@ -320,12 +348,7 @@ def binance_docs(opener=default_opener, window: int = 220, max_hits: int = 3) ->
         except Exception as exc:   # noqa: BLE001
             out[name] = {"url": url, "readable": False, "error": f"{type(exc).__name__}: {str(exc)[:100]}"}
             continue
-        if raw.lstrip().startswith("{"):
-            try:
-                raw = json.dumps(json.loads(raw).get("data") or {}, ensure_ascii=False)
-            except ValueError:
-                pass
-        text = _strip(raw)
+        text = _page_text(raw)
         hits = {}
         for kw in DOC_KEYWORDS:
             idxs = [m.start() for m in re.finditer(re.escape(kw), text)][:max_hits]
