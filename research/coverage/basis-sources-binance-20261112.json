@@ -1,0 +1,2423 @@
+{
+ "kind": "basis-source-survey",
+ "run_at": "2026-11-12T14:16:47+00:00",
+ "note": "Kartläggning av täckning, inga priser hämtade för analys och inget backtest. Slutprov (2025+) läses inte. Körd från Claudes sandlåda.",
+ "sources": {
+  "binance": {
+   "reachable": true,
+   "um_dated_futures": {
+    "market": "um",
+    "underlyings": {
+     "BTC": {
+      "contracts": 27,
+      "first_expiry": "2021-01-29",
+      "last_expiry": "2027-03-26",
+      "contracts_with_missing_months": [],
+      "coverage": [
+       {
+        "contract": "BTCBUSD_210129",
+        "expiry": "2021-01-29",
+        "files": 1,
+        "first_month": "2021-01",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCBUSD_210226",
+        "expiry": "2021-02-26",
+        "files": 1,
+        "first_month": "2021-01",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_210326",
+        "expiry": "2021-03-26",
+        "files": 2,
+        "first_month": "2021-02",
+        "last_month": "2021-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_210625",
+        "expiry": "2021-06-25",
+        "files": 4,
+        "first_month": "2021-03",
+        "last_month": "2021-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_210924",
+        "expiry": "2021-09-24",
+        "files": 4,
+        "first_month": "2021-06",
+        "last_month": "2021-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_211231",
+        "expiry": "2021-12-31",
+        "files": 4,
+        "first_month": "2021-09",
+        "last_month": "2021-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_220325",
+        "expiry": "2022-03-25",
+        "files": 4,
+        "first_month": "2021-12",
+        "last_month": "2022-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_220624",
+        "expiry": "2022-06-24",
+        "files": 4,
+        "first_month": "2022-03",
+        "last_month": "2022-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_220930",
+        "expiry": "2022-09-30",
+        "files": 4,
+        "first_month": "2022-06",
+        "last_month": "2022-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_221230",
+        "expiry": "2022-12-30",
+        "files": 4,
+        "first_month": "2022-09",
+        "last_month": "2022-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_230331",
+        "expiry": "2023-03-31",
+        "files": 4,
+        "first_month": "2022-12",
+        "last_month": "2023-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_230630",
+        "expiry": "2023-06-30",
+        "files": 4,
+        "first_month": "2023-03",
+        "last_month": "2023-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_230929",
+        "expiry": "2023-09-29",
+        "files": 6,
+        "first_month": "2023-06",
+        "last_month": "2023-11",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_231229",
+        "expiry": "2023-12-29",
+        "files": 6,
+        "first_month": "2023-08",
+        "last_month": "2024-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_240329",
+        "expiry": "2024-03-29",
+        "files": 7,
+        "first_month": "2023-09",
+        "last_month": "2024-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_240628",
+        "expiry": "2024-06-28",
+        "files": 8,
+        "first_month": "2023-12",
+        "last_month": "2024-07",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_240927",
+        "expiry": "2024-09-27",
+        "files": 7,
+        "first_month": "2024-03",
+        "last_month": "2024-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_241227",
+        "expiry": "2024-12-27",
+        "files": 7,
+        "first_month": "2024-06",
+        "last_month": "2024-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_250328",
+        "expiry": "2025-03-28",
+        "files": 7,
+        "first_month": "2024-09",
+        "last_month": "2025-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_250627",
+        "expiry": "2025-06-27",
+        "files": 7,
+        "first_month": "2024-12",
+        "last_month": "2025-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_250926",
+        "expiry": "2025-09-26",
+        "files": 7,
+        "first_month": "2025-03",
+        "last_month": "2025-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_251226",
+        "expiry": "2025-12-26",
+        "files": 8,
+        "first_month": "2025-06",
+        "last_month": "2026-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_260327",
+        "expiry": "2026-03-27",
+        "files": 8,
+        "first_month": "2025-09",
+        "last_month": "2026-04",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_260626",
+        "expiry": "2026-06-26",
+        "files": 7,
+        "first_month": "2025-12",
+        "last_month": "2026-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_260925",
+        "expiry": "2026-09-25",
+        "files": 7,
+        "first_month": "2026-03",
+        "last_month": "2026-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_261225",
+        "expiry": "2026-12-25",
+        "files": 5,
+        "first_month": "2026-06",
+        "last_month": "2026-10",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSDT_270326",
+        "expiry": "2027-03-26",
+        "files": 2,
+        "first_month": "2026-09",
+        "last_month": "2026-10",
+        "missing_months": 0
+       }
+      ]
+     },
+     "ETH": {
+      "contracts": 25,
+      "first_expiry": "2021-03-26",
+      "last_expiry": "2027-03-26",
+      "contracts_with_missing_months": [],
+      "coverage": [
+       {
+        "contract": "ETHUSDT_210326",
+        "expiry": "2021-03-26",
+        "files": 2,
+        "first_month": "2021-02",
+        "last_month": "2021-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_210625",
+        "expiry": "2021-06-25",
+        "files": 4,
+        "first_month": "2021-03",
+        "last_month": "2021-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_210924",
+        "expiry": "2021-09-24",
+        "files": 4,
+        "first_month": "2021-06",
+        "last_month": "2021-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_211231",
+        "expiry": "2021-12-31",
+        "files": 4,
+        "first_month": "2021-09",
+        "last_month": "2021-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_220325",
+        "expiry": "2022-03-25",
+        "files": 4,
+        "first_month": "2021-12",
+        "last_month": "2022-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_220624",
+        "expiry": "2022-06-24",
+        "files": 4,
+        "first_month": "2022-03",
+        "last_month": "2022-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_220930",
+        "expiry": "2022-09-30",
+        "files": 4,
+        "first_month": "2022-06",
+        "last_month": "2022-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_221230",
+        "expiry": "2022-12-30",
+        "files": 4,
+        "first_month": "2022-09",
+        "last_month": "2022-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_230331",
+        "expiry": "2023-03-31",
+        "files": 4,
+        "first_month": "2022-12",
+        "last_month": "2023-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_230630",
+        "expiry": "2023-06-30",
+        "files": 4,
+        "first_month": "2023-03",
+        "last_month": "2023-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_230929",
+        "expiry": "2023-09-29",
+        "files": 6,
+        "first_month": "2023-06",
+        "last_month": "2023-11",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_231229",
+        "expiry": "2023-12-29",
+        "files": 6,
+        "first_month": "2023-08",
+        "last_month": "2024-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_240329",
+        "expiry": "2024-03-29",
+        "files": 7,
+        "first_month": "2023-09",
+        "last_month": "2024-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_240628",
+        "expiry": "2024-06-28",
+        "files": 8,
+        "first_month": "2023-12",
+        "last_month": "2024-07",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_240927",
+        "expiry": "2024-09-27",
+        "files": 7,
+        "first_month": "2024-03",
+        "last_month": "2024-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_241227",
+        "expiry": "2024-12-27",
+        "files": 7,
+        "first_month": "2024-06",
+        "last_month": "2024-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_250328",
+        "expiry": "2025-03-28",
+        "files": 7,
+        "first_month": "2024-09",
+        "last_month": "2025-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_250627",
+        "expiry": "2025-06-27",
+        "files": 7,
+        "first_month": "2024-12",
+        "last_month": "2025-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_250926",
+        "expiry": "2025-09-26",
+        "files": 7,
+        "first_month": "2025-03",
+        "last_month": "2025-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_251226",
+        "expiry": "2025-12-26",
+        "files": 8,
+        "first_month": "2025-06",
+        "last_month": "2026-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_260327",
+        "expiry": "2026-03-27",
+        "files": 8,
+        "first_month": "2025-09",
+        "last_month": "2026-04",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_260626",
+        "expiry": "2026-06-26",
+        "files": 7,
+        "first_month": "2025-12",
+        "last_month": "2026-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_260925",
+        "expiry": "2026-09-25",
+        "files": 7,
+        "first_month": "2026-03",
+        "last_month": "2026-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_261225",
+        "expiry": "2026-12-25",
+        "files": 5,
+        "first_month": "2026-06",
+        "last_month": "2026-10",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSDT_270326",
+        "expiry": "2027-03-26",
+        "files": 2,
+        "first_month": "2026-09",
+        "last_month": "2026-10",
+        "missing_months": 0
+       }
+      ]
+     }
+    }
+   },
+   "cm_dated_futures": {
+    "market": "cm",
+    "underlyings": {
+     "ADA": {
+      "contracts": 21,
+      "first_expiry": "2020-09-25",
+      "last_expiry": "2025-09-26",
+      "contracts_with_missing_months": [],
+      "coverage": [
+       {
+        "contract": "ADAUSD_200925",
+        "expiry": "2020-09-25",
+        "files": 7,
+        "first_month": "2020-07",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_201225",
+        "expiry": "2020-12-25",
+        "files": 5,
+        "first_month": "2020-09",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_210326",
+        "expiry": "2021-03-26",
+        "files": 7,
+        "first_month": "2020-09",
+        "last_month": "2021-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_210625",
+        "expiry": "2021-06-25",
+        "files": 7,
+        "first_month": "2020-12",
+        "last_month": "2021-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_210924",
+        "expiry": "2021-09-24",
+        "files": 7,
+        "first_month": "2021-03",
+        "last_month": "2021-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_211231",
+        "expiry": "2021-12-31",
+        "files": 7,
+        "first_month": "2021-06",
+        "last_month": "2021-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_220325",
+        "expiry": "2022-03-25",
+        "files": 7,
+        "first_month": "2021-09",
+        "last_month": "2022-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_220624",
+        "expiry": "2022-06-24",
+        "files": 7,
+        "first_month": "2021-12",
+        "last_month": "2022-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_220930",
+        "expiry": "2022-09-30",
+        "files": 7,
+        "first_month": "2022-03",
+        "last_month": "2022-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_221230",
+        "expiry": "2022-12-30",
+        "files": 7,
+        "first_month": "2022-06",
+        "last_month": "2022-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_230331",
+        "expiry": "2023-03-31",
+        "files": 7,
+        "first_month": "2022-09",
+        "last_month": "2023-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_230630",
+        "expiry": "2023-06-30",
+        "files": 7,
+        "first_month": "2022-12",
+        "last_month": "2023-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_230929",
+        "expiry": "2023-09-29",
+        "files": 8,
+        "first_month": "2023-03",
+        "last_month": "2023-10",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_231229",
+        "expiry": "2023-12-29",
+        "files": 8,
+        "first_month": "2023-06",
+        "last_month": "2024-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_240329",
+        "expiry": "2024-03-29",
+        "files": 7,
+        "first_month": "2023-09",
+        "last_month": "2024-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_240628",
+        "expiry": "2024-06-28",
+        "files": 7,
+        "first_month": "2023-12",
+        "last_month": "2024-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_240927",
+        "expiry": "2024-09-27",
+        "files": 7,
+        "first_month": "2024-03",
+        "last_month": "2024-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_241227",
+        "expiry": "2024-12-27",
+        "files": 7,
+        "first_month": "2024-06",
+        "last_month": "2024-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_250328",
+        "expiry": "2025-03-28",
+        "files": 7,
+        "first_month": "2024-09",
+        "last_month": "2025-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_250627",
+        "expiry": "2025-06-27",
+        "files": 7,
+        "first_month": "2024-12",
+        "last_month": "2025-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "ADAUSD_250926",
+        "expiry": "2025-09-26",
+        "files": 7,
+        "first_month": "2025-03",
+        "last_month": "2025-09",
+        "missing_months": 0
+       }
+      ]
+     },
+     "BCH": {
+      "contracts": 20,
+      "first_expiry": "2020-12-25",
+      "last_expiry": "2025-09-26",
+      "contracts_with_missing_months": [],
+      "coverage": [
+       {
+        "contract": "BCHUSD_201225",
+        "expiry": "2020-12-25",
+        "files": 2,
+        "first_month": "2020-12",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "BCHUSD_210326",
+        "expiry": "2021-03-26",
+        "files": 4,
+        "first_month": "2020-12",
+        "last_month": "2021-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BCHUSD_210625",
+        "expiry": "2021-06-25",
+        "files": 7,
+        "first_month": "2020-12",
+        "last_month": "2021-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BCHUSD_210924",
+        "expiry": "2021-09-24",
+        "files": 7,
+        "first_month": "2021-03",
+        "last_month": "2021-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "BCHUSD_211231",
+        "expiry": "2021-12-31",
+        "files": 7,
+        "first_month": "2021-06",
+        "last_month": "2021-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "BCHUSD_220325",
+        "expiry": "2022-03-25",
+        "files": 7,
+        "first_month": "2021-09",
+        "last_month": "2022-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BCHUSD_220624",
+        "expiry": "2022-06-24",
+        "files": 7,
+        "first_month": "2021-12",
+        "last_month": "2022-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BCHUSD_220930",
+        "expiry": "2022-09-30",
+        "files": 7,
+        "first_month": "2022-03",
+        "last_month": "2022-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "BCHUSD_221230",
+        "expiry": "2022-12-30",
+        "files": 7,
+        "first_month": "2022-06",
+        "last_month": "2022-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "BCHUSD_230331",
+        "expiry": "2023-03-31",
+        "files": 7,
+        "first_month": "2022-09",
+        "last_month": "2023-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BCHUSD_230630",
+        "expiry": "2023-06-30",
+        "files": 7,
+        "first_month": "2022-12",
+        "last_month": "2023-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BCHUSD_230929",
+        "expiry": "2023-09-29",
+        "files": 8,
+        "first_month": "2023-03",
+        "last_month": "2023-10",
+        "missing_months": 0
+       },
+       {
+        "contract": "BCHUSD_231229",
+        "expiry": "2023-12-29",
+        "files": 8,
+        "first_month": "2023-06",
+        "last_month": "2024-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "BCHUSD_240329",
+        "expiry": "2024-03-29",
+        "files": 7,
+        "first_month": "2023-09",
+        "last_month": "2024-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BCHUSD_240628",
+        "expiry": "2024-06-28",
+        "files": 7,
+        "first_month": "2023-12",
+        "last_month": "2024-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BCHUSD_240927",
+        "expiry": "2024-09-27",
+        "files": 7,
+        "first_month": "2024-03",
+        "last_month": "2024-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "BCHUSD_241227",
+        "expiry": "2024-12-27",
+        "files": 7,
+        "first_month": "2024-06",
+        "last_month": "2024-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "BCHUSD_250328",
+        "expiry": "2025-03-28",
+        "files": 7,
+        "first_month": "2024-09",
+        "last_month": "2025-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BCHUSD_250627",
+        "expiry": "2025-06-27",
+        "files": 7,
+        "first_month": "2024-12",
+        "last_month": "2025-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BCHUSD_250926",
+        "expiry": "2025-09-26",
+        "files": 7,
+        "first_month": "2025-03",
+        "last_month": "2025-09",
+        "missing_months": 0
+       }
+      ]
+     },
+     "BN": {
+      "contracts": 25,
+      "first_expiry": "2020-12-25",
+      "last_expiry": "2026-12-25",
+      "contracts_with_missing_months": [],
+      "coverage": [
+       {
+        "contract": "BNBUSD_201225",
+        "expiry": "2020-12-25",
+        "files": 3,
+        "first_month": "2020-11",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_210326",
+        "expiry": "2021-03-26",
+        "files": 5,
+        "first_month": "2020-11",
+        "last_month": "2021-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_210625",
+        "expiry": "2021-06-25",
+        "files": 7,
+        "first_month": "2020-12",
+        "last_month": "2021-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_210924",
+        "expiry": "2021-09-24",
+        "files": 7,
+        "first_month": "2021-03",
+        "last_month": "2021-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_211231",
+        "expiry": "2021-12-31",
+        "files": 7,
+        "first_month": "2021-06",
+        "last_month": "2021-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_220325",
+        "expiry": "2022-03-25",
+        "files": 7,
+        "first_month": "2021-09",
+        "last_month": "2022-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_220624",
+        "expiry": "2022-06-24",
+        "files": 7,
+        "first_month": "2021-12",
+        "last_month": "2022-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_220930",
+        "expiry": "2022-09-30",
+        "files": 7,
+        "first_month": "2022-03",
+        "last_month": "2022-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_221230",
+        "expiry": "2022-12-30",
+        "files": 7,
+        "first_month": "2022-06",
+        "last_month": "2022-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_230331",
+        "expiry": "2023-03-31",
+        "files": 7,
+        "first_month": "2022-09",
+        "last_month": "2023-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_230630",
+        "expiry": "2023-06-30",
+        "files": 7,
+        "first_month": "2022-12",
+        "last_month": "2023-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_230929",
+        "expiry": "2023-09-29",
+        "files": 8,
+        "first_month": "2023-03",
+        "last_month": "2023-10",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_231229",
+        "expiry": "2023-12-29",
+        "files": 8,
+        "first_month": "2023-06",
+        "last_month": "2024-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_240329",
+        "expiry": "2024-03-29",
+        "files": 7,
+        "first_month": "2023-09",
+        "last_month": "2024-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_240628",
+        "expiry": "2024-06-28",
+        "files": 7,
+        "first_month": "2023-12",
+        "last_month": "2024-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_240927",
+        "expiry": "2024-09-27",
+        "files": 7,
+        "first_month": "2024-03",
+        "last_month": "2024-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_241227",
+        "expiry": "2024-12-27",
+        "files": 7,
+        "first_month": "2024-06",
+        "last_month": "2024-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_250328",
+        "expiry": "2025-03-28",
+        "files": 7,
+        "first_month": "2024-09",
+        "last_month": "2025-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_250627",
+        "expiry": "2025-06-27",
+        "files": 7,
+        "first_month": "2024-12",
+        "last_month": "2025-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_250926",
+        "expiry": "2025-09-26",
+        "files": 7,
+        "first_month": "2025-03",
+        "last_month": "2025-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_251226",
+        "expiry": "2025-12-26",
+        "files": 7,
+        "first_month": "2025-06",
+        "last_month": "2025-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_260327",
+        "expiry": "2026-03-27",
+        "files": 7,
+        "first_month": "2025-09",
+        "last_month": "2026-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_260626",
+        "expiry": "2026-06-26",
+        "files": 7,
+        "first_month": "2025-12",
+        "last_month": "2026-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_260925",
+        "expiry": "2026-09-25",
+        "files": 7,
+        "first_month": "2026-03",
+        "last_month": "2026-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "BNBUSD_261225",
+        "expiry": "2026-12-25",
+        "files": 5,
+        "first_month": "2026-06",
+        "last_month": "2026-10",
+        "missing_months": 0
+       }
+      ]
+     },
+     "BTC": {
+      "contracts": 26,
+      "first_expiry": "2020-09-25",
+      "last_expiry": "2026-12-25",
+      "contracts_with_missing_months": [],
+      "coverage": [
+       {
+        "contract": "BTCUSD_200925",
+        "expiry": "2020-09-25",
+        "files": 8,
+        "first_month": "2020-06",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_201225",
+        "expiry": "2020-12-25",
+        "files": 7,
+        "first_month": "2020-07",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_210326",
+        "expiry": "2021-03-26",
+        "files": 7,
+        "first_month": "2020-09",
+        "last_month": "2021-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_210625",
+        "expiry": "2021-06-25",
+        "files": 7,
+        "first_month": "2020-12",
+        "last_month": "2021-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_210924",
+        "expiry": "2021-09-24",
+        "files": 7,
+        "first_month": "2021-03",
+        "last_month": "2021-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_211231",
+        "expiry": "2021-12-31",
+        "files": 7,
+        "first_month": "2021-06",
+        "last_month": "2021-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_220325",
+        "expiry": "2022-03-25",
+        "files": 7,
+        "first_month": "2021-09",
+        "last_month": "2022-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_220624",
+        "expiry": "2022-06-24",
+        "files": 7,
+        "first_month": "2021-12",
+        "last_month": "2022-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_220930",
+        "expiry": "2022-09-30",
+        "files": 7,
+        "first_month": "2022-03",
+        "last_month": "2022-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_221230",
+        "expiry": "2022-12-30",
+        "files": 7,
+        "first_month": "2022-06",
+        "last_month": "2022-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_230331",
+        "expiry": "2023-03-31",
+        "files": 7,
+        "first_month": "2022-09",
+        "last_month": "2023-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_230630",
+        "expiry": "2023-06-30",
+        "files": 7,
+        "first_month": "2022-12",
+        "last_month": "2023-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_230929",
+        "expiry": "2023-09-29",
+        "files": 8,
+        "first_month": "2023-03",
+        "last_month": "2023-10",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_231229",
+        "expiry": "2023-12-29",
+        "files": 8,
+        "first_month": "2023-06",
+        "last_month": "2024-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_240329",
+        "expiry": "2024-03-29",
+        "files": 7,
+        "first_month": "2023-09",
+        "last_month": "2024-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_240628",
+        "expiry": "2024-06-28",
+        "files": 7,
+        "first_month": "2023-12",
+        "last_month": "2024-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_240927",
+        "expiry": "2024-09-27",
+        "files": 7,
+        "first_month": "2024-03",
+        "last_month": "2024-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_241227",
+        "expiry": "2024-12-27",
+        "files": 7,
+        "first_month": "2024-06",
+        "last_month": "2024-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_250328",
+        "expiry": "2025-03-28",
+        "files": 7,
+        "first_month": "2024-09",
+        "last_month": "2025-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_250627",
+        "expiry": "2025-06-27",
+        "files": 7,
+        "first_month": "2024-12",
+        "last_month": "2025-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_250926",
+        "expiry": "2025-09-26",
+        "files": 7,
+        "first_month": "2025-03",
+        "last_month": "2025-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_251226",
+        "expiry": "2025-12-26",
+        "files": 7,
+        "first_month": "2025-06",
+        "last_month": "2025-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_260327",
+        "expiry": "2026-03-27",
+        "files": 7,
+        "first_month": "2025-09",
+        "last_month": "2026-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_260626",
+        "expiry": "2026-06-26",
+        "files": 7,
+        "first_month": "2025-12",
+        "last_month": "2026-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_260925",
+        "expiry": "2026-09-25",
+        "files": 7,
+        "first_month": "2026-03",
+        "last_month": "2026-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "BTCUSD_261225",
+        "expiry": "2026-12-25",
+        "files": 5,
+        "first_month": "2026-06",
+        "last_month": "2026-10",
+        "missing_months": 0
+       }
+      ]
+     },
+     "DOT": {
+      "contracts": 20,
+      "first_expiry": "2020-12-25",
+      "last_expiry": "2025-09-26",
+      "contracts_with_missing_months": [],
+      "coverage": [
+       {
+        "contract": "DOTUSD_201225",
+        "expiry": "2020-12-25",
+        "files": 3,
+        "first_month": "2020-11",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "DOTUSD_210326",
+        "expiry": "2021-03-26",
+        "files": 5,
+        "first_month": "2020-11",
+        "last_month": "2021-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "DOTUSD_210625",
+        "expiry": "2021-06-25",
+        "files": 7,
+        "first_month": "2020-12",
+        "last_month": "2021-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "DOTUSD_210924",
+        "expiry": "2021-09-24",
+        "files": 7,
+        "first_month": "2021-03",
+        "last_month": "2021-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "DOTUSD_211231",
+        "expiry": "2021-12-31",
+        "files": 7,
+        "first_month": "2021-06",
+        "last_month": "2021-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "DOTUSD_220325",
+        "expiry": "2022-03-25",
+        "files": 7,
+        "first_month": "2021-09",
+        "last_month": "2022-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "DOTUSD_220624",
+        "expiry": "2022-06-24",
+        "files": 7,
+        "first_month": "2021-12",
+        "last_month": "2022-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "DOTUSD_220930",
+        "expiry": "2022-09-30",
+        "files": 7,
+        "first_month": "2022-03",
+        "last_month": "2022-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "DOTUSD_221230",
+        "expiry": "2022-12-30",
+        "files": 7,
+        "first_month": "2022-06",
+        "last_month": "2022-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "DOTUSD_230331",
+        "expiry": "2023-03-31",
+        "files": 7,
+        "first_month": "2022-09",
+        "last_month": "2023-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "DOTUSD_230630",
+        "expiry": "2023-06-30",
+        "files": 7,
+        "first_month": "2022-12",
+        "last_month": "2023-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "DOTUSD_230929",
+        "expiry": "2023-09-29",
+        "files": 8,
+        "first_month": "2023-03",
+        "last_month": "2023-10",
+        "missing_months": 0
+       },
+       {
+        "contract": "DOTUSD_231229",
+        "expiry": "2023-12-29",
+        "files": 8,
+        "first_month": "2023-06",
+        "last_month": "2024-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "DOTUSD_240329",
+        "expiry": "2024-03-29",
+        "files": 7,
+        "first_month": "2023-09",
+        "last_month": "2024-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "DOTUSD_240628",
+        "expiry": "2024-06-28",
+        "files": 7,
+        "first_month": "2023-12",
+        "last_month": "2024-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "DOTUSD_240927",
+        "expiry": "2024-09-27",
+        "files": 7,
+        "first_month": "2024-03",
+        "last_month": "2024-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "DOTUSD_241227",
+        "expiry": "2024-12-27",
+        "files": 7,
+        "first_month": "2024-06",
+        "last_month": "2024-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "DOTUSD_250328",
+        "expiry": "2025-03-28",
+        "files": 7,
+        "first_month": "2024-09",
+        "last_month": "2025-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "DOTUSD_250627",
+        "expiry": "2025-06-27",
+        "files": 7,
+        "first_month": "2024-12",
+        "last_month": "2025-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "DOTUSD_250926",
+        "expiry": "2025-09-26",
+        "files": 7,
+        "first_month": "2025-03",
+        "last_month": "2025-09",
+        "missing_months": 0
+       }
+      ]
+     },
+     "EOS": {
+      "contracts": 2,
+      "first_expiry": "2020-12-25",
+      "last_expiry": "2021-03-26",
+      "contracts_with_missing_months": [],
+      "coverage": [
+       {
+        "contract": "EOSUSD_201225",
+        "expiry": "2020-12-25",
+        "files": 2,
+        "first_month": "2020-12",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "EOSUSD_210326",
+        "expiry": "2021-03-26",
+        "files": 2,
+        "first_month": "2020-12",
+        "last_month": "2021-01",
+        "missing_months": 0
+       }
+      ]
+     },
+     "ETC": {
+      "contracts": 2,
+      "first_expiry": "2020-12-25",
+      "last_expiry": "2021-03-26",
+      "contracts_with_missing_months": [],
+      "coverage": [
+       {
+        "contract": "ETCUSD_201225",
+        "expiry": "2020-12-25",
+        "files": 2,
+        "first_month": "2020-12",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETCUSD_210326",
+        "expiry": "2021-03-26",
+        "files": 2,
+        "first_month": "2020-12",
+        "last_month": "2021-01",
+        "missing_months": 0
+       }
+      ]
+     },
+     "ETH": {
+      "contracts": 26,
+      "first_expiry": "2020-09-25",
+      "last_expiry": "2026-12-25",
+      "contracts_with_missing_months": [],
+      "coverage": [
+       {
+        "contract": "ETHUSD_200925",
+        "expiry": "2020-09-25",
+        "files": 7,
+        "first_month": "2020-07",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_201225",
+        "expiry": "2020-12-25",
+        "files": 6,
+        "first_month": "2020-08",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_210326",
+        "expiry": "2021-03-26",
+        "files": 7,
+        "first_month": "2020-09",
+        "last_month": "2021-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_210625",
+        "expiry": "2021-06-25",
+        "files": 7,
+        "first_month": "2020-12",
+        "last_month": "2021-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_210924",
+        "expiry": "2021-09-24",
+        "files": 7,
+        "first_month": "2021-03",
+        "last_month": "2021-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_211231",
+        "expiry": "2021-12-31",
+        "files": 7,
+        "first_month": "2021-06",
+        "last_month": "2021-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_220325",
+        "expiry": "2022-03-25",
+        "files": 7,
+        "first_month": "2021-09",
+        "last_month": "2022-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_220624",
+        "expiry": "2022-06-24",
+        "files": 7,
+        "first_month": "2021-12",
+        "last_month": "2022-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_220930",
+        "expiry": "2022-09-30",
+        "files": 7,
+        "first_month": "2022-03",
+        "last_month": "2022-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_221230",
+        "expiry": "2022-12-30",
+        "files": 7,
+        "first_month": "2022-06",
+        "last_month": "2022-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_230331",
+        "expiry": "2023-03-31",
+        "files": 7,
+        "first_month": "2022-09",
+        "last_month": "2023-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_230630",
+        "expiry": "2023-06-30",
+        "files": 7,
+        "first_month": "2022-12",
+        "last_month": "2023-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_230929",
+        "expiry": "2023-09-29",
+        "files": 8,
+        "first_month": "2023-03",
+        "last_month": "2023-10",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_231229",
+        "expiry": "2023-12-29",
+        "files": 8,
+        "first_month": "2023-06",
+        "last_month": "2024-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_240329",
+        "expiry": "2024-03-29",
+        "files": 7,
+        "first_month": "2023-09",
+        "last_month": "2024-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_240628",
+        "expiry": "2024-06-28",
+        "files": 7,
+        "first_month": "2023-12",
+        "last_month": "2024-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_240927",
+        "expiry": "2024-09-27",
+        "files": 7,
+        "first_month": "2024-03",
+        "last_month": "2024-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_241227",
+        "expiry": "2024-12-27",
+        "files": 7,
+        "first_month": "2024-06",
+        "last_month": "2024-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_250328",
+        "expiry": "2025-03-28",
+        "files": 7,
+        "first_month": "2024-09",
+        "last_month": "2025-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_250627",
+        "expiry": "2025-06-27",
+        "files": 7,
+        "first_month": "2024-12",
+        "last_month": "2025-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_250926",
+        "expiry": "2025-09-26",
+        "files": 7,
+        "first_month": "2025-03",
+        "last_month": "2025-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_251226",
+        "expiry": "2025-12-26",
+        "files": 7,
+        "first_month": "2025-06",
+        "last_month": "2025-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_260327",
+        "expiry": "2026-03-27",
+        "files": 7,
+        "first_month": "2025-09",
+        "last_month": "2026-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_260626",
+        "expiry": "2026-06-26",
+        "files": 7,
+        "first_month": "2025-12",
+        "last_month": "2026-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_260925",
+        "expiry": "2026-09-25",
+        "files": 7,
+        "first_month": "2026-03",
+        "last_month": "2026-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "ETHUSD_261225",
+        "expiry": "2026-12-25",
+        "files": 5,
+        "first_month": "2026-06",
+        "last_month": "2026-10",
+        "missing_months": 0
+       }
+      ]
+     },
+     "FIL": {
+      "contracts": 2,
+      "first_expiry": "2020-12-25",
+      "last_expiry": "2021-03-26",
+      "contracts_with_missing_months": [],
+      "coverage": [
+       {
+        "contract": "FILUSD_201225",
+        "expiry": "2020-12-25",
+        "files": 2,
+        "first_month": "2020-12",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "FILUSD_210326",
+        "expiry": "2021-03-26",
+        "files": 4,
+        "first_month": "2020-12",
+        "last_month": "2021-03",
+        "missing_months": 0
+       }
+      ]
+     },
+     "LINK": {
+      "contracts": 21,
+      "first_expiry": "2020-09-25",
+      "last_expiry": "2025-09-26",
+      "contracts_with_missing_months": [],
+      "coverage": [
+       {
+        "contract": "LINKUSD_200925",
+        "expiry": "2020-09-25",
+        "files": 7,
+        "first_month": "2020-07",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_201225",
+        "expiry": "2020-12-25",
+        "files": 5,
+        "first_month": "2020-09",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_210326",
+        "expiry": "2021-03-26",
+        "files": 7,
+        "first_month": "2020-09",
+        "last_month": "2021-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_210625",
+        "expiry": "2021-06-25",
+        "files": 7,
+        "first_month": "2020-12",
+        "last_month": "2021-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_210924",
+        "expiry": "2021-09-24",
+        "files": 7,
+        "first_month": "2021-03",
+        "last_month": "2021-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_211231",
+        "expiry": "2021-12-31",
+        "files": 7,
+        "first_month": "2021-06",
+        "last_month": "2021-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_220325",
+        "expiry": "2022-03-25",
+        "files": 7,
+        "first_month": "2021-09",
+        "last_month": "2022-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_220624",
+        "expiry": "2022-06-24",
+        "files": 7,
+        "first_month": "2021-12",
+        "last_month": "2022-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_220930",
+        "expiry": "2022-09-30",
+        "files": 7,
+        "first_month": "2022-03",
+        "last_month": "2022-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_221230",
+        "expiry": "2022-12-30",
+        "files": 7,
+        "first_month": "2022-06",
+        "last_month": "2022-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_230331",
+        "expiry": "2023-03-31",
+        "files": 7,
+        "first_month": "2022-09",
+        "last_month": "2023-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_230630",
+        "expiry": "2023-06-30",
+        "files": 7,
+        "first_month": "2022-12",
+        "last_month": "2023-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_230929",
+        "expiry": "2023-09-29",
+        "files": 8,
+        "first_month": "2023-03",
+        "last_month": "2023-10",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_231229",
+        "expiry": "2023-12-29",
+        "files": 8,
+        "first_month": "2023-06",
+        "last_month": "2024-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_240329",
+        "expiry": "2024-03-29",
+        "files": 7,
+        "first_month": "2023-09",
+        "last_month": "2024-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_240628",
+        "expiry": "2024-06-28",
+        "files": 7,
+        "first_month": "2023-12",
+        "last_month": "2024-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_240927",
+        "expiry": "2024-09-27",
+        "files": 7,
+        "first_month": "2024-03",
+        "last_month": "2024-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_241227",
+        "expiry": "2024-12-27",
+        "files": 7,
+        "first_month": "2024-06",
+        "last_month": "2024-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_250328",
+        "expiry": "2025-03-28",
+        "files": 7,
+        "first_month": "2024-09",
+        "last_month": "2025-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_250627",
+        "expiry": "2025-06-27",
+        "files": 7,
+        "first_month": "2024-12",
+        "last_month": "2025-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "LINKUSD_250926",
+        "expiry": "2025-09-26",
+        "files": 7,
+        "first_month": "2025-03",
+        "last_month": "2025-09",
+        "missing_months": 0
+       }
+      ]
+     },
+     "LTC": {
+      "contracts": 20,
+      "first_expiry": "2020-12-25",
+      "last_expiry": "2025-09-26",
+      "contracts_with_missing_months": [],
+      "coverage": [
+       {
+        "contract": "LTCUSD_201225",
+        "expiry": "2020-12-25",
+        "files": 2,
+        "first_month": "2020-12",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "LTCUSD_210326",
+        "expiry": "2021-03-26",
+        "files": 4,
+        "first_month": "2020-12",
+        "last_month": "2021-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "LTCUSD_210625",
+        "expiry": "2021-06-25",
+        "files": 7,
+        "first_month": "2020-12",
+        "last_month": "2021-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "LTCUSD_210924",
+        "expiry": "2021-09-24",
+        "files": 7,
+        "first_month": "2021-03",
+        "last_month": "2021-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "LTCUSD_211231",
+        "expiry": "2021-12-31",
+        "files": 7,
+        "first_month": "2021-06",
+        "last_month": "2021-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "LTCUSD_220325",
+        "expiry": "2022-03-25",
+        "files": 7,
+        "first_month": "2021-09",
+        "last_month": "2022-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "LTCUSD_220624",
+        "expiry": "2022-06-24",
+        "files": 7,
+        "first_month": "2021-12",
+        "last_month": "2022-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "LTCUSD_220930",
+        "expiry": "2022-09-30",
+        "files": 7,
+        "first_month": "2022-03",
+        "last_month": "2022-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "LTCUSD_221230",
+        "expiry": "2022-12-30",
+        "files": 7,
+        "first_month": "2022-06",
+        "last_month": "2022-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "LTCUSD_230331",
+        "expiry": "2023-03-31",
+        "files": 7,
+        "first_month": "2022-09",
+        "last_month": "2023-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "LTCUSD_230630",
+        "expiry": "2023-06-30",
+        "files": 7,
+        "first_month": "2022-12",
+        "last_month": "2023-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "LTCUSD_230929",
+        "expiry": "2023-09-29",
+        "files": 8,
+        "first_month": "2023-03",
+        "last_month": "2023-10",
+        "missing_months": 0
+       },
+       {
+        "contract": "LTCUSD_231229",
+        "expiry": "2023-12-29",
+        "files": 8,
+        "first_month": "2023-06",
+        "last_month": "2024-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "LTCUSD_240329",
+        "expiry": "2024-03-29",
+        "files": 7,
+        "first_month": "2023-09",
+        "last_month": "2024-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "LTCUSD_240628",
+        "expiry": "2024-06-28",
+        "files": 7,
+        "first_month": "2023-12",
+        "last_month": "2024-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "LTCUSD_240927",
+        "expiry": "2024-09-27",
+        "files": 7,
+        "first_month": "2024-03",
+        "last_month": "2024-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "LTCUSD_241227",
+        "expiry": "2024-12-27",
+        "files": 7,
+        "first_month": "2024-06",
+        "last_month": "2024-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "LTCUSD_250328",
+        "expiry": "2025-03-28",
+        "files": 7,
+        "first_month": "2024-09",
+        "last_month": "2025-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "LTCUSD_250627",
+        "expiry": "2025-06-27",
+        "files": 7,
+        "first_month": "2024-12",
+        "last_month": "2025-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "LTCUSD_250926",
+        "expiry": "2025-09-26",
+        "files": 7,
+        "first_month": "2025-03",
+        "last_month": "2025-09",
+        "missing_months": 0
+       }
+      ]
+     },
+     "SOL": {
+      "contracts": 10,
+      "first_expiry": "2024-09-27",
+      "last_expiry": "2026-12-25",
+      "contracts_with_missing_months": [],
+      "coverage": [
+       {
+        "contract": "SOLUSD_240927",
+        "expiry": "2024-09-27",
+        "files": 2,
+        "first_month": "2024-08",
+        "last_month": "2024-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "SOLUSD_241227",
+        "expiry": "2024-12-27",
+        "files": 5,
+        "first_month": "2024-08",
+        "last_month": "2024-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "SOLUSD_250328",
+        "expiry": "2025-03-28",
+        "files": 7,
+        "first_month": "2024-09",
+        "last_month": "2025-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "SOLUSD_250627",
+        "expiry": "2025-06-27",
+        "files": 7,
+        "first_month": "2024-12",
+        "last_month": "2025-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "SOLUSD_250926",
+        "expiry": "2025-09-26",
+        "files": 7,
+        "first_month": "2025-03",
+        "last_month": "2025-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "SOLUSD_251226",
+        "expiry": "2025-12-26",
+        "files": 7,
+        "first_month": "2025-06",
+        "last_month": "2025-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "SOLUSD_260327",
+        "expiry": "2026-03-27",
+        "files": 7,
+        "first_month": "2025-09",
+        "last_month": "2026-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "SOLUSD_260626",
+        "expiry": "2026-06-26",
+        "files": 7,
+        "first_month": "2025-12",
+        "last_month": "2026-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "SOLUSD_260925",
+        "expiry": "2026-09-25",
+        "files": 7,
+        "first_month": "2026-03",
+        "last_month": "2026-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "SOLUSD_261225",
+        "expiry": "2026-12-25",
+        "files": 5,
+        "first_month": "2026-06",
+        "last_month": "2026-10",
+        "missing_months": 0
+       }
+      ]
+     },
+     "TRX": {
+      "contracts": 2,
+      "first_expiry": "2020-12-25",
+      "last_expiry": "2021-03-26",
+      "contracts_with_missing_months": [],
+      "coverage": [
+       {
+        "contract": "TRXUSD_201225",
+        "expiry": "2020-12-25",
+        "files": 2,
+        "first_month": "2020-12",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "TRXUSD_210326",
+        "expiry": "2021-03-26",
+        "files": 2,
+        "first_month": "2020-12",
+        "last_month": "2021-01",
+        "missing_months": 0
+       }
+      ]
+     },
+     "XRP": {
+      "contracts": 25,
+      "first_expiry": "2020-12-25",
+      "last_expiry": "2026-12-25",
+      "contracts_with_missing_months": [],
+      "coverage": [
+       {
+        "contract": "XRPUSD_201225",
+        "expiry": "2020-12-25",
+        "files": 3,
+        "first_month": "2020-11",
+        "last_month": "2021-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_210326",
+        "expiry": "2021-03-26",
+        "files": 5,
+        "first_month": "2020-11",
+        "last_month": "2021-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_210625",
+        "expiry": "2021-06-25",
+        "files": 7,
+        "first_month": "2020-12",
+        "last_month": "2021-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_210924",
+        "expiry": "2021-09-24",
+        "files": 7,
+        "first_month": "2021-03",
+        "last_month": "2021-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_211231",
+        "expiry": "2021-12-31",
+        "files": 7,
+        "first_month": "2021-06",
+        "last_month": "2021-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_220325",
+        "expiry": "2022-03-25",
+        "files": 7,
+        "first_month": "2021-09",
+        "last_month": "2022-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_220624",
+        "expiry": "2022-06-24",
+        "files": 7,
+        "first_month": "2021-12",
+        "last_month": "2022-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_220930",
+        "expiry": "2022-09-30",
+        "files": 7,
+        "first_month": "2022-03",
+        "last_month": "2022-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_221230",
+        "expiry": "2022-12-30",
+        "files": 7,
+        "first_month": "2022-06",
+        "last_month": "2022-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_230331",
+        "expiry": "2023-03-31",
+        "files": 7,
+        "first_month": "2022-09",
+        "last_month": "2023-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_230630",
+        "expiry": "2023-06-30",
+        "files": 7,
+        "first_month": "2022-12",
+        "last_month": "2023-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_230929",
+        "expiry": "2023-09-29",
+        "files": 8,
+        "first_month": "2023-03",
+        "last_month": "2023-10",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_231229",
+        "expiry": "2023-12-29",
+        "files": 8,
+        "first_month": "2023-06",
+        "last_month": "2024-01",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_240329",
+        "expiry": "2024-03-29",
+        "files": 7,
+        "first_month": "2023-09",
+        "last_month": "2024-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_240628",
+        "expiry": "2024-06-28",
+        "files": 7,
+        "first_month": "2023-12",
+        "last_month": "2024-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_240927",
+        "expiry": "2024-09-27",
+        "files": 7,
+        "first_month": "2024-03",
+        "last_month": "2024-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_241227",
+        "expiry": "2024-12-27",
+        "files": 7,
+        "first_month": "2024-06",
+        "last_month": "2024-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_250328",
+        "expiry": "2025-03-28",
+        "files": 7,
+        "first_month": "2024-09",
+        "last_month": "2025-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_250627",
+        "expiry": "2025-06-27",
+        "files": 7,
+        "first_month": "2024-12",
+        "last_month": "2025-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_250926",
+        "expiry": "2025-09-26",
+        "files": 7,
+        "first_month": "2025-03",
+        "last_month": "2025-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_251226",
+        "expiry": "2025-12-26",
+        "files": 7,
+        "first_month": "2025-06",
+        "last_month": "2025-12",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_260327",
+        "expiry": "2026-03-27",
+        "files": 7,
+        "first_month": "2025-09",
+        "last_month": "2026-03",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_260626",
+        "expiry": "2026-06-26",
+        "files": 7,
+        "first_month": "2025-12",
+        "last_month": "2026-06",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_260925",
+        "expiry": "2026-09-25",
+        "files": 7,
+        "first_month": "2026-03",
+        "last_month": "2026-09",
+        "missing_months": 0
+       },
+       {
+        "contract": "XRPUSD_261225",
+        "expiry": "2026-12-25",
+        "files": 5,
+        "first_month": "2026-06",
+        "last_month": "2026-10",
+        "missing_months": 0
+       }
+      ]
+     }
+    }
+   },
+   "spot_reference": {
+    "ADA": {
+     "files": 103,
+     "first_month": "2018-04",
+     "last_month": "2026-10",
+     "missing_months": 0
+    },
+    "BCH": {
+     "files": 84,
+     "first_month": "2019-11",
+     "last_month": "2026-10",
+     "missing_months": 0
+    },
+    "BN": {
+     "files": 0
+    },
+    "BTC": {
+     "files": 111,
+     "first_month": "2017-08",
+     "last_month": "2026-10",
+     "missing_months": 0
+    },
+    "DOT": {
+     "files": 75,
+     "first_month": "2020-08",
+     "last_month": "2026-10",
+     "missing_months": 0
+    },
+    "EOS": {
+     "files": 85,
+     "first_month": "2018-05",
+     "last_month": "2025-05",
+     "missing_months": 0
+    },
+    "ETC": {
+     "files": 101,
+     "first_month": "2018-06",
+     "last_month": "2026-10",
+     "missing_months": 0
+    },
+    "ETH": {
+     "files": 111,
+     "first_month": "2017-08",
+     "last_month": "2026-10",
+     "missing_months": 0
+    },
+    "FIL": {
+     "files": 73,
+     "first_month": "2020-10",
+     "last_month": "2026-10",
+     "missing_months": 0
+    },
+    "LINK": {
+     "files": 94,
+     "first_month": "2019-01",
+     "last_month": "2026-10",
+     "missing_months": 0
+    },
+    "LTC": {
+     "files": 107,
+     "first_month": "2017-12",
+     "last_month": "2026-10",
+     "missing_months": 0
+    },
+    "SOL": {
+     "files": 75,
+     "first_month": "2020-08",
+     "last_month": "2026-10",
+     "missing_months": 0
+    },
+    "TRX": {
+     "files": 101,
+     "first_month": "2018-06",
+     "last_month": "2026-10",
+     "missing_months": 0
+    },
+    "XRP": {
+     "files": 102,
+     "first_month": "2018-05",
+     "last_month": "2026-10",
+     "missing_months": 0
+    }
+   }
+  }
+ }
+}

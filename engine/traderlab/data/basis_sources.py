@@ -1,0 +1,244 @@
+"""Kartläggning av källor för en oberoende uppföljning av kassa-och-termin-idén (basis, H-0020).
+
+Frågan: vilka daterade terminer (med fast förfall) och vilken spot-referens kan hämtas **utan betaltjänst**, med
+tidsstämplade priser, och hur stor är täckningen punktvis? Modulen hämtar bara kontraktslistor och täckning
+(månadsfiler, första och sista dag, luckor). Den hämtar inga priser för analys, kör inget backtest och läser inget
+slutprov. Resultatet är ett underlag för beslut, inte en strategi.
+
+Varje källa är en funktion som tar `opener(url) -> bytes` och returnerar en ordbok, så att allt kan testas utan nätverk.
+Källor som inte nås anges som `reachable: false` med felet, och gissas aldrig fram.
+
+Körs: `python -m traderlab.data.basis_sources --sources binance deribit bitmex bybit bitstamp fred okx`.
+"""
+from __future__ import annotations
+
+import json
+import re
+import time
+import urllib.error
+import urllib.parse
+import urllib.request
+from datetime import datetime, timezone
+from pathlib import Path
+
+LIST = "https://s3-ap-northeast-1.amazonaws.com/data.binance.vision?delimiter=/&prefix="
+MONTHS_RE = re.compile(r"-(\d{4})-(\d{2})\.zip$")
+EXPIRY_RE = re.compile(r"^(?P<base>[A-Z0-9]+?)(?P<quote>USDT|USD|BUSD)_(?P<ymd>\d{6})$")
+
+
+def default_opener(url: str, headers: dict | None = None, tries: int = 4) -> bytes:
+    """Hämtar en URL med omförsök vid tillfälliga nätverksfel (2, 4, 8 s). HTTP-fel (till exempel 404) försöks inte om."""
+    req = urllib.request.Request(url, headers={"User-Agent": "TraderGo research (data survey)", **(headers or {})})
+    for attempt in range(tries):
+        try:
+            with urllib.request.urlopen(req, timeout=60) as r:
+                return r.read()
+        except urllib.error.HTTPError:
+            raise
+        except OSError:
+            if attempt == tries - 1:
+                raise
+            time.sleep(2 * 2 ** attempt)
+    raise RuntimeError("oåtkomlig")
+
+
+def _attempt(fn, *a, **k) -> dict:
+    """Kör en källprob; fel blir ett resultat (`reachable: false`), inte ett avbrott."""
+    try:
+        return {"reachable": True, **fn(*a, **k)}
+    except Exception as exc:   # noqa: BLE001 - alla nätverksfel ska redovisas
+        return {"reachable": False, "error": f"{type(exc).__name__}: {str(exc)[:200]}"}
+
+
+# ------------------------------------------------------------------ Binance (data.binance.vision)
+
+def s3_list(prefix: str, opener=default_opener) -> tuple[list[str], list[str]]:
+    """(delprefix, nycklar) under ett prefix i Binances publika arkiv, med sidindelning."""
+    prefixes, keys, marker = [], [], ""
+    while True:
+        xml = opener(LIST + urllib.parse.quote(prefix) + (f"&marker={urllib.parse.quote(marker)}" if marker else "")).decode()
+        pre = re.findall(r"<Prefix>([^<]+)</Prefix>", xml)
+        pre = [p for p in pre if p != prefix]
+        ks = re.findall(r"<Key>([^<]+)</Key>", xml)
+        prefixes += pre
+        keys += ks
+        if "<IsTruncated>true</IsTruncated>" in xml and (pre or ks):
+            marker = (ks or pre)[-1]
+        else:
+            return prefixes, keys
+
+
+def month_span(keys: list[str]) -> dict:
+    """Första och sista månad och antal saknade månader (luckor) ur en lista av .zip-nycklar."""
+    ms = sorted({(int(m.group(1)), int(m.group(2))) for k in keys if (m := MONTHS_RE.search(k))})
+    if not ms:
+        return {"files": 0}
+    expected = (ms[-1][0] - ms[0][0]) * 12 + ms[-1][1] - ms[0][1] + 1
+    return {"files": len(ms), "first_month": f"{ms[0][0]}-{ms[0][1]:02d}", "last_month": f"{ms[-1][0]}-{ms[-1][1]:02d}",
+            "missing_months": expected - len(ms)}
+
+
+def expiry_date(ymd: str) -> str:
+    return f"20{ymd[:2]}-{ymd[2:4]}-{ymd[4:]}"
+
+
+def binance_market(market: str, opener=default_opener) -> dict:
+    """Daterade terminer i USDⓈ-M (`um`) eller COIN-M (`cm`): per underliggande: kontrakt, förfall och dagsfilernas täckning."""
+    base = f"data/futures/{market}/monthly/klines/"
+    syms, _ = s3_list(base, opener)
+    dated: dict[str, list[str]] = {}
+    for p in syms:
+        name = p[len(base):].strip("/")
+        m = EXPIRY_RE.match(name)
+        if m:
+            dated.setdefault(m.group("base"), []).append(name)
+    out = {}
+    for und, names in sorted(dated.items()):
+        names.sort(key=lambda n: n.rsplit("_", 1)[1])
+        cover, short = [], []
+        for n in names:
+            _, keys = s3_list(f"{base}{n}/1d/", opener)
+            span = month_span([k for k in keys if k.endswith(".zip")])
+            cover.append({"contract": n, "expiry": expiry_date(n.rsplit("_", 1)[1]), **span})
+            if span.get("missing_months"):
+                short.append(n)
+        out[und] = {"contracts": len(names), "first_expiry": cover[0]["expiry"], "last_expiry": cover[-1]["expiry"],
+                    "contracts_with_missing_months": short, "coverage": cover}
+    return {"market": market, "underlyings": out}
+
+
+def binance_spot_reference(underlyings: list[str], opener=default_opener) -> dict:
+    """Finns spot-referens (USDT-par) med dagsfiler, och från vilken månad?"""
+    res = {}
+    for und in underlyings:
+        _, keys = s3_list(f"data/spot/monthly/klines/{und}USDT/1d/", opener)
+        res[und] = month_span([k for k in keys if k.endswith(".zip")])
+    return res
+
+
+def binance(opener=default_opener) -> dict:
+    um, cm = binance_market("um", opener), binance_market("cm", opener)
+    und = sorted(set(um["underlyings"]) | set(cm["underlyings"]))
+    return {"um_dated_futures": um, "cm_dated_futures": cm, "spot_reference": binance_spot_reference(und, opener)}
+
+
+# ------------------------------------------------------------------ Deribit (publikt API)
+
+def _ts(ms: int) -> str:
+    return datetime.fromtimestamp(ms / 1000, tz=timezone.utc).strftime("%Y-%m-%d")
+
+
+def deribit(opener=default_opener, currencies=("BTC", "ETH"), pause: float = 0.2) -> dict:
+    """Utgångna och aktiva daterade terminer i Deribit, och om dagsstaplar finns för ett utgånget kontrakt."""
+    out = {}
+    for cur in currencies:
+        url = f"https://www.deribit.com/api/v2/public/get_instruments?currency={cur}&kind=future&expired=true"
+        res = json.loads(opener(url))["result"]
+        dated = [r for r in res if not r["instrument_name"].endswith("PERPETUAL")]
+        dated.sort(key=lambda r: r["expiration_timestamp"])
+        sample = {}
+        if dated:
+            r = dated[len(dated) // 2]
+            q = (f"https://www.deribit.com/api/v2/public/get_tradingview_chart_data?instrument_name={r['instrument_name']}"
+                 f"&start_timestamp={r['creation_timestamp']}&end_timestamp={r['expiration_timestamp']}&resolution=1D")
+            time.sleep(pause)
+            d = json.loads(opener(q))["result"]
+            ticks = d.get("ticks", [])
+            life_days = max(1, (r["expiration_timestamp"] - r["creation_timestamp"]) // 86_400_000)
+            sample = {"instrument": r["instrument_name"], "life_days": life_days, "daily_bars": len(ticks),
+                      "first_bar": _ts(ticks[0]) if ticks else None, "last_bar": _ts(ticks[-1]) if ticks else None,
+                      "has_ohlcv": all(k in d for k in ("open", "high", "low", "close", "volume"))}
+        out[cur] = {"expired_dated_contracts": len(dated),
+                    "first_expiry": _ts(dated[0]["expiration_timestamp"]) if dated else None,
+                    "last_expiry": _ts(dated[-1]["expiration_timestamp"]) if dated else None,
+                    "sample_coverage": sample}
+    return {"currencies": out}
+
+
+# ------------------------------------------------------------------ BitMEX (publikt API och publik datalagring)
+
+def bitmex(opener=default_opener, pause: float = 2.5) -> dict:
+    flt = urllib.parse.quote(json.dumps({"typ": "FFCCSX"}))
+    rows = json.loads(opener(f"https://www.bitmex.com/api/v1/instrument?filter={flt}&columns=symbol,rootSymbol,expiry,listing,state,underlying&count=500"))
+    rows = [r for r in rows if r.get("expiry")]
+    rows.sort(key=lambda r: r["expiry"])
+    by_root: dict[str, list] = {}
+    for r in rows:
+        by_root.setdefault(r.get("rootSymbol", "?"), []).append(r)
+    sample = {}
+    old = [r for r in rows if r["expiry"] < "2021-01-01"]
+    if old:
+        r = old[len(old) // 2]
+        time.sleep(pause)
+        q = (f"https://www.bitmex.com/api/v1/trade/bucketed?binSize=1d&partial=false&symbol={r['symbol']}"
+             f"&count=500&reverse=false&startTime={urllib.parse.quote(r.get('listing') or r['expiry'])}")
+        bars = json.loads(opener(q))
+        sample = {"instrument": r["symbol"], "listing": r.get("listing"), "expiry": r["expiry"], "daily_bars": len(bars),
+                  "first_bar": bars[0]["timestamp"] if bars else None, "last_bar": bars[-1]["timestamp"] if bars else None}
+    s3 = {}
+    for day in ("20170331", "20200327"):
+        try:
+            data = opener(f"https://s3-eu-west-1.amazonaws.com/public.bitmex.com/data/trade/{day}.csv.gz")
+            s3[day] = {"available": True, "bytes": len(data)}
+        except Exception as exc:   # noqa: BLE001
+            s3[day] = {"available": False, "error": f"{type(exc).__name__}: {str(exc)[:100]}"}
+    return {"dated_contracts_by_root": {k: {"contracts": len(v), "first_expiry": v[0]["expiry"][:10], "last_expiry": v[-1]["expiry"][:10]}
+                                        for k, v in by_root.items()},
+            "sample_daily_coverage": sample, "public_trade_files": s3}
+
+
+# ------------------------------------------------------------------ Bybit, Bitstamp, FRED, OKX
+
+def bybit(opener=default_opener) -> dict:
+    html = opener("https://public.bybit.com/trading/").decode("utf-8", "replace")
+    names = sorted(set(re.findall(r'href="([A-Z0-9\-]+)/"', html)))
+    dated = [n for n in names if re.search(r"\d{2}$", n) and re.search(r"(H|M|U|Z)\d{2}$|-\d{2}[A-Z]{3}\d{2}$", n)]
+    return {"symbols_listed": len(names), "dated_looking_symbols": dated[:40], "dated_count": len(dated)}
+
+
+def bitstamp(opener=default_opener) -> dict:
+    d = json.loads(opener("https://www.bitstamp.net/api/v2/ohlc/btcusd/?step=86400&limit=3&start=1300000000"))["data"]["ohlc"]
+    return {"btcusd_first_daily_bar_from_start_2011": _ts(int(d[0]["timestamp"]) * 1000) if d else None}
+
+
+def fred(opener=default_opener) -> dict:
+    rows = opener("https://fred.stlouisfed.org/graph/fredgraph.csv?id=DTB3").decode().strip().splitlines()[1:]
+    return {"series": "DTB3 (3-månaders amerikansk statsväxel)", "first": rows[0].split(",")[0], "last": rows[-1].split(",")[0], "rows": len(rows)}
+
+
+def okx(opener=default_opener) -> dict:
+    live = json.loads(opener("https://www.okx.com/api/v5/public/instruments?instType=FUTURES&uly=BTC-USD"))["data"]
+    try:
+        old = json.loads(opener("https://www.okx.com/api/v5/market/history-candles?instId=BTC-USD-210326&bar=1D&limit=3"))["data"]
+    except Exception as exc:   # noqa: BLE001
+        old = f"{type(exc).__name__}"
+    return {"live_dated_contracts_btc_usd": len(live), "expired_contract_candles": old if isinstance(old, str) else len(old)}
+
+
+SOURCES = {"binance": binance, "deribit": deribit, "bitmex": bitmex, "bybit": bybit, "bitstamp": bitstamp, "fred": fred, "okx": okx}
+
+
+def survey(sources: list[str], opener=default_opener) -> dict:
+    return {"kind": "basis-source-survey", "run_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+            "note": "Kartläggning av täckning, inga priser hämtade för analys och inget backtest. Slutprov (2025+) läses inte.",
+            "sources": {s: _attempt(SOURCES[s], opener) for s in sources}}
+
+
+def main() -> None:
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--repo", type=Path, default=Path(__file__).resolve().parents[3])
+    ap.add_argument("--sources", nargs="+", default=list(SOURCES), choices=list(SOURCES))
+    ap.add_argument("--tag", default="")
+    a = ap.parse_args()
+    d = survey(a.sources)
+    folder = a.repo / "research" / "coverage"
+    folder.mkdir(parents=True, exist_ok=True)
+    path = folder / f'basis-sources{("-" + a.tag) if a.tag else ""}-{datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")}.json'
+    path.write_text(json.dumps(d, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    print(json.dumps({k: v.get("reachable") for k, v in d["sources"].items()}))
+    print(path)
+
+
+if __name__ == "__main__":
+    main()
