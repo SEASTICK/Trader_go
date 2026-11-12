@@ -1,0 +1,500 @@
+{
+ "hypothesis_id": "H-0021",
+ "kind": "gap-audit",
+ "run_at": "2026-11-12T13:52:43+00:00",
+ "period": [
+  "2021-01-01",
+  "2024-12-31"
+ ],
+ "universe": 85,
+ "held_transitions_without_next_open": 37,
+ "contracts": [
+  "AKROUSDT",
+  "BZRXUSDT",
+  "FILUSDT",
+  "FLMUSDT",
+  "FTMUSDT",
+  "GRTUSDT",
+  "IOTAUSDT",
+  "KNCUSDT",
+  "KSMUSDT",
+  "LRCUSDT",
+  "LTCUSDT",
+  "LUNAUSDT",
+  "MATICUSDT",
+  "MKRUSDT",
+  "NEARUSDT",
+  "OCEANUSDT",
+  "OMGUSDT",
+  "RLCUSDT",
+  "RSRUSDT",
+  "SANDUSDT",
+  "SKLUSDT",
+  "SOLUSDT",
+  "STORJUSDT",
+  "SUSHIUSDT",
+  "TRBUSDT",
+  "TRXUSDT",
+  "VETUSDT",
+  "WAVESUSDT",
+  "XLMUSDT",
+  "XRPUSDT",
+  "YFIIUSDT",
+  "YFIUSDT",
+  "ZECUSDT",
+  "ZENUSDT",
+  "ZILUSDT"
+ ],
+ "by_kind": {
+  "serien_tar_slut": 5,
+  "lucka_serien_fortsätter": 32
+ },
+ "by_day": {
+  "2021-12-19": {
+   "positions": 1,
+   "gross_weight": 0.00639
+  },
+  "2022-02-25": {
+   "positions": 32,
+   "gross_weight": 0.36777
+  },
+  "2022-04-12": {
+   "positions": 1,
+   "gross_weight": 0.01277
+  },
+  "2022-05-13": {
+   "positions": 1,
+   "gross_weight": 0.0
+  },
+  "2022-05-27": {
+   "positions": 1,
+   "gross_weight": 0.00864
+  },
+  "2024-09-11": {
+   "positions": 1,
+   "gross_weight": 0.02348
+  }
+ },
+ "rows": [
+  {
+   "day": "2021-12-19",
+   "contract": "BZRXUSDT",
+   "weight": -0.00639,
+   "direction": "short",
+   "last_data": "2021-12-19",
+   "kind": "serien_tar_slut",
+   "resumes": null,
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "FILUSDT",
+   "weight": 0.01154,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "FLMUSDT",
+   "weight": 0.01092,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "FTMUSDT",
+   "weight": -0.00721,
+   "direction": "short",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "GRTUSDT",
+   "weight": 0.01059,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "IOTAUSDT",
+   "weight": 0.01259,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "KNCUSDT",
+   "weight": 0.01078,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "KSMUSDT",
+   "weight": -0.0108,
+   "direction": "short",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "LRCUSDT",
+   "weight": 0.00805,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "LTCUSDT",
+   "weight": 0.01443,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "LUNAUSDT",
+   "weight": -0.01325,
+   "direction": "short",
+   "last_data": "2022-05-13",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "MKRUSDT",
+   "weight": 0.01579,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "NEARUSDT",
+   "weight": -0.00686,
+   "direction": "short",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "OCEANUSDT",
+   "weight": -0.00936,
+   "direction": "short",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "OMGUSDT",
+   "weight": 0.01173,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "RLCUSDT",
+   "weight": 0.01106,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "RSRUSDT",
+   "weight": -0.01094,
+   "direction": "short",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "SANDUSDT",
+   "weight": 0.00901,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "SKLUSDT",
+   "weight": 0.01012,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "SOLUSDT",
+   "weight": -0.0117,
+   "direction": "short",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "STORJUSDT",
+   "weight": -0.01095,
+   "direction": "short",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "SUSHIUSDT",
+   "weight": -0.00916,
+   "direction": "short",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "TRBUSDT",
+   "weight": 0.01101,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "TRXUSDT",
+   "weight": 0.01944,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "VETUSDT",
+   "weight": 0.01157,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "WAVESUSDT",
+   "weight": 0.01053,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "XLMUSDT",
+   "weight": 0.01489,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "XRPUSDT",
+   "weight": 0.01172,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "YFIIUSDT",
+   "weight": 0.01351,
+   "direction": "long",
+   "last_data": "2022-04-12",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "YFIUSDT",
+   "weight": -0.01061,
+   "direction": "short",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "ZECUSDT",
+   "weight": 0.01392,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "ZENUSDT",
+   "weight": 0.01223,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-02-25",
+   "contract": "ZILUSDT",
+   "weight": 0.0115,
+   "direction": "long",
+   "last_data": "2024-12-31",
+   "kind": "lucka_serien_fortsätter",
+   "resumes": "2022-03-01",
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-04-12",
+   "contract": "YFIIUSDT",
+   "weight": 0.01277,
+   "direction": "long",
+   "last_data": "2022-04-12",
+   "kind": "serien_tar_slut",
+   "resumes": null,
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-05-13",
+   "contract": "LUNAUSDT",
+   "weight": -0.0,
+   "direction": "short",
+   "last_data": "2022-05-13",
+   "kind": "serien_tar_slut",
+   "resumes": null,
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2022-05-27",
+   "contract": "AKROUSDT",
+   "weight": -0.00864,
+   "direction": "short",
+   "last_data": "2022-05-27",
+   "kind": "serien_tar_slut",
+   "resumes": null,
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  },
+  {
+   "day": "2024-09-11",
+   "contract": "MATICUSDT",
+   "weight": -0.02348,
+   "direction": "short",
+   "last_data": "2024-09-11",
+   "kind": "serien_tar_slut",
+   "resumes": null,
+   "documented": false,
+   "note": "Ingen tidsstämplad avnoteringskälla ingår i data (arkivet har bara dagsstaplar). Räknas som oförklarad."
+  }
+ ],
+ "series_ending_before_panel_end": {
+  "AKROUSDT": "2022-05-27",
+  "BZRXUSDT": "2021-12-19",
+  "DOTECOUSDT": "2021-02-19",
+  "HNTUSDT": "2024-05-28",
+  "LUNAUSDT": "2022-05-13",
+  "MATICUSDT": "2024-09-11",
+  "SRMUSDT": "2024-05-28",
+  "TOMOUSDT": "2024-05-28",
+  "YFIIUSDT": "2022-04-12"
+ },
+ "how_treated_by_engine_before_fix": "Sista stapeln värderades till avkastning 0 och positionen stängdes till senast kända öppning.",
+ "note": "Diagnos. Ändrar inget resultat och är ingen ny körning av strategin."
+}

@@ -120,9 +120,10 @@ def load_panel(data_dir: Path, symbols: list[str]):
 
 
 def simulate(opens, highs, lows, w, costs, funding) -> portfolio.PortfolioResult:
-    """Kör portföljen med likvidationsstoppet. Saknad high/low för hållen position ger InvalidRun."""
+    """Kör portföljen med likvidationsstoppet. Saknad high/low för hållen position, saknad nästa öppning (avnotering eller
+    oförklarad datalucka) eller saknad finansieringsränta ger InvalidRun: luckor fylls aldrig med sista kända värde."""
     try:
-        res = portfolio.run(opens, w, costs, funding, highs=highs, lows=lows, stop=STOP)
+        res = portfolio.run(opens, w, costs, funding, highs=highs, lows=lows, stop=STOP, strict_gaps=True)
     except ValueError as exc:
         raise InvalidRun(str(exc)) from exc
     gaps = portfolio.funding_gaps(res.weights, funding)
