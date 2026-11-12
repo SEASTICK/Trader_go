@@ -4,11 +4,23 @@ Datum: 2026-11-12. Uppdrag från Codex efter PR #118 (H-0022 förregistrerad, N 
 
 ## Slutsats
 
-1. **Data finns och är verifierade.** För alla 91 mynt-cykler som universumet släpper in (7 mynt × 13 cykler; cykel 2 är platt) finns last price (COIN-M), markpris och spot med samma `open_time` på inträdes- och utträdesdagen, volym > 0 på alla fyllningar, staplar för varje hållen dag och nästa öppning efter varje hållen dag. **0 av 91 skulle bli `OGILTIG` på grund av saknade staplar.** Kontraktsstorleken (härledd median) ligger inom 9,5–10,5 för alla 91.
+1. **Data finns och är verifierade.** För alla 91 mynt-cykler som universumet släpper in (7 mynt × 13 cykler; cykel 2 är platt) klarar datan exakt de kontroller som koden använder (se "Kontrollerna i koden" nedan): gemensam `open_time` exakt 00:00:00 UTC på fyllnings- och utträdesdagen, volym > 0 på alla fyllningar, markpris varje hållen dag och nästa öppning efter varje hållen dag för **både** termin och spot. **0 av 91 skulle bli `OGILTIG` på grund av saknade staplar.** Kontraktsstorleken (härledd median) ligger inom 9,5–10,5 för alla 91.
 2. **Men datakrav 4 går inte att uppfylla med den registrerade likviditetsregeln.** Protokollet kräver minst 10 av 13 cykler med minst 4 handlade mynt. Högst **9** cykler kan ha fyra mynt, även i det mest generösa fallet (minsta position 10 000 USD, alltså serier med medianvolym över 500 000 USD). Vid startstorleken 20 000 USD är det 5 cykler, och antalet mynt-cykler (45) hamnar under kravet 46.
 3. **Det betyder att H-0022 som registrerad inte är ett giltigt test:** en körning som följer protokollet skulle få `OGILTIG` (datakrav 4, ingen beslut) oavsett strategiutfall. Jag säger det utan att köra något, enligt uppdraget.
 
 Orsaken är likviditetstaket (2 % av den inrullade seriens 20-dagars medianvolym). Vid utträdet 7 dagar före förfall är nästa serie den *näst närmaste*, och den handlas mycket tunnare än närmaste serien. Volymen sjunker dessutom kraftigt över tid (20-dagarsmedian: 2021 ofta 10–30 miljoner USD per dag, 2022–2024 ofta under en miljon, se `h0022-datatackning-tabeller.md`).
+
+## Kontrollerna i koden (`h0022_coverage.audit_coin_cycle`)
+
+En mynt-cykel räknas som `data_complete` (och blir annars `OGILTIG` om positionen tas) bara om **alla** följande gäller, och inget annat:
+
+1. **Exakt gemensam `open_time`:** en stapel med `open_time` exakt 00:00:00 UTC finns för **både** terminen och spoten på fyllningsdagen och på utträdesdagen. En stapel stämplad t.ex. 01:00 räknas inte som dagens stapel (den redovisas under `off_midnight_bars`), så ett ben med 01:00 och ett med 00:00 samma kalenderdag blir ofullständigt.
+2. **Volym > 0** på fyllningsstaplarna (termin och spot, inträde och utträde).
+3. **Markpris** (daglig stapel) för varje hållen dag, från inträdesdagen till och med dagen före utträdesdagen.
+4. **Nästa öppning** (stapel exakt 00:00 UTC) för varje dag efter en hållen dag, till och med utträdesdagen, för **både** terminen och spoten, så att ett riskstopp kan fyllas.
+5. Beslutsdagens förutsättningar (inte `OGILTIG`, utan platt om de saknas): verifierad stapel med volym på beslutsdagen, minst 20 handelsdagar före den, och kontraktsstorlek 9,5–10,5.
+
+Regressionsprov (syntetiska): terminen 01:00 mot spot 00:00, båda benen 01:00 samma dag, spot som saknar en mellandag, terminen som saknar en mellandag, saknad markprisdag och nollvolym på en fyllning ger alla `data_complete` falskt och `ogiltig_if_traded` sant.
 
 ## Täckning per cykel
 
@@ -44,7 +56,7 @@ Cykler med minst fyra mynt vid minsta storlek: 1, 3, 4, 5, 6, 7, 9, 12 och 13 (n
 * **Markpris 2023-08-28..31:** månadsfilerna för de sju 0929-serierna (cykel 10) saknar de fyra dagarna, vilket annars hade gjort sju mynt-cykler `OGILTIGA` (saknad markprisdag under innehavet). Dagarna fylldes ur Binances dagsarkiv för markpris med samma verifiering som i #113: sparad checksumma, SHA-256 mot manifestet `research/coverage/h0022-mark-gap-2023-08.json` (56 filer: sju serier × fyra gapdagar plus fyra grannedagar), giltig tidsstämpel och konsistent OHLC, och **exakt likhet med månadsfilen** för alla 28 grannedagar. Luckfyllnaden är märkt per stapel (`source = daily`) och vägras om något av detta saknas.
 * **Last price 2023-08-28..31:** 14 serier (0929 och 1229) fylldes ur de verifierade dagsfilerna från #113 (112 filer).
 * **Spot:** inga luckor i månadsfilerna 2021-03 till 2024-09 för de sju mynten (inga dagsfiler behövdes).
-* **Övriga luckor:** inga. Samma `open_time` på båda benen vid alla fyllningar och utträden (91 av 91).
+* **Övriga luckor:** inga. Efter skärpningen (exakt 00:00 UTC, nästa öppning för både termin och spot) är 91 av 91 kompletta, och inga staplar har avvikande tidsstämpel (`off_midnight_bars` tomt för alla 91).
 
 ## Verifiering och källor
 

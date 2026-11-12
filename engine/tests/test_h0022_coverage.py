@@ -128,5 +128,49 @@ def test_dataperioden_stänger_2025_och_checksummekontroll_upptäcker_fel(tmp_pa
 def test_incheckad_rapport_har_inga_checksummefel_och_inga_hål_för_beslutade_mynt():
     rep = json.loads((REPO / "research" / "coverage" / "h0022-datatackning.json").read_text(encoding="utf-8"))
     assert rep["checksum_failures"] == {} and rep["coverage"]["ogiltig_om_handlad"] == []
-    assert len(rep["audits"]) == 91 and all(a["open_time_aligned_fill_exit"] for a in rep["audits"])
+    assert len(rep["audits"]) == 91 and all(a["open_time_aligned_fill_exit"] and a["data_complete"] for a in rep["audits"])
+    assert all(a["off_midnight_bars"] == {} for a in rep["audits"]) and all("spot_next_open_days" not in a["missing"] for a in rep["audits"])
     assert not any(k.startswith("data/raw/binance") and re.search(r"2025-\d\d|2026-\d\d", k) for k in rep["files"])
+
+
+# ------------------------------------------------------------------ fail-closed: exakt gemensam open_time och nästa öppning för båda benen
+def _shift_day(df, day, hours):
+    """Flyttar en stapels open_time `hours` timmar (t.ex. 01:00 i stället för 00:00)."""
+    idx = list(df.index)
+    i = idx.index(pd.Timestamp(day, tz="UTC"))
+    idx[i] = idx[i] + pd.Timedelta(hours=hours)
+    out = df.copy()
+    out.index = pd.DatetimeIndex(idx)
+    return out
+
+
+def test_ena_benet_med_open_time_0100_i_stallet_for_0000_ar_ofullstandigt_och_ogiltigt_om_handlat():
+    c, fut, mark, spot = _complete()
+    fut2 = _shift_day(fut, c["fill"], 1)                              # terminen 01:00, spot 00:00 samma kalenderdag
+    a = hc.audit_coin_cycle(cycle=c, fut=fut2, mark=mark, spot=spot, implied_size_median=10.0)
+    assert not a["open_time_aligned_fill_exit"] and not a["data_complete"] and a["ogiltig_if_traded"]
+    assert a["off_midnight_bars"]["fut"] == [c["fill"]] and c["fill"] in a["missing"]["fut_fill_bar"]
+    spot2 = _shift_day(spot, c["exit"], 1)                            # och utträdesdagen på spoten
+    b = hc.audit_coin_cycle(cycle=c, fut=fut, mark=mark, spot=spot2, implied_size_median=10.0)
+    assert not b["data_complete"] and b["ogiltig_if_traded"] and c["exit"] in b["missing"]["spot_exit_bar"]
+
+
+def test_bada_benen_0100_samma_dag_godkänns_inte_eftersom_protokollet_kräver_öppningen_0000():
+    c, fut, mark, spot = _complete()
+    a = hc.audit_coin_cycle(cycle=c, fut=_shift_day(fut, c["fill"], 1), mark=mark, spot=_shift_day(spot, c["fill"], 1), implied_size_median=10.0)
+    assert not a["data_complete"] and a["ogiltig_if_traded"]          # lika tid, men inte öppningen: fortfarande ofullständigt
+
+
+def test_spot_som_saknar_en_mellandag_ger_ofullständigt_även_om_terminen_är_komplett():
+    c, fut, mark, spot = _complete()
+    spot = spot.drop(pd.Timestamp("2022-05-10", tz="UTC"))
+    a = hc.audit_coin_cycle(cycle=c, fut=fut, mark=mark, spot=spot, implied_size_median=10.0)
+    assert a["missing"]["spot_next_open_days"] == ["2022-05-10"] and "fut_next_open_days" not in a["missing"]
+    assert not a["data_complete"] and not a["held_days_complete"] and a["ogiltig_if_traded"]
+
+
+def test_en_off_midnight_stapel_på_en_oväsentlig_dag_ändrar_inte_fullständigheten_men_redovisas_inte_som_gemensam_tid():
+    c, fut, mark, spot = _complete()
+    fut = _shift_day(fut, "2022-01-05", 1)                            # långt före beslutsdagen: ingen krävd dag
+    a = hc.audit_coin_cycle(cycle=c, fut=fut, mark=mark, spot=spot, implied_size_median=10.0)
+    assert a["data_complete"] and a["open_time_aligned_fill_exit"] and a["off_midnight_bars"] == {}

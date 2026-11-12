@@ -73,12 +73,30 @@ def required_days(cycle: dict) -> dict:
             "next_open": _days((dt.date.fromisoformat(fill) + dt.timedelta(days=1)).isoformat(), x)}
 
 
+def _exact_midnight(df: pd.DataFrame | None) -> pd.DatetimeIndex:
+    """Bara staplar med `open_time` exakt 00:00:00 UTC räknas som en dagsstapel. En stapel stämplad t.ex. 01:00 hör inte till dagens öppning."""
+    if df is None or df.empty:
+        return pd.DatetimeIndex([], tz="UTC")
+    return df.index[df.index == df.index.normalize()]
+
+
 def _index_days(df: pd.DataFrame | None) -> set[str]:
-    return set() if df is None or df.empty else {d.date().isoformat() for d in df.index}
+    return {d.date().isoformat() for d in _exact_midnight(df)}
+
+
+def _off_midnight(df: pd.DataFrame | None, days: list[str]) -> list[str]:
+    """Dagar i `days` som har en stapel vars `open_time` inte är exakt 00:00 UTC (diagnostik)."""
+    if df is None or df.empty:
+        return []
+    off = {d.date().isoformat() for d in df.index if d != d.normalize()}
+    return [t for t in days if t in off]
 
 
 def _traded_days(df: pd.DataFrame | None) -> set[str]:
-    return set() if df is None or df.empty else {d.date().isoformat() for d in df.index[df["volume"] > 0]}
+    if df is None or df.empty:
+        return set()
+    sel = df[(df["volume"] > 0) & (df.index == df.index.normalize())]
+    return {d.date().isoformat() for d in sel.index}
 
 
 def audit_coin_cycle(*, cycle: dict, fut: pd.DataFrame | None, mark: pd.DataFrame | None, spot: pd.DataFrame | None,
@@ -93,12 +111,12 @@ def audit_coin_cycle(*, cycle: dict, fut: pd.DataFrame | None, mark: pd.DataFram
     median20 = None
     n_traded = 0
     if fut is not None and not fut.empty:
-        upto = fut[(fut["volume"] > 0) & (fut.index <= pd.Timestamp(d, tz="UTC"))]
+        upto = fut[(fut["volume"] > 0) & (fut.index == fut.index.normalize()) & (fut.index <= pd.Timestamp(d, tz="UTC"))]
         n_traded = int(len(upto))
         if n_traded >= 20:
             median20 = float(statistics.median(upto["volume"].iloc[-20:] * CONTRACT_USD))
-    aligned = [day for day in (f, x) if day in fut_days and day in spot_days and
-               pd.Timestamp(day, tz="UTC") in fut.index and pd.Timestamp(day, tz="UTC") in spot.index]
+    # samma open_time: båda benen måste ha en stapel exakt 00:00:00 UTC på fyllnings- och utträdesdagen
+    aligned = all(day in fut_days and day in spot_days for day in (f, x))
     missing = {
         "fut_decision_bar": [] if d in fut_traded else [d],
         "fut_fill_bar": [] if f in fut_traded else [f],
@@ -108,21 +126,25 @@ def audit_coin_cycle(*, cycle: dict, fut: pd.DataFrame | None, mark: pd.DataFram
         "spot_exit_bar": [] if x in spot_traded else [x],
         "mark_held_days": [t for t in req["held"] if t not in mark_days],
         "fut_next_open_days": [t for t in req["next_open"] if t not in fut_days],
+        "spot_next_open_days": [t for t in req["next_open"] if t not in spot_days],
     }
+    off_midnight = {"fut": _off_midnight(fut, [f, x] + req["next_open"]), "spot": _off_midnight(spot, [f, x] + req["next_open"]),
+                    "mark": _off_midnight(mark, req["held"])}
     size_ok = implied_size_median is not None and 9.5 <= implied_size_median <= 10.5
     decision_possible = (not missing["fut_decision_bar"] and not missing["spot_decision_bar"] and n_traded >= 20 and size_ok)
     # saknade fyllnings-, utträdes-, markpris- eller (stopp-)nästa-öppningsstaplar för ett beslutat mynt gör körningen OGILTIG
     fill_complete = not any(missing[k] for k in ("fut_fill_bar", "fut_exit_bar", "spot_fill_bar", "spot_exit_bar"))
-    held_complete = not missing["mark_held_days"] and not missing["fut_next_open_days"]
+    held_complete = not missing["mark_held_days"] and not missing["fut_next_open_days"] and not missing["spot_next_open_days"]
     return {
         "coin": None, "cycle": cycle["cycle"], "expiry": cycle["expiry"], "decision": d, "fill": f, "exit": x,
         "n_held_days": len(req["held"]), "missing": {k: v for k, v in missing.items() if v},
-        "open_time_aligned_fill_exit": sorted(aligned) == sorted([f, x]),
+        "open_time_aligned_fill_exit": aligned, "off_midnight_bars": {k: v for k, v in off_midnight.items() if v},
         "traded_days_before_decision": n_traded, "median20_usd": median20, "implied_size_median": implied_size_median,
         "contract_size_ok": size_ok, "decision_possible": decision_possible,
         "fill_exit_bars_complete": fill_complete, "held_days_complete": held_complete,
-        "data_complete": fill_complete and held_complete and not missing["fut_next_open_days"],
-        "ogiltig_if_traded": decision_possible and not (fill_complete and held_complete),
+        # fail-closed enligt protokollet: exakt gemensam open_time, fyllnings- och utträdesstaplar, markpris varje hållen dag och nästa öppning för både termin och spot
+        "data_complete": fill_complete and held_complete and aligned,
+        "ogiltig_if_traded": decision_possible and not (fill_complete and held_complete and aligned),
         "liquidity_min_ok": median20 is not None and median20 >= MIN_MEDIAN20_USD,
         "liquidity_start_ok": median20 is not None and median20 >= START_SIZE_MEDIAN20_USD,
     }
