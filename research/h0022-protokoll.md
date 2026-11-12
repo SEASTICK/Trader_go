@@ -45,12 +45,13 @@ skälet till att statistiken är lagd på cykelnivå (se "Statistik").
 | Utträde | **Exakt sju kalenderdagar före förfall** (fredag 00:00 UTC): terminen köps tillbaka och spot säljs vid den dagens öppning, båda benen. Ingen avräkning används. |
 | Rullning | Utträdet och nästa inträde sker vid samma öppning. Nästa serie måste vara valbar enligt beslutsdagen (dagen före), annars platt den cykeln. Cykler följer kalendern oavsett resultat. |
 | Priser | Fyllning vid dagsstapelns öppning (last price för terminen, spotens öppning). Spot och termin har **separata** priser vid inträde och utträde (`spot0`, `fut0`, `fut_exit`, `spot_exit`). |
-| Hela kapitalet och coin-marginalen | Per mynt investeras 10 000 USD (`A`). Mynt köps för beloppet (avgift och glidning ingår), läggs som marginal, kontrakt säljs avrundat **ned** efter öppningsavgiften (effektiv hävstång ≤ 1), PnL i mynt = n · 10 · (1/`fut_exit` − 1/`fut0`), avgifter dras i mynt, slutvärde i USD först när spot säljs. Kapital i portföljen = 7 × 10 000 USD. Platta mynt lämnar kapitalet i kontanter utan ränta. Beräknas med `basis_costs.pre_expiry_cycle`. |
+| Hela kapitalet och coin-marginalen (per position) | Positionens storlek `A` kommer från kassaboken nedan. Mynt köps för `A` (avgift och glidning ingår), läggs som marginal, kontrakt säljs avrundat **ned** efter öppningsavgiften (effektiv hävstång ≤ 1), PnL i mynt = n · 10 · (1/`fut_exit` − 1/`fut0`), avgifter dras i mynt, slutvärde i USD först när spot säljs. Beräknas med `basis_costs.pre_expiry_cycle`. |
+| Kassabok (självfinansierande, låst) | **Startkapital 140 000 USD kontanter** vid första fyllningen (2021-03-27). Sju platser, en per mynt. Vid **varje** cykelstart har alla positioner från föregående cykel redan stängts vid samma öppning, så portföljen är ren USD-kassa `V`. Storlek per plats: `A = min(V / 7, likviditetstak)` om myntet är valbart, annars 0; är `A` under **10 000 USD** blir platsen platt. Summan av alla `A` är högst `V`, så kassan räcker alltid och ingen position kräver tillskott. Insatsen `A` lämnar kassan vid inträdet och slutvärdet (USD efter spot-sälj) kommer tillbaka vid utträdet. **Vinster återinvesteras** vid nästa cykelstart genom `V/7`; **överskott** (platta platser, platser begränsade av likviditetstaket) ligger kvar som kontanter **utan ränta** tills dess. Förluster minskar `V` och därmed nästa cykels `A`. Inga externa tillskott, inga uttag, ingen prioritering behövs (ingen brist uppstår), inget efterhandsval. Specifikationen är `basis_costs.ledger_run`. |
 | Kostnader | Spot 0,100 %, termin taker 0,050 % (hela perioden, konservativt), glidning 5 bp per ben, fyra ben = **50 bp** per cykel vid noll basis. **Stress 2,5×** (alla fyra komponenter) = 125 bp (bokfört 124,2 bp: kostnaderna är andelar av ett krympande värde, så budgeten är en övre gräns inom 1 bp). Ingen BNB-rabatt, inga maker-order. |
 | Markprisbaserat riskstopp | Varje hållen dag: marginalkvot (`basis_costs.margin_ratio`) vid dagens **högsta markpris** (markPriceKlines), underhållsnivå antagen **50 %**. Är kvoten ≥ **0,8** någon dag stängs båda benen vid nästa öppning (full kostnad) och myntet är platt resten av cykeln. Stoppet redovisas, och varje utlöst stopp ger **REJECT** (kriterium 5). Saknas markpris för en hållen dag är körningen `OGILTIG`. |
-| Likviditetstak och minsta storlek | Positionen (10 000 USD) får vara högst **2 %** av seriens medianvolym i USD över de senaste 20 verifierade handelsdagarna till och med beslutsdagen (volym i kontrakt × 10 USD). Färre än 20 handelsdagar eller överskriden gräns: platt. Minsta position 10 000 USD per mynt (ett kontrakt högst 0,1 %). |
+| Likviditetstak och minsta storlek | Positionen får vara högst **2 %** av seriens medianvolym (kassabokens tak) i USD över de senaste 20 verifierade handelsdagarna till och med beslutsdagen (volym i kontrakt × 10 USD). Färre än 20 handelsdagar eller överskriden gräns: platt. Minsta position 10 000 USD per mynt (ett kontrakt högst 0,1 %). |
 | Kontraktsstorlek | Serien måste ha härledd median mellan 9,5 och 10,5 USD (`coinm-implied-contract-size.json`), annars platt (0 av 135 idag). |
-| Jämförelse 1 (kontanter) | Årlig avkastning (CAGR) över hela spannet 2021-03-27 till 2024-09-20 (1 273 dagar, inklusive platta perioder) ska överstiga **3 %**, samma gräns som i H-0020 (ungefär snittet för amerikanska 3-månadersväxlar 2021–2024; gränsen är ett förhandslåst närmevärde och inte en ny datahämtning). Annars är kontanter bättre. |
+| Jämförelse 1 (kontanter) | Årlig avkastning (CAGR) för **kassabokens totalvärde** `(V_slut / 140 000)^(365/1273) − 1`, över hela spannet 2021-03-27 till 2024-09-20 (1 273 dagar, inklusive platta perioder) ska överstiga **3 %**, samma gräns som i H-0020 (ungefär snittet för amerikanska 3-månadersväxlar 2021–2024; gränsen är ett förhandslåst närmevärde och inte en ny datahämtning). Annars är kontanter bättre. |
 | Jämförelse 2 (marknadsneutral) | Beta mot BTCUSDT spot, regressionen på kvartalscyklernas avkastning (BTC spot, öppning till öppning, samma datum), n = 14. |
 | Slumpkontroll | Inte tillämpbar (positionen är utan riktningsval). I stället redovisas *noll-basis-kostnaden* (50 bp) som referens för alla cyklers kostnad. |
 
@@ -78,12 +79,38 @@ Genererad ur universumtabellen (`coinm-pit-series.json`) och `universe_at`; inga
 
 Antal cykler **n = 14** (13 med positioner, 1 platt). Hela spannet är 1 273 dagar (3,49 år).
 
+## Kassaboken: två syntetiska cykler räknade för hand
+
+Alla siffror nedan är syntetiska och reproduceras exakt av `ledger_run` (test `test_ledger_exempel_vinst_och_forlust_tva_cykler`). Kostnader: spot 0,100 %, termin taker 0,050 %, glidning 5 bp per ben. Kontraktsstorlek 10 USD.
+
+**Cykel 1.** Start `V = 140 000`. Sju valbara platser, alla utan tak, så `A = V/7 = 20 000` per plats. Sex platser: spot0 100, fut0 104, fut_exit 100,5, spot_exit 100 (basis 4 % → 0,5 %). Sjunde platsen: spot0 100, fut0 100, fut_exit 103, spot_exit 100 (basis vidgas, förlust).
+
+| Plats | A (USD) | Kontrakt | Slutvärde (USD) | Avkastning |
+|---|---|---|---|---|
+| 1 till 6 (varje) | 20 000,00 | 2 074 | 20 593,04 | +2,9652 % |
+| 7 | 20 000,00 | 1 995 | 19 320,63 | −3,3968 % |
+
+Investerat 140 000,00, kassa 0, `V_slut` = 6 × 20 593,04 + 19 320,63 = **142 878,86** (avrundat till cent), r₁ = **+2,0563 %**.
+
+**Cykel 2.** Start `V = 142 878,86`, `V/7 = 20 411,27`. Plats 1 är inte valbar (platt). Plats 2 har likviditetstak 15 000 (`A = min(20 411,27; 15 000) = 15 000`). Platserna 3 till 6 vinner (som ovan), plats 7 har fut0 100 och fut_exit 104 (förlust).
+
+| Plats | A (USD) | Kontrakt | Slutvärde (USD) | Avkastning |
+|---|---|---|---|---|
+| 1 | 0 (platt) | 0 | 0 | 0 |
+| 2 | 15 000,00 | 1 556 | 15 444,94 | +2,9662 % |
+| 3 till 6 (varje) | 20 411,27 | 2 117 | 21 016,61 | +2,9657 % |
+| 7 | 20 411,27 | 2 036 | 19 528,34 | −4,3257 % |
+
+Investerat 117 056,33, kassa som står kvar 25 822,53, `V_slut` = 25 822,53 + 15 444,94 + 4 × 21 016,61 + 19 528,34 = **144 862,25**, r₂ = **+1,3882 %**. Totalt +3,4730 % över två cykler.
+
+Kontroller som motorn måste uppfylla: summan av `A` är aldrig större än `V`; `V_slut = V_start − Σ A + Σ slutvärde`; nästa cykels `V_start` är föregående `V_slut`; CAGR, t och beta beräknas ur samma `V`-serie. Stress (2,5×) körs som en **egen** kassabok med stressade kostnader från samma startkapital, där varje cykels `V` kommer ur den bokens egen utveckling.
+
 ## Statistik: 14 starkt korrelerade kvartalscykler
 
 Positionerna för de sju mynten rör sig ihop (samma börs, samma regim, samma kalender), och cyklerna är kvartal. Dagsavkastningen i en säkrad kassa-och-termin
 är nästan en jämn upplupen basis, så ett dagligt t-värde vore kraftigt överskattat jämfört med de **14** oberoende utfallen. Därför är beslutsstatistiken lagd på cykelnivå:
 
-* En observation per cykel: portföljens cykelavkastning r_k = (1/7) · Σ över valbara mynt av avkastningen för det myntet på dess 10 000 USD (platta mynt och den platta cykeln ger 0).
+* En observation per cykel, **ur kassaboken**: r_k = V_slut / V_start − 1 för cykel k (hela portföljen, platta platser och kontanter ger 0 för sin del, den platta cykeln 2 ger exakt 0). Samma r_k används för t, beta och CAGR.
 * t = medelvärde(r_k) / (std(r_k) / √14), med n−1 = 13 frihetsgrader.
 * Kravet är **max(2,84; Student-t-kvantilen med 13 frihetsgrader för p = 0,05/22)** = max(2,84; **3,42**) = **3,42**. 2,84 är Bonferronikravet för N = 22 (`python -m traderlab krav 22`);
   3,42 är det strängare kravet för så få observationer. Båda är bestämda nu.

@@ -144,3 +144,66 @@ def test_pre_expiry_hävstång_högst_1_och_avrundningen_redovisas():
     assert c.contracts * 10.0 <= c.coins_bought * 102.0
     big = pre_expiry_cycle(capital_usd=BIG, spot0=100.0, fut0=102.0, fut_exit=90.0, spot_exit=88.0, contract_usd=10.0)
     assert abs(c.ret - big.ret) > 0.0005                     # litet kapital: avrundningsresten ger en märkbar avvikelse
+
+
+# ------------------------------------------------------------------ kassabok: två syntetiska cykler med vinst och förlust
+def _slot(valid=True, cap=float("inf"), spot0=100.0, fut0=104.0, fut_exit=100.5, spot_exit=100.0, contract_usd=10.0):
+    return dict(valid=valid, cap=cap, spot0=spot0, fut0=fut0, fut_exit=fut_exit, spot_exit=spot_exit, contract_usd=contract_usd)
+
+
+def _exempel():
+    c1 = [_slot() for _ in range(6)] + [_slot(fut0=100.0, fut_exit=103.0)]
+    c2 = [_slot(valid=False), _slot(cap=15000.0)] + [_slot() for _ in range(4)] + [_slot(fut0=100.0, fut_exit=104.0)]
+    return [c1, c2]
+
+
+def test_ledger_exempel_vinst_och_forlust_tva_cykler():
+    from traderlab.basis_costs import ledger_run
+    r = ledger_run(cycles=_exempel())
+    c1, c2 = r["cycles"]
+    assert c1["v_start"] == 140000.0 and c1["invested"] == pytest.approx(140000.0) and c1["cash_idle"] == pytest.approx(0.0, abs=1e-9)
+    assert [p["size"] for p in c1["positions"]] == [20000.0] * 7
+    assert [p["contracts"] for p in c1["positions"]] == [2074] * 6 + [1995]
+    assert c1["positions"][0]["usd_end"] == pytest.approx(20593.04, abs=0.005) and c1["positions"][6]["usd_end"] == pytest.approx(19320.63, abs=0.005)
+    assert c1["v_end"] == pytest.approx(142878.86, abs=0.01) and c1["r"] == pytest.approx(0.020563, abs=1e-6)
+    # cykel 2 börjar med cykel 1:s slutvärde (ingen extern tillförsel), V/7 återinvesterar vinsten
+    assert c2["v_start"] == pytest.approx(c1["v_end"])
+    sizes = [round(p["size"], 2) for p in c2["positions"]]
+    assert sizes == [0.0, 15000.0, 20411.27, 20411.27, 20411.27, 20411.27, 20411.27]
+    assert [p["contracts"] for p in c2["positions"]] == [0, 1556, 2117, 2117, 2117, 2117, 2036]
+    assert c2["invested"] == pytest.approx(117056.33, abs=0.01) and c2["cash_idle"] == pytest.approx(25822.53, abs=0.01)
+    assert c2["v_end"] == pytest.approx(144862.25, abs=0.01) and c2["r"] == pytest.approx(0.013882, abs=1e-6)
+    assert r["total_return"] == pytest.approx(0.034730, abs=1e-5)
+
+
+def test_ledger_invarianter_summan_av_positioner_aldrig_over_kassan_och_bokföringen_stämmer():
+    from traderlab.basis_costs import ledger_run
+    r = ledger_run(cycles=_exempel() * 3)
+    prev_end = None
+    for c in r["cycles"]:
+        assert c["invested"] <= c["v_start"] + 1e-9 and c["cash_idle"] >= -1e-9
+        proceeds = sum(p["usd_end"] for p in c["positions"])
+        assert c["v_end"] == pytest.approx(c["v_start"] - c["invested"] + proceeds)
+        assert c["r"] == pytest.approx(c["v_end"] / c["v_start"] - 1)
+        if prev_end is not None:
+            assert c["v_start"] == pytest.approx(prev_end)         # exakt kedjning, inga tillskott eller uttag
+        prev_end = c["v_end"]
+    assert r["v_end"] == pytest.approx(prev_end)
+
+
+def test_ledger_förlust_minskar_nästa_storlek_och_under_minsta_storlek_blir_platt():
+    from traderlab.basis_costs import ledger_run
+    loss = [_slot(fut0=100.0, fut_exit=140.0) for _ in range(7)]            # basis vidgas kraftigt: alla förlorar
+    r = ledger_run(cycles=[loss, [_slot() for _ in range(7)]], start_capital=140000.0)
+    assert r["cycles"][0]["r"] < -0.2
+    assert r["cycles"][1]["positions"][0]["size"] == pytest.approx(r["cycles"][1]["v_start"] / 7)       # mindre än 20 000
+    flat = ledger_run(cycles=[[_slot() for _ in range(7)]], start_capital=60000.0)                      # 60 000 / 7 < 10 000
+    assert flat["cycles"][0]["invested"] == 0.0 and flat["cycles"][0]["r"] == 0.0 and flat["v_end"] == 60000.0
+
+
+def test_ledger_ogiltig_platsantal_och_platt_cykel_ger_noll():
+    from traderlab.basis_costs import ledger_run
+    with pytest.raises(ValueError):
+        ledger_run(cycles=[[_slot()] * 6])
+    r = ledger_run(cycles=[[_slot(valid=False) for _ in range(7)]])
+    assert r["cycles"][0]["r"] == 0.0 and r["v_end"] == 140000.0

@@ -165,3 +165,52 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+# ------------------------------------------------------------------ självfinansierande USD-kassabok (H-0022)
+LEDGER_START_USD = 140_000.0   # utgångskapital; 7 platser à 20 000 USD ger utrymme för en halvering innan minsta storlek binder
+LEDGER_SLOTS = 7               # en plats per underliggande; platta platser står kvar som kontanter utan ränta
+LEDGER_MIN_SIZE = 10_000.0     # minsta position per mynt (ett kontrakt högst 0,1 %)
+LEDGER_LIQUIDITY_FRACTION = 0.02
+
+
+def ledger_run(*, cycles: list[list[dict]], start_capital: float = LEDGER_START_USD, slots: int = LEDGER_SLOTS,
+               min_size: float = LEDGER_MIN_SIZE, spot_fee: float = SPOT_FEE, fut_taker: float = LOCKED_FUT_TAKER,
+               slippage: float = LOCKED_SLIPPAGE) -> dict:
+    """Självfinansierande USD-kassabok från startkapitalet genom alla cykler. Inga externa tillskott, inget efterhandsval.
+
+    Varje cykel börjar med att **alla** positioner från föregående cykel stängts vid samma öppning, så portföljen är då ren kassa V.
+    Storlek per plats: `A = min(V / slots, cap)` om platsen är valbar (`valid`), annars 0; är `A` under `min_size` är platsen platt.
+    `cap` är likviditetstaket i USD (2 % av medianvolymen) och sätts av anroparen före cykeln. Summan av alla `A` är högst V, så
+    kassan kan aldrig bli för liten, och överskott (vinster, platta platser, begränsade platser) ligger kvar som kontanter utan ränta
+    tills nästa cykel där V/slots återinvesterar dem. Kostnaderna ligger i varje position (`pre_expiry_cycle`), så kassan minskar
+    exakt med insatsen A vid inträdet och ökar med slutvärdet (USD efter spot-sälj) vid utträdet.
+
+    Varje element i `cycles` är en lista med en dict per plats: `valid`, `cap`, och priserna `spot0`, `fut0`, `fut_exit`, `spot_exit`,
+    `contract_usd`. Returnerar per cykel startvärde, positioner, slutvärde och cykelavkastning r = V_slut / V_start − 1, samt
+    totalvärdet. Cykelavkastningen är den som används för t, beta och CAGR."""
+    value = start_capital
+    out = []
+    for slots_in_cycle in cycles:
+        if len(slots_in_cycle) != slots:
+            raise ValueError(f"{len(slots_in_cycle)} platser, väntade {slots}")
+        v_start, positions, invested, proceeds = value, [], 0.0, 0.0
+        for slot in slots_in_cycle:
+            size = min(v_start / slots, slot["cap"]) if slot["valid"] else 0.0
+            if size < min_size:
+                size = 0.0
+            if size == 0.0:
+                positions.append({"size": 0.0, "usd_end": 0.0, "ret": 0.0, "contracts": 0})
+                continue
+            c = pre_expiry_cycle(capital_usd=size, spot0=slot["spot0"], fut0=slot["fut0"], fut_exit=slot["fut_exit"],
+                                 spot_exit=slot["spot_exit"], contract_usd=slot["contract_usd"], spot_fee=spot_fee,
+                                 fut_taker=fut_taker, slippage=slippage)
+            positions.append({"size": size, "usd_end": c.usd_end, "ret": c.ret, "contracts": c.contracts})
+            invested += size
+            proceeds += c.usd_end
+        assert invested <= v_start + 1e-9, "kassan räcker alltid: summan av positionerna är högst V"
+        v_end = v_start - invested + proceeds
+        out.append({"v_start": v_start, "positions": positions, "invested": invested, "cash_idle": v_start - invested,
+                    "v_end": v_end, "r": v_end / v_start - 1})
+        value = v_end
+    return {"cycles": out, "v_end": value, "total_return": value / start_capital - 1}
