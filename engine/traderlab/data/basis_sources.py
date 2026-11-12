@@ -451,7 +451,41 @@ def binance_announcements(opener=default_opener, max_pages: int = 300, max_artic
     return {"catalogs": per_catalog, "matching_titles": len(rows), "titles": rows, "read": len(relevant), "articles": relevant}
 
 
-SOURCES = {"binance_announcements": binance_announcements, "binance": binance, "binance_api": binance_api, "binance_docs": binance_docs, "binance_docs_text": lambda opener=default_opener: binance_docs(opener, full_text=True), "deribit": deribit, "bitmex_api": bitmex_api, "bitmex_files": lambda opener=None: bitmex_files(),
+PIT_TITLE = re.compile(r"(?i)(will (launch|list|relaunch)[^.]*(quarterly|delivery)[^.]*(coin-?m|coin-margined|usd\b)|coin-?m[^.]*(quarterly|delivery)|"
+                       r"(quarterly|delivery)[^.]*coin-?m|margin tiers of multiple coin-m)")
+
+
+def binance_articles_pit(opener=default_opener, pause: float = 3.0) -> dict:
+    """Läser hela texten i de COIN-M-kvartalsmeddelanden som `binance_announcements` listade (research/coverage/*ann1*.json).
+    Pausar mellan anropen eftersom Binance annars svarar 429."""
+    repo = Path(__file__).resolve().parents[3]
+    files = sorted((repo / "research" / "coverage").glob("basis-sources-ann1-*.json"))
+    if not files:
+        raise FileNotFoundError("ingen ann1-rapport; kör binance_announcements först")
+    titles = json.loads(files[-1].read_text(encoding="utf-8"))["sources"]["binance_announcements"]["titles"]
+    picked = [t for t in titles if PIT_TITLE.search(t["title"]) and t["released"] < "2025-01-01"]   # inget 2025+
+    out = []
+    for t in picked:
+        row = {k: t[k] for k in ("code", "title", "released", "catalog")}
+        for attempt in range(5):
+            try:
+                row["text"] = _page_text(opener(ANN_ARTICLE.format(code=t["code"]), tries=2).decode("utf-8", "replace"))
+                break
+            except urllib.error.HTTPError as exc:
+                row["text_error"] = f"HTTP {exc.code}"
+                time.sleep(pause * (attempt + 2))
+            except Exception as exc:   # noqa: BLE001
+                row["text_error"] = f"{type(exc).__name__}: {str(exc)[:80]}"
+                break
+        else:
+            pass
+        row["characters"] = len(row.get("text", ""))
+        out.append(row)
+        time.sleep(pause)
+    return {"picked": len(picked), "read": sum(1 for r in out if r["characters"]), "articles": out}
+
+
+SOURCES = {"binance_articles_pit": binance_articles_pit, "binance_announcements": binance_announcements, "binance": binance, "binance_api": binance_api, "binance_docs": binance_docs, "binance_docs_text": lambda opener=default_opener: binance_docs(opener, full_text=True), "deribit": deribit, "bitmex_api": bitmex_api, "bitmex_files": lambda opener=None: bitmex_files(),
            "bybit": bybit, "bitstamp": bitstamp, "fred": fred, "fred_text": fred_text, "okx": okx}
 
 
