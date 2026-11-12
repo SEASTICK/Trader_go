@@ -42,8 +42,10 @@ Serieräkningen är de 135 serier med data före 2025 från `coinm-pit-series.js
 ## Modellen (låst som förslag)
 
 Specifikationen finns som körbar kod med syntetiska tester i `engine/traderlab/basis_costs.py` och `tests/test_basis_costs.py`.
+**`pre_expiry_cycle` är förslaget** (utträde 7 dagar före förfall). `hold_cycle` är en **annan modell** (hållen till förfall med avräkning) och ska inte
+användas för förslaget.
 
-1. **Hela kapitalet och coin-marginalen räknas.** Kapitalet C (USD) köper X mynt på spot (avgift och glidning ingår), mynten läggs
+1. **Hela kapitalet och coin-marginalen räknas** (i `pre_expiry_cycle`, med separata spot- och terminspriser vid in- och utträde). Kapitalet C (USD) köper X mynt på spot (avgift och glidning ingår), mynten läggs
    som marginal, avgiften för att sälja kontrakten dras i **mynt**, och kontraktsantalet avrundas **ned** så att
    `notional ≤ marginal efter öppningsavgift` (effektiv hävstång ≤ 1). Allt bokförs i mynt (PnL = n · storlek · (1/in − 1/ut) för en kort
    position) och slutvärdet i USD tas först när spotbenet säljs (avgift och glidning ingår). Det är motsatsen till H-0020:s förenkling,
@@ -58,11 +60,15 @@ Specifikationen finns som körbar kod med syntetiska tester i `engine/traderlab/
 4. **Kostnadsbudget:** spot-köp 15 bp (10 avgift + 5 glidning), termin-sälj 10 bp, terminsutträde 10 bp, spot-sälj 15 bp = **50 bp per cykel**
    (avgifter 30 bp plus glidning 20 bp). Stresstest 2,5× = **125 bp**. Hållen till förfall: 45 bp, eftersom avräkningen bara kostar
    takeravgift. Siffrorna är kostnader, inte en prognos.
-5. **Förutbestämt utträde:** stäng båda benen vid dagens slut **7 kalenderdagar före förfall** med takeravgift, och flytta (rulla) till nästa
-   serie bara om den är valbar enligt `universe_at` den dagen (annonserad och handlad, verifierad stapel). Utträdesdagen är fastlagd av
-   kalendern, inte av pris. Alternativ om en senare förregistrering vill hålla till förfall: avräkningskursen kan beräknas både som
-   timmesmedel och som 30-minutersmedel ur indexpris-minutstaplar för förfallodagen (dagsfiler finns i arkivet) och det sämre utfallet gäller;
-   det är ett eget, större arbete.
+5. **Förutbestämt utträde (`pre_expiry_cycle`):** stäng båda benen vid dagens slut **7 kalenderdagar före förfall**. Terminen köps tillbaka till
+   terminens senaste pris den dagen (`fut_exit`, inte en avräkningskurs) och spotbenet säljs till spotpriset den dagen (`spot_exit`), alla fyra
+   ben med takeravgift och glidning. PnL i mynt = n · storlek · (1/`fut_exit` − 1/`fut0`), utträdesavgiften dras i mynt på notionellt värde vid
+   `fut_exit`. Rulla till nästa serie bara om den är valbar enligt `universe_at` den dagen. Utträdesdagen är fastlagd av kalendern, inte av pris.
+   **Test:** utan avgifter är avkastningen exakt `(fut0/spot0) · (spot_exit/fut_exit) − 1` för olika prisvägar, och vid noll basis är den bokförda
+   kostnaden 50 bp (stress 2,5× ger 124,2 bp; budgeten är additiv och därför en övre gräns inom 1 bp).
+   **Förfallsvarianten (`hold_cycle`) är en annan modell** med ett slutpris (avräkning) och 45 bp; den används inte av förslaget. Vill en senare
+   förregistrering hålla till förfall kan avräkningskursen beräknas både som timmesmedel och som 30-minutersmedel ur indexpris-minutstaplar för
+   förfallodagen, och det sämre utfallet gäller. Det är ett eget, större arbete.
 
 ### Fail-closed (OGILTIG, inte MORE_RESEARCH)
 
@@ -94,7 +100,7 @@ Specifikationen finns som körbar kod med syntetiska tester i `engine/traderlab/
 
 ## Filer
 
-* `engine/traderlab/basis_costs.py`: avgifter, kostnadsbudget, kontraktsstorlek ur data, `hold_cycle`, `margin_ratio`.
+* `engine/traderlab/basis_costs.py`: avgifter, kostnadsbudget, kontraktsstorlek ur data, `pre_expiry_cycle` (förslaget), `hold_cycle` (annan modell), `margin_ratio`.
 * `engine/tests/test_basis_costs.py`: tester med syntetiska tal.
 * `research/universe/coinm-implied-contract-size.json`: kontraktsstorlek härledd per serie (före 2025).
 * `research/coverage/basis-sources-cost1-*.json`, `…cost2-*.json`: rådata från Binance-meddelandena (avgifter, marginaltabeller, spotavgifter).

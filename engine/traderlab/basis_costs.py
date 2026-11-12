@@ -3,8 +3,10 @@
 Inga marknadspriser används här och ingen avkastning har räknats på historik. Modulen gör två saker:
 1. `implied_contract_size`: härleder kontraktsstorleken i USD ur kline-kolumnerna (kontrakt och mynt) för en serie, utan priser
    som urvalskriterium. COIN-M-klines har volym i *kontrakt* (kolumn 5) och i *mynt* (kolumn 7); kontraktsstorlek ≈ mynt · pris / kontrakt.
-2. Kostnadsbudget och mynt-bokföring för en hållen-till-förfall-cykel (`hold_cycle`) som räknar hela kapitalet och coin-marginalen:
-   spotbenet köps för kapitalet, mynten ligger som marginal, det inversa kontraktet säljs, och allt (avgifter, PnL, restmynt) bokförs i mynt.
+2. Kostnadsbudget och mynt-bokföring som räknar hela kapitalet och coin-marginalen: spotbenet köps för kapitalet, mynten ligger som
+   marginal, det inversa kontraktet säljs, och allt (avgifter, PnL, restmynt) bokförs i mynt. Två åtskilda modeller:
+   `pre_expiry_cycle` (förslaget: stängning 7 dagar före förfall, fyra ben med takeravgift och glidning, separata priser) och
+   `hold_cycle` (en ANNAN modell: hållen till förfall med avräkning).
 """
 from __future__ import annotations
 
@@ -87,9 +89,33 @@ class Cycle:
     ret: float
 
 
+def pre_expiry_cycle(*, capital_usd: float, spot0: float, fut0: float, fut_exit: float, spot_exit: float, contract_usd: float,
+                     spot_fee: float = SPOT_FEE, fut_taker: float = LOCKED_FUT_TAKER, slippage: float = LOCKED_SLIPPAGE) -> Cycle:
+    """**Förslaget:** utträde före förfall (7 kalenderdagar), alltså en vanlig stängning och *inte* en avräkning.
+
+    Fyra affärsben, alla med takeravgift och glidning och med **separata priser**: spot-köp vid `spot0`, termin-sälj vid `fut0`,
+    termin-återköp vid terminspriset på utträdesdagen `fut_exit` (senaste pris, inte avräkningskurs) och spot-sälj vid
+    `spot_exit`. Hela kapitalet och coin-marginalen räknas: mynt köps för kapitalet, kontrakt avrundas ned efter öppningsavgiften
+    (effektiv hävstång ≤ 1), PnL = n · storlek · (1/fut_exit − 1/fut0) i mynt, utträdesavgiften dras i mynt på notionellt värde vid
+    `fut_exit`, och slutvärdet tas i USD först när spotbenet säljs. Kostnaden är 50 bp vid noll basis (test i test_basis_costs.py)."""
+    coins = capital_usd / (spot0 * (1 + spot_fee + slippage))
+    contracts = math.floor(coins * fut0 / (contract_usd * (1 + fut_taker + slippage)))
+    notional_usd = contracts * contract_usd
+    open_fee_coins = notional_usd / fut0 * (fut_taker + slippage)
+    margin = coins - open_fee_coins
+    pnl_coins = notional_usd * (1 / fut_exit - 1 / fut0)
+    exit_fee_coins = notional_usd / fut_exit * (fut_taker + slippage)
+    coins_end = margin + pnl_coins - exit_fee_coins
+    usd_end = coins_end * spot_exit * (1 - spot_fee - slippage)
+    return Cycle(capital_usd, coins, contracts, margin, capital_usd - coins * spot0 * (1 + spot_fee + slippage),
+                 (notional_usd / fut0) / margin if margin else math.inf, coins_end, usd_end, usd_end / capital_usd - 1)
+
+
 def hold_cycle(*, capital_usd: float, spot0: float, fut0: float, settle: float, spot_end: float, contract_usd: float,
                spot_fee: float = SPOT_FEE, fut_taker: float = LOCKED_FUT_TAKER, slippage: float = LOCKED_SLIPPAGE) -> Cycle:
-    """En cykel: köp mynt för **hela** kapitalet, lägg dem som marginal, sälj heltalskontrakt till terminspriset, håll till förfall.
+    """**FÖRFALLSVARIANT (en annan modell än förslaget; använd `pre_expiry_cycle` för utträde före förfall).**
+
+    En cykel: köp mynt för **hela** kapitalet, lägg dem som marginal, sälj heltalskontrakt till terminspriset, håll till förfall.
 
     Inversa kontrakt: PnL(mynt) för short = n · storlek · (1/avräkning − 1/in). Alla avgifter dras i mynt (futures) eller USD (spot).
     Kontraktsantalet avrundas **ned** (aldrig mer exponering än marginalen), så effektiv hävstång ≤ 1."""

@@ -4,7 +4,8 @@ import zipfile
 
 import pytest
 
-from traderlab.basis_costs import (COINM_FEES, fut_taker_on, hold_cycle, implied_contract_size, margin_ratio, round_trip_cost)
+from traderlab.basis_costs import (COINM_FEES, fut_taker_on, hold_cycle, implied_contract_size, margin_ratio, pre_expiry_cycle,
+                                   round_trip_cost)
 
 
 def test_daterade_avgifter_byter_vid_rätt_datum():
@@ -95,3 +96,51 @@ def test_tomt_underlag_ger_noll_staplar(tmp_path):
     p.write_bytes(_zip_with([]))
     assert implied_contract_size([p]) == {"bars": 0}
     assert not math.isnan(round_trip_cost()["total"])
+
+
+# ------------------------------------------------------------------ förslaget: utträde före förfall (inte avräkning)
+BIG = 1e9    # så stort kapital att heltalsavrundningen är försumbar
+
+
+def test_pre_expiry_utan_avgifter_ger_exakt_basisförändringen_med_separata_priser():
+    for fut_exit, spot_exit in ((102.0, 100.0), (150.0, 149.0), (60.0, 61.0), (100.0, 100.0)):
+        c = pre_expiry_cycle(capital_usd=BIG, spot0=100.0, fut0=103.0, fut_exit=fut_exit, spot_exit=spot_exit, contract_usd=10.0,
+                             spot_fee=0.0, fut_taker=0.0, slippage=0.0)
+        assert c.ret == pytest.approx((103.0 / 100.0) * (spot_exit / fut_exit) - 1, abs=1e-6)
+
+
+def test_pre_expiry_noll_basis_kostar_exakt_budgeten_50_bp_med_alla_fyra_ben():
+    c = pre_expiry_cycle(capital_usd=BIG, spot0=100.0, fut0=100.0, fut_exit=80.0, spot_exit=80.0, contract_usd=10.0)
+    assert -c.ret == pytest.approx(round_trip_cost()["total"], abs=2e-5)           # 0,0050
+    assert -c.ret * 1e4 == pytest.approx(50.0, abs=0.2)
+    up = pre_expiry_cycle(capital_usd=BIG, spot0=100.0, fut0=100.0, fut_exit=300.0, spot_exit=300.0, contract_usd=10.0)
+    assert -up.ret == pytest.approx(-c.ret, abs=2e-5)                               # kostnaden beror inte på prisriktningen
+
+
+def test_pre_expiry_stresstest_2_5_gånger_ger_125_bp():
+    c = pre_expiry_cycle(capital_usd=BIG, spot0=100.0, fut0=100.0, fut_exit=100.0, spot_exit=100.0, contract_usd=10.0,
+                         spot_fee=0.001 * 2.5, fut_taker=0.0005 * 2.5, slippage=0.0005 * 2.5)
+    # Kostnaderna är andelar av ett värde som krymper efter varje ben, så den bokförda kostnaden (124,2 bp) hamnar strax under den
+    # additiva budgeten (125 bp): budgeten är en övre gräns, och skillnaden ska vara under 1 bp.
+    assert -c.ret * 1e4 <= round_trip_cost(stress=2.5)["total_bp"] + 1e-9
+    assert -c.ret * 1e4 == pytest.approx(125.0, abs=1.0)
+
+
+def test_pre_expiry_är_inte_avräkning_ben_och_priser_skiljer_sig_från_hold_cycle():
+    kw = dict(capital_usd=BIG, spot0=100.0, fut0=103.0, contract_usd=10.0)
+    pre = pre_expiry_cycle(fut_exit=101.0, spot_exit=100.0, **kw)
+    # hold_cycle har bara ett slutpris (avräkning), ingen glidning på terminsutträdet och ett ben mindre i kostnaden
+    hold = hold_cycle(settle=100.0, spot_end=100.0, **kw)
+    assert pre.ret < hold.ret + 0.003                       # utträdet före förfall bär basisrest (101 mot 100) och extra glidning
+    assert round_trip_cost(exit="pre_expiry")["total_bp"] - round_trip_cost(exit="settlement")["total_bp"] == pytest.approx(5.0)
+    assert pre.ret != pytest.approx(hold.ret, abs=1e-5)
+    import inspect
+    assert "fut_exit" in inspect.signature(pre_expiry_cycle).parameters and "settle" not in inspect.signature(pre_expiry_cycle).parameters
+
+
+def test_pre_expiry_hävstång_högst_1_och_avrundningen_redovisas():
+    c = pre_expiry_cycle(capital_usd=1000.0, spot0=100.0, fut0=102.0, fut_exit=90.0, spot_exit=88.0, contract_usd=10.0)
+    assert c.effective_leverage <= 1.0 + 1e-12
+    assert c.contracts * 10.0 <= c.coins_bought * 102.0
+    big = pre_expiry_cycle(capital_usd=BIG, spot0=100.0, fut0=102.0, fut_exit=90.0, spot_exit=88.0, contract_usd=10.0)
+    assert abs(c.ret - big.ret) > 0.0005                     # litet kapital: avrundningsresten ger en märkbar avvikelse
