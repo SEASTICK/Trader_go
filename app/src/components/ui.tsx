@@ -11,7 +11,7 @@ export function Segmented<T extends string>({ value, options, onChange }: { valu
 }
 
 export function StatusDot({ status }: { status: string }) {
-  const tone = status === "REJECT" ? "bad" : status === "READY_FOR_PAPER" ? "good" : status === "Pågår" || status === "MORE_RESEARCH" ? "warn" : "idle";
+  const tone = status === "REJECT" ? "bad" : status === "READY_FOR_PAPER" ? "good" : status === "Pågår" || status === "MORE_RESEARCH" || status === "OGILTIG" ? "warn" : "idle";
   return <span className={`status ${tone}`}><i />{status}</span>;
 }
 

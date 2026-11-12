@@ -1,7 +1,7 @@
 # Vägen till en app som ger positiv avkastning
 
 Ingen kan lova positiv avkastning. Det vi kan styra är att leta på rätt ställen, mäta ärligt och bara
-släppa igenom det som klarar varje grind. Hittills: alla avgjorda hypoteser `REJECT` (H-0001–H-0015, H-0018–H-0020; H-0016 och H-0017 väntar på kurskälla), läget 2026-11-05.
+släppa igenom det som klarar varje grind. Hittills: alla 19 avgjorda hypoteser är `REJECT` (H-0001–H-0015 och H-0017–H-0020). H-0016 har en registrerad `OGILTIG` körning (för stor andel av vikten utan kurs) och inget beslut, läget 2026-11-12.
 
 Produktens faser och den bekräftade målbilden beskrivs i [färdplanen](fardplan.md). Grindarna nedan gäller validering av strategier och ger ingen aktivering av livehandel.
 
@@ -10,7 +10,7 @@ Produktens faser och den bekräftade målbilden beskrivs i [färdplanen](fardpla
 | # | Grind | Krav för att gå vidare | Status |
 |---|---|---|---|
 | 1 | Hypotes registrerad | Hypotes, data, kostnader och kriterier i `research/registry.md` före körning | Fungerar |
-| 2 | Historiskt test | Spårets kriterier: t ≥ krav (stiger med antal försök), vinst med 2,5 gånger kostnaderna, spårets extra krav | 0 av 18 klarade. Närmast: H-0020 basis (t 2,41 mot 2,81, klarar övriga fyra kriterier) |
+| 2 | Historiskt test | Spårets kriterier: t ≥ krav (stiger med antal försök), vinst med 2,5 gånger kostnaderna, spårets extra krav | 0 av 19 klarade. Närmast: H-0020 basis (t 2,41 mot 2,81, klarar övriga fyra kriterier) |
 | 3 | Slutprov (holdout) | Samma regler på orörd data 2025-01 till 2026-09, körs en gång | Ingen har nått hit |
 | 4 | Papper framåt | Fryst strategi på servern minst 3 månader. Utfallet inom ±2 standardfel av testet, ingen regel bruten | Insamlingen går sedan 2026-11-02 (Edwins server) |
 | 5 | Liten live | Uttryckligt beslut av er båda (`pengar-grind`). Liten summa, nyckel utan uttag låst till serverns IP, nödstopp och maxförlust per dag | Inte påbörjad, och får inte påbörjas utan beslut |
@@ -40,9 +40,15 @@ Produktens faser och den bekräftade målbilden beskrivs i [färdplanen](fardpla
 
 Att följa kända investerares redovisade innehav, i stället för egna signaler:
 
-- **H-0016:** tio kända investerares 13F-innehav (Berkshire m.fl.), `research/13f-protokoll.md`.
-- **H-0017:** Nancy Pelosis redovisade affärer, `research/pelosi-protokoll.md`.
-- **Papper framåt:** 100 000 USD som följer de tio investerarna från 2026-11-05, sidan Investerare i appen.
+- **H-0016:** tio kända investerares 13F-innehav (Berkshire m.fl.), `research/13f-protokoll.md`. **Ogiltig, inget
+  beslut.** Protokollet kräver att minst 90 % av vikten har kurs. Körningen 2026-11-12 hade 14,8 % utan kurs (gräns
+  10 %), mest avnoterade och uppköpta bolag som Yahoo inte har. Siffrorna i registret är bara diagnostik. En omkörning
+  med rättad kurshämtning pågår och är inte avgjord. Täckningsdiagnosen ligger på grenen `bot/h-0016-tackning`.
+- **H-0017:** Nancy Pelosis redovisade affärer, `research/pelosi-protokoll.md`. **REJECT**: t 1,43 mot kravet 2,75,
+  och Sharpe 0,97 mot SPY:s 1,01. Mer avkastning än SPY men också mer risk.
+- **Papper framåt:** 100 000 USD som följer de tio investerarna från 2026-11-05, sidan Investerare i appen. Det är en
+  **observation framåt**, inte ett validerat historiskt test. Den bevisar inget förrän grind 4 (minst 3 månader) är
+  uppnådd, och H-0016 är inte godkänd.
 
 Kurserna kommer från Yahoo utan nyckel, se [kurskalla.md](kurskalla.md). Båda urvalen är gjorda i efterhand, eftersom
 investerarna är kända för att ha lyckats. Testen blir därför för optimistiska.

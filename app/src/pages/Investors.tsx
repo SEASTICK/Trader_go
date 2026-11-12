@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import paper from "../../data/paper13f.json";
 import snap from "../../data/investors13f.json";
 import pelosiData from "../../data/pelosi.json";
+import registryMd from "../../../research/registry.md?raw";
 import { LineChart } from "../components/Charts";
+import { groupRegistry, missingPrices, parseRegistry } from "../lib/registry";
 import { Page } from "../components/ui";
 
 type Holding = { ticker: string; shares: number; value: number };
@@ -24,6 +26,9 @@ const sn = snap as unknown as Snapshot;
 type Pelosi = { updated_at: string | null; start: string; filings: { filed: string; doc_id: string; trades: { ticker: string; kind: string; asset: string; traded: string }[] }[] };
 const pel = pelosiData as unknown as Pelosi;
 const latestFiling = [sn.recent_filings[0]?.filed ?? "", pel.filings[0]?.filed ?? ""].sort().pop() ?? "";
+/** Läget för de historiska testen av investeringsidén, rakt ur registret (inget hårdkodat). */
+const history = groupRegistry(parseRegistry(registryMd)).filter((h) => h.id === "H-0016" || h.id === "H-0017")
+  .map((h) => ({ id: h.id, decision: h.decision, invalid: h.invalid, missing: missingPrices(h.result) }));
 const usd = (v: number) => `${Math.round(v).toLocaleString("sv-SE")} USD`;
 const pct = (v: number) => `${v >= 0 ? "+" : ""}${(v * 100).toFixed(2).replace(".", ",")} %`;
 export const SEEN_KEY = "trader_go.seenFilings";
@@ -115,7 +120,7 @@ export default function Investors() {
       )}
 
       <section className="card table-card">
-        <div className="card-head"><div><h2>Nancy Pelosi</h2><p className="muted">Nya redovisade aktieaffärer från {pel.start} (House PTR). Affärer redovisas upp till 45 dagar i efterhand. Testet H-0017 körs med samma kurser som papperportföljen.</p></div></div>
+        <div className="card-head"><div><h2>Nancy Pelosi</h2><p className="muted">Nya redovisade aktieaffärer från {pel.start} (House PTR). Affärer redovisas upp till 45 dagar i efterhand. Det historiska testet H-0017 är avgjort (se Research, Hypoteser).</p></div></div>
         {pel.filings.length === 0 ? <div className="empty">Inga nya redovisningar sedan {pel.start}.</div> : pel.filings.map((f) => (
           <div key={f.doc_id} className={f.filed > seenBefore ? "inv-event new" : "inv-event"}>
             <div><b>Redovisning {f.filed}</b>{f.filed > seenBefore && <span className="inv-new">Ny</span>}</div>
@@ -136,13 +141,14 @@ export default function Investors() {
         </section>
         <section className="card table-card">
           <div className="card-head"><div><h2>Papperportföljens innehav</h2><p className="muted">Papper. Inga riktiga order.</p></div></div>
-          {p.holdings.length === 0 ? <div className="empty">Inga innehav än. Portföljen köper när kurskällan är på plats.</div> : p.holdings.map((h) => (
+          {p.holdings.length === 0 ? <div className="empty">Inga innehav än. Portföljen köper vid nästa uppdatering.</div> : p.holdings.map((h) => (
             <div key={h.ticker} className="inv-row"><b>{h.ticker}</b><span className="muted">{h.shares.toLocaleString("sv-SE", { maximumFractionDigits: 2 })} st</span><span>{usd(h.value)}</span><span className="muted">{((h.value / p.value) * 100).toFixed(1).replace(".", ",")} %</span></div>
           ))}
         </section>
       </div>
 
-      <p className="footnote">Följer: {p.managers.join(", ")}. Regler: <code>{"research/13f-protokoll.md"}</code>. Redovisningarna kommer upp till 45 dagar efter kvartalet, så portföljen ligger alltid efter investerarna. Det här är en observation, inte ett godkänt test, och inget löfte om avkastning.</p>
+      <p className="footnote">Följer: {p.managers.join(", ")}. Regler: <code>{"research/13f-protokoll.md"}</code>. Redovisningarna kommer upp till 45 dagar efter kvartalet, så portföljen ligger alltid efter investerarna. Papperportföljen är en observation framåt från 2026-11-05, inte ett validerat historiskt test, och inget löfte om avkastning.</p>
+      <p className="footnote">Historiska tester av idén: {history.map((h) => `${h.id} ${h.invalid ? `ogiltig${h.missing ? ` (${String(h.missing.share).replace(".", ",")} % av vikten utan kurs, gräns ${h.missing.limit} %)` : ""}` : h.decision ?? "pågår"}`).join(" · ")}. Se Research, Hypoteser.</p>
     </Page>
   );
 }

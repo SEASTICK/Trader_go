@@ -28,7 +28,15 @@ export function parseRegistry(md: string): Registry {
 export type Hypothesis = {
   id: string; date: string; title: string; statement: string; market: string; track: "A" | "B" | "C";
   decision: string | null; result: string | null; t: number | null; krav: number | null; criteria: string; runs: number;
+  /** Senaste körningen blev OGILTIG och hypotesen har inget giltigt beslut. Siffrorna i resultatet är då bara diagnostik. */
+  invalid: boolean;
 };
+
+/** "Genomsnittlig vikt utan kurs 14,8 % (gräns 10 %)" ur resultattexten: [andel, gräns] i procent, annars null. */
+export function missingPrices(result: string | null): { share: number; limit: number } | null {
+  const m = (result ?? "").match(/vikt utan kurs (\d+(?:,\d+)?) % \(gräns (\d+(?:,\d+)?) %\)/);
+  return m ? { share: num(m[1]), limit: num(m[2]) } : null;
+}
 
 const num = (s: string) => Number(s.replace("−", "-").replace(",", "."));
 
@@ -49,12 +57,18 @@ export function groupRegistry(reg: Registry): Hypothesis[] {
     if (!h) {
       const track = (text.match(/[Ss]pår ([ABC])/)?.[1] ?? "A") as "A" | "B" | "C";
       h = { id: r.id, date: r.cells["datum"] ?? "", title: shortTitle(text), statement: text, market: r.cells["marknad"] ?? "",
-            track, decision: null, result: null, t: null, krav: null, criteria: r.cells["beslutskriterier"] ?? "", runs: 0 };
+            track, decision: null, result: null, t: null, krav: null, criteria: r.cells["beslutskriterier"] ?? "", runs: 0, invalid: false };
       out.set(r.id, h);
     }
     if (isResult) h.runs += 1;
     const d = r.cells["beslut"];
+    if (d === "OGILTIG" && !h.decision) {
+      // Ogiltig körning utan giltigt beslut: visas som ogiltig, aldrig som avgjord. Ett senare beslut skriver över.
+      h.invalid = true;
+      h.result = r.cells["resultat"] ?? null;
+    }
     if (d && d !== "OGILTIG") {
+      h.invalid = false;
       h.decision = d;
       h.result = r.cells["resultat"] ?? null;
       // "t 1,43 (krav 2,71)" eller "t −1,8023 mot 2,67".
