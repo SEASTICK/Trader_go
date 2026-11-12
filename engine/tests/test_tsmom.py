@@ -249,6 +249,62 @@ def test_stop_off_leaves_earlier_engine_results_unchanged():
     assert portfolio.run(n[0], n[3], tsmom.COSTS, n[4]).equity.equals(portfolio.run(n[0], n[3], tsmom.COSTS, n[4]).equity)
 
 
+# ---------------------------------------------------------------- saknad nästa öppning (avnotering eller datalucka)
+
+def _with_gap(weight=-0.5, last_present=5, resume=None, n=14):
+    """Som _mini men öppningen saknas från dag `last_present + 1` (och återkommer dag `resume` om angiven)."""
+    opens, highs, lows, w, f = _mini(weight, {}, n=n)
+    missing = list(range(last_present + 1, n if resume is None else resume))
+    for d in missing:
+        opens.iloc[d, 0] = np.nan; highs.iloc[d, 0] = np.nan; lows.iloc[d, 0] = np.nan
+    return opens, highs, lows, w, f
+
+
+def test_current_data_requirement_misses_a_series_that_ends_while_held():
+    """Granskningsfynd P1 (Codex, PR #110): utan strict_gaps passerar fallet tyst. Den sista stapeln värderas till
+    avkastning 0 och positionen stängs till senast kända öppning, alltså en fyllning som inte gick att handla till."""
+    opens, highs, lows, w, f = _with_gap()
+    quiet = portfolio.run(opens, w, ZERO_COST, f, highs=highs, lows=lows, stop=tsmom.STOP)   # ingen varning
+    assert quiet.gaps == [("2024-01-05", "X", pytest.approx(-0.5))]
+    assert quiet.equity.iloc[-1] == pytest.approx(1.0)   # sista stapelns rörelse är osynlig: värderad till 0
+
+
+def test_strict_gaps_stops_the_run_when_a_held_series_ends():
+    opens, highs, lows, w, f = _with_gap()
+    with pytest.raises(ValueError, match="Nästa öppning saknas"):
+        portfolio.run(opens, w, ZERO_COST, f, highs=highs, lows=lows, stop=tsmom.STOP, strict_gaps=True)
+    with pytest.raises(tsmom.InvalidRun, match="Nästa öppning saknas"):
+        tsmom.simulate(opens, highs, lows, w, ZERO_COST, f | {"X": pd.Series(1e-4, index=pd.date_range("2023-12-31", periods=60, freq="8h", tz="UTC"))})
+
+
+def test_an_internal_data_gap_that_resumes_is_also_caught():
+    opens, highs, lows, w, f = _with_gap(last_present=4, resume=8)
+    quiet = portfolio.run(opens, w, ZERO_COST, f, highs=highs, lows=lows, stop=tsmom.STOP)
+    assert len(quiet.gaps) == 1 and quiet.gaps[0][0] == "2024-01-04"
+    with pytest.raises(ValueError, match="Nästa öppning saknas"):
+        portfolio.run(opens, w, ZERO_COST, f, highs=highs, lows=lows, stop=tsmom.STOP, strict_gaps=True)
+
+
+def test_no_false_alarm_for_unheld_missing_coins_or_a_full_series():
+    opens, highs, lows, w, f = _with_gap(weight=0.0)   # ingen position: luckan spelar ingen roll
+    res = portfolio.run(opens, w, ZERO_COST, f, highs=highs, lows=lows, stop=tsmom.STOP, strict_gaps=True)
+    assert res.gaps == []
+    opens, highs, lows, w, f = _mini(-0.5, {})        # komplett serie, position hålls hela perioden
+    res = portfolio.run(opens, w, ZERO_COST, f, highs=highs, lows=lows, stop=tsmom.STOP, strict_gaps=True)
+    assert res.gaps == []
+
+
+def test_gap_audit_classifies_series_end_versus_resuming_gap():
+    from traderlab import gapaudit
+    idx = pd.date_range("2024-01-01", periods=10, freq="1D", tz="UTC")
+    opens = pd.DataFrame({"END": [100.0] * 4 + [np.nan] * 6, "GAP": [100.0, 100, 100, np.nan, np.nan, 100, 100, 100, 100, 100]}, index=idx)
+    rows = gapaudit.classify(opens, [("2024-01-04", "END", -0.02), ("2024-01-03", "GAP", 0.01)])
+    by = {r["contract"]: r for r in rows}
+    assert by["END"]["kind"] == "serien_tar_slut" and by["END"]["direction"] == "short" and by["END"]["last_data"] == "2024-01-04"
+    assert by["GAP"]["kind"] == "lucka_serien_fortsätter" and by["GAP"]["resumes"] == "2024-01-06" and by["GAP"]["direction"] == "long"
+    assert all(r["documented"] is False for r in rows)
+
+
 # ---------------------------------------------------------------- slutprovsskydd och körning (syntetiskt)
 
 def _zip(rows):
