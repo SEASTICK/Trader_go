@@ -111,3 +111,13 @@ def test_protokoll_och_register_låser_slutpunkten_och_btc_kravet():
         assert must in PROTO, must
     assert "F_15" in " ".join(_row("H-0023")) and "2024-09-20 00:00 UTC" in " ".join(_row("H-0023"))
     assert "F_{k+1}` (kontanterna" not in PROTO
+
+
+def test_gränsen_anges_med_rätt_nämnare_10_av_13_aldrig_10_av_10():
+    docs = (REPO / "docs" / "vagen-till-avkastning.md").read_text(encoding="utf-8")
+    rapport = (REPO / "research" / "universe" / "rullning-b-rapport.md").read_text(encoding="utf-8")
+    for name, text in (("protokoll", PROTO), ("statusdokument", docs), ("rapport", rapport), ("register", " ".join(_row("H-0023")))):
+        assert "10 av 10" not in text, name
+    assert "10 av 13 cykler** (krav: minst 10 av 13), utan marginal" in PROTO
+    assert "10 av 13 kvartal (kravet är minst 10 av 13), utan marginal" in docs
+    assert "10 av 13 cykler (krav: minst 10 av 13), utan marginal" in rapport

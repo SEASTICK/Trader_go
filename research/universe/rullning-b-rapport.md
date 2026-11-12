@@ -17,7 +17,7 @@ Beslutsregeln (låst före mätning): ja om tidtabellen vid minsta position 10 0
 | Mynt-cykler som blir OGILTIGA av saknade staplar | 0 | 0 | **0** |
 | Beslutsregeln uppfylld | | nej | **ja** |
 
-**Rullning B klarar alltså datakraven, men exakt på gränsen: 10 av 10.** Det bör inte läsas som ett robust ja.
+**Rullning B klarar alltså datakraven, men exakt på gränsen: 10 av 13 cykler (krav: minst 10 av 13), utan marginal.** Det bör inte läsas som ett robust ja.
 
 ## Varför marginalen är noll (känslighet)
 

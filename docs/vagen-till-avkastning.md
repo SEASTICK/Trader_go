@@ -64,7 +64,7 @@ Alla tre är försök att komma närmare målet, och inget av dem har visat avka
 - **H-0022, kassa-och-termin på sju altcoins:** `OGILTIG`, ingen körning gjordes. Datagranskningen visade att den serie man rullar in i är för tunt handlad: högst
   9 av 13 kvartal kan ha minst fyra mynt, medan testets eget krav var 10. Det är en diagnos av data, inte ett resultat. Ingen avkastning har räknats.
 - **H-0023, samma idé med en annan tidtabell (förregistrerad, inte körd):** man går in efter att det förra kontraktet löpt ut, i den då närmaste serien, i stället för
-  veckan före. Tidtabellen valdes efter att vi sett H-0022:s volymproblem, och datagranskningen klarar kravet på exakt gränsen (10 av 10). Testet kan därför fortfarande bli
+  veckan före. Tidtabellen valdes efter att vi sett H-0022:s volymproblem, och datagranskningen klarar kravet på exakt gränsen: 10 av 13 kvartal (kravet är minst 10 av 13), utan marginal. Testet kan därför fortfarande bli
   `OGILTIGT`. H-0020 (samma grundidé på BTC och ETH) är `REJECT`. Se `research/h0023-protokoll.md`. Ingen avkastning har räknats och inget löfte ges.
 
 ## Nästa idéer i kö (registreras en i taget, aldrig efter att ha sett resultatet)

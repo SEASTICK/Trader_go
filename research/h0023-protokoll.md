@@ -143,7 +143,7 @@ Godkänt betyder bara att idén får granskas och sedan testas på slutprovet (2
 
 ## Kända antaganden och svagheter (skrivna i förväg)
 
-* **Idén valdes efter H-0022:s volymdiagnos** och klarar täckningen på exakt gränsen (10 av 10 cykler). Det är en designfrihet som gör ett positivt resultat mindre trovärdigt, och ett nytt försök med högre krav.
+* **Idén valdes efter H-0022:s volymdiagnos** och klarar täckningen på exakt gränsen: **10 av 13 cykler** (krav: minst 10 av 13), utan marginal. Det är en designfrihet som gör ett positivt resultat mindre trovärdigt, och ett nytt försök med högre krav.
 * **H-0020 är REJECT** på BTC och ETH, samma börs och delvis samma period (2021–2024); H-0022 blev OGILTIG. Resultatet förväntas vara korrelerat med H-0020. Priserna för dessa mynt är också sedda i H-0014 till H-0021 (USDT-terminer).
 * **Få och korrelerade utfall:** 14 kvartalscykler (13 med positioner). Ett REJECT, `OGILTIG` eller `MORE_RESEARCH` med låg styrka är det troliga. Cykelkalendern ger regimer (2021 uppgång, 2022 nedgång, 2023–24 återhämtning) som kan avgöra resultatet.
 * **Åtta dagar i kontanter utan ränta i varje cykel** sänker avkastningen på hela kapitalet jämfört med en tidtabell utan väntan. Det är konservativt men inte realistiskt.
