@@ -11,7 +11,7 @@ ombalanseringsdagar och NaN-rader (eller saknade dagar) däremellan. En rad som 
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import numpy as np
 import pandas as pd
@@ -26,6 +26,7 @@ class PortfolioResult:
     turnover: pd.Series       # omsatt belopp per dag, i andel av kapitalet
     total_costs: float
     total_funding: float      # betald (+) eller mottagen (-), i andel av startkapitalet
+    stops: list = field(default_factory=list)   # likvidationsstopp: (dag, instrument, förlust i andel av kapitalet)
 
     @property
     def bar_returns(self) -> pd.Series:
@@ -46,13 +47,27 @@ def funding_per_day(index: pd.DatetimeIndex, funding: dict[str, pd.Series], colu
 
 
 def run(opens: pd.DataFrame, weights: pd.DataFrame, costs: CostModel,
-        funding: dict[str, pd.Series] | None = None) -> PortfolioResult:
+        funding: dict[str, pd.Series] | None = None, *, highs: pd.DataFrame | None = None,
+        lows: pd.DataFrame | None = None, stop: float | None = None) -> PortfolioResult:
+    """Kör portföljen. Med `stop` (till exempel 0,05) och dagens high/low gäller det förenklade likvidationsstoppet i
+    research/tsmom-protokoll.md: varje position har insatsen I = vikt × kapital vid ombalanseringen (ingångskurs =
+    fyllningens öppning). Positionens equity är I plus orealiserat resultat. Den stoppas när equity har fallit till
+    `stop` × I, alltså short vid high ≥ (2 − stop) × ingångskurs och long vid low ≤ stop × ingångskurs. Vid stopp förloras
+    hela positionens equity (insatsen), positionen stängs och kan inte återhämtas förrän nästa ombalansering.
+    Saknas high eller low för en hållen position ger det ValueError (ogiltig körning), aldrig en tyst lucka."""
+    if stop is not None and (highs is None or lows is None):
+        raise ValueError("Likvidationsstopp kräver high och low.")
     opens = opens.sort_index()
     cols = list(opens.columns)
     idx = opens.index
     target = weights.reindex(index=idx, columns=cols)
     fund = funding_per_day(idx, funding or {}, cols).to_numpy()
     o = opens.to_numpy(dtype=float)
+    hi = highs.reindex(index=idx, columns=cols).to_numpy(dtype=float) if stop is not None else None
+    lo = lows.reindex(index=idx, columns=cols).to_numpy(dtype=float) if stop is not None else None
+    entry = np.full(len(cols), np.nan)   # ingångskurs vid senaste ombalansering
+    n0 = np.zeros(len(cols))             # insats (ingångsnotional) per position
+    stops: list = []
     tgt = target.to_numpy(dtype=float)
     has_row = ~np.all(np.isnan(tgt), axis=1)
     rate = costs.per_side
@@ -72,11 +87,14 @@ def run(opens: pd.DataFrame, weights: pd.DataFrame, costs: CostModel,
             desired[~np.isfinite(o[i])] = 0.0
             traded = np.abs(desired - notional)
             notional = desired
+            entry = np.where(desired != 0, o[i], np.nan)
+            n0 = np.abs(desired)
         # Saknat pris i dag: stäng på senaste kända öppning (positionen avvecklades när datan tog slut).
         gone = ~np.isfinite(o[i]) & (notional != 0)
         if gone.any():
             traded[gone] += np.abs(notional[gone])
             notional[gone] = 0.0
+            n0[gone] = 0.0
         c = traded.sum() * rate
         equity -= c
         tc += c
@@ -85,10 +103,26 @@ def run(opens: pd.DataFrame, weights: pd.DataFrame, costs: CostModel,
         # Avkastning från öppning i till öppning i+1. Saknas nästa öppning används ingen rörelse (stängs i morgon).
         r = np.where(np.isfinite(o[i]) & np.isfinite(o[i + 1]), o[i + 1] / o[i] - 1, 0.0)
         f = float(np.dot(notional, np.nan_to_num(fund[i])))
-        pnl = float(np.dot(notional, r))
+        hit = np.zeros(len(cols), dtype=bool)
+        if stop is not None:
+            held = (notional != 0) & np.isfinite(o[i])
+            if (held & ~(np.isfinite(hi[i]) & np.isfinite(lo[i]))).any():
+                bad = [cols[k] for k in np.where(held & ~(np.isfinite(hi[i]) & np.isfinite(lo[i])))[0]]
+                raise ValueError(f"High eller low saknas för hållen position {idx[i].date()}: {bad}")
+            tol = 1 - 1e-12
+            hit = (held & (notional < 0) & (hi[i] >= (2 - stop) * entry * tol)) | \
+                  (held & (notional > 0) & (lo[i] <= stop * entry / tol))
+        pnl = float(np.dot(np.where(hit, 0.0, notional), r))
+        if hit.any():
+            sign = np.sign(notional)
+            e = n0 + sign * (np.abs(notional) - n0)   # positionens equity vid öppningen
+            lost = np.where(hit, e, 0.0)
+            pnl -= float(lost.sum())
+            stops += [(str(idx[i].date()), cols[k], float(lost[k] / max(equity, 1e-12))) for k in np.where(hit)[0]]
         equity += pnl - f
         tf += f
-        notional = notional * (1 + r)
+        notional = np.where(hit, 0.0, notional * (1 + r))
+        n0 = np.where(hit, 0.0, n0)
         if equity <= 0:   # konkurs: kontot är slut och kan inte återuppstå
             equity, notional = 0.0, np.zeros(k)
             tgt[i:] = 0.0
@@ -97,7 +131,7 @@ def run(opens: pd.DataFrame, weights: pd.DataFrame, costs: CostModel,
     sl = slice(0, n - 1)
     return PortfolioResult(pd.Series(eq_out[sl], index=idx[sl], name="equity"),
                            pd.DataFrame(w_out[sl], index=idx[sl], columns=cols),
-                           pd.Series(turn_out[sl], index=idx[sl], name="turnover"), tc, tf)
+                           pd.Series(turn_out[sl], index=idx[sl], name="turnover"), tc, tf, stops)
 
 
 def funding_gaps(held: pd.DataFrame, funding: dict[str, pd.Series]) -> dict[str, int]:
