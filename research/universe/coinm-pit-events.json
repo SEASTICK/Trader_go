@@ -1,0 +1,534 @@
+[
+ {
+  "code": "1ad0f6c11f6948e4994882b320474a5f",
+  "released": "2020-07-20",
+  "title": "Binance Futures Will Launch ADAUSD Quarterly 0925 Futures Contract With Up to 75x Leverage",
+  "underlyings": [
+   "ADA"
+  ],
+  "series": [
+   {
+    "mmdd": "0925",
+    "expiry": "2020-09-25"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "5a0d2bc6a20f41ec9cf915c5f2fe5875",
+  "released": "2020-07-21",
+  "title": "Binance Futures Will Launch LINKUSD Quarterly 0925 Futures Contract With Up to 75x Leverage",
+  "underlyings": [
+   "LINK"
+  ],
+  "series": [
+   {
+    "mmdd": "0925",
+    "expiry": "2020-09-25"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "c7eab9f4fcb14ca8a9ff03b6a11fca2d",
+  "released": "2020-07-23",
+  "title": "Binance Futures Will Launch ETHUSD Quarterly 0925 Futures Contract With Up to 75x Leverage",
+  "underlyings": [
+   "ETH"
+  ],
+  "series": [
+   {
+    "mmdd": "0925",
+    "expiry": "2020-09-25"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "10b7cc7883294d77a0b4e5ca9e3dabc4",
+  "released": "2020-08-04",
+  "title": "Binance Futures Will Launch ETHUSD Quarterly 1225 Futures Contract With Up to 75x Leverage",
+  "underlyings": [
+   "ETH"
+  ],
+  "series": [
+   {
+    "mmdd": "1225",
+    "expiry": "2020-12-25"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "06de94fc70a34ee9b817b5effeea8a9a",
+  "released": "2020-09-04",
+  "title": "Binance Futures Will Launch ADAUSD and LINKUSD Quarterly 1225 Coin-Margined Contracts With Up to 75x Leverage",
+  "underlyings": [
+   "ADA",
+   "LINK"
+  ],
+  "series": [
+   {
+    "mmdd": "1225",
+    "expiry": "2020-12-25"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "964de9361a2447b2805306a965f89439",
+  "released": "2020-09-24",
+  "title": "Binance Futures Will List BTC, ETH, ADA & LINK Coin-Margined Quarterly 0326 Futures Contracts",
+  "underlyings": [
+   "ADA",
+   "BTC",
+   "ETH",
+   "LINK"
+  ],
+  "series": [
+   {
+    "mmdd": "0326",
+    "expiry": "2021-03-26"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "9003156d8e02430bb636be2e9ec75d2c",
+  "released": "2020-11-03",
+  "title": "Binance Futures Will Launch BNBUSD and DOTUSD Quarterly 1225 & 0326 Coin-Margined Contracts With Up to 75x Leverage",
+  "underlyings": [
+   "BNB",
+   "DOT"
+  ],
+  "series": [
+   {
+    "mmdd": "1225",
+    "expiry": "2020-12-25"
+   },
+   {
+    "mmdd": "0326",
+    "expiry": "2021-03-26"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "cb6333abc4004d59a6a571b39d7a6d36",
+  "released": "2020-11-30",
+  "title": "Binance Futures Will Launch XRP, LTC, EOS, BCH Quarterly 1225 & 0326 Coin-Margined Contracts with up to 75X Leverage",
+  "underlyings": [
+   "BCH",
+   "EOS",
+   "LTC",
+   "XRP"
+  ],
+  "series": [
+   {
+    "mmdd": "1225",
+    "expiry": "2020-12-25"
+   },
+   {
+    "mmdd": "0326",
+    "expiry": "2021-03-26"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "a8c1e3ab525d40babfb6e4872d0c187e",
+  "released": "2020-12-07",
+  "title": "Binance Futures Will Launch TRX, ETC, FIL Quarterly 1225 & 0326 Coin-Margined Contracts with up to 75X Leverage",
+  "underlyings": [
+   "ETC",
+   "FIL",
+   "TRX"
+  ],
+  "series": [
+   {
+    "mmdd": "1225",
+    "expiry": "2020-12-25"
+   },
+   {
+    "mmdd": "0326",
+    "expiry": "2021-03-26"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "6f1c18c7cc5b46d9b1a2a64736cabb37",
+  "released": "2020-12-25",
+  "title": "Binance Futures Will List Coin-Margined Quarterly 0625 Futures Contracts",
+  "underlyings": [
+   "ADA",
+   "BCH",
+   "BNB",
+   "BTC",
+   "DOT",
+   "ETH",
+   "LINK",
+   "LTC",
+   "XRP"
+  ],
+  "series": [
+   {
+    "mmdd": "0625",
+    "expiry": "2021-06-25"
+   }
+  ],
+  "not_listed": [
+   "EOS",
+   "ETC",
+   "FIL",
+   "TRX"
+  ]
+ },
+ {
+  "code": "0f5a36947c6445628fa8406946524b97",
+  "released": "2021-06-23",
+  "title": "Binance Futures Will List Coin-Margined Quarterly 1231 Futures Contracts",
+  "underlyings": [
+   "ADA",
+   "BCH",
+   "BNB",
+   "BTC",
+   "DOT",
+   "ETH",
+   "LINK",
+   "LTC",
+   "XRP"
+  ],
+  "series": [
+   {
+    "mmdd": "1231",
+    "expiry": "2021-12-31"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "f60a29757eae477ab766846658710975",
+  "released": "2021-09-22",
+  "title": "Binance Futures Will List Coin-Margined Quarterly 0325 Futures Contracts",
+  "underlyings": [
+   "ADA",
+   "BCH",
+   "BNB",
+   "BTC",
+   "DOT",
+   "ETH",
+   "LINK",
+   "LTC",
+   "XRP"
+  ],
+  "series": [
+   {
+    "mmdd": "0325",
+    "expiry": "2022-03-25"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "e67980b0a68a40e2b8538d097367e3f9",
+  "released": "2021-12-29",
+  "title": "Binance Futures Will List Coin-Margined Quarterly 0624 Futures Contracts",
+  "underlyings": [
+   "ADA",
+   "BCH",
+   "BNB",
+   "BTC",
+   "DOT",
+   "ETH",
+   "LINK",
+   "LTC",
+   "XRP"
+  ],
+  "series": [
+   {
+    "mmdd": "0624",
+    "expiry": "2022-06-24"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "ccd0c95685104110b28ae516c9aec5e4",
+  "released": "2022-03-21",
+  "title": "Binance Futures Will List Coin-Margined Quarterly 0930 Futures Contracts",
+  "underlyings": [
+   "ADA",
+   "BCH",
+   "BNB",
+   "BTC",
+   "DOT",
+   "ETH",
+   "LINK",
+   "LTC",
+   "XRP"
+  ],
+  "series": [
+   {
+    "mmdd": "0930",
+    "expiry": "2022-09-30"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "bdee571482a749dab5f64b2dbf98deea",
+  "released": "2022-06-20",
+  "title": "Binance Futures Will List Coin-Margined Quarterly 1230 Futures Contracts",
+  "underlyings": [
+   "ADA",
+   "BCH",
+   "BNB",
+   "BTC",
+   "DOT",
+   "ETH",
+   "LINK",
+   "LTC",
+   "XRP"
+  ],
+  "series": [
+   {
+    "mmdd": "1230",
+    "expiry": "2022-12-30"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "93ba5570b4514ee6a8052a8b18560bb0",
+  "released": "2022-09-27",
+  "title": "Binance Futures Will List Coin-Margined Quarterly 0331 Futures Contracts",
+  "underlyings": [
+   "ADA",
+   "BCH",
+   "BNB",
+   "BTC",
+   "DOT",
+   "ETH",
+   "LINK",
+   "LTC",
+   "XRP"
+  ],
+  "series": [
+   {
+    "mmdd": "0331",
+    "expiry": "2023-03-31"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "877eef331e38480986e48e2c51cb0b84",
+  "released": "2022-12-27",
+  "title": "Binance Futures Will List Coin-Margined Quarterly 0630 Futures Contracts",
+  "underlyings": [
+   "ADA",
+   "BCH",
+   "BNB",
+   "BTC",
+   "DOT",
+   "ETH",
+   "LINK",
+   "LTC",
+   "XRP"
+  ],
+  "series": [
+   {
+    "mmdd": "0630",
+    "expiry": "2023-06-30"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "76d937da154c45e3b94b2b4159b5b276",
+  "released": "2023-03-29",
+  "title": "Binance Futures Will List Coin-Margined Quarterly 0929 Futures Contracts",
+  "underlyings": [
+   "ADA",
+   "BCH",
+   "BNB",
+   "BTC",
+   "DOT",
+   "ETH",
+   "LINK",
+   "LTC",
+   "XRP"
+  ],
+  "series": [
+   {
+    "mmdd": "0929",
+    "expiry": "2023-09-29"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "5bf60d75d57a45f0bce9b32acb91f667",
+  "released": "2023-06-27",
+  "title": "Binance Futures Will List Coin-Margined Quarterly 1229 Futures Contracts",
+  "underlyings": [
+   "ADA",
+   "BCH",
+   "BNB",
+   "BTC",
+   "DOT",
+   "ETH",
+   "LINK",
+   "LTC",
+   "XRP"
+  ],
+  "series": [
+   {
+    "mmdd": "1229",
+    "expiry": "2023-12-29"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "1d6cd066484e4748b1951ba62597aa26",
+  "released": "2023-09-25",
+  "title": "Binance Futures Will List USDⓈ-M & COIN-M Quarterly 0329 Futures Delivery Contracts",
+  "underlyings": [
+   "ADA",
+   "BCH",
+   "BNB",
+   "BTC",
+   "DOT",
+   "ETH",
+   "LINK",
+   "LTC",
+   "XRP"
+  ],
+  "series": [
+   {
+    "mmdd": "0329",
+    "expiry": "2024-03-29"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "775834d281a4472a952b13adb10e0b4e",
+  "released": "2023-12-22",
+  "title": "Binance Futures Will List USDⓈ-M & COIN-M Quarterly 0628 Delivery Contracts",
+  "underlyings": [
+   "ADA",
+   "BCH",
+   "BNB",
+   "BTC",
+   "DOT",
+   "ETH",
+   "LINK",
+   "LTC",
+   "XRP"
+  ],
+  "series": [
+   {
+    "mmdd": "0628",
+    "expiry": "2024-06-28"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "d46721f327df4d61bd72878ee9092ac0",
+  "released": "2024-03-22",
+  "title": "Binance Futures Will List USDⓈ-M & COIN-M Quarterly 0927 Delivery Contracts",
+  "underlyings": [
+   "ADA",
+   "BCH",
+   "BNB",
+   "BTC",
+   "DOT",
+   "ETH",
+   "LINK",
+   "LTC",
+   "XRP"
+  ],
+  "series": [
+   {
+    "mmdd": "0927",
+    "expiry": "2024-09-27"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "41d6514883444ea39b7324859e937c31",
+  "released": "2024-06-19",
+  "title": "Binance Futures Will List USDⓈ-M & COIN-M Quarterly 1227 Delivery Contracts",
+  "underlyings": [
+   "ADA",
+   "BCH",
+   "BNB",
+   "BTC",
+   "DOT",
+   "ETH",
+   "LINK",
+   "LTC",
+   "XRP"
+  ],
+  "series": [
+   {
+    "mmdd": "1227",
+    "expiry": "2024-12-27"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "f2338846942d48daa4f9395173727f4c",
+  "released": "2024-09-20",
+  "title": "Binance Futures Will List USDⓈ-M & COIN-M Quarterly 0328 Delivery Contracts",
+  "underlyings": [
+   "ADA",
+   "BCH",
+   "BNB",
+   "BTC",
+   "DOT",
+   "ETH",
+   "LINK",
+   "LTC",
+   "SOL",
+   "XRP"
+  ],
+  "series": [
+   {
+    "mmdd": "0328",
+    "expiry": "2025-03-28"
+   }
+  ],
+  "not_listed": []
+ },
+ {
+  "code": "b325289a041d497c8aa82a028d7ef49e",
+  "released": "2024-12-20",
+  "title": "Binance Futures Will List USDⓈ-M & COIN-M Quarterly 0627 Delivery Contracts",
+  "underlyings": [
+   "ADA",
+   "BCH",
+   "BNB",
+   "BTC",
+   "DOT",
+   "ETH",
+   "LINK",
+   "LTC",
+   "SOL",
+   "XRP"
+  ],
+  "series": [
+   {
+    "mmdd": "0627",
+    "expiry": "2025-06-27"
+   }
+  ],
+  "not_listed": []
+ }
+]
