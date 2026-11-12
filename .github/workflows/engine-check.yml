@@ -1,16 +1,18 @@
 name: Engine check
 
-# Tester för forskningsmotorn på Linux (billigt). Körs bara när engine/ ändras.
+# Tester för forskningsmotorn på Linux (billigt). Körs när engine/ eller registret ändras (testerna läser registret).
 on:
   pull_request:
     paths:
       - "engine/**"
+      - "research/registry.md"
       - ".github/workflows/engine-check.yml"
   # Även direkt-push till main (docs/samarbete.md): fångar ett rött main direkt, inte först vid nästa PR.
   push:
     branches: [main]
     paths:
       - "engine/**"
+      - "research/registry.md"
       - ".github/workflows/engine-check.yml"
   workflow_dispatch:
 

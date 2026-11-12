@@ -92,9 +92,15 @@ def _load_yahoo(ticker: str, data_dir: Path, opener=None, max_age_hours: float |
         except OSError as exc:
             raise PriceSourceUnavailable(f"Yahoo svarar inte för {ticker}: {exc}") from exc
         try:
-            json.loads(raw)
+            chart = json.loads(raw).get("chart") or {}
         except ValueError as exc:   # felsida i stället för data: sparas inte
             raise PriceSourceUnavailable(f"Oväntat svar från Yahoo för {ticker}: {raw[:80]!r}") from exc
+        if not chart.get("result"):
+            # Svar utan data sparas aldrig: ett tillfälligt fel får inte fastna i cachen som "aktien finns inte".
+            code = str((chart.get("error") or {}).get("code", "")).lower()
+            if code in ("", "not found"):
+                return None
+            raise PriceSourceUnavailable(f"Yahoo gav inga data för {ticker}: {code or 'okänt fel'}")
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(raw)
         if opener is None:

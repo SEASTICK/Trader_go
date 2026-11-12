@@ -17,7 +17,7 @@ def test_catalog_copies_only_packaged_registry_and_four_versioned_strategies():
     assert all(h['registry_commit'] for h in rows.values())
     # H-0001–H-0012 är avgjorda (REJECT). Senare hypoteser får vara oavgjorda eller ha ett giltigt beslut.
     assert all(rows[f'H-{i:04d}']['decision']=='REJECT' for i in range(1,13))
-    assert all(h['decision'] in (None,'REJECT','MORE_RESEARCH','READY_FOR_PAPER') for h in rows.values())
+    assert all(h['decision'] in (None,'REJECT','MORE_RESEARCH','READY_FOR_PAPER','OGILTIG') for h in rows.values())
     assert {s['version'] for s in s.writes['strategies']}=={'1.0.0'}
 
 def test_empty_catalog_fails_before_writing(tmp_path):
