@@ -20,7 +20,7 @@ from pathlib import Path
 # Källa: Binance-meddelanden (se research/universe/h0022-kostnad-antaganden.md). Maker används inte: konservativt tas alltid taker.
 COINM_FEES = (
     # (gäller från, maker, taker, källa)
-    ("2020-07-10", 0.00015, 0.00040, "meddelande 2020-07-10 (kvartalsterminer; texten ej läst, se rapporten) och 'Before' i 2021-04-22"),
+    ("2020-07-17", 0.00015, 0.00040, "meddelande 2020-07-10 (ny avgiftsstruktur från 2020-07-17, siffror ej i texten) och Before-kolumnen i meddelandet 2021-04-22"),
     ("2021-04-27", 0.00010, 0.00050, "Notice on Binance Futures Coin-Margined Futures Fee Adjustments, 2021-04-22"),
     ("2023-09-26", 0.00020, 0.00050, "Binance Futures Updates Trading Fees for COIN-M Futures Contracts, 2023-09-18"),
 )
@@ -40,10 +40,15 @@ def fut_taker_on(day: str) -> float:
 
 
 def round_trip_cost(*, spot_fee: float = SPOT_FEE, fut_taker: float = LOCKED_FUT_TAKER, slippage: float = LOCKED_SLIPPAGE,
-                    stress: float = 1.0) -> dict:
-    """Total kostnad (andel av positionens värde) för spot-köp, termin-sälj, avräkning (= takeravgift) och spot-sälj. Fyra ben."""
+                    stress: float = 1.0, exit: str = "pre_expiry") -> dict:
+    """Total kostnad (andel av positionens värde) för en cykel: spot-köp, termin-sälj, terminsutträde och spot-sälj.
+
+    `exit="pre_expiry"` (förslaget): terminen stängs 7 dagar före förfall med takeravgift **och** glidning. `exit="settlement"`:
+    hållen till förfall, då avräkningen kostar bara takeravgift (ingen glidning, men avräkningsfönstret är oklart)."""
+    if exit not in ("pre_expiry", "settlement"):
+        raise ValueError(exit)
     legs = {"spot_buy": spot_fee + slippage, "future_sell": fut_taker + slippage,
-            "settlement": fut_taker, "spot_sell": spot_fee + slippage}
+            "future_exit": fut_taker + (slippage if exit == "pre_expiry" else 0.0), "spot_sell": spot_fee + slippage}
     total = sum(legs.values()) * stress
     return {"legs": {k: v * stress for k, v in legs.items()}, "total": total, "total_bp": total * 1e4}
 

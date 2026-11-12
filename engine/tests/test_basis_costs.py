@@ -16,11 +16,14 @@ def test_daterade_avgifter_byter_vid_rätt_datum():
 
 def test_kostnadsbudget_fyra_ben_och_stresspåslag():
     base = round_trip_cost()
-    # spot köp 10+5, termin sälj 5+5, avräkning 5, spot sälj 10+5 = 45 bp
-    assert base["total_bp"] == pytest.approx(45.0)
+    # spot köp 10+5, termin sälj 5+5, termin utträde 5+5, spot sälj 10+5 = 50 bp
+    assert base["total_bp"] == pytest.approx(50.0)
+    assert round_trip_cost(exit="settlement")["total_bp"] == pytest.approx(45.0)      # avräkning: bara takeravgift
     stressed = round_trip_cost(stress=2.5)
-    assert stressed["total"] == pytest.approx(base["total"] * 2.5)
-    assert set(base["legs"]) == {"spot_buy", "future_sell", "settlement", "spot_sell"}
+    assert stressed["total"] == pytest.approx(base["total"] * 2.5) and stressed["total_bp"] == pytest.approx(125.0)
+    assert set(base["legs"]) == {"spot_buy", "future_sell", "future_exit", "spot_sell"}
+    with pytest.raises(ValueError):
+        round_trip_cost(exit="x")
 
 
 def test_utan_avgifter_är_avkastningen_exakt_basis_när_kontrakten_går_jämnt_upp():
