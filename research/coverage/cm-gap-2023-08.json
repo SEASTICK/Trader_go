@@ -1,0 +1,4287 @@
+{
+ "kind": "cm-gap-2023-08",
+ "run_at": "2026-11-12T15:26:45+00:00",
+ "gap_days": [
+  "2023-08-28",
+  "2023-08-29",
+  "2023-08-30",
+  "2023-08-31"
+ ],
+ "contracts_with_gap": [
+  "ADAUSD_230929",
+  "ADAUSD_231229",
+  "BCHUSD_230929",
+  "BCHUSD_231229",
+  "BNBUSD_230929",
+  "BNBUSD_231229",
+  "BTCUSD_230929",
+  "BTCUSD_231229",
+  "DOTUSD_230929",
+  "DOTUSD_231229",
+  "ETHUSD_230929",
+  "ETHUSD_231229",
+  "LINKUSD_230929",
+  "LINKUSD_231229",
+  "LTCUSD_230929",
+  "LTCUSD_231229",
+  "XRPUSD_230929",
+  "XRPUSD_231229"
+ ],
+ "summary": {
+  "cm_gap_contract_days": 72,
+  "cm_gap_days_with_verified_original": 72,
+  "cm_gap_days_missing_or_failed": [],
+  "cm_neighbor_days_compared_with_monthly": 72,
+  "cm_neighbor_mismatches": [],
+  "spot_gap_days": 36,
+  "spot_gap_days_in_monthly": 36,
+  "spot_gap_days_with_verified_daily": 36,
+  "spot_gap_days_equal_to_monthly": 36,
+  "cm_missing_days_to_expiry_after_fill": 0,
+  "spot_mismatches_vs_monthly": []
+ },
+ "cm": {
+  "ADAUSD_230929": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ADAUSD_230929/1d/ADAUSD_230929-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "9e5d6df05487315f57a36fd675f397d68ac43682be42319ff57a2d575ee125d2",
+     "bytes": 350
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ADAUSD_230929/1d/ADAUSD_230929-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "4d429604ab6bb4dd763fe8b03a4699c6e151c12728191925c1d96e20a3d79749",
+     "bytes": 351
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0007639419404126269
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ADAUSD_230929/1d/ADAUSD_230929-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "dc32875d4cc9d2c0d2b5ebffd54ba021c1e986cc2e1d65e8d0c7f6da9dc3a145",
+     "bytes": 352
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.002272727272727204
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ADAUSD_230929/1d/ADAUSD_230929-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "0d7c6594c89b58289f84d5dca347f246976b0151f48beb160e777e6b523cb5a4",
+     "bytes": 355
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0011189854531892252
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ADAUSD_230929/1d/ADAUSD_230929-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "514bfc1d9d083e27872c02740201f036c5b493a72f2cfd0e1d59f7c67a3c1861",
+     "bytes": 350
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0029314767314034818
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ADAUSD_230929/1d/ADAUSD_230929-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "84b99a0e1b72ca8d9d8d608d457f6e17be8aad570ed553436e47e7b2069dcbbe",
+     "bytes": 353
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0007524454477052522
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ADAUSD_230929/1d/ADAUSD_230929-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "cf9b41a54383bb4476e32df390ed62810fd69d7f0b6c59d87f261776ef6a31a3",
+     "bytes": 352
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.00039184952978055243
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ADAUSD_230929/1d/ADAUSD_230929-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "6ea63c3a43cbd537412b43aa2eb9c2943cf528f32b70f8a91b4301a9a9ecc45f",
+     "bytes": 351
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.00039138943248528957
+   },
+   "_after_fill": {
+    "monthly_bars": 185,
+    "bars_after": 189,
+    "daily_bars_added": 4,
+    "missing_days_to_expiry": 0
+   }
+  },
+  "ADAUSD_231229": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ADAUSD_231229/1d/ADAUSD_231229-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "a73cbdbabb866516f8b2dbb1ae90eba10a16d6565a88d3b6c1aebe37f86e2cf1",
+     "bytes": 350
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ADAUSD_231229/1d/ADAUSD_231229-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "53ef393a093edd1b8485283ac0aad66b6b3e92b9c617e90a555507198bd7c627",
+     "bytes": 352
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0015168752370118277
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ADAUSD_231229/1d/ADAUSD_231229-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "9719930829ada8171481b1d49bd3626d42cc7aeb80b53f9852e603b5d6f3f02a",
+     "bytes": 352
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0003765060240963347
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ADAUSD_231229/1d/ADAUSD_231229-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "ba3cca5f160f034d4a95482f69d13b3dad485bebfe0e7e7e829d1652af1a5e02",
+     "bytes": 351
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0018594272963927683
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ADAUSD_231229/1d/ADAUSD_231229-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "5ca3fec38a87456ffcd39133e85574b8b20fddee6bc58cad180e8eae95b3a28e",
+     "bytes": 345
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0029175784099197966
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ADAUSD_231229/1d/ADAUSD_231229-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "82cbc85840fb591d113727efcf25548e01205f2a0deff0af451c3ab8ebc6b295",
+     "bytes": 350
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.0007462686567165644
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ADAUSD_231229/1d/ADAUSD_231229-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "107d073ee461ac7f5aa1501003166501978ce83cb33d7d32d54dfc34160055e9",
+     "bytes": 352
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0015570260801867075
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ADAUSD_231229/1d/ADAUSD_231229-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "fcd7a6b7dcb4d9e42d1f8362627faa76a8157e9473e83e37ec8e21ea4bace9dc",
+     "bytes": 350
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.001946282600233551
+   },
+   "_after_fill": {
+    "monthly_bars": 190,
+    "bars_after": 194,
+    "daily_bars_added": 4,
+    "missing_days_to_expiry": 0
+   }
+  },
+  "BCHUSD_230929": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BCHUSD_230929/1d/BCHUSD_230929-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "3cf198b36b6d3a865e20746dd13b2444d4532097baa116af37f6316565198bb9",
+     "bytes": 350
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BCHUSD_230929/1d/BCHUSD_230929-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "f68aa66540e5d3d9b335c610f0e69d4774121f5ba8b3edd64a69d62cc9707a20",
+     "bytes": 350
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.0012698412698413097
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BCHUSD_230929/1d/BCHUSD_230929-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "81c1e154949792545a7a68d70d28655503fc943dfa679bfa3f0272dffd7172a7",
+     "bytes": 352
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.0005087763927754674
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BCHUSD_230929/1d/BCHUSD_230929-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "ae06e88c90d9226036057853b98131344bee400fca9ea5a4d53769b0275d224d",
+     "bytes": 355
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BCHUSD_230929/1d/BCHUSD_230929-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "bdae1b323be2bdb5604d3b9d2200041b54822c7e9fefe988c74e4aa61b31ac27",
+     "bytes": 351
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 8.938547486048165e-05
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BCHUSD_230929/1d/BCHUSD_230929-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "77e555648c5cf45dbbd6562900b61cd4c72b60d85379a724c7b7abcb3842f59b",
+     "bytes": 353
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0005588933910856131
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BCHUSD_230929/1d/BCHUSD_230929-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "8ae4bc05a7b3c21f1425b6917b3af2b8c8f5b4ec715bc676330a95c70c8e47ee",
+     "bytes": 354
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.000581761768555844
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BCHUSD_230929/1d/BCHUSD_230929-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "95bb6f30cd38f1c44dfd53a7412f2b569dec0944b74abe467a900f3ff5fe706a",
+     "bytes": 353
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -5.0405766419681086e-05
+   },
+   "_after_fill": {
+    "monthly_bars": 185,
+    "bars_after": 189,
+    "daily_bars_added": 4,
+    "missing_days_to_expiry": 0
+   }
+  },
+  "BCHUSD_231229": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BCHUSD_231229/1d/BCHUSD_231229-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "c98cf032f9962dbff2ed4d1ecc9769f34fa58781224184ffad535e1aa9a08a4c",
+     "bytes": 350
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BCHUSD_231229/1d/BCHUSD_231229-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "4803f0fb70b4d4df0fe5f16f2b389b02aa1e778b68a0f12ee7a5e9b01c9cfaf2",
+     "bytes": 352
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.002040378006872734
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BCHUSD_231229/1d/BCHUSD_231229-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "2f4df471969a3464596f726c70532bd8f6bd225cb4dda7f397acc60864903fbd",
+     "bytes": 354
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0002578515806301862
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BCHUSD_231229/1d/BCHUSD_231229-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "034b64f9cd27ca41e1e0e32522df8dd5d9c922b7b33b48bda79b8b65597d987f",
+     "bytes": 355
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0004808976756611738
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BCHUSD_231229/1d/BCHUSD_231229-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "152641d1eeca2d29914d872931a25944fe94ed991b4ebdf8dd30ecf985e77ddc",
+     "bytes": 354
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.00045185486421761567
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BCHUSD_231229/1d/BCHUSD_231229-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "9b3892f35f97e1d163877121f35ec76aef33e39bb8d9322c2f951723d1c9e527",
+     "bytes": 352
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.00023550468654320866
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BCHUSD_231229/1d/BCHUSD_231229-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "376265c880a32ae6c46f128bfeea314efb861b473057e4e31c5ccd409c89bc60",
+     "bytes": 354
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 9.815469179441649e-05
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BCHUSD_231229/1d/BCHUSD_231229-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "dc99daca8ca5b05db42acf04eba5c7cbafa85a2761736f46b6233bd167fb3ddc",
+     "bytes": 352
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.0015313153999284568
+   },
+   "_after_fill": {
+    "monthly_bars": 190,
+    "bars_after": 194,
+    "daily_bars_added": 4,
+    "missing_days_to_expiry": 0
+   }
+  },
+  "BNBUSD_230929": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BNBUSD_230929/1d/BNBUSD_230929-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "12cd369ab2a311189dbbb2bcb37b2708fd6e8504a2322b832f8cf905782095fa",
+     "bytes": 351
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BNBUSD_230929/1d/BNBUSD_230929-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "68d5e3f40c0b82c4372acf6cf786766cf28f4c68c4b6317a14ad4de18a8cce6b",
+     "bytes": 352
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.00018802293879860432
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BNBUSD_230929/1d/BNBUSD_230929-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "d7526d602c83b1d17b4dc0efb2ad4ed4c5eb4131b987fe4a803e89496bbfc189",
+     "bytes": 353
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.00018634987188437258
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BNBUSD_230929/1d/BNBUSD_230929-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "cda2cfe3f4c0f1ce06ddedd93c4c263b1f6b34e3e249389d379682bbad9247a1",
+     "bytes": 354
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -4.652461151943843e-05
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BNBUSD_230929/1d/BNBUSD_230929-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "59e82d035b87903394ce0af549faa76e1832bbf173d71a0e67a2407cf1894e84",
+     "bytes": 352
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0007170386304562459
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BNBUSD_230929/1d/BNBUSD_230929-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "29d1e1d2c37ec44cbec0b0b69d26ec50ac50f3f39af31ee2f19797e18986e77a",
+     "bytes": 354
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.000453926463912957
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BNBUSD_230929/1d/BNBUSD_230929-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "48f8f8a58a80da8c49286763cca199a372e2742a709e15dfc8ba2d97ad11a84a",
+     "bytes": 355
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.0005153190293264442
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BNBUSD_230929/1d/BNBUSD_230929-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "6686f0da1f81b6094219cc22c28216892abb8f92d547e8a23127329621fb5af8",
+     "bytes": 352
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.0004269044682667644
+   },
+   "_after_fill": {
+    "monthly_bars": 185,
+    "bars_after": 189,
+    "daily_bars_added": 4,
+    "missing_days_to_expiry": 0
+   }
+  },
+  "BNBUSD_231229": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BNBUSD_231229/1d/BNBUSD_231229-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "ca75eb57ac238ebc0f8694417ebaeaa72983468c5ad92a6bec2beb1856158e7c",
+     "bytes": 350
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BNBUSD_231229/1d/BNBUSD_231229-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "dfc017cd525a58a897b2a9d389ea925613ffc0a328a6782b6c39f7a8422b3c57",
+     "bytes": 353
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.0002857823291260164
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BNBUSD_231229/1d/BNBUSD_231229-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "034e3ff6044d029c1cda30a0f13cc90f25ac93bd44a5de63eb90dc714f5c09e4",
+     "bytes": 354
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.00033079722130346934
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BNBUSD_231229/1d/BNBUSD_231229-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "5dd8829658c58a856d15c1cd59aff7b6bdc7c9c5ae07c4f512bf6e7caf4e13f5",
+     "bytes": 354
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -9.443316492740994e-05
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BNBUSD_231229/1d/BNBUSD_231229-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "1c42d6aa7176e9e10d6080bbd8bd0ad18f3ff1152a723809b358633fc06a3a2d",
+     "bytes": 352
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.001502116618872007
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BNBUSD_231229/1d/BNBUSD_231229-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "0c299d7eef1ae5a272fe9614b0d06144d216ba9866ed3e9c64bad96f8eea0708",
+     "bytes": 353
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.0005527406725012174
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BNBUSD_231229/1d/BNBUSD_231229-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "c854db8cb7c87a58fb227b97fe2eb1e5d20d11965e2621d5fe1ac4788acdc2b5",
+     "bytes": 353
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.00019037646946851172
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BNBUSD_231229/1d/BNBUSD_231229-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "e384b239e96147b9af15348ad6624ff5f66ce6f0f5583496fba3b6f3dce561d4",
+     "bytes": 353
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.0002891705624367136
+   },
+   "_after_fill": {
+    "monthly_bars": 190,
+    "bars_after": 194,
+    "daily_bars_added": 4,
+    "missing_days_to_expiry": 0
+   }
+  },
+  "BTCUSD_230929": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BTCUSD_230929/1d/BTCUSD_230929-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "b2d7a88b5ffd16933faa0b2fba89906dbd41222dc9249f6f8d4e520394009f5f",
+     "bytes": 352
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BTCUSD_230929/1d/BTCUSD_230929-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "314313111b040a3e628269b4e4065d33ef63a1cf7b38435bf7aef6532a1ccc53",
+     "bytes": 354
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 4.5949195506267415e-05
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BTCUSD_230929/1d/BTCUSD_230929-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "65aecccde162e773c7ee3b96119c8cf528a9afae447db967c7ba11ddfd70fc0d",
+     "bytes": 356
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 2.6751762750132357e-05
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BTCUSD_230929/1d/BTCUSD_230929-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "bc1db104b0ee499d1f2c4d2a2ed14910bd0932a42ae00fdefa5709fbbbf04ff0",
+     "bytes": 357
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -3.821271489790057e-06
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BTCUSD_230929/1d/BTCUSD_230929-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "e9da2b46dcedd58c75b710ed362da8facd06413d8e8a9dc06f13533033e6e3dd",
+     "bytes": 354
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BTCUSD_230929/1d/BTCUSD_230929-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "e41e52c3c4f7adee22e7f15a28d7ef807b72d90c6db03755bf1c79aa5523269e",
+     "bytes": 356
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BTCUSD_230929/1d/BTCUSD_230929-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "b26a71d2fe93b2778c2f7c9ceba6017c1b2ffb14199451f215d48651d7612583",
+     "bytes": 357
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.0001232561185108283
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BTCUSD_230929/1d/BTCUSD_230929-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "66b260f2a80fbc652a2c4b44193a6dc6dbb3a622ff848ae34ec3f9a27ba7c334",
+     "bytes": 353
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -5.4175583064752786e-05
+   },
+   "_after_fill": {
+    "monthly_bars": 185,
+    "bars_after": 189,
+    "daily_bars_added": 4,
+    "missing_days_to_expiry": 0
+   }
+  },
+  "BTCUSD_231229": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BTCUSD_231229/1d/BTCUSD_231229-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "93409f75abf30c525255210b00e27334ddd6f60bcb7db19133cf60fb25ae9980",
+     "bytes": 351
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BTCUSD_231229/1d/BTCUSD_231229-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "b1d24f01748d93c2932cc176d899d85550520f956ef387029d444cb799c6886e",
+     "bytes": 352
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.0002491346346215062
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BTCUSD_231229/1d/BTCUSD_231229-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "dcaea21ef91694f772150e33c0394ff1d0c7e00d2d1d31209854a57a59845246",
+     "bytes": 354
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 3.765726615867493e-06
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BTCUSD_231229/1d/BTCUSD_231229-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "4a82393397e8157a751ddb1839d8424faced3cbbc77521558df708d8d95d7525",
+     "bytes": 355
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -3.7643515903296176e-06
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BTCUSD_231229/1d/BTCUSD_231229-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "8d0680d72a4721e39cf1478b4d0c6f5011e6c21672015d0d5a2f34290b830f28",
+     "bytes": 354
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 5.6738594655936225e-05
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BTCUSD_231229/1d/BTCUSD_231229-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "e5e75ab9f54dcace435928936e2f9668c26cb2ee784f38d9001d5a4682570d14",
+     "bytes": 355
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -1.081221347642991e-05
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BTCUSD_231229/1d/BTCUSD_231229-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "cb739ca3f45b305685ac2ed6c1df9b3dbefc369447965526bcf5a246d2edcff9",
+     "bytes": 356
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.00010251542477457409
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/BTCUSD_231229/1d/BTCUSD_231229-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "ff084b1a3d497e570be01020d01660ecd64bc98f841d21235404a409c7c7e8cf",
+     "bytes": 352
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.00047285470776436966
+   },
+   "_after_fill": {
+    "monthly_bars": 190,
+    "bars_after": 194,
+    "daily_bars_added": 4,
+    "missing_days_to_expiry": 0
+   }
+  },
+  "DOTUSD_230929": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/DOTUSD_230929/1d/DOTUSD_230929-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "249dd7f5ada99a5dbb4d1ddb752971e35e947a25544c32ee4eabef030c119692",
+     "bytes": 347
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/DOTUSD_230929/1d/DOTUSD_230929-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "03a72053d8054e5afdcb0567a167b82735c4285d45f62ba0d62e7e9d0785feda",
+     "bytes": 347
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.00022227161591481526
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/DOTUSD_230929/1d/DOTUSD_230929-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "beb3c5e0e80e2f36feb0d06dad60f441874969b8435aa14187ecb58f5b60eb4a",
+     "bytes": 348
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.003122212310437189
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/DOTUSD_230929/1d/DOTUSD_230929-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "fa7959131ba778752aa1c4340904aa348f74c892e3a73ace7ffb3b1cd955e9c5",
+     "bytes": 350
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.004134029590948662
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/DOTUSD_230929/1d/DOTUSD_230929-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "6b79a6092ad3ae72b87b8ea1432850d1574598f8cbaa3a2b3bb48571e302f0bd",
+     "bytes": 346
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.0036441586280815397
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/DOTUSD_230929/1d/DOTUSD_230929-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "093daead4722b2562698222ca72ee11f8632cf8efcdf1e67a9a1359227d67e15",
+     "bytes": 347
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.0019902697921274637
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/DOTUSD_230929/1d/DOTUSD_230929-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "8632092e7380b6ed521895250f596241474ef89c9ffcb7d9b787f1cde53cdf1d",
+     "bytes": 350
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.002822201317027373
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/DOTUSD_230929/1d/DOTUSD_230929-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "fa6d38e4188c6bec9d3711cb773bbcd85d15fea789ae115a53c497ba5cbbeda2",
+     "bytes": 349
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0016642891107940816
+   },
+   "_after_fill": {
+    "monthly_bars": 185,
+    "bars_after": 189,
+    "daily_bars_added": 4,
+    "missing_days_to_expiry": 0
+   }
+  },
+  "DOTUSD_231229": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/DOTUSD_231229/1d/DOTUSD_231229-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "fb286d6d5daaa41f132480f4453343d78ef584befeeef037624ced89df6dbaca",
+     "bytes": 346
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/DOTUSD_231229/1d/DOTUSD_231229-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "f01f70e40b1b5ccf8ea95f6d339546c154f9daa64b30824aee7b5fd8a983a21b",
+     "bytes": 347
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.002000444543232005
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/DOTUSD_231229/1d/DOTUSD_231229-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "49e30ef07d934b2627556ea8bddec5b0cc04a59add0b7105a18552a74ad3ac70",
+     "bytes": 350
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.004225038914832169
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/DOTUSD_231229/1d/DOTUSD_231229-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "b362e7a257d710417e339549f9630d31b64a45522584a41def79806f61ba3b77",
+     "bytes": 351
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.00043402777777790114
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/DOTUSD_231229/1d/DOTUSD_231229-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "c15450a637ebbb096136cf7a3f3186a57cd6955b37f416377d6057f77f7489c6",
+     "bytes": 350
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.004487179487179471
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/DOTUSD_231229/1d/DOTUSD_231229-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "9b1c07b902aeb258301ee246d4511d1751a61b54191aefb66c95bfef0f0b3a88",
+     "bytes": 348
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.0011018069634199934
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/DOTUSD_231229/1d/DOTUSD_231229-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "d9dbbb6227e051678d6754e92b1d28d4d752ebf0c9603cad052d6ebad2a054e1",
+     "bytes": 348
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0016474464579903092
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/DOTUSD_231229/1d/DOTUSD_231229-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "594f660eff0e25c9373bcf523d39f2d8320e3212013cead357ce0c514db56ebe",
+     "bytes": 349
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0011944577161968617
+   },
+   "_after_fill": {
+    "monthly_bars": 190,
+    "bars_after": 194,
+    "daily_bars_added": 4,
+    "missing_days_to_expiry": 0
+   }
+  },
+  "ETHUSD_230929": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ETHUSD_230929/1d/ETHUSD_230929-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "6f93a73690ee07f10e0eca55a043bbdecc4369ad4f35da53f10551f5596e3482",
+     "bytes": 355
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ETHUSD_230929/1d/ETHUSD_230929-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "41c83591e5a541a33e762ad068c78f9915c84db5542b67b7ff38bd004d980c18",
+     "bytes": 355
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0001395758109050682
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ETHUSD_230929/1d/ETHUSD_230929-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "9cc3c7c6ffb94d3324f15078c1279e0f0486cca35fca2003b772ef0ed71c6f82",
+     "bytes": 358
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 7.831089425014426e-05
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ETHUSD_230929/1d/ETHUSD_230929-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "9caf189ed0316bbb11bc55f6b5b6531076500fe65dbed16e2e8a358d3fb472f7",
+     "bytes": 359
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.00013895349890957753
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ETHUSD_230929/1d/ETHUSD_230929-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "66f94aaba447a951793611979b25d2d722ea45c85035cad86b215a2085b566fc",
+     "bytes": 358
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.00013272472315351003
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ETHUSD_230929/1d/ETHUSD_230929-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "413fef50acc5fa9927976480003c98e6af77677bc5d5f47e0008c04f2768fd17",
+     "bytes": 359
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 4.68491048892794e-05
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ETHUSD_230929/1d/ETHUSD_230929-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "7bc7ef4bf09caac264d36f09b9dcc22931d8abdb2feada2617366ee3001854dc",
+     "bytes": 358
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -4.8584372836391054e-05
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ETHUSD_230929/1d/ETHUSD_230929-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "b33dd493d383d7b5706a76b5b12155479ec720b46f64ade2d307ec831a6d6cdd",
+     "bytes": 354
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 8.59106529209619e-05
+   },
+   "_after_fill": {
+    "monthly_bars": 185,
+    "bars_after": 189,
+    "daily_bars_added": 4,
+    "missing_days_to_expiry": 0
+   }
+  },
+  "ETHUSD_231229": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ETHUSD_231229/1d/ETHUSD_231229-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "96da5ae159aea4a1b3d0b517144260c6b54a25dea5fe4b186601313e65533ed4",
+     "bytes": 353
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ETHUSD_231229/1d/ETHUSD_231229-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "c94590627df864a8488c738a8d5688d41c398324060a6e65539a73531124c601",
+     "bytes": 353
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.00014407578386221864
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ETHUSD_231229/1d/ETHUSD_231229-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "27194e957acc9b1ef74be21d0e89d89631d04a7ce17be61c1572783f0e936602",
+     "bytes": 355
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -1.1919803561744047e-05
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ETHUSD_231229/1d/ETHUSD_231229-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "ceba491786cddfe36ea116edda794fd336f8c12fa85c8c0fd0225eb1dd04d0f1",
+     "bytes": 358
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.00011961865572551744
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ETHUSD_231229/1d/ETHUSD_231229-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "63c0f2d38f160099c8b8734e0708ce2ab620e551e1a322866aa173b0e37e13d7",
+     "bytes": 355
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0002970919270981476
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ETHUSD_231229/1d/ETHUSD_231229-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "4a2ae139267f3995b15b95c2c343d44a40430a292b4405696f8f6d6699db7341",
+     "bytes": 353
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 4.635746239256555e-05
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ETHUSD_231229/1d/ETHUSD_231229-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "fd1348c0aac8e5d0cd9faac661d3f35c09ccedb2526603f9fdadba482e4e30bb",
+     "bytes": 356
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 2.4011765765274973e-05
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/ETHUSD_231229/1d/ETHUSD_231229-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "9ad190ff77cc7142cc764682cde4c39c2b1b128eb34a4226d496cbc1366f3211",
+     "bytes": 355
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0001636889425087329
+   },
+   "_after_fill": {
+    "monthly_bars": 190,
+    "bars_after": 194,
+    "daily_bars_added": 4,
+    "missing_days_to_expiry": 0
+   }
+  },
+  "LINKUSD_230929": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LINKUSD_230929/1d/LINKUSD_230929-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "1d63b2fee7bf36edf0fc632a1bd4c52d481e0063e825fbbc31e14501e93b0d60",
+     "bytes": 350
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LINKUSD_230929/1d/LINKUSD_230929-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "9e936775a28421bee0d91f7761df169bd5fd2fa6257431cffe5af077488b1ea6",
+     "bytes": 353
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0008285004142500885
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LINKUSD_230929/1d/LINKUSD_230929-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "4c3fdfe16d16f2f20fe09fe077acd0c7b3c1f8ff801696aeef1ff7417c119381",
+     "bytes": 353
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.004626569729015095
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LINKUSD_230929/1d/LINKUSD_230929-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "22ad6d58482592dadc1a97b0f8245c73f4900644a3d75bdfd9f4205960212e05",
+     "bytes": 352
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0003325020781381749
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LINKUSD_230929/1d/LINKUSD_230929-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "63cf2d40217ff2be73c94b3e6a49f51293f003f6d1b3ee0c4c52ec56056c7012",
+     "bytes": 347
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0022518899790895386
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LINKUSD_230929/1d/LINKUSD_230929-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "fa07d9041e13679a975f2c330dea9ecef6013ac3f4be0a47ffe5b7e6375aee13",
+     "bytes": 353
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.003022162525184835
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LINKUSD_230929/1d/LINKUSD_230929-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "b2e500dd98e9a5ea0426d7b0a1e02bb477ac85392591c11ffa9d7eb8c6b55f35",
+     "bytes": 353
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0028852681602171693
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LINKUSD_230929/1d/LINKUSD_230929-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "92c594a557bd8cca0eadb5e619a3f2f2d0edf7f01860947ea37ce7fe1c1c8a28",
+     "bytes": 351
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0003361909564632004
+   },
+   "_after_fill": {
+    "monthly_bars": 185,
+    "bars_after": 189,
+    "daily_bars_added": 4,
+    "missing_days_to_expiry": 0
+   }
+  },
+  "LINKUSD_231229": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LINKUSD_231229/1d/LINKUSD_231229-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "eebaf791599b99e35b376499af1d58322b76af3bd5ec1cf04d7126b81d8a80ec",
+     "bytes": 348
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LINKUSD_231229/1d/LINKUSD_231229-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "774478149f615266ef0e1591f3e406de2bb4cf0a6bb980f3929f0900bc6b973e",
+     "bytes": 349
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.002458210422812135
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LINKUSD_231229/1d/LINKUSD_231229-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "fce573d45dd1bee1448a1811df6e0b2e2246c7ed59d9028122663a8b2c5ed12c",
+     "bytes": 352
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0004901159941184119
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LINKUSD_231229/1d/LINKUSD_231229-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "819728c9655c76cb999dfba70792997bf6f662279bd55463c85d516450027c42",
+     "bytes": 354
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.0013134132326383385
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LINKUSD_231229/1d/LINKUSD_231229-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "cf86a2ef6874b2d2af2391e12ab8b7ee9c19686513983a55d8b1a6ce5b6bb67c",
+     "bytes": 348
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0012724669953874113
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LINKUSD_231229/1d/LINKUSD_231229-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "929e9d8dd88b3daa6c5e394b79bbd2d9e47a046c495bdd84e474ef4857ef7097",
+     "bytes": 352
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.0001662510390688654
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LINKUSD_231229/1d/LINKUSD_231229-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "3ac9c302d4bf3b7c698f60cb47c256cf0d8194e9123eb133a66c6cf41d8c7eed",
+     "bytes": 352
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.000670465973851897
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LINKUSD_231229/1d/LINKUSD_231229-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "8e9212c3488a047c306198309dfb46c0f05066b355714fc3f7f885aae960dd8d",
+     "bytes": 353
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0004971826317534678
+   },
+   "_after_fill": {
+    "monthly_bars": 190,
+    "bars_after": 194,
+    "daily_bars_added": 4,
+    "missing_days_to_expiry": 0
+   }
+  },
+  "LTCUSD_230929": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LTCUSD_230929/1d/LTCUSD_230929-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "257a8780bc188e5e4b7f78fabcb763b190dab609304ad30512eb3dbd0a4c1f5e",
+     "bytes": 347
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LTCUSD_230929/1d/LTCUSD_230929-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "820aafbf5806a819a2cc0f63d2e73e96a09e0963f464df2ef864b429182ab946",
+     "bytes": 349
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LTCUSD_230929/1d/LTCUSD_230929-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "b2ed3aaf0135a7dafe77c8b198f32c4f843a05822ce080f4a1521e575898c67a",
+     "bytes": 350
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0012232415902140303
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LTCUSD_230929/1d/LTCUSD_230929-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "f93bf07aa032f5071a8efeeaafddae87f7b01462a5162e5b12fcedb50c334ea2",
+     "bytes": 353
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.00015241579027591712
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LTCUSD_230929/1d/LTCUSD_230929-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "71ef3d25102741774f5f3205fe050a9c2230cb404d5fbc136b810fb660523da4",
+     "bytes": 349
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.00014492753623196464
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LTCUSD_230929/1d/LTCUSD_230929-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "f88f16357ea499abc8832f724dee811e29a710dd47576582b3712eb2eb565c5b",
+     "bytes": 352
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.000590493061706443
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LTCUSD_230929/1d/LTCUSD_230929-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "61edc657396460a08a6d1f10cf1a30f9dde999c685e53ad120c403bc9483adab",
+     "bytes": 351
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.0009394081728509862
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LTCUSD_230929/1d/LTCUSD_230929-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "80f36d4c83b1022878d7393a954161895839c3a82b69039fb0389faebb072cff",
+     "bytes": 347
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.0001586546089163976
+   },
+   "_after_fill": {
+    "monthly_bars": 185,
+    "bars_after": 189,
+    "daily_bars_added": 4,
+    "missing_days_to_expiry": 0
+   }
+  },
+  "LTCUSD_231229": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LTCUSD_231229/1d/LTCUSD_231229-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "b8dbbd9e728af463c111320ddee0eff73206a47d2559dcc4bfec1eeda0f75b3e",
+     "bytes": 347
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LTCUSD_231229/1d/LTCUSD_231229-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "ef1078255c07f644e75facc573e8901ef5f7e5fdeb0144e8ee36f50c46bfbf44",
+     "bytes": 349
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.0003039975680195761
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LTCUSD_231229/1d/LTCUSD_231229-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "3f431a102577e0c34d88f59c235b9eaa418889be449ae4056089f3a5148688f5",
+     "bytes": 348
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0010606060606059842
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LTCUSD_231229/1d/LTCUSD_231229-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "ae5c4930bae56e1a51b8cd37881a38ef16769468f91db68fb6ca352c5cd72355",
+     "bytes": 352
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.0009045680687471691
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LTCUSD_231229/1d/LTCUSD_231229-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "af633c7de97de728962efd3fd7c77c7b96a2aa1fbc75af8330bc297821841626",
+     "bytes": 348
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0001436575204711854
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LTCUSD_231229/1d/LTCUSD_231229-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "2d72c7797de78bebe492c29b27a73d47d0ea2d456967a22dcd908b1c37be77d9",
+     "bytes": 351
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.00029274004683832455
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LTCUSD_231229/1d/LTCUSD_231229-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "a08ce695294cd235c33f1f40b3987ba9fb0dc18e0c8f4e28bd297c9053f67a55",
+     "bytes": 349
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.0007753140021707905
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/LTCUSD_231229/1d/LTCUSD_231229-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "e73a945f8c1074a11bc3472dec619dade155a043b01d8c2f40d026b167fdfd09",
+     "bytes": 344
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.0014135385581907078
+   },
+   "_after_fill": {
+    "monthly_bars": 190,
+    "bars_after": 194,
+    "daily_bars_added": 4,
+    "missing_days_to_expiry": 0
+   }
+  },
+  "XRPUSD_230929": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/XRPUSD_230929/1d/XRPUSD_230929-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "71c35467c26b1b7b0a5c04c359c12769abe12fcd6ad982179b7e92db49f55e9f",
+     "bytes": 351
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/XRPUSD_230929/1d/XRPUSD_230929-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "b1c7065dfa4ee735f5b4255063d2bce72d569d6e1c51aee3ae5392dac235612b",
+     "bytes": 352
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0020968356843309444
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/XRPUSD_230929/1d/XRPUSD_230929-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "ee59d2e424a8363d87349a88a20852bf4bb2415a5a30887c7151c0d1a5204197",
+     "bytes": 352
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.0020876826722338038
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/XRPUSD_230929/1d/XRPUSD_230929-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "fd1047c11ca28a7f02fdebb39994ce839b48829d62d426d9a49db4f96a48d16d",
+     "bytes": 353
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.0013297872340426453
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/XRPUSD_230929/1d/XRPUSD_230929-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "fe38433737f0b5efff441c200f8265ed8f4b644e40ce7b03d8be1c6779ca8f07",
+     "bytes": 349
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.0001841959845276797
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/XRPUSD_230929/1d/XRPUSD_230929-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "1a0333665fedbbda3e0b1bb3bc3fab857c9cb841285903b2013a93f8a436af8d",
+     "bytes": 353
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.0028232636928288146
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/XRPUSD_230929/1d/XRPUSD_230929-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "bd490bd3c2315ee5cc7f48056345ecd21386e02c81d940d8303c8d8f6053786c",
+     "bytes": 352
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.001364788457788979
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/XRPUSD_230929/1d/XRPUSD_230929-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "c830c3bb044fe1ef7118d93d43f4784413ccb9eaa327bf1cbdd71ec55e7fe840",
+     "bytes": 349
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0010020040080160886
+   },
+   "_after_fill": {
+    "monthly_bars": 185,
+    "bars_after": 189,
+    "daily_bars_added": 4,
+    "missing_days_to_expiry": 0
+   }
+  },
+  "XRPUSD_231229": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/XRPUSD_231229/1d/XRPUSD_231229-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "c5169f13489234f9bc33f8ad5d2efe3d28804344ae72fff53ede5f34c964bb57",
+     "bytes": 350
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/XRPUSD_231229/1d/XRPUSD_231229-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "1578313b706874dd534046cb00a02f0163be3df5f599b91fa6f82607c5968ef4",
+     "bytes": 352
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.00037643515904384195
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/XRPUSD_231229/1d/XRPUSD_231229-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "f0688d81b8a957deb0f461ca1e29a2d9225402dd289289f9cd00c05327ad3ba9",
+     "bytes": 353
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.0005636978579480756
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/XRPUSD_231229/1d/XRPUSD_231229-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "00c1c81b588b0d08e1af49eca516a517d54da6b9ea2ad8ef0c2a1e5b7d1e69ac",
+     "bytes": 355
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": -0.00018814675446843232
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/XRPUSD_231229/1d/XRPUSD_231229-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "e6bb03681994d7a7dddfe48f23f01f25b2d50e83a1e0f6940920612288fd28f1",
+     "bytes": 350
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0007295276308589838
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/XRPUSD_231229/1d/XRPUSD_231229-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "309234b386dba5d81f8303b8b01de11236a7836896b547273a5a77357d77a506",
+     "bytes": 353
+    },
+    "in_monthly": false,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": null,
+    "open_vs_previous_close": 0.0
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/XRPUSD_231229/1d/XRPUSD_231229-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "3e9aa90320f27b9b93ae3379e3883cb7756d4e4732c48b85695af047a502a516",
+     "bytes": 353
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.0011569610489778892
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/futures/cm/daily/klines/XRPUSD_231229/1d/XRPUSD_231229-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "1f49e4fbae9ee7c25b211c8e69eecfce2fa9f63859b8e4a9165c330b901edfe5",
+     "bytes": 351
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.00039611804317685184
+   },
+   "_after_fill": {
+    "monthly_bars": 190,
+    "bars_after": 194,
+    "daily_bars_added": 4,
+    "missing_days_to_expiry": 0
+   }
+  }
+ },
+ "spot": {
+  "BTCUSDT": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1d/BTCUSDT-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "41a54d14c90e47ade5a3b21835d7c7dbc735ef2e44a3c38c6188a09faeb4f31d",
+     "bytes": 234
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1d/BTCUSDT-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "95ea769fa2e63b9d20f4121b82e3658300a1b4376cdcb958f18961b450e08fcf",
+     "bytes": 238
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 3.843586036111901e-07
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1d/BTCUSDT-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "40c38f4be8b6f89f3948194e10816fb38a49e1561b7e101338728dc769ea7003",
+     "bytes": 238
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 3.8311578087757425e-07
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1d/BTCUSDT-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "fc9ef5a34e2bbc7126e596f1b6e16965467acb674ceeccc6a3ac52acf022b724",
+     "bytes": 242
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1d/BTCUSDT-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "3485137a2dad21de8706cb27ff84090914bc0de6d9e7555f3b660f6e746bbf21",
+     "bytes": 238
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1d/BTCUSDT-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "389209fc1a784b08b74a38149cf962354b86d5615e2f5876cb770fbdc3954106",
+     "bytes": 240
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1d/BTCUSDT-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "6f479e4634f21da054c2aa626a0d854e36ca28d4effa54bf29092c9d804caf7f",
+     "bytes": 240
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -3.8549341996318987e-07
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BTCUSDT/1d/BTCUSDT-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "828c49fdb661376f2e299a07f768c24b46e914bc53efdffc750016a131f9e65e",
+     "bytes": 238
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -3.8752104714046e-07
+   }
+  },
+  "ETHUSDT": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "78f4bb30d531ab405a6e81da659be9464af2631c4228e10279100593825f7edc",
+     "bytes": 230
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "42cff8d94eef390b860abdf3ba3cd899e277ce531e68ae298b0584893bf88724",
+     "bytes": 233
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -6.071497959947436e-06
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "2760838b2b1eace295b8efe1c4424158572f16badba86ce542daf6749395aa3b",
+     "bytes": 236
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "10d978d772ed4f093afcebf36eb930efc086a1d095b48126b5d3b119b6c0298f",
+     "bytes": 236
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "6731c6f2bf90528ced2a32f85c0790dd243833ada4ed418317762b3d356ab59b",
+     "bytes": 231
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -5.7822853904987426e-06
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "55f15f927b64ffec35e74f6a3d600fc5d865418e0cae760c7bda046516d60850",
+     "bytes": 234
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "434e94e25833bb7215d2a70e90690ed18b981485136e09990f5e68e22f816bf1",
+     "bytes": 235
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 6.07622010506681e-06
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/ETHUSDT/1d/ETHUSDT-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "adc1d1bb268f891c7cf4d0f4f893a6c55cfda330a828fd8460adc6d69bb5f7a9",
+     "bytes": 233
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 6.138283245027409e-06
+   }
+  },
+  "ADAUSDT": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/ADAUSDT/1d/ADAUSDT-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "2bc697ea5b04f9d5580a5e262c29f7f85b7b0fd0b6aad81f560edeba9a88c0e5",
+     "bytes": 228
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/ADAUSDT/1d/ADAUSDT-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "6bd4f39c7aac678f2ab053b195af15fec2e7d8f9354fd99835d7e42ae79ec504",
+     "bytes": 228
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/ADAUSDT/1d/ADAUSDT-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "47fb9cbacc5b29f33d34e82c5262f00083525bc1f6416dc428a4923f00d37bcb",
+     "bytes": 229
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.00037965072133627764
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/ADAUSDT/1d/ADAUSDT-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "954898f247f41bedd6f68a0fbbd66a6a7030e6d6095e17715f23a9345c79c930",
+     "bytes": 229
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/ADAUSDT/1d/ADAUSDT-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "6b7a6a46fd8f24a222310098ccbed3f775fcbeb872c938fc94ba2535488a886c",
+     "bytes": 227
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/ADAUSDT/1d/ADAUSDT-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "b30b70a68a59ac357333dfd895556cfd5f5795c858c14da81ba3498a61f18648",
+     "bytes": 228
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.00037678975131871795
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/ADAUSDT/1d/ADAUSDT-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "99672d52ecdb808bf119086a3a1e3de68d65a4a023e5dc4f9fa319aeccf20760",
+     "bytes": 230
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/ADAUSDT/1d/ADAUSDT-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "00f5cfa77b5b0ad96cc1231807acc7cdb69a5397b341c520a3a63b8d370facb5",
+     "bytes": 226
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   }
+  },
+  "BCHUSDT": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BCHUSDT/1d/BCHUSDT-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "6b615bfaf958ef9cd16e61ac8d0406c150383f571c440cc3045ae095297c52ed",
+     "bytes": 227
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BCHUSDT/1d/BCHUSDT-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "3c369b3e9b67b818158f7e209424c933149278fa7f21345e3aae56497b5ea510",
+     "bytes": 229
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BCHUSDT/1d/BCHUSDT-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "bb522b291ddd45dd517e4fa9c8a1165d5147c01e749dd430655ef99ae4db4540",
+     "bytes": 229
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BCHUSDT/1d/BCHUSDT-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "07b5cd4dbaa2bdfc7a4436dee48dda2d825910e7099e820ab21df746874c5336",
+     "bytes": 230
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.000524383848977461
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BCHUSDT/1d/BCHUSDT-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "57ec71c5852b27a2e951b1cf28d1b62eca0395b6a17dc8b5d5d481e6310d0fca",
+     "bytes": 225
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.000444049733570262
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BCHUSDT/1d/BCHUSDT-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "5690b2e1f69bde2dc38bfd522fa81b0783b4e391fb866feb15e3a16082a5df0a",
+     "bytes": 228
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0004631773969430153
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BCHUSDT/1d/BCHUSDT-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "d2bbb7b4ac319e4d4fd5c60817898d409e2c4514976e728e3872705e7178e3e9",
+     "bytes": 228
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BCHUSDT/1d/BCHUSDT-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "ae25f7ed0258283482a4e162f6e905893972e3247d24bbc4b9f29037391210e6",
+     "bytes": 228
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   }
+  },
+  "BNBUSDT": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BNBUSDT/1d/BNBUSDT-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "6369c4a3d2f61ebb32194e185fbf171a6da0fdce7769892864745be31168a5f3",
+     "bytes": 226
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BNBUSDT/1d/BNBUSDT-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "35021cbc8d9f5639a220576ccb660efcdb91fc37520c61df2e568e41199bbb0d",
+     "bytes": 227
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.0004618937644341736
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BNBUSDT/1d/BNBUSDT-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "99f59344b0ac4fab84e5d13a0d617acb8010d235a25c280ff37f79c50ad07e1b",
+     "bytes": 230
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BNBUSDT/1d/BNBUSDT-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "1b2aa86993006887c62377e9bd8e3435c7034a1947f4579b85fe3f3818e031b4",
+     "bytes": 230
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BNBUSDT/1d/BNBUSDT-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "94276b7117c1827f0770b6bc67a5c13b7664424bd1d443ab565f4cc365665017",
+     "bytes": 229
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BNBUSDT/1d/BNBUSDT-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "02b22b46c18ae8b529fd60bc59ef995efecae7ce6ddcfd9f75eb9abf59fd71f0",
+     "bytes": 227
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BNBUSDT/1d/BNBUSDT-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "ae46b4cf684fc7b44039009efd1e95bfb61db44716ea5d2b2e30b2f3680b99f5",
+     "bytes": 227
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/BNBUSDT/1d/BNBUSDT-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "f6dbdb9b21c023f5469b6dacb4c590ec227c6a6e84997cb6d1b27684164b28b6",
+     "bytes": 227
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   }
+  },
+  "DOTUSDT": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/DOTUSDT/1d/DOTUSDT-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "60657261530423250a46aa79ea33b0983e4a59e1c674a071a8cb2a60384dc2c0",
+     "bytes": 224
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/DOTUSDT/1d/DOTUSDT-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "8f2a66a27fd3a2c555846ddd9376d88df62f3b39ffb55c93965fc041f4fb1bfb",
+     "bytes": 227
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.00044375416019515335
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/DOTUSDT/1d/DOTUSDT-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "6f17830797eaa4785728372b76f8f7822f5d2e9317bcfbd4d0617759c4e39aae",
+     "bytes": 226
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/DOTUSDT/1d/DOTUSDT-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "a9c06bed9f7b5aa011d86b2d2e0994e5ce0fe53f375a38ff2bc4035dd51fe6b3",
+     "bytes": 229
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/DOTUSDT/1d/DOTUSDT-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "4c9053fb44c65f8f1f5f0e6cf4a06a772be4a425c714da92a35332c9aecce1ed",
+     "bytes": 227
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/DOTUSDT/1d/DOTUSDT-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "3894c12c36e3b5aded688c8315b7202bad2f77aa71fea683692bbf90c602b208",
+     "bytes": 227
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0002205558006176389
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/DOTUSDT/1d/DOTUSDT-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "71de7f31b71573d15b92119a4fd50369672b77f36c48cc9a656f14e8172369fe",
+     "bytes": 229
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/DOTUSDT/1d/DOTUSDT-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "dcc67dde77e64a377f555b61c2d7605604711acc070222089032c08111120414",
+     "bytes": 227
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   }
+  },
+  "LINKUSDT": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/LINKUSDT/1d/LINKUSDT-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "598b5f6e45bd14ce5a1be63c7ec8585271bd64bbe8751709e6886cfc9c26a117",
+     "bytes": 228
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/LINKUSDT/1d/LINKUSDT-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "51a05d82eb8101ef531f455f99547b44e94c5c7d28ec60f05b7ea7d9eb44f62b",
+     "bytes": 229
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.00016650016650021637
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/LINKUSDT/1d/LINKUSDT-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "c5c02bd0381de856c4671702823fcd87d6b0aee8b0615ef266c176a1ce93e23f",
+     "bytes": 230
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.00016583747927034764
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/LINKUSDT/1d/LINKUSDT-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "1fe489833e6a82ba42cf6692bbc3af5664ccd9bab3eb1a9952c401cd0d559afc",
+     "bytes": 232
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/LINKUSDT/1d/LINKUSDT-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "09efc516c639347c1f470ea75ce7dfd837cfa906878cff30ab19755239b04f36",
+     "bytes": 230
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.00016144656118832756
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/LINKUSDT/1d/LINKUSDT-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "1696ad383512f224599eacc53fc45629bdf04c5e9b6ec8313077f788285b7290",
+     "bytes": 232
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/LINKUSDT/1d/LINKUSDT-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "8ef994510a003cd9e4f265f3ea779c719b8196767c763c999a277c194bfc8d9d",
+     "bytes": 232
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.00017009695526437607
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/LINKUSDT/1d/LINKUSDT-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "c6c0b8233d8e887e4a26f49a526066f356d48648478b845eb1a2063005e4e81b",
+     "bytes": 228
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   }
+  },
+  "LTCUSDT": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/LTCUSDT/1d/LTCUSDT-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "39a3f99a30562d7664f7195ed61b5716064d3dcb76220f062cf4754c05bfa948",
+     "bytes": 228
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/LTCUSDT/1d/LTCUSDT-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "63e4334e5ea17b65e394941f2ffbab32e5a736342f1904e5d099c0742ed61b56",
+     "bytes": 229
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.00015382248884798777
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/LTCUSDT/1d/LTCUSDT-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "b942c478c0b6b43021a9304a750824b0b21c8e9f853782d184a05aa78edac779",
+     "bytes": 231
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/LTCUSDT/1d/LTCUSDT-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "02a0b53cbe05697539eb149d7e4f397b8cc3a46520e057f0a8024dcbd8476c78",
+     "bytes": 231
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.00015262515262504106
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/LTCUSDT/1d/LTCUSDT-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "c4dcdd85a211782d71b530dd7e0afcd03aac697fc054025d6d122609b958be90",
+     "bytes": 228
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.00014522218995072222
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/LTCUSDT/1d/LTCUSDT-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "7c438ad50c45c4265c5aea1c1a66b13cb317489a091984642e7cbf3fea9e4600",
+     "bytes": 229
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/LTCUSDT/1d/LTCUSDT-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "f5c8a639d834d592f24a50a794625a96c0a3d29006095d395585d4211d212228",
+     "bytes": 230
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.0001565190170605968
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/LTCUSDT/1d/LTCUSDT-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "d6ef3f808cab6eb22b155b0a553e62b1fe06573f21a7508781d30c2bf9b70cca",
+     "bytes": 228
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   }
+  },
+  "XRPUSDT": {
+   "2023-08-26": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/XRPUSDT/1d/XRPUSDT-1d-2023-08-26.zip",
+     "status": "ok",
+     "sha256": "61b6a5d2e0b2cfe4ac407f80dbf63913fe9b567e0f9a258cb57a90e5f14794ac",
+     "bytes": 226
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    }
+   },
+   "2023-08-27": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/XRPUSDT/1d/XRPUSDT-1d-2023-08-27.zip",
+     "status": "ok",
+     "sha256": "5a52e19ec97d99bf8b6f2ec06cd497751f47abbe66e26a9f5f62c1d27dcfd7b3",
+     "bytes": 228
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-28": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/XRPUSDT/1d/XRPUSDT-1d-2023-08-28.zip",
+     "status": "ok",
+     "sha256": "c9fe247bb9641a6bc6bd3de6b1975d38b4f27f36aacfdb5c0b10bd9a58e55b1d",
+     "bytes": 227
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": -0.0001909854851031012
+   },
+   "2023-08-29": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/XRPUSDT/1d/XRPUSDT-1d-2023-08-29.zip",
+     "status": "ok",
+     "sha256": "16c6a3e98ef3ff7705557bfa37a604c358579a8037c550dc0190d256f90a727e",
+     "bytes": 231
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-30": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/XRPUSDT/1d/XRPUSDT-1d-2023-08-30.zip",
+     "status": "ok",
+     "sha256": "6c49a4b4c1924bb6c21dbe4fb56bea2ede76c347d037512afe1a2583b43795c9",
+     "bytes": 229
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-08-31": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/XRPUSDT/1d/XRPUSDT-1d-2023-08-31.zip",
+     "status": "ok",
+     "sha256": "579ecf2adaf110b9a2ca0691cffd74ea84fedbab2c487eb2ef12c17c114f95ef",
+     "bytes": 225
+    },
+    "in_monthly": true,
+    "is_gap_day": true,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-09-01": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/XRPUSDT/1d/XRPUSDT-1d-2023-09-01.zip",
+     "status": "ok",
+     "sha256": "9e3e20bb04c2408e9e51ae2885eafb35c756416a343a11552a9839bc3c24e7c8",
+     "bytes": 231
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0
+   },
+   "2023-09-02": {
+    "daily": {
+     "url": "https://data.binance.vision/data/spot/daily/klines/XRPUSDT/1d/XRPUSDT-1d-2023-09-02.zip",
+     "status": "ok",
+     "sha256": "576fadd2bf2b4a39ee851a9c28df990e2666ddbaa56f77651f8ed7bd5fc4b4e4",
+     "bytes": 229
+    },
+    "in_monthly": true,
+    "is_gap_day": false,
+    "sanity": {
+     "rows": 1,
+     "ok": true,
+     "problem": ""
+    },
+    "vs_monthly": {
+     "equal": true,
+     "differences": {}
+    },
+    "open_vs_previous_close": 0.0002008032128513193
+   }
+  }
+ },
+ "note": "Bara Binances originalfiler med verifierad checksumma. Ingen interpolation, inget sista-kända-pris, ingen annan börs. Inget från 2025+, inget backtest."
+}
