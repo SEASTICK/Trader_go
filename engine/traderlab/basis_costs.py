@@ -254,3 +254,40 @@ def held_mark_days(fill_day: _dt.date, expiry: _dt.date) -> list[_dt.date]:
         days.append(d)
         d += _dt.timedelta(days=1)
     return days
+
+
+# ------------------------------------------------------------------ rullningsbeslut: bara data till och med dagen FÖRE fyllningen
+class InvalidFill(ValueError):
+    """Fyllningsstapeln saknas eller har ingen volym för en position som redan beslutats: körningen är OGILTIG, inte platt."""
+
+
+def roll_decision_day(fill_day: _dt.date) -> _dt.date:
+    """Beslutsdagen för en fyllning vid öppningen `fill_day` (00:00 UTC) är dagen före. Fyllningsdagens stapel är inte färdig vid beslutet."""
+    return fill_day - _dt.timedelta(days=1)
+
+
+def select_for_fill(rows: list[dict], underlying: str, expiry: str, fill_day: _dt.date) -> bool:
+    """Är serien valbar för en fyllning vid öppningen `fill_day`? Använder **bara** beslutsdagen (dagen före): `universe_at` med
+    annons, verifierad handelsstapel med volym och förfall efter beslutsdagen. Fyllningsdagens stapel används aldrig för valet."""
+    from .pit_universe import universe_at
+    decision = roll_decision_day(fill_day).isoformat()
+    return any(r["expiry"] == expiry for r in universe_at(rows, decision, (underlying,)))
+
+
+def liquidity_cap_usd(volume_contracts_by_day: dict[str, float], fill_day: _dt.date, *, contract_usd: float = 10.0,
+                      fraction: float = LEDGER_LIQUIDITY_FRACTION, window: int = 20) -> float | None:
+    """Likviditetstak i USD: `fraction` × medianen av volymen (kontrakt × `contract_usd`) över de senaste `window` handelsdagarna
+    (volym > 0) till och med beslutsdagen (dagen före fyllningen). Färre än `window` dagar ger None (platt). Fyllningsdagens och
+    senare dagars volym ignoreras helt."""
+    decision = roll_decision_day(fill_day).isoformat()
+    days = sorted(d for d, v in volume_contracts_by_day.items() if d <= decision and v > 0)
+    if len(days) < window:
+        return None
+    return fraction * statistics.median(volume_contracts_by_day[d] * contract_usd for d in days[-window:])
+
+
+def verify_fill_bar(row: dict, fill_day: _dt.date) -> None:
+    """Efter att ett mynt beslutats valbart måste fyllningsstapeln finnas med volym > 0. Annars `InvalidFill` (OGILTIG, inte platt)."""
+    from .pit_universe import has_traded_bar
+    if not has_traded_bar(row, fill_day.isoformat()):
+        raise InvalidFill(f"{row.get('underlying')} {row.get('expiry')}: ingen verifierad handelsstapel på fyllningsdagen {fill_day}")

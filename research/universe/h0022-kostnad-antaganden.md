@@ -65,7 +65,7 @@ användas för förslaget.
    Terminen köps tillbaka till
    terminens last price (`open` i den dagens 1d-stapel, `fut_exit`, inte en avräkningskurs) och spotbenet säljs till spotens `open` samma stapel (`spot_exit`), alla fyra
    ben med takeravgift och glidning. PnL i mynt = n · storlek · (1/`fut_exit` − 1/`fut0`), utträdesavgiften dras i mynt på notionellt värde vid
-   `fut_exit`. Rulla till nästa serie bara om den är valbar enligt `universe_at` den dagen. Utträdesdagen är fastlagd av kalendern, inte av pris.
+   `fut_exit`. Rulla till nästa serie bara om den var valbar enligt `universe_at` på **beslutsdagen, dagen före fyllningen** (stängning dagen före utträdesdagen); utträdesdagens egen stapel är inte färdig vid 00:00 UTC och används aldrig för valet (`basis_costs.select_for_fill`). *Den tidigare formuleringen "valbar på utträdesdagen" i PR #116 är ersatt.* Utträdesdagen är fastlagd av kalendern, inte av pris.
    **Test:** utan avgifter är avkastningen exakt `(fut0/spot0) · (spot_exit/fut_exit) − 1` för olika prisvägar, och vid noll basis är den bokförda
    kostnaden 50 bp (stress 2,5× ger 124,2 bp; budgeten är additiv och därför en övre gräns inom 1 bp).
    **Förfallsvarianten (`hold_cycle`) är en annan modell** med ett slutpris (avräkning) och 45 bp; den används inte av förslaget. Vill en senare

@@ -142,6 +142,9 @@ def _has_traded_bar(r: dict, day: str) -> bool:
     return any(a <= day <= b for a, b in r.get("traded_runs") or [])
 
 
+has_traded_bar = _has_traded_bar      # offentligt namn för motorn
+
+
 def _tradable(r: dict, day: str) -> bool:
     """Valbar först när serien var offentligt meddelad och en verifierad handelsstapel finns beslutsdagen."""
     return bool(r.get("data_checked") and r["status"] == "announced_and_observed" and r["announced_on"]

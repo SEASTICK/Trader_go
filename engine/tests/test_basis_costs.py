@@ -248,3 +248,49 @@ def test_sista_markprisdag_är_dagen_före_utträdesdagen():
     assert dt.date(2021, 6, 18) not in days                        # utträdesdagens stapel läses inte
     assert len(days) == 83                                         # som kalendern: 2021-03-27 till 2021-06-18
     assert held_mark_days(dt.date(2021, 6, 18), dt.date(2021, 9, 24))[-1] == dt.date(2021, 9, 16)
+
+
+# ------------------------------------------------------------------ rullning: valet använder bara dagen före fyllningen
+def _serie(first="2021-03-01", last="2021-06-25", runs=None, announced="2021-02-20", expiry="2021-06-25", und="ADA"):
+    return {"underlying": und, "expiry": expiry, "announced_on": announced, "status": "announced_and_observed", "data_checked": True,
+            "first_traded_bar": first, "last_traded_bar": last, "traded_runs": runs if runs is not None else [[first, last]]}
+
+
+def test_rullningsbeslut_vid_0000_ändras_inte_av_utträdesdagens_saknade_eller_nollvolymstapel():
+    import datetime as dt
+    from traderlab.basis_costs import roll_decision_day, select_for_fill
+    fill = dt.date(2021, 6, 18)                                  # utträdesdag = fyllningsdag för nästa serie
+    assert roll_decision_day(fill) == dt.date(2021, 6, 17)
+    ok = _serie(runs=[["2021-03-01", "2021-06-25"]])
+    saknas = _serie(runs=[["2021-03-01", "2021-06-17"], ["2021-06-19", "2021-06-25"]])          # 06-18 saknas eller har nollvolym
+    assert select_for_fill([ok], "ADA", "2021-06-25", fill) is True
+    assert select_for_fill([saknas], "ADA", "2021-06-25", fill) is True                          # beslutet oförändrat: föregående dag är valbar
+    from traderlab.pit_universe import universe_at
+    assert universe_at([saknas], "2021-06-18", ("ADA",)) == []                                   # med fyllningsdagens data hade valet ändrats
+    # föregående dag saknar handel: platt, oavsett vad fyllningsdagen visar
+    ej = _serie(runs=[["2021-03-01", "2021-06-16"], ["2021-06-18", "2021-06-25"]])
+    assert select_for_fill([ej], "ADA", "2021-06-25", fill) is False
+
+
+def test_saknad_eller_nollvolym_fyllningsstapel_efter_beslut_är_ogiltig_inte_platt():
+    import datetime as dt
+    from traderlab.basis_costs import InvalidFill, select_for_fill, verify_fill_bar
+    fill = dt.date(2021, 6, 18)
+    r = _serie(runs=[["2021-03-01", "2021-06-17"], ["2021-06-19", "2021-06-25"]])
+    assert select_for_fill([r], "ADA", "2021-06-25", fill)                                        # valbar vid beslutet
+    with pytest.raises(InvalidFill):
+        verify_fill_bar(r, fill)                                                                   # men fyllningsstapeln saknas
+    verify_fill_bar(_serie(), fill)                                                                # finns: inget fel
+
+
+def test_likviditetstaket_använder_bara_dagar_till_och_med_beslutsdagen():
+    import datetime as dt
+    from traderlab.basis_costs import liquidity_cap_usd
+    fill = dt.date(2021, 6, 18)
+    vol = {(dt.date(2021, 5, 1) + dt.timedelta(days=i)).isoformat(): 1000.0 for i in range(48)}   # t.o.m. 2021-06-17
+    base = liquidity_cap_usd(vol, fill)
+    assert base == pytest.approx(0.02 * 1000.0 * 10.0)
+    vol["2021-06-18"] = 10_000_000.0                                                              # fyllningsdagens stapel: ignoreras
+    vol["2021-06-19"] = 0.0
+    assert liquidity_cap_usd(vol, fill) == base
+    assert liquidity_cap_usd({k: v for k, v in list(vol.items())[:10]}, fill) is None              # färre än 20 handelsdagar: platt
