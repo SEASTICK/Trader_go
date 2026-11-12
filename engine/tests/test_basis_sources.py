@@ -142,3 +142,24 @@ def test_binance_docs_returns_excerpts_and_reports_unreadable_pages():
     assert r["faq_pnl"]["readable"] and "Unrealized" in r["faq_pnl"]["excerpts"]
     assert "node" not in r["faq_pnl"]["excerpts"]["Unrealized"][0]   # ren text, inga JSON-tecken
     assert r["faq_margin_liquidation"]["readable"] is False and "451" in r["faq_margin_liquidation"]["error"]
+
+
+def test_announcements_filtrerar_och_läser_relevanta_artiklar():
+    import json as _json
+    from traderlab.data import basis_sources as bs
+
+    def opener(url, headers=None, tries=4):
+        if "list/query" in url:
+            page = int(url.split("pageNo=")[1].split("&")[0])
+            if "catalogId=49" in url and page == 1:
+                arts = [{"title": "Binance Futures Will Launch COIN-Margined ADAUSD Quarterly Contracts", "code": "abc", "releaseDate": 1600000000000},
+                        {"title": "Binance Will List FOO", "code": "zzz", "releaseDate": 1600000000000}]
+                return _json.dumps({"data": {"catalogs": [{"articles": arts}]}}).encode()
+            return _json.dumps({"data": {"catalogs": [{"articles": []}]}}).encode()
+        body = _json.dumps({"node": "root", "child": [{"node": "text", "text": "Each contract is worth 10 USD. Launch tomorrow."}]})
+        return _json.dumps({"data": {"body": body}}).encode()
+
+    out = bs.binance_announcements(opener, max_pages=3)
+    assert out["matching_titles"] == 1 and out["read"] == 1
+    art = out["articles"][0]
+    assert art["released"] == "2020-09-13" and any("10 USD" in e for e in art["excerpts"])
