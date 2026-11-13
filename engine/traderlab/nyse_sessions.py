@@ -150,7 +150,8 @@ def reconcile(sessions: pd.DatetimeIndex | None = None, ledger: pd.DataFrame | N
         problems.append("ledger-datum som är sessioner")
     if not expected.equals(pd.DatetimeIndex(sessions)):
         problems.append("sessionerna är inte vardagar minus ledgern")
-    verified = ledger["verified_source"].astype(str).str.strip().ne("") & ledger["verified_by"].astype(str).str.strip().ne("") & ledger["verified_date"].astype(str).str.strip().ne("")
+    src = ledger["verified_source"].astype(str).str.strip()
+    verified = src.ne("") & src.str.lower().ne("saknas") & ledger["verified_by"].astype(str).str.strip().ne("") & ledger["verified_date"].astype(str).str.strip().ne("")     # "saknas" = ingen officiell källa: räknas som overifierad
     return {"ok": not problems, "problems": problems, "ledger_rows": int(len(ledger)), "verified_rows": int(verified.sum()), "unverified_rows": int((~verified).sum()),
             "fully_verified": bool(verified.all()), "sessions": int(len(sessions))}
 

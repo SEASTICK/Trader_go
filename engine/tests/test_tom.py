@@ -313,6 +313,10 @@ def test_verifieringsstatus_kraver_kalla_person_och_datum_pa_varje_rad():
     part.loc[0, "verified_date"] = ""
     r = nyse_sessions.reconcile(sessions, part)
     assert r["verified_rows"] == 175 and r["fully_verified"] is False
+    none = full.copy()
+    none.loc[3, "verified_source"] = "saknas"                                                                          # ingen officiell källa för raden: räknas som overifierad
+    r2 = nyse_sessions.reconcile(sessions, none)
+    assert r2["verified_rows"] == 175 and r2["fully_verified"] is False
 
 
 def test_standardbeteendet_ar_ogiltig_tills_kalendern_ar_verifierad(monkeypatch):
