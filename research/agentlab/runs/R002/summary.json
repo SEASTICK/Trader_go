@@ -1,0 +1,120 @@
+{
+ "run": "R002",
+ "seconds": 19.8,
+ "ideas_generated": 150,
+ "ideas_selected": 30,
+ "evaluated_versions": 31,
+ "controls": 8,
+ "controls_advanced": 0,
+ "verdicts": {
+  "REJECT": 29,
+  "PROMISING": 1,
+  "ITERATED": 1
+ },
+ "families": {
+  "funding_carry": {
+   "tested": 6,
+   "rejected": 6,
+   "advanced": 0,
+   "best_disc_sharpe": 0.9380217125027557
+  },
+  "trend_ma": {
+   "tested": 6,
+   "rejected": 6,
+   "advanced": 0,
+   "best_disc_sharpe": 0.952199452339963
+  },
+  "ts_mom": {
+   "tested": 5,
+   "rejected": 5,
+   "advanced": 0,
+   "best_disc_sharpe": 1.0363972876191385
+  },
+  "ensemble_rank": {
+   "tested": 2,
+   "rejected": 1,
+   "advanced": 1,
+   "best_disc_sharpe": 1.7406985204047536
+  },
+  "lowvol": {
+   "tested": 1,
+   "rejected": 1,
+   "advanced": 0,
+   "best_disc_sharpe": 0.3664495247047731
+  },
+  "donchian": {
+   "tested": 1,
+   "rejected": 1,
+   "advanced": 0,
+   "best_disc_sharpe": 0.11043421094906514
+  },
+  "mtf_trend": {
+   "tested": 1,
+   "rejected": 1,
+   "advanced": 0,
+   "best_disc_sharpe": 0.8207722560843457
+  },
+  "xs_rev": {
+   "tested": 1,
+   "rejected": 1,
+   "advanced": 0,
+   "best_disc_sharpe": -1.6792665230367851
+  },
+  "ml_xs": {
+   "tested": 1,
+   "rejected": 1,
+   "advanced": 1,
+   "best_disc_sharpe": 1.6548342805848466
+  },
+  "bab": {
+   "tested": 1,
+   "rejected": 1,
+   "advanced": 0,
+   "best_disc_sharpe": 1.323980310343068
+  },
+  "funding_fade": {
+   "tested": 1,
+   "rejected": 1,
+   "advanced": 0,
+   "best_disc_sharpe": -1.3936867077172461
+  },
+  "pairs": {
+   "tested": 1,
+   "rejected": 1,
+   "advanced": 0,
+   "best_disc_sharpe": -0.8271688813804147
+  },
+  "xs_mom": {
+   "tested": 1,
+   "rejected": 0,
+   "advanced": 0,
+   "best_disc_sharpe": 0.6147414699538545
+  },
+  "vol_regime": {
+   "tested": 2,
+   "rejected": 2,
+   "advanced": 0,
+   "best_disc_sharpe": 0.7949212194585592
+  },
+  "vol_shock": {
+   "tested": 1,
+   "rejected": 1,
+   "advanced": 0,
+   "best_disc_sharpe": 0.6375156904549165
+  }
+ },
+ "trials": 375,
+ "experiments_registered": 82,
+ "learnings": [
+  "ML slog den enkla tumregeln xs_mom i 1 av 1 körningar (discovery).",
+  "Negativa kontroller: 8 slumpstrategier, 0 gick vidare förbi discovery (falsklarmsfrekvens 0/8).",
+  "Vanligaste dödsorsaker: inte skild från slumpen (30); olönsam med 2,5 gånger kostnaderna (16); deflated Sharpe 0.00 med 13.0 effektiva försök (9); deflated Sharpe 0.02 med 13.0 effektiva försök (4); ingen rimlig ändring finns (4)"
+ ],
+ "known_issues": [],
+ "sealed_looks": 3,
+ "promising": [
+  "ensemble_rank(members=['xs_mom', 'funding_carry', 'lowvol'], q=0.3, rebal=3) [PROMISING, poäng 66.9]"
+ ],
+ "workers": 4,
+ "agents_spawned": 108
+}

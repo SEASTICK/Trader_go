@@ -1,0 +1,111 @@
+{
+ "run": "R004",
+ "seconds": 80.2,
+ "ideas_generated": 200,
+ "ideas_selected": 36,
+ "evaluated_versions": 42,
+ "controls": 8,
+ "controls_advanced": 0,
+ "verdicts": {
+  "REJECT": 36,
+  "ITERATED": 6
+ },
+ "families": {
+  "ml_xs": {
+   "tested": 13,
+   "rejected": 8,
+   "advanced": 0,
+   "best_disc_sharpe": 1.3992141447798685
+  },
+  "xs_mom": {
+   "tested": 9,
+   "rejected": 8,
+   "advanced": 0,
+   "best_disc_sharpe": 1.2539489749032637
+  },
+  "funding_carry": {
+   "tested": 8,
+   "rejected": 8,
+   "advanced": 0,
+   "best_disc_sharpe": 0.7051392488593167
+  },
+  "ts_mom": {
+   "tested": 2,
+   "rejected": 2,
+   "advanced": 0,
+   "best_disc_sharpe": 0.4705428367970404
+  },
+  "trend_ma": {
+   "tested": 1,
+   "rejected": 1,
+   "advanced": 0,
+   "best_disc_sharpe": 0.692795984730791
+  },
+  "xs_rev": {
+   "tested": 1,
+   "rejected": 1,
+   "advanced": 0,
+   "best_disc_sharpe": -0.8876869994301344
+  },
+  "lowvol": {
+   "tested": 1,
+   "rejected": 1,
+   "advanced": 0,
+   "best_disc_sharpe": 0.47016247494761976
+  },
+  "mtf_trend": {
+   "tested": 1,
+   "rejected": 1,
+   "advanced": 0,
+   "best_disc_sharpe": 0.49155126592256415
+  },
+  "donchian": {
+   "tested": 1,
+   "rejected": 1,
+   "advanced": 0,
+   "best_disc_sharpe": 1.319852289385156
+  },
+  "bab": {
+   "tested": 1,
+   "rejected": 1,
+   "advanced": 1,
+   "best_disc_sharpe": 1.7036523376883612
+  },
+  "funding_fade": {
+   "tested": 1,
+   "rejected": 1,
+   "advanced": 0,
+   "best_disc_sharpe": -0.5888610388155279
+  },
+  "pairs": {
+   "tested": 1,
+   "rejected": 1,
+   "advanced": 0,
+   "best_disc_sharpe": -0.6191342273607057
+  },
+  "vol_regime": {
+   "tested": 1,
+   "rejected": 1,
+   "advanced": 0,
+   "best_disc_sharpe": -0.25393350843406565
+  },
+  "vol_shock": {
+   "tested": 1,
+   "rejected": 1,
+   "advanced": 0,
+   "best_disc_sharpe": 0.5832084361341089
+  }
+ },
+ "trials": 770,
+ "experiments_registered": 173,
+ "learnings": [
+  "ML slog den enkla tumregeln xs_mom i 2 av 13 körningar (discovery).",
+  "Negativa kontroller: 8 slumpstrategier, 0 gick vidare förbi discovery (falsklarmsfrekvens 0/8).",
+  "Vanligaste dödsorsaker: inte skild från slumpen (33); olönsam med 2,5 gånger kostnaderna (23); deflated Sharpe 0.00 med 15.0 effektiva försök (10); deflated Sharpe 0.01 med 15.0 effektiva försök (8); ingen rimlig ändring finns (4)"
+ ],
+ "known_issues": [],
+ "sealed_looks": 5,
+ "promising": [],
+ "workers": 4,
+ "agents_spawned": 149
+}

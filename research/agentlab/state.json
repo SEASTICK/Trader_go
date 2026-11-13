@@ -1,0 +1,4655 @@
+{
+ "runs": 4,
+ "trials": 770,
+ "experiments": 173,
+ "tested_keys": [
+  "1e5d86fb7081",
+  "035fe48512b4",
+  "f915e6991d82",
+  "123800b28405",
+  "2a9c14525d0b",
+  "5a31a06ad38a",
+  "cbc20fd20dc6",
+  "7121ab6b68f7",
+  "a740d00e97d9",
+  "79c521890543",
+  "be7cf3d8a71a",
+  "839deeffa5cb",
+  "ccaf50b9e6e1",
+  "04474bcc8b0b",
+  "0ce3119d0d39",
+  "50b6cdd942f3",
+  "44f2ddca506b",
+  "d9bc17524b39",
+  "fa9caa28ed9f",
+  "bc0966debb54",
+  "0d897a5028c6",
+  "f29d416cf6bb",
+  "bbbdfe68b142",
+  "5c009b8a9a02",
+  "923f8c6cdcba",
+  "60a32b8d445f",
+  "a12a69b3ce7a",
+  "d3391b1624d5",
+  "b01872143813",
+  "f438a88c0e73",
+  "cd98b6e8ba94",
+  "6d167dc3c138",
+  "0f415b1b59df",
+  "cd952e677e73",
+  "9870d0c5fe44",
+  "a5ef4bcaa794",
+  "03b499cfae9d",
+  "2b4a36b0f1c6",
+  "fe3f386819ae",
+  "3e965c3d9604",
+  "e5caf966d23a",
+  "18bc45c1b7e4",
+  "e2c80fd152a3",
+  "1399020269c6",
+  "b392ed621e7d",
+  "21702fbc0491",
+  "610bac07a444",
+  "5d24d119a900",
+  "ca61a35e45c9",
+  "c06e40fcb5b6",
+  "bfe0c4ac988e",
+  "0051738937c5",
+  "0f6acdf9d385",
+  "c3c32c09d34b",
+  "269dbe5519ff",
+  "47f7352a2da9",
+  "27fcfdb40901",
+  "050384bce67c",
+  "c03050811847",
+  "7e474a16cdca",
+  "50f5c2d41f49",
+  "35840c2b5fbd",
+  "812502bdeae4",
+  "e949ce60b89f",
+  "4700e199c34e",
+  "bb7584cf8286",
+  "6be56afb0eee",
+  "c6fad4ee5e74",
+  "5c7be0d87560",
+  "cc7da2befafe",
+  "957b9eac894b",
+  "9a855dabba77",
+  "068d6651fdbf",
+  "cd98b6e8ba94",
+  "6d167dc3c138",
+  "0f415b1b59df",
+  "cd952e677e73",
+  "9870d0c5fe44",
+  "a5ef4bcaa794",
+  "03b499cfae9d",
+  "2b4a36b0f1c6",
+  "e557e6fa0403",
+  "59427e56d85e",
+  "7da0e0754215",
+  "20eb6622fa58",
+  "7254b3889fb0",
+  "1347dae07a3c",
+  "276a77db4812",
+  "53f492c11f78",
+  "9190134e68d7",
+  "3d9b8ffbb802",
+  "678bfce8593c",
+  "f572a23de072",
+  "2c6df3942e82",
+  "9e60b8bdc7e3",
+  "6be5a5e07b90",
+  "119fe6fff8ee",
+  "2d3d4d5026e5",
+  "ed4638b0aaff",
+  "89ead85f5439",
+  "decf78427a8e",
+  "977b8b09f618",
+  "b12576e396e7",
+  "d6d8f6bd361c",
+  "1ae762b211aa",
+  "bc64ad45c7c5",
+  "382d1253c48d",
+  "aa8782e7f9b3",
+  "e16dd8d38cc9",
+  "99cac0a48675",
+  "bc95749962a7",
+  "d70f5dba1c59",
+  "cd98b6e8ba94",
+  "6d167dc3c138",
+  "0f415b1b59df",
+  "cd952e677e73",
+  "9870d0c5fe44",
+  "a5ef4bcaa794",
+  "03b499cfae9d",
+  "2b4a36b0f1c6",
+  "bad2ed0dfa50",
+  "2f74bad8e366",
+  "71dd6e73beb6",
+  "7f0e63fe9594",
+  "828eed5084a9",
+  "33d113825485",
+  "35c4bf21e658",
+  "261ecb0215fc",
+  "1c66336e44df",
+  "9ce75bb12daf",
+  "b80e10a4d56f",
+  "108fb9dfbab8",
+  "3a2cc9a8722a",
+  "ac553030b5e8",
+  "68d1686656ee",
+  "d04389fc68c9",
+  "fa584c72d55b",
+  "60beab4c2edb",
+  "9094376567ea",
+  "38d1f1fc9626",
+  "35eacbd54a3c",
+  "f41fe82da176",
+  "f3c43c24000e",
+  "856ccb9a3b6a",
+  "17bc2f0757ff",
+  "041952d89f61",
+  "08dadf4f9f5f",
+  "a59f1cf2d10b",
+  "560fd86dade2",
+  "29bc6ee37a82",
+  "e3fa0cd38ca6",
+  "24c2a0a4fa80",
+  "b1162662ddd5",
+  "5ad5972ba49b",
+  "39a597f0cde6",
+  "2bca23e0cceb",
+  "d44ccfbc8af1",
+  "8fac032a197c",
+  "cd98b6e8ba94",
+  "6d167dc3c138",
+  "0f415b1b59df",
+  "cd952e677e73",
+  "9870d0c5fe44",
+  "a5ef4bcaa794",
+  "03b499cfae9d",
+  "2b4a36b0f1c6",
+  "80f79228f807",
+  "62a877ce0588",
+  "0d80b931cba5",
+  "43c8cd634567",
+  "4903600c43fc",
+  "735b57803b0f"
+ ],
+ "family_stats": {
+  "xs_mom": {
+   "tested": 22,
+   "rejected": 20,
+   "promising": 0,
+   "best_score": 0.0,
+   "trials": 0
+  },
+  "xs_rev": {
+   "tested": 5,
+   "rejected": 5,
+   "promising": 0,
+   "best_score": 0.0,
+   "trials": 0
+  },
+  "vol_regime": {
+   "tested": 5,
+   "rejected": 5,
+   "promising": 0,
+   "best_score": 0.0,
+   "trials": 0
+  },
+  "trend_ma": {
+   "tested": 13,
+   "rejected": 12,
+   "promising": 0,
+   "best_score": 0.0,
+   "trials": 0
+  },
+  "donchian": {
+   "tested": 5,
+   "rejected": 5,
+   "promising": 0,
+   "best_score": 0.0,
+   "trials": 0
+  },
+  "bab": {
+   "tested": 4,
+   "rejected": 4,
+   "promising": 0,
+   "best_score": 51.8,
+   "trials": 0
+  },
+  "funding_carry": {
+   "tested": 22,
+   "rejected": 21,
+   "promising": 0,
+   "best_score": 0.0,
+   "trials": 0
+  },
+  "lowvol": {
+   "tested": 5,
+   "rejected": 5,
+   "promising": 0,
+   "best_score": 0.0,
+   "trials": 0
+  },
+  "pairs": {
+   "tested": 4,
+   "rejected": 4,
+   "promising": 0,
+   "best_score": 0.0,
+   "trials": 0
+  },
+  "ensemble_rank": {
+   "tested": 12,
+   "rejected": 9,
+   "promising": 1,
+   "best_score": 66.9,
+   "trials": 0
+  },
+  "mtf_trend": {
+   "tested": 5,
+   "rejected": 5,
+   "promising": 0,
+   "best_score": 0.0,
+   "trials": 0
+  },
+  "ml_xs": {
+   "tested": 21,
+   "rejected": 13,
+   "promising": 0,
+   "best_score": 48.3,
+   "trials": 0
+  },
+  "vol_shock": {
+   "tested": 4,
+   "rejected": 4,
+   "promising": 0,
+   "best_score": 0.0,
+   "trials": 0
+  },
+  "ts_mom": {
+   "tested": 9,
+   "rejected": 9,
+   "promising": 0,
+   "best_score": 0.0,
+   "trials": 0
+  },
+  "funding_fade": {
+   "tested": 4,
+   "rejected": 4,
+   "promising": 0,
+   "best_score": 0.0,
+   "trials": 0
+  },
+  "placebo": {
+   "tested": 0,
+   "rejected": 0,
+   "promising": 0,
+   "best_score": 0.0,
+   "trials": 0
+  }
+ },
+ "best": [
+  {
+   "key": "610bac07a444",
+   "desc": "ensemble_rank({'members': ['xs_mom', 'funding_carry', 'lowvol'], 'q': 0.3, 'rebal': 3})",
+   "verdict": "MORE_RESEARCH",
+   "score": 66.9
+  },
+  {
+   "key": "2d3d4d5026e5",
+   "desc": "ensemble_rank({'members': ['xs_mom', 'funding_carry', 'lowvol'], 'q': 0.2, 'rebal': 7})",
+   "verdict": "REJECT",
+   "score": 55.8
+  },
+  {
+   "key": "108fb9dfbab8",
+   "desc": "bab({'vt': 0.2, 'k': 60, 'q': 0.3, 'rebal': 7, 'uni': 50})",
+   "verdict": "REJECT",
+   "score": 51.8
+  },
+  {
+   "key": "0051738937c5",
+   "desc": "ml_xs({'model': 'lgbm', 'h': 3, 'q': 0.3, 'retrain': 60, 'uni': 30})",
+   "verdict": "REJECT",
+   "score": 48.3
+  }
+ ],
+ "rejected": [
+  {
+   "key": "1e5d86fb7081",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=0, q=0.2, rebal=3, uni=30, vt=0.2, k=120)",
+   "reason": "inte skild från slumpen (permutation p=0.22); deflated Sharpe 0.03 med 15.9 effektiva försök",
+   "run": "R001"
+  },
+  {
+   "key": "035fe48512b4",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0.2, k=14, q=0.3, rebal=7, uni=50)",
+   "reason": "svag discovery-Sharpe 0.10 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.43); deflated Sharpe 0.01 med 15.9 effekt",
+   "run": "R001"
+  },
+  {
+   "key": "f915e6991d82",
+   "family": "trend_ma",
+   "desc": "trend_ma(vt=0, n=100, basket=2)",
+   "reason": "inte skild från slumpen (permutation p=0.52); deflated Sharpe 0.04 med 15.9 effektiva försök",
+   "run": "R001"
+  },
+  {
+   "key": "2a9c14525d0b",
+   "family": "ts_mom",
+   "desc": "ts_mom(long_only=False, vt=0, uni=5, k=160)",
+   "reason": "inte skild från slumpen (permutation p=0.32); deflated Sharpe 0.09 med 15.9 effektiva försök",
+   "run": "R001"
+  },
+  {
+   "key": "5a31a06ad38a",
+   "family": "xs_rev",
+   "desc": "xs_rev(q=0.2, rebal=2, uni=30, vt=0.2, k=3)",
+   "reason": "svag discovery-Sharpe -2.00 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.97); deflated Sharpe 0.00 med 15.9 effek",
+   "run": "R001"
+  },
+  {
+   "key": "cbc20fd20dc6",
+   "family": "donchian",
+   "desc": "donchian(vt=0.15, n=40, basket=5)",
+   "reason": "inte skild från slumpen (permutation p=0.30); deflated Sharpe 0.04 med 15.9 effektiva försök",
+   "run": "R001"
+  },
+  {
+   "key": "7121ab6b68f7",
+   "family": "lowvol",
+   "desc": "lowvol(vt=0, k=40, q=0.2, rebal=7, uni=30)",
+   "reason": "svag discovery-Sharpe 0.21 efter kostnad; inte skild från slumpen (permutation p=0.29); deflated Sharpe 0.02 med 15.9 effektiva försök",
+   "run": "R001"
+  },
+  {
+   "key": "a740d00e97d9",
+   "family": "mtf_trend",
+   "desc": "mtf_trend(vt=0.15, ks=[20, 60, 180], basket=10)",
+   "reason": "inte skild från slumpen (permutation p=0.41); deflated Sharpe 0.01 med 15.9 effektiva försök",
+   "run": "R001"
+  },
+  {
+   "key": "be7cf3d8a71a",
+   "family": "vol_regime",
+   "desc": "vol_regime(base=ts_mom, k_vol=20, mode=high, k=30, uni=30)",
+   "reason": "ingen rimlig ändring finns",
+   "run": "R001"
+  },
+  {
+   "key": "839deeffa5cb",
+   "family": "bab",
+   "desc": "bab(vt=0, k=180, q=0.3, rebal=14, uni=30)",
+   "reason": "deflated Sharpe 0.12 med 15.9 effektiva försök",
+   "run": "R001"
+  },
+  {
+   "key": "ccaf50b9e6e1",
+   "family": "pairs",
+   "desc": "pairs(lb=40, z_in=2.0, z_out=0.5, npairs=6)",
+   "reason": "läckage: vikter för dag t ändras av framtida data; svag discovery-Sharpe -1.32 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permu",
+   "run": "R001"
+  },
+  {
+   "key": "04474bcc8b0b",
+   "family": "funding_fade",
+   "desc": "funding_fade(k=7, z=1.5, hold=7, uni=30)",
+   "reason": "svag discovery-Sharpe -0.61 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.90); deflated Sharpe 0.00 med 15.9 effek",
+   "run": "R001"
+  },
+  {
+   "key": "0ce3119d0d39",
+   "family": "vol_shock",
+   "desc": "vol_shock(z=3.0, mode=fade, hold=3, uni=30)",
+   "reason": "svag discovery-Sharpe -0.78 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.76); deflated Sharpe 0.00 med 15.9 effek",
+   "run": "R001"
+  },
+  {
+   "key": "50b6cdd942f3",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=1, q=0.3, rebal=7, uni=30, vt=0, k=90)",
+   "reason": "inte skild från slumpen (permutation p=0.19); deflated Sharpe 0.03 med 15.9 effektiva försök",
+   "run": "R001"
+  },
+  {
+   "key": "44f2ddca506b",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0.2, k=30, q=0.2, rebal=3, uni=30)",
+   "reason": "svag discovery-Sharpe -0.70 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.77); deflated Sharpe 0.00 med 15.9 effek",
+   "run": "R001"
+  },
+  {
+   "key": "d9bc17524b39",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0, k=3, q=0.3, rebal=7, uni=50)",
+   "reason": "ingen rimlig ändring finns",
+   "run": "R001"
+  },
+  {
+   "key": "fa9caa28ed9f",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=3, q=0.3, rebal=14, uni=50, vt=0.2, k=14)",
+   "reason": "inte skild från slumpen (permutation p=0.19); deflated Sharpe 0.06 med 15.9 effektiva försök",
+   "run": "R001"
+  },
+  {
+   "key": "bc0966debb54",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=0, q=0.2, rebal=3, uni=20, vt=0.2, k=120)",
+   "reason": "svag discovery-Sharpe -0.24 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.57); deflated Sharpe 0.00 med 15.9 effek",
+   "run": "R001"
+  },
+  {
+   "key": "0d897a5028c6",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=3, q=0.3, rebal=7, uni=50, vt=0, k=90)",
+   "reason": "svag discovery-Sharpe -0.31 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.43); deflated Sharpe 0.00 med 15.9 effek",
+   "run": "R001"
+  },
+  {
+   "key": "bbbdfe68b142",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=3, q=0.2, rebal=3, uni=50, vt=0.2, k=120)",
+   "reason": "svag discovery-Sharpe 0.14 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.30); deflated Sharpe 0.02 med 15.9 effekt",
+   "run": "R001"
+  },
+  {
+   "key": "5c009b8a9a02",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0.2, k=14, q=0.2, rebal=3, uni=30)",
+   "reason": "svag discovery-Sharpe -0.50 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.79); deflated Sharpe 0.00 med 15.9 effek",
+   "run": "R001"
+  },
+  {
+   "key": "923f8c6cdcba",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0.2, k=3, q=0.3, rebal=7, uni=50)",
+   "reason": "olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.25); deflated Sharpe 0.04 med 15.9 effektiva försök",
+   "run": "R001"
+  },
+  {
+   "key": "60a32b8d445f",
+   "family": "trend_ma",
+   "desc": "trend_ma(vt=0, n=20, basket=10)",
+   "reason": "inte skild från slumpen (permutation p=0.70); deflated Sharpe 0.04 med 15.9 effektiva försök",
+   "run": "R001"
+  },
+  {
+   "key": "a12a69b3ce7a",
+   "family": "ensemble_rank",
+   "desc": "ensemble_rank(members=['xs_mom', 'funding_carry', 'lowvol'], q=0.2, rebal=3)",
+   "reason": "deflated Sharpe 0.46 med 15.9 effektiva försök",
+   "run": "R001"
+  },
+  {
+   "key": "d3391b1624d5",
+   "family": "trend_ma",
+   "desc": "trend_ma(vt=0, n=50, basket=5)",
+   "reason": "inte skild från slumpen (permutation p=0.54); deflated Sharpe 0.06 med 15.9 effektiva försök",
+   "run": "R001"
+  },
+  {
+   "key": "fe3f386819ae",
+   "family": "ensemble_rank",
+   "desc": "ensemble_rank(members=['funding_carry', 'lowvol', 'bab'], q=0.3, rebal=3)",
+   "reason": "deflated Sharpe 0.35 med 15.5 effektiva försök",
+   "run": "R001"
+  },
+  {
+   "key": "3e965c3d9604",
+   "family": "ml_xs",
+   "desc": "ml_xs(model=ridge, h=3, q=0.3, retrain=90, uni=30)",
+   "reason": "deflated Sharpe 0.50 med 15.5 effektiva försök",
+   "run": "R001"
+  },
+  {
+   "key": "e5caf966d23a",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0, k=30, q=0.3, rebal=7, uni=30)",
+   "reason": "svag discovery-Sharpe 0.18 efter kostnad; inte skild från slumpen (permutation p=0.39); deflated Sharpe 0.02 med 15.5 effektiva försök",
+   "run": "R001"
+  },
+  {
+   "key": "18bc45c1b7e4",
+   "family": "ensemble_rank",
+   "desc": "ensemble_rank(members=['xs_mom', 'xs_rev', 'bab'], q=0.3, rebal=7)",
+   "reason": "ingen rimlig ändring finns",
+   "run": "R001"
+  },
+  {
+   "key": "e2c80fd152a3",
+   "family": "trend_ma",
+   "desc": "trend_ma(vt=0.15, n=50, basket=2)",
+   "reason": "inte skild från slumpen (permutation p=0.29); deflated Sharpe 0.08 med 15.5 effektiva försök",
+   "run": "R001"
+  },
+  {
+   "key": "1399020269c6",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0, k=7, q=0.2, rebal=3, uni=50)",
+   "reason": "svag discovery-Sharpe 0.16 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.35); deflated Sharpe 0.03 med 13.0 effekt",
+   "run": "R002"
+  },
+  {
+   "key": "b392ed621e7d",
+   "family": "trend_ma",
+   "desc": "trend_ma(vt=0.15, n=50, basket=5)",
+   "reason": "inte skild från slumpen (permutation p=0.26); deflated Sharpe 0.06 med 13.0 effektiva försök",
+   "run": "R002"
+  },
+  {
+   "key": "21702fbc0491",
+   "family": "ts_mom",
+   "desc": "ts_mom(long_only=True, vt=0.15, uni=5, k=80)",
+   "reason": "svag discovery-Sharpe 0.14 efter kostnad; inte skild från slumpen (permutation p=0.84); deflated Sharpe 0.03 med 13.0 effektiva försök",
+   "run": "R002"
+  },
+  {
+   "key": "5d24d119a900",
+   "family": "lowvol",
+   "desc": "lowvol(vt=0, k=90, q=0.3, rebal=14, uni=50)",
+   "reason": "inte skild från slumpen (permutation p=0.16); deflated Sharpe 0.06 med 13.0 effektiva försök",
+   "run": "R002"
+  },
+  {
+   "key": "ca61a35e45c9",
+   "family": "donchian",
+   "desc": "donchian(vt=0, n=80, basket=5)",
+   "reason": "svag discovery-Sharpe 0.11 efter kostnad; inte skild från slumpen (permutation p=0.87); deflated Sharpe 0.02 med 13.0 effektiva försök; slår inte köp-och-behåll",
+   "run": "R002"
+  },
+  {
+   "key": "c06e40fcb5b6",
+   "family": "mtf_trend",
+   "desc": "mtf_trend(vt=0, ks=[20, 60, 180], basket=5)",
+   "reason": "inte skild från slumpen (permutation p=0.34); deflated Sharpe 0.18 med 13.0 effektiva försök",
+   "run": "R002"
+  },
+  {
+   "key": "bfe0c4ac988e",
+   "family": "xs_rev",
+   "desc": "xs_rev(q=0.3, rebal=3, uni=30, vt=0.2, k=5)",
+   "reason": "svag discovery-Sharpe -1.68 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.98); deflated Sharpe 0.00 med 13.0 effek",
+   "run": "R002"
+  },
+  {
+   "key": "0f6acdf9d385",
+   "family": "bab",
+   "desc": "bab(vt=0.2, k=90, q=0.2, rebal=7, uni=30)",
+   "reason": "deflated Sharpe 0.44 med 13.0 effektiva försök",
+   "run": "R002"
+  },
+  {
+   "key": "c3c32c09d34b",
+   "family": "funding_fade",
+   "desc": "funding_fade(k=7, z=2.0, hold=3, uni=30)",
+   "reason": "svag discovery-Sharpe -1.39 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=1.00); deflated Sharpe 0.00 med 13.0 effek",
+   "run": "R002"
+  },
+  {
+   "key": "269dbe5519ff",
+   "family": "pairs",
+   "desc": "pairs(lb=20, z_in=1.5, z_out=0.5, npairs=6)",
+   "reason": "läckage: vikter för dag t ändras av framtida data; svag discovery-Sharpe -0.83 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permu",
+   "run": "R002"
+  },
+  {
+   "key": "27fcfdb40901",
+   "family": "vol_regime",
+   "desc": "vol_regime(base=ts_mom, k_vol=20, mode=high, k=60, uni=30)",
+   "reason": "inte skild från slumpen (permutation p=0.33); deflated Sharpe 0.13 med 13.0 effektiva försök",
+   "run": "R002"
+  },
+  {
+   "key": "050384bce67c",
+   "family": "vol_shock",
+   "desc": "vol_shock(z=2.0, mode=fade, hold=3, uni=50)",
+   "reason": "ingen rimlig ändring finns",
+   "run": "R002"
+  },
+  {
+   "key": "c03050811847",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0, k=14, q=0.3, rebal=7, uni=50)",
+   "reason": "inte skild från slumpen (permutation p=0.29); deflated Sharpe 0.06 med 13.0 effektiva försök",
+   "run": "R002"
+  },
+  {
+   "key": "7e474a16cdca",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0.2, k=14, q=0.2, rebal=7, uni=30)",
+   "reason": "svag discovery-Sharpe -0.28 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.63); deflated Sharpe 0.00 med 13.0 effek",
+   "run": "R002"
+  },
+  {
+   "key": "50f5c2d41f49",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0, k=7, q=0.3, rebal=3, uni=30)",
+   "reason": "ingen rimlig ändring finns",
+   "run": "R002"
+  },
+  {
+   "key": "35840c2b5fbd",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0.2, k=14, q=0.2, rebal=7, uni=50)",
+   "reason": "svag discovery-Sharpe 0.21 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.38); deflated Sharpe 0.04 med 13.0 effekt",
+   "run": "R002"
+  },
+  {
+   "key": "812502bdeae4",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0, k=7, q=0.2, rebal=7, uni=30)",
+   "reason": "inte skild från slumpen (permutation p=0.25); deflated Sharpe 0.08 med 13.0 effektiva försök",
+   "run": "R002"
+  },
+  {
+   "key": "e949ce60b89f",
+   "family": "trend_ma",
+   "desc": "trend_ma(vt=0.15, n=50, basket=10)",
+   "reason": "inte skild från slumpen (permutation p=0.55); deflated Sharpe 0.10 med 13.0 effektiva försök",
+   "run": "R002"
+  },
+  {
+   "key": "4700e199c34e",
+   "family": "trend_ma",
+   "desc": "trend_ma(vt=0, n=200, basket=10)",
+   "reason": "svag discovery-Sharpe 0.22 efter kostnad; inte skild från slumpen (permutation p=0.83); deflated Sharpe 0.04 med 13.0 effektiva försök; slår inte köp-och-behåll",
+   "run": "R002"
+  },
+  {
+   "key": "bb7584cf8286",
+   "family": "ensemble_rank",
+   "desc": "ensemble_rank(members=['xs_mom', 'xs_rev', 'bab'], q=0.2, rebal=3)",
+   "reason": "ingen rimlig ändring finns",
+   "run": "R002"
+  },
+  {
+   "key": "6be56afb0eee",
+   "family": "ts_mom",
+   "desc": "ts_mom(long_only=True, vt=0.15, uni=5, k=160)",
+   "reason": "svag discovery-Sharpe -0.05 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.88); deflated Sharpe 0.01 med 13.0 effek",
+   "run": "R002"
+  },
+  {
+   "key": "c6fad4ee5e74",
+   "family": "trend_ma",
+   "desc": "trend_ma(vt=0, n=20, basket=2)",
+   "reason": "inte skild från slumpen (permutation p=0.33); deflated Sharpe 0.10 med 13.0 effektiva försök",
+   "run": "R002"
+  },
+  {
+   "key": "5c7be0d87560",
+   "family": "ts_mom",
+   "desc": "ts_mom(long_only=True, vt=0.15, uni=10, k=80)",
+   "reason": "svag discovery-Sharpe 0.11 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.87); deflated Sharpe 0.02 med 13.0 effekt",
+   "run": "R002"
+  },
+  {
+   "key": "cc7da2befafe",
+   "family": "ts_mom",
+   "desc": "ts_mom(long_only=True, vt=0.15, uni=10, k=40)",
+   "reason": "inte skild från slumpen (permutation p=0.30); deflated Sharpe 0.27 med 13.0 effektiva försök",
+   "run": "R002"
+  },
+  {
+   "key": "957b9eac894b",
+   "family": "ts_mom",
+   "desc": "ts_mom(long_only=True, vt=0.15, uni=5, k=10)",
+   "reason": "inte skild från slumpen (permutation p=0.44); deflated Sharpe 0.10 med 13.0 effektiva försök",
+   "run": "R002"
+  },
+  {
+   "key": "9a855dabba77",
+   "family": "trend_ma",
+   "desc": "trend_ma(vt=0.15, n=200, basket=10)",
+   "reason": "svag discovery-Sharpe 0.26 efter kostnad; inte skild från slumpen (permutation p=0.79); deflated Sharpe 0.04 med 13.0 effektiva försök",
+   "run": "R002"
+  },
+  {
+   "key": "068d6651fdbf",
+   "family": "trend_ma",
+   "desc": "trend_ma(vt=0.15, n=100, basket=5)",
+   "reason": "svag discovery-Sharpe 0.06 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.88); deflated Sharpe 0.02 med 13.0 effekt",
+   "run": "R002"
+  },
+  {
+   "key": "e557e6fa0403",
+   "family": "vol_regime",
+   "desc": "vol_regime(base=xs_mom, k_vol=20, mode=low, k=30, uni=30)",
+   "reason": "deflated Sharpe 0.17 med 13.2 effektiva försök",
+   "run": "R002"
+  },
+  {
+   "key": "0051738937c5",
+   "family": "ml_xs",
+   "desc": "ml_xs(model=lgbm, h=3, q=0.3, retrain=60, uni=30)",
+   "reason": "negativ Sharpe i valideringsåret (-1.56)",
+   "run": "R002"
+  },
+  {
+   "key": "59427e56d85e",
+   "family": "ensemble_rank",
+   "desc": "ensemble_rank(members=['xs_mom', 'xs_rev', 'bab'], q=0.3, rebal=3)",
+   "reason": "ingen rimlig ändring finns",
+   "run": "R003"
+  },
+  {
+   "key": "7da0e0754215",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=3, q=0.3, rebal=7, uni=50, vt=0.2, k=90)",
+   "reason": "svag discovery-Sharpe -0.43 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.40); deflated Sharpe 0.00 med 14.3 effek",
+   "run": "R003"
+  },
+  {
+   "key": "20eb6622fa58",
+   "family": "xs_rev",
+   "desc": "xs_rev(q=0.2, rebal=2, uni=30, vt=0, k=7)",
+   "reason": "svag discovery-Sharpe -2.22 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=1.00); deflated Sharpe 0.00 med 14.3 effek",
+   "run": "R003"
+  },
+  {
+   "key": "7254b3889fb0",
+   "family": "lowvol",
+   "desc": "lowvol(vt=0.2, k=40, q=0.3, rebal=14, uni=30)",
+   "reason": "ingen rimlig ändring finns",
+   "run": "R003"
+  },
+  {
+   "key": "1347dae07a3c",
+   "family": "donchian",
+   "desc": "donchian(vt=0, n=40, basket=10)",
+   "reason": "inte skild från slumpen (permutation p=0.47); deflated Sharpe 0.21 med 14.3 effektiva försök",
+   "run": "R003"
+  },
+  {
+   "key": "276a77db4812",
+   "family": "mtf_trend",
+   "desc": "mtf_trend(vt=0.15, ks=[20, 60, 180], basket=5)",
+   "reason": "inte skild från slumpen (permutation p=0.24); deflated Sharpe 0.04 med 14.3 effektiva försök",
+   "run": "R003"
+  },
+  {
+   "key": "9190134e68d7",
+   "family": "bab",
+   "desc": "bab(vt=0.2, k=180, q=0.3, rebal=7, uni=50)",
+   "reason": "deflated Sharpe 0.13 med 14.3 effektiva försök",
+   "run": "R003"
+  },
+  {
+   "key": "3d9b8ffbb802",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0, k=14, q=0.3, rebal=3, uni=30)",
+   "reason": "ingen rimlig ändring finns",
+   "run": "R003"
+  },
+  {
+   "key": "678bfce8593c",
+   "family": "pairs",
+   "desc": "pairs(lb=20, z_in=2.5, z_out=0.0, npairs=6)",
+   "reason": "läckage: vikter för dag t ändras av framtida data; svag discovery-Sharpe -1.26 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permu",
+   "run": "R003"
+  },
+  {
+   "key": "f572a23de072",
+   "family": "funding_fade",
+   "desc": "funding_fade(k=7, z=2.0, hold=7, uni=50)",
+   "reason": "svag discovery-Sharpe -0.00 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.69); deflated Sharpe 0.01 med 14.3 effek",
+   "run": "R003"
+  },
+  {
+   "key": "2c6df3942e82",
+   "family": "trend_ma",
+   "desc": "trend_ma(vt=0.15, n=200, basket=2)",
+   "reason": "inte skild från slumpen (permutation p=0.23); deflated Sharpe 0.20 med 14.3 effektiva försök",
+   "run": "R003"
+  },
+  {
+   "key": "9e60b8bdc7e3",
+   "family": "ts_mom",
+   "desc": "ts_mom(long_only=False, vt=0, uni=10, k=80)",
+   "reason": "svag discovery-Sharpe 0.27 efter kostnad; inte skild från slumpen (permutation p=0.40); deflated Sharpe 0.04 med 14.3 effektiva försök",
+   "run": "R003"
+  },
+  {
+   "key": "6be5a5e07b90",
+   "family": "vol_shock",
+   "desc": "vol_shock(z=3.0, mode=fade, hold=3, uni=50)",
+   "reason": "svag discovery-Sharpe -0.82 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.78); deflated Sharpe 0.00 med 14.3 effek",
+   "run": "R003"
+  },
+  {
+   "key": "119fe6fff8ee",
+   "family": "vol_regime",
+   "desc": "vol_regime(base=ts_mom, k_vol=20, mode=low, k=30, uni=30)",
+   "reason": "svag discovery-Sharpe -0.27 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.92); deflated Sharpe 0.01 med 14.3 effek",
+   "run": "R003"
+  },
+  {
+   "key": "ed4638b0aaff",
+   "family": "ensemble_rank",
+   "desc": "ensemble_rank(members=['xs_mom', 'funding_carry', 'lowvol'], q=0.3, rebal=7)",
+   "reason": "deflated Sharpe 0.38 med 14.3 effektiva försök",
+   "run": "R003"
+  },
+  {
+   "key": "89ead85f5439",
+   "family": "ensemble_rank",
+   "desc": "ensemble_rank(members=['funding_carry', 'lowvol', 'bab'], q=0.3, rebal=7)",
+   "reason": "deflated Sharpe 0.39 med 14.3 effektiva försök",
+   "run": "R003"
+  },
+  {
+   "key": "decf78427a8e",
+   "family": "ensemble_rank",
+   "desc": "ensemble_rank(members=['funding_carry', 'lowvol', 'bab'], q=0.2, rebal=7)",
+   "reason": "ingen rimlig ändring finns",
+   "run": "R003"
+  },
+  {
+   "key": "977b8b09f618",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=0, q=0.2, rebal=3, uni=50, vt=0, k=120)",
+   "reason": "inte skild från slumpen (permutation p=0.21); deflated Sharpe 0.07 med 14.3 effektiva försök",
+   "run": "R003"
+  },
+  {
+   "key": "b12576e396e7",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=3, q=0.2, rebal=7, uni=20, vt=0.2, k=14)",
+   "reason": "deflated Sharpe 0.24 med 14.3 effektiva försök",
+   "run": "R003"
+  },
+  {
+   "key": "d6d8f6bd361c",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=3, q=0.2, rebal=7, uni=30, vt=0, k=7)",
+   "reason": "svag discovery-Sharpe 0.08 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.32); deflated Sharpe 0.02 med 14.3 effekt",
+   "run": "R003"
+  },
+  {
+   "key": "1ae762b211aa",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=0, q=0.2, rebal=14, uni=30, vt=0.2, k=60)",
+   "reason": "svag discovery-Sharpe 0.00 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.32); deflated Sharpe 0.01 med 14.3 effekt",
+   "run": "R003"
+  },
+  {
+   "key": "bc64ad45c7c5",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=3, q=0.3, rebal=14, uni=30, vt=0.2, k=60)",
+   "reason": "svag discovery-Sharpe -0.04 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.36); deflated Sharpe 0.01 med 14.3 effek",
+   "run": "R003"
+  },
+  {
+   "key": "382d1253c48d",
+   "family": "mtf_trend",
+   "desc": "mtf_trend(vt=0.15, ks=[10, 30, 90], basket=5)",
+   "reason": "inte skild från slumpen (permutation p=0.21); deflated Sharpe 0.02 med 14.3 effektiva försök",
+   "run": "R003"
+  },
+  {
+   "key": "aa8782e7f9b3",
+   "family": "ml_xs",
+   "desc": "ml_xs(model=lgbm, h=5, q=0.2, retrain=90, uni=30)",
+   "reason": "olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.20); deflated Sharpe 0.04 med 14.3 effektiva försök",
+   "run": "R003"
+  },
+  {
+   "key": "e16dd8d38cc9",
+   "family": "donchian",
+   "desc": "donchian(vt=0.15, n=80, basket=5)",
+   "reason": "svag discovery-Sharpe 0.18 efter kostnad; inte skild från slumpen (permutation p=0.80); deflated Sharpe 0.03 med 14.3 effektiva försök",
+   "run": "R003"
+  },
+  {
+   "key": "99cac0a48675",
+   "family": "lowvol",
+   "desc": "lowvol(vt=0, k=20, q=0.2, rebal=14, uni=50)",
+   "reason": "inte skild från slumpen (permutation p=0.18); deflated Sharpe 0.06 med 14.3 effektiva försök",
+   "run": "R003"
+  },
+  {
+   "key": "bc95749962a7",
+   "family": "xs_rev",
+   "desc": "xs_rev(q=0.2, rebal=5, uni=30, vt=0, k=1)",
+   "reason": "svag discovery-Sharpe -1.79 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.98); deflated Sharpe 0.00 med 14.3 effek",
+   "run": "R003"
+  },
+  {
+   "key": "d70f5dba1c59",
+   "family": "ml_xs",
+   "desc": "ml_xs(model=ridge, h=5, q=0.3, retrain=60, uni=30)",
+   "reason": "deflated Sharpe 0.15 med 14.3 effektiva försök",
+   "run": "R003"
+  },
+  {
+   "key": "2f74bad8e366",
+   "family": "ml_xs",
+   "desc": "ml_xs(model=mlp, h=5, q=0.2, retrain=90, uni=30)",
+   "reason": "olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.17); deflated Sharpe 0.04 med 14.6 effektiva försök",
+   "run": "R003"
+  },
+  {
+   "key": "2d3d4d5026e5",
+   "family": "ensemble_rank",
+   "desc": "ensemble_rank(members=['xs_mom', 'funding_carry', 'lowvol'], q=0.2, rebal=7)",
+   "reason": "negativ Sharpe i valideringsåret (-0.50)",
+   "run": "R003"
+  },
+  {
+   "key": "71dd6e73beb6",
+   "family": "ml_xs",
+   "desc": "ml_xs(model=ridge, h=1, q=0.3, retrain=90, uni=30)",
+   "reason": "svag discovery-Sharpe -0.29 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.31); deflated Sharpe 0.01 med 15.0 effek",
+   "run": "R004"
+  },
+  {
+   "key": "7f0e63fe9594",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=3, q=0.2, rebal=14, uni=30, vt=0.2, k=90)",
+   "reason": "svag discovery-Sharpe -0.05 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.35); deflated Sharpe 0.01 med 15.0 effek",
+   "run": "R004"
+  },
+  {
+   "key": "828eed5084a9",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0.2, k=7, q=0.3, rebal=7, uni=30)",
+   "reason": "inte skild från slumpen (permutation p=0.26); deflated Sharpe 0.06 med 15.0 effektiva försök",
+   "run": "R004"
+  },
+  {
+   "key": "33d113825485",
+   "family": "ts_mom",
+   "desc": "ts_mom(long_only=False, vt=0, uni=5, k=80)",
+   "reason": "svag discovery-Sharpe 0.28 efter kostnad; inte skild från slumpen (permutation p=0.39); deflated Sharpe 0.04 med 15.0 effektiva försök",
+   "run": "R004"
+  },
+  {
+   "key": "35c4bf21e658",
+   "family": "trend_ma",
+   "desc": "trend_ma(vt=0, n=50, basket=10)",
+   "reason": "inte skild från slumpen (permutation p=0.59); deflated Sharpe 0.13 med 15.0 effektiva försök",
+   "run": "R004"
+  },
+  {
+   "key": "261ecb0215fc",
+   "family": "xs_rev",
+   "desc": "xs_rev(q=0.2, rebal=5, uni=20, vt=0, k=5)",
+   "reason": "svag discovery-Sharpe -0.89 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.79); deflated Sharpe 0.00 med 15.0 effek",
+   "run": "R004"
+  },
+  {
+   "key": "1c66336e44df",
+   "family": "lowvol",
+   "desc": "lowvol(vt=0, k=90, q=0.2, rebal=14, uni=30)",
+   "reason": "inte skild från slumpen (permutation p=0.15); deflated Sharpe 0.08 med 15.0 effektiva försök",
+   "run": "R004"
+  },
+  {
+   "key": "9ce75bb12daf",
+   "family": "mtf_trend",
+   "desc": "mtf_trend(vt=0.15, ks=[10, 30, 90], basket=10)",
+   "reason": "inte skild från slumpen (permutation p=0.49); deflated Sharpe 0.08 med 15.0 effektiva försök",
+   "run": "R004"
+  },
+  {
+   "key": "b80e10a4d56f",
+   "family": "donchian",
+   "desc": "donchian(vt=0.15, n=20, basket=10)",
+   "reason": "ingen rimlig ändring finns",
+   "run": "R004"
+  },
+  {
+   "key": "3a2cc9a8722a",
+   "family": "funding_fade",
+   "desc": "funding_fade(k=3, z=1.5, hold=7, uni=30)",
+   "reason": "svag discovery-Sharpe -0.59 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.85); deflated Sharpe 0.00 med 15.0 effek",
+   "run": "R004"
+  },
+  {
+   "key": "ac553030b5e8",
+   "family": "pairs",
+   "desc": "pairs(lb=20, z_in=1.5, z_out=0.0, npairs=3)",
+   "reason": "läckage: vikter för dag t ändras av framtida data; svag discovery-Sharpe -0.62 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permu",
+   "run": "R004"
+  },
+  {
+   "key": "68d1686656ee",
+   "family": "vol_regime",
+   "desc": "vol_regime(base=ts_mom, k_vol=20, mode=low, k=60, uni=30)",
+   "reason": "svag discovery-Sharpe -0.25 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.96); deflated Sharpe 0.01 med 15.0 effek",
+   "run": "R004"
+  },
+  {
+   "key": "d04389fc68c9",
+   "family": "vol_shock",
+   "desc": "vol_shock(z=3.0, mode=follow, hold=3, uni=50)",
+   "reason": "inte skild från slumpen (permutation p=0.23); deflated Sharpe 0.10 med 15.0 effektiva försök",
+   "run": "R004"
+  },
+  {
+   "key": "35eacbd54a3c",
+   "family": "ml_xs",
+   "desc": "ml_xs(model=ridge, h=1, q=0.2, retrain=90, uni=30)",
+   "reason": "svag discovery-Sharpe -0.79 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.51); deflated Sharpe 0.00 med 15.0 effek",
+   "run": "R004"
+  },
+  {
+   "key": "f41fe82da176",
+   "family": "ml_xs",
+   "desc": "ml_xs(model=ridge, h=3, q=0.3, retrain=60, uni=30)",
+   "reason": "deflated Sharpe 0.49 med 15.0 effektiva försök",
+   "run": "R004"
+  },
+  {
+   "key": "f3c43c24000e",
+   "family": "ml_xs",
+   "desc": "ml_xs(model=ridge, h=3, q=0.2, retrain=90, uni=30)",
+   "reason": "deflated Sharpe 0.22 med 15.0 effektiva försök",
+   "run": "R004"
+  },
+  {
+   "key": "856ccb9a3b6a",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=1, q=0.2, rebal=14, uni=20, vt=0.2, k=60)",
+   "reason": "svag discovery-Sharpe -0.25 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.49); deflated Sharpe 0.01 med 15.0 effek",
+   "run": "R004"
+  },
+  {
+   "key": "17bc2f0757ff",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=3, q=0.3, rebal=3, uni=30, vt=0.2, k=7)",
+   "reason": "svag discovery-Sharpe -0.24 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.34); deflated Sharpe 0.01 med 15.0 effek",
+   "run": "R004"
+  },
+  {
+   "key": "041952d89f61",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=1, q=0.3, rebal=14, uni=50, vt=0, k=60)",
+   "reason": "svag discovery-Sharpe 0.08 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.31); deflated Sharpe 0.02 med 15.0 effekt",
+   "run": "R004"
+  },
+  {
+   "key": "08dadf4f9f5f",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0, k=3, q=0.2, rebal=3, uni=50)",
+   "reason": "svag discovery-Sharpe 0.28 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.22); deflated Sharpe 0.05 med 15.0 effekt",
+   "run": "R004"
+  },
+  {
+   "key": "a59f1cf2d10b",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=1, q=0.2, rebal=7, uni=20, vt=0.2, k=90)",
+   "reason": "svag discovery-Sharpe -0.13 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.43); deflated Sharpe 0.01 med 15.0 effek",
+   "run": "R004"
+  },
+  {
+   "key": "560fd86dade2",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0.2, k=30, q=0.3, rebal=7, uni=30)",
+   "reason": "svag discovery-Sharpe -0.56 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.70); deflated Sharpe 0.00 med 15.0 effek",
+   "run": "R004"
+  },
+  {
+   "key": "e3fa0cd38ca6",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=1, q=0.2, rebal=3, uni=30, vt=0.2, k=14)",
+   "reason": "deflated Sharpe 0.41 med 15.0 effektiva försök",
+   "run": "R004"
+  },
+  {
+   "key": "24c2a0a4fa80",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=0, q=0.3, rebal=14, uni=30, vt=0.2, k=60)",
+   "reason": "svag discovery-Sharpe 0.21 efter kostnad; inte skild från slumpen (permutation p=0.26); deflated Sharpe 0.04 med 15.0 effektiva försök",
+   "run": "R004"
+  },
+  {
+   "key": "b1162662ddd5",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0, k=30, q=0.2, rebal=3, uni=50)",
+   "reason": "svag discovery-Sharpe 0.25 efter kostnad; inte skild från slumpen (permutation p=0.33); deflated Sharpe 0.04 med 15.0 effektiva försök",
+   "run": "R004"
+  },
+  {
+   "key": "5ad5972ba49b",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0.2, k=7, q=0.3, rebal=3, uni=30)",
+   "reason": "svag discovery-Sharpe 0.09 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.39); deflated Sharpe 0.02 med 15.0 effekt",
+   "run": "R004"
+  },
+  {
+   "key": "39a597f0cde6",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0, k=7, q=0.2, rebal=3, uni=30)",
+   "reason": "inte skild från slumpen (permutation p=0.30); deflated Sharpe 0.06 med 15.0 effektiva försök",
+   "run": "R004"
+  },
+  {
+   "key": "2bca23e0cceb",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0, k=30, q=0.3, rebal=7, uni=50)",
+   "reason": "svag discovery-Sharpe -0.09 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.50); deflated Sharpe 0.01 med 15.0 effek",
+   "run": "R004"
+  },
+  {
+   "key": "d44ccfbc8af1",
+   "family": "funding_carry",
+   "desc": "funding_carry(vt=0, k=3, q=0.3, rebal=3, uni=50)",
+   "reason": "ingen rimlig ändring finns",
+   "run": "R004"
+  },
+  {
+   "key": "8fac032a197c",
+   "family": "ts_mom",
+   "desc": "ts_mom(long_only=False, vt=0.15, uni=5, k=20)",
+   "reason": "inte skild från slumpen (permutation p=0.18); deflated Sharpe 0.08 med 15.0 effektiva försök",
+   "run": "R004"
+  },
+  {
+   "key": "80f79228f807",
+   "family": "ml_xs",
+   "desc": "ml_xs(model=ens, h=5, q=0.2, retrain=90, uni=30)",
+   "reason": "deflated Sharpe 0.27 med 15.1 effektiva försök",
+   "run": "R004"
+  },
+  {
+   "key": "62a877ce0588",
+   "family": "ml_xs",
+   "desc": "ml_xs(model=rf, h=3, q=0.3, retrain=60, uni=30)",
+   "reason": "ingen rimlig ändring finns",
+   "run": "R004"
+  },
+  {
+   "key": "0d80b931cba5",
+   "family": "ml_xs",
+   "desc": "ml_xs(model=lgbm_prob, h=5, q=0.2, retrain=90, uni=30)",
+   "reason": "svag discovery-Sharpe 0.03 efter kostnad; olönsam med 2,5 gånger kostnaderna; inte skild från slumpen (permutation p=0.27); deflated Sharpe 0.02 med 15.1 effekt",
+   "run": "R004"
+  },
+  {
+   "key": "4903600c43fc",
+   "family": "xs_mom",
+   "desc": "xs_mom(skip=0, q=0.2, rebal=7, uni=30, vt=0.2, k=14)",
+   "reason": "deflated Sharpe 0.32 med 15.1 effektiva försök",
+   "run": "R004"
+  },
+  {
+   "key": "735b57803b0f",
+   "family": "ml_xs",
+   "desc": "ml_xs(model=ridge, h=5, q=0.3, retrain=90, uni=30)",
+   "reason": "deflated Sharpe 0.22 med 15.1 effektiva försök",
+   "run": "R004"
+  },
+  {
+   "key": "108fb9dfbab8",
+   "family": "bab",
+   "desc": "bab(vt=0.2, k=60, q=0.3, rebal=7, uni=50)",
+   "reason": "negativ Sharpe i valideringsåret (-1.91)",
+   "run": "R004"
+  }
+ ],
+ "promising": [],
+ "data": {
+  "um_ohlcv": {
+   "status": "available",
+   "description": "Dagliga USDⓈ-M-perpar (OHLCV) från data.binance.vision",
+   "needs": ""
+  },
+  "um_funding": {
+   "status": "available",
+   "description": "Finansieringsränta per 8 timmar, summerad per dag",
+   "needs": ""
+  },
+  "um_4h": {
+   "status": "available",
+   "description": "4h-staplar för samma kontrakt (finns lokalt, används inte ännu)",
+   "needs": ""
+  },
+  "cm_quarterly": {
+   "status": "available",
+   "description": "COIN-M-kvartalsterminer (basis mot spot), finns lokalt delvis",
+   "needs": ""
+  },
+  "um_metrics_oi": {
+   "status": "proposed",
+   "description": "Open interest och long/short-kvot (data.binance.vision futures/um/daily/metrics)",
+   "needs": "Dagsfiler per symbol; nedladdning via arkivet. Binance API är blockerat (451), så bara arkivet."
+  },
+  "um_liquidations": {
+   "status": "proposed",
+   "description": "Likvidationer",
+   "needs": "Finns inte som publikt arkiv på data.binance.vision."
+  },
+  "orderbook": {
+   "status": "proposed",
+   "description": "Orderbok (bookDepth) och spreadar",
+   "needs": "bookDepth-arkiv finns men är stort; kräver egen nedladdning."
+  },
+  "macro": {
+   "status": "proposed",
+   "description": "Makro (räntor, dollarindex, volatilitetsindex)",
+   "needs": "Kräver en öppen källa (FRED); inte vald än."
+  },
+  "sentiment": {
+   "status": "proposed",
+   "description": "Sentiment (Fear & Greed, sociala medier)",
+   "needs": "Kräver en öppen källa; inte vald än."
+  }
+ },
+ "known_issues": [
+  "R001-R004: okänd data blev tyst noll (finansiering 0,76 %, pris 0,41 % av bruttoexponeringen) och leveranskontrakt (BTCUSDT_230331 m fl) behandlades som evighetsterminer. Audit: audits/coverage-R001-R004.json. Motorregel v2 gäller från och med nu."
+ ],
+ "agents": {
+  "data>FundingSpecialist": {
+   "name": "FundingSpecialist",
+   "goal": "Mät om finansieringsränta förutsäger framtida avkastning (informationskoefficient)",
+   "parent": "data",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "data>OrderbookSpecialist": {
+   "name": "OrderbookSpecialist",
+   "goal": "Kontrollera om orderboksdata finns och föreslå hur den skaffas",
+   "parent": "data",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "data>OISpecialist": {
+   "name": "OISpecialist",
+   "goal": "Kontrollera om open interest finns och föreslå hur den skaffas",
+   "parent": "data",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "1e5d86fb7081:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "123800b28405:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "035fe48512b4:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "5a31a06ad38a:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "7121ab6b68f7:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "ccaf50b9e6e1:quant>PairsSpecialist": {
+   "name": "PairsSpecialist",
+   "goal": "Kontrollera att spreadarna verkligen är mean-reverting (halveringstid)",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "50b6cdd942f3:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "839deeffa5cb:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "44f2ddca506b:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "d9bc17524b39:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "fa9caa28ed9f:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "0d897a5028c6:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "bc0966debb54:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "f29d416cf6bb:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "bbbdfe68b142:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "5c009b8a9a02:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "923f8c6cdcba:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "a12a69b3ce7a:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "b01872143813:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "035fe48512b4:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "f915e6991d82:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "1e5d86fb7081:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "1e5d86fb7081:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "035fe48512b4:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "035fe48512b4:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "f915e6991d82:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "f915e6991d82:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "123800b28405:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "123800b28405:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "2a9c14525d0b:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "2a9c14525d0b:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "5a31a06ad38a:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "5a31a06ad38a:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "cbc20fd20dc6:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "cbc20fd20dc6:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "be7cf3d8a71a:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "7121ab6b68f7:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "7121ab6b68f7:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "a740d00e97d9:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "a740d00e97d9:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "be7cf3d8a71a:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "be7cf3d8a71a:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "839deeffa5cb:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "839deeffa5cb:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "ccaf50b9e6e1:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "ccaf50b9e6e1:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "04474bcc8b0b:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "04474bcc8b0b:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "44f2ddca506b:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "0ce3119d0d39:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "0ce3119d0d39:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "50b6cdd942f3:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "50b6cdd942f3:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "79c521890543:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "fa9caa28ed9f:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "44f2ddca506b:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "44f2ddca506b:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "fa9caa28ed9f:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "fa9caa28ed9f:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "d9bc17524b39:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "d9bc17524b39:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "bbbdfe68b142:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "bc0966debb54:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "bc0966debb54:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "5c009b8a9a02:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "0d897a5028c6:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "0d897a5028c6:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "f29d416cf6bb:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "f29d416cf6bb:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "923f8c6cdcba:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "60a32b8d445f:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "bbbdfe68b142:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "bbbdfe68b142:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "5c009b8a9a02:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "5c009b8a9a02:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "923f8c6cdcba:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "923f8c6cdcba:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "d3391b1624d5:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "60a32b8d445f:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "60a32b8d445f:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "a12a69b3ce7a:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "a12a69b3ce7a:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "f438a88c0e73:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "d3391b1624d5:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "d3391b1624d5:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "b01872143813:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "b01872143813:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "f438a88c0e73:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "f438a88c0e73:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "cd98b6e8ba94:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "cd98b6e8ba94:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "6d167dc3c138:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "6d167dc3c138:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "0f415b1b59df:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "0f415b1b59df:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "cd952e677e73:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "cd952e677e73:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "9870d0c5fe44:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "9870d0c5fe44:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "a5ef4bcaa794:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "a5ef4bcaa794:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "03b499cfae9d:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "03b499cfae9d:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "2b4a36b0f1c6:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "2b4a36b0f1c6:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "79c521890543:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "79c521890543:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "3e965c3d9604:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "18bc45c1b7e4:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "e5caf966d23a:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "fe3f386819ae:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "e2c80fd152a3:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "fe3f386819ae:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "fe3f386819ae:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "e5caf966d23a:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "e5caf966d23a:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "18bc45c1b7e4:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "18bc45c1b7e4:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "e2c80fd152a3:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "e2c80fd152a3:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "3e965c3d9604:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "3e965c3d9604:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R001"
+  },
+  "610bac07a444:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "1399020269c6:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "5d24d119a900:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "bfe0c4ac988e:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "269dbe5519ff:quant>PairsSpecialist": {
+   "name": "PairsSpecialist",
+   "goal": "Kontrollera att spreadarna verkligen är mean-reverting (halveringstid)",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "0f6acdf9d385:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "c03050811847:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "47f7352a2da9:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "7e474a16cdca:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "812502bdeae4:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "50f5c2d41f49:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "35840c2b5fbd:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "bb7584cf8286:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "b392ed621e7d:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "1399020269c6:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "1399020269c6:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "b392ed621e7d:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "b392ed621e7d:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "21702fbc0491:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "21702fbc0491:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "ca61a35e45c9:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "610bac07a444:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "610bac07a444:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "5d24d119a900:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "5d24d119a900:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "c06e40fcb5b6:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "bfe0c4ac988e:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "ca61a35e45c9:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "ca61a35e45c9:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "0f6acdf9d385:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "c06e40fcb5b6:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "c06e40fcb5b6:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "bfe0c4ac988e:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "bfe0c4ac988e:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "0f6acdf9d385:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "0f6acdf9d385:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "47f7352a2da9:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "c3c32c09d34b:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "c3c32c09d34b:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "269dbe5519ff:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "269dbe5519ff:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "27fcfdb40901:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "050384bce67c:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "47f7352a2da9:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "47f7352a2da9:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "27fcfdb40901:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "27fcfdb40901:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "050384bce67c:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "050384bce67c:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "7e474a16cdca:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "c03050811847:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "c03050811847:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "35840c2b5fbd:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "7e474a16cdca:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "7e474a16cdca:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "50f5c2d41f49:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "50f5c2d41f49:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "35840c2b5fbd:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "35840c2b5fbd:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "4700e199c34e:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "812502bdeae4:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "812502bdeae4:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "e949ce60b89f:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "e949ce60b89f:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "4700e199c34e:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "4700e199c34e:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "c6fad4ee5e74:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "bb7584cf8286:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "bb7584cf8286:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "5c7be0d87560:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "6be56afb0eee:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "6be56afb0eee:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "c6fad4ee5e74:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "c6fad4ee5e74:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "5c7be0d87560:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "5c7be0d87560:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "cc7da2befafe:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "cc7da2befafe:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "0051738937c5:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "957b9eac894b:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "957b9eac894b:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "068d6651fdbf:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "068d6651fdbf:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "9a855dabba77:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "9a855dabba77:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "0051738937c5:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "0051738937c5:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "e557e6fa0403:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "e557e6fa0403:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R002"
+  },
+  "59427e56d85e:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "20eb6622fa58:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "7da0e0754215:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "7254b3889fb0:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "3d9b8ffbb802:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "678bfce8593c:quant>PairsSpecialist": {
+   "name": "PairsSpecialist",
+   "goal": "Kontrollera att spreadarna verkligen är mean-reverting (halveringstid)",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "9190134e68d7:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "2d3d4d5026e5:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "ed4638b0aaff:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "89ead85f5439:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "decf78427a8e:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "977b8b09f618:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "b12576e396e7:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "d6d8f6bd361c:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "bc64ad45c7c5:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "1ae762b211aa:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "bc95749962a7:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "99cac0a48675:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "d70f5dba1c59:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "7da0e0754215:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "59427e56d85e:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "59427e56d85e:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "7da0e0754215:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "7da0e0754215:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "20eb6622fa58:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "20eb6622fa58:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "7254b3889fb0:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "1347dae07a3c:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "7254b3889fb0:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "7254b3889fb0:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "276a77db4812:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "1347dae07a3c:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "1347dae07a3c:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "276a77db4812:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "276a77db4812:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "9190134e68d7:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "9190134e68d7:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "9190134e68d7:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "3d9b8ffbb802:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "3d9b8ffbb802:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "f572a23de072:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "f572a23de072:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "f572a23de072:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "678bfce8593c:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "678bfce8593c:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "2c6df3942e82:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "2c6df3942e82:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "9e60b8bdc7e3:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "9e60b8bdc7e3:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "aa8782e7f9b3:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "119fe6fff8ee:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "6be5a5e07b90:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "6be5a5e07b90:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "119fe6fff8ee:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "119fe6fff8ee:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "2d3d4d5026e5:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "2d3d4d5026e5:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "89ead85f5439:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "89ead85f5439:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "ed4638b0aaff:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "ed4638b0aaff:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "b12576e396e7:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "977b8b09f618:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "977b8b09f618:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "decf78427a8e:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "decf78427a8e:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "1ae762b211aa:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "b12576e396e7:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "b12576e396e7:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "bc64ad45c7c5:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "d6d8f6bd361c:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "d6d8f6bd361c:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "382d1253c48d:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "1ae762b211aa:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "1ae762b211aa:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "bc64ad45c7c5:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "bc64ad45c7c5:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "382d1253c48d:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "382d1253c48d:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "e16dd8d38cc9:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "e16dd8d38cc9:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "99cac0a48675:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "99cac0a48675:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "bc95749962a7:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "bc95749962a7:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "53f492c11f78:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "53f492c11f78:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "53f492c11f78:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "aa8782e7f9b3:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "aa8782e7f9b3:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "d70f5dba1c59:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "d70f5dba1c59:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "bad2ed0dfa50:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "bad2ed0dfa50:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "bad2ed0dfa50:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "2f74bad8e366:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "2f74bad8e366:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "2f74bad8e366:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R003"
+  },
+  "828eed5084a9:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "7f0e63fe9594:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "1c66336e44df:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "261ecb0215fc:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "ac553030b5e8:quant>PairsSpecialist": {
+   "name": "PairsSpecialist",
+   "goal": "Kontrollera att spreadarna verkligen är mean-reverting (halveringstid)",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "71dd6e73beb6:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "108fb9dfbab8:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "9094376567ea:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "35eacbd54a3c:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "f41fe82da176:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "38d1f1fc9626:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "f3c43c24000e:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "17bc2f0757ff:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "856ccb9a3b6a:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "08dadf4f9f5f:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "041952d89f61:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "560fd86dade2:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "a59f1cf2d10b:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "29bc6ee37a82:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "e3fa0cd38ca6:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "24c2a0a4fa80:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "b1162662ddd5:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "5ad5972ba49b:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "39a597f0cde6:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "2bca23e0cceb:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "d44ccfbc8af1:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "7f0e63fe9594:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "828eed5084a9:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "7f0e63fe9594:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "7f0e63fe9594:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "828eed5084a9:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "828eed5084a9:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "35c4bf21e658:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "33d113825485:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "33d113825485:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "35c4bf21e658:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "35c4bf21e658:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "1c66336e44df:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "1c66336e44df:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "261ecb0215fc:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "261ecb0215fc:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "9ce75bb12daf:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "9ce75bb12daf:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "108fb9dfbab8:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "b80e10a4d56f:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "b80e10a4d56f:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "108fb9dfbab8:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "108fb9dfbab8:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "3a2cc9a8722a:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "3a2cc9a8722a:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "68d1686656ee:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "ac553030b5e8:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "ac553030b5e8:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "68d1686656ee:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "68d1686656ee:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "856ccb9a3b6a:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "d04389fc68c9:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "d04389fc68c9:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "17bc2f0757ff:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "856ccb9a3b6a:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "856ccb9a3b6a:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "041952d89f61:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "041952d89f61:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "17bc2f0757ff:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "17bc2f0757ff:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "08dadf4f9f5f:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "08dadf4f9f5f:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "560fd86dade2:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "a59f1cf2d10b:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "a59f1cf2d10b:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "560fd86dade2:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "560fd86dade2:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "e3fa0cd38ca6:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "29bc6ee37a82:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "29bc6ee37a82:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "24c2a0a4fa80:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "e3fa0cd38ca6:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "e3fa0cd38ca6:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "24c2a0a4fa80:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "24c2a0a4fa80:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "5ad5972ba49b:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "b1162662ddd5:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "b1162662ddd5:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "5ad5972ba49b:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "5ad5972ba49b:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "39a597f0cde6:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "39a597f0cde6:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "2bca23e0cceb:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "2bca23e0cceb:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "d44ccfbc8af1:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "d44ccfbc8af1:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "8fac032a197c:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "8fac032a197c:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "fa584c72d55b:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "60beab4c2edb:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "71dd6e73beb6:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "71dd6e73beb6:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "fa584c72d55b:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "fa584c72d55b:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "60beab4c2edb:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "60beab4c2edb:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "9094376567ea:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "9094376567ea:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "38d1f1fc9626:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "38d1f1fc9626:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "35eacbd54a3c:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "35eacbd54a3c:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "f41fe82da176:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "f41fe82da176:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "f3c43c24000e:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "f3c43c24000e:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "0d80b931cba5:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "4903600c43fc:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "quant",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "4903600c43fc:risk>LiquidationStressSpecialist": {
+   "name": "LiquidationStressSpecialist",
+   "goal": "Stressa hävstång och likvidationsrisk",
+   "parent": "risk",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "43c8cd634567:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "4903600c43fc:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "4903600c43fc:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "80f79228f807:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "62a877ce0588:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "80f79228f807:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "80f79228f807:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "0d80b931cba5:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "0d80b931cba5:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "62a877ce0588:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "62a877ce0588:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "43c8cd634567:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "43c8cd634567:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "735b57803b0f:quant>CrossSectionSpecialist": {
+   "name": "CrossSectionSpecialist",
+   "goal": "Visa om edgen ligger i long- eller short-benet",
+   "parent": "ml",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "735b57803b0f:skeptic>LeakageSpecialist": {
+   "name": "LeakageSpecialist",
+   "goal": "Bevisa eller motbevisa läckage med en trunkeringstest",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  },
+  "735b57803b0f:skeptic>AssetSplitSpecialist": {
+   "name": "AssetSplitSpecialist",
+   "goal": "Testa om edgen bärs av ett fåtal tillgångar",
+   "parent": "skeptic",
+   "ephemeral": true,
+   "run": "R004"
+  }
+ },
+ "disc_sharpes": [
+  0.36351887705456665,
+  0.10166777127221074,
+  0.4403661061230264,
+  1.0799478037845036,
+  0.6828183956580826,
+  -1.999279927563104,
+  0.9613584875476363,
+  0.21200115681735848,
+  0.6838063917194921,
+  1.21321078213963,
+  1.1926498271131103,
+  0.7789518728090296,
+  -1.3229130826891797,
+  -0.6133350733402438,
+  -0.7778368791516734,
+  0.32080134833330753,
+  -0.6983584262174358,
+  0.7061646388698744,
+  0.5214494443441159,
+  -0.23793290488627886,
+  -0.30927852110214926,
+  0.8902351613990481,
+  0.14355585653644287,
+  -0.49853606186472044,
+  0.38254436299754985,
+  0.46221463197215307,
+  1.5150528504232756,
+  0.5958172880362571,
+  0.8874713636364333,
+  0.8824304823204185,
+  -0.940229785139528,
+  -0.23524856849694753,
+  -1.7948228837074909,
+  1.1196225676052398,
+  -1.0672610466404917,
+  -0.7386445460199649,
+  -1.3704784478426923,
+  0.06920693594597269,
+  1.2973060884656853,
+  1.5514133865784976,
+  0.18335627726908987,
+  0.7131574291061228,
+  0.6338498617260093,
+  0.15871859598087215,
+  0.952199452339963,
+  0.1380432602063787,
+  1.7406985204047536,
+  0.3664495247047731,
+  0.11043421094906514,
+  0.8207722560843457,
+  -1.6792665230367851,
+  1.6548342805848466,
+  1.323980310343068,
+  -1.3936867077172461,
+  -0.8271688813804147,
+  0.6147414699538545,
+  0.657359249824126,
+  0.6375156904549165,
+  0.4091143106568197,
+  -0.2843851549596629,
+  0.9380217125027557,
+  0.2139939549690606,
+  0.4860488336902885,
+  0.6194524842719152,
+  0.2186620926397421,
+  1.3102071172269047,
+  -0.04987782585815247,
+  0.5575206659224109,
+  0.10869758989532635,
+  1.0363972876191385,
+  0.6226286562438329,
+  0.26151174833761254,
+  0.06001201902229327,
+  -0.940229785139528,
+  -0.23524856849694753,
+  -1.7948228837074909,
+  1.1196225676052398,
+  -1.0672610466404917,
+  -0.7386445460199649,
+  -1.3704784478426923,
+  0.06920693594597269,
+  0.7949212194585592,
+  0.8033893407401809,
+  -0.4317614979520435,
+  -2.2183230564022876,
+  0.9088295368698929,
+  0.9622197574178919,
+  0.8480106140915196,
+  0.451304774187701,
+  0.718396708772226,
+  0.9404374991650448,
+  -1.2578987219139264,
+  -0.0036127501152548236,
+  0.8885654579769185,
+  0.2725424437349067,
+  -0.8201178708109222,
+  -0.2695809489291576,
+  1.7059445973072551,
+  1.278839804729001,
+  1.2927812166730426,
+  1.2105770382969623,
+  0.4686693364611844,
+  1.0164878988968795,
+  0.07646298505739947,
+  0.003570435093293647,
+  -0.038001722431184014,
+  0.8247772600543225,
+  0.3003522656449246,
+  0.18095867803964702,
+  0.43628205032936473,
+  -1.7856355769159198,
+  0.7774712973199498,
+  -0.940229785139528,
+  -0.23524856849694753,
+  -1.7948228837074909,
+  1.1196225676052398,
+  -1.0672610466404917,
+  -0.7386445460199649,
+  -1.3704784478426923,
+  0.06920693594597269,
+  1.2685796973087224,
+  0.35267125862821846,
+  -0.292613665083256,
+  -0.05234108470022373,
+  0.3880887502711718,
+  0.2793140792499966,
+  0.692795984730791,
+  -0.8876869994301344,
+  0.47016247494761976,
+  0.49155126592256415,
+  1.319852289385156,
+  1.7036523376883612,
+  -0.5888610388155279,
+  -0.6191342273607057,
+  -0.25393350843406565,
+  0.5832084361341089,
+  1.0579965707396048,
+  0.38147461644265546,
+  1.1420532039508495,
+  0.6990015589506438,
+  -0.7870785511021885,
+  1.3992141447798685,
+  0.9014906670629903,
+  -0.2531949642654747,
+  -0.23844058077034194,
+  0.07638667526387438,
+  0.2807656219602914,
+  -0.13235355632093082,
+  -0.5625784555405701,
+  0.7264093942896757,
+  1.2539489749032637,
+  0.21157862626524482,
+  0.24774689383316614,
+  0.09365302689660304,
+  0.37745998413320453,
+  -0.08966969353650074,
+  0.7051392488593167,
+  0.4705428367970404,
+  -0.940229785139528,
+  -0.23524856849694753,
+  -1.7948228837074909,
+  1.1196225676052398,
+  -1.0672610466404917,
+  -0.7386445460199649,
+  -1.3704784478426923,
+  0.06920693594597269,
+  0.9840387686034086,
+  1.2070846031722569,
+  0.02815774232665078,
+  0.4540502025176026,
+  1.0904420132169468,
+  0.8848729302286563
+ ],
+ "learnings": [
+  "ML slog den enkla tumregeln xs_mom i 2 av 13 körningar (discovery).",
+  "Negativa kontroller: 8 slumpstrategier, 0 gick vidare förbi discovery (falsklarmsfrekvens 0/8).",
+  "Vanligaste dödsorsaker: inte skild från slumpen (33); olönsam med 2,5 gånger kostnaderna (23); deflated Sharpe 0.00 med 15.0 effektiva försök (10); deflated Sharpe 0.01 med 15.0 effektiva försök (8); ingen rimlig ändring finns (4)"
+ ],
+ "data_panel": {
+  "symbols": 119,
+  "first": "2020-01-01",
+  "last": "2024-12-31",
+  "funding_symbols": 85,
+  "caveat": "Bara kontrakt som har arkiv lokalt (survivorship). Slutprovet 2025+ är aldrig läst."
+ },
+ "data_findings": {
+  "FundingSpecialist": {
+   "agent": "FundingSpecialist",
+   "ic_funding7_vs_fwd1d_disc": -0.015263376037127943,
+   "ic_t": -2.0439424067034944,
+   "note": "Negativ IC = hög finansieringsränta följs av sämre avkastning (carry/trängsel).",
+   "objections": []
+  },
+  "OrderbookSpecialist": {
+   "agent": "OrderbookSpecialist",
+   "available": false,
+   "proposal": "Ingen orderbok finns lokalt. Förslag: data.binance.vision futures/um/daily/bookDepth (stort; börja med BTC/ETH) och bygg spread/obalans-features. Binance API är blockerat (451).",
+   "objections": []
+  },
+  "OISpecialist": {
+   "agent": "OISpecialist",
+   "available": false,
+   "proposal": "Ingen open interest lokalt. Förslag: data.binance.vision futures/um/daily/metrics (OI, long/short-kvot) som dagsfiler per symbol.",
+   "objections": []
+  }
+ },
+ "portfolio": {
+  "div_value": {
+   "108fb9dfbab8": 1.420211848111166
+  },
+  "max_corr": {
+   "108fb9dfbab8": 0.0
+  },
+  "combos": {
+   "all_invvol": {
+    "members": [
+     "108fb9dfbab8"
+    ],
+    "disc": {
+     "n": 822,
+     "sharpe": 1.7036523376883612,
+     "ann_ret": 0.39895383616737556,
+     "ann_vol": 0.23417561631659248,
+     "max_dd": -0.21261038556827083,
+     "hit": 0.5401459854014599,
+     "cvar5": -0.02523134493880987,
+     "skew": -0.24858782796371182,
+     "total": 1.3076537067334377
+    },
+    "valid": {
+     "n": 365,
+     "sharpe": -1.9127013320704087,
+     "ann_ret": -0.44268996560422286,
+     "ann_vol": 0.2314475125737649,
+     "max_dd": -0.43082488117310325,
+     "hit": 0.4520547945205479,
+     "cvar5": -0.029304687803591842,
+     "skew": -0.042130200323750804,
+     "total": -0.3748441584364798
+    },
+    "final": {
+     "n": 366,
+     "sharpe": -0.16643785396069538,
+     "ann_ret": -0.03498368958549035,
+     "ann_vol": 0.21019070333454196,
+     "max_dd": -0.2433129461479947,
+     "hit": 0.5245901639344263,
+     "cvar5": -0.02444715800731973,
+     "skew": -0.2093882152264752,
+     "total": -0.05560789443194303
+    }
+   },
+   "greedy": {
+    "members": [
+     "108fb9dfbab8"
+    ],
+    "disc": {
+     "n": 822,
+     "sharpe": 1.7036523376883612,
+     "ann_ret": 0.39895383616737556,
+     "ann_vol": 0.23417561631659248,
+     "max_dd": -0.21261038556827083,
+     "hit": 0.5401459854014599,
+     "cvar5": -0.02523134493880987,
+     "skew": -0.24858782796371182,
+     "total": 1.3076537067334377
+    },
+    "valid": {
+     "n": 365,
+     "sharpe": -1.9127013320704087,
+     "ann_ret": -0.44268996560422286,
+     "ann_vol": 0.2314475125737649,
+     "max_dd": -0.43082488117310325,
+     "hit": 0.4520547945205479,
+     "cvar5": -0.029304687803591842,
+     "skew": -0.042130200323750804,
+     "total": -0.3748441584364798
+    },
+    "final": {
+     "n": 366,
+     "sharpe": -0.16643785396069538,
+     "ann_ret": -0.03498368958549035,
+     "ann_vol": 0.21019070333454196,
+     "max_dd": -0.2433129461479947,
+     "hit": 0.5245901639344263,
+     "cvar5": -0.02444715800731973,
+     "skew": -0.2093882152264752,
+     "total": -0.05560789443194303
+    }
+   }
+  }
+ },
+ "sealed_looks": 5,
+ "spent": {
+  "valid": [],
+  "final": []
+ },
+ "data_status": {
+  "disc": "utforskande: flera körningar och många försök har använt den",
+  "valid": "FÖRBRUKAD: sedd av tidigare körningar (se spent.valid och legacy_unsealed)",
+  "final": "FÖRBRUKAD: sedd av tidigare körningar (se spent.final och legacy_unsealed)"
+ },
+ "legacy_unsealed": {
+  "runs": [
+   "R001",
+   "R002",
+   "R003",
+   "R004"
+  ],
+  "note": "Barriären var bara en visningsregel i dessa körningar. 2023 och 2024 är förbrukade för alla deras kandidater. Deflated Sharpe med effektivt antal försök och domare v2 valdes efter att utfall setts och kan inte retroaktivt bekräfta en kandidat."
+ }
+}
