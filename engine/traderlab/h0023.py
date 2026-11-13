@@ -42,6 +42,8 @@ MIN_COIN_CYCLES = 46         # av 91 möjliga (7 × 13)
 MIN_CYCLES_WITH_FOUR = 10    # av 13 cykler med minst 4 handlade mynt
 CASH_CAGR_LIMIT = 0.03
 BETA_LIMIT = 0.2
+LOCKED_ATTEMPTS = 23         # N i det frysta protokollet, oberoende av senare registerrader (H-0024 ... ändrar inte H-0023:s gräns)
+LOCKED_T_REQUIRED = 3.45     # det frysta kravet på t över de 14 cyklerna (kvantilen 3,4452… avrundad enligt protokollet)
 SIZE_RANGE = (9.5, 10.5)     # härledd kontraktsstorlek (USD) som krävs per serie
 
 
@@ -277,7 +279,7 @@ def cycle_t(r: list[float]) -> float:
     return mean / (sd / math.sqrt(n))
 
 
-def evaluate(ordinary: SimResult, stressed: SimResult, panel: Panel, cycles: list[dict], *, attempts: int, seed: int = 0, n_boot: int = 10000,
+def evaluate(ordinary: SimResult, stressed: SimResult, panel: Panel, cycles: list[dict], *, seed: int = 0, n_boot: int = 10000,
              min_coin_cycles: int = MIN_COIN_CYCLES, min_cycles_four: int = MIN_CYCLES_WITH_FOUR) -> dict:
     """Datakrav (fail-closed) och därefter cykelstatistik och beslut. En ogiltig körning ger **inga prestandasiffror**, bara orsaker och täckningsdiagnos."""
     reasons: list[str] = []
@@ -293,7 +295,7 @@ def evaluate(ordinary: SimResult, stressed: SimResult, panel: Panel, cycles: lis
     for day in sorted({d for w in windows for d in w}):
         if not _traded(panel.btc, day):
             reasons.append(f"Datakrav 8: ingen verifierad BTCUSDT-spotstapel exakt 00:00 UTC med volym {day}")
-    base = {"hypothesis_id": HYPOTHESIS, "attempts": attempts, "n_cycles": len(cycles),
+    base = {"hypothesis_id": HYPOTHESIS, "attempts": LOCKED_ATTEMPTS, "n_cycles": len(cycles),
             "coverage_diagnostic": {"traded_coin_cycles": ordinary.traded_coin_cycles, "possible_coin_cycles": possible, "cycles_with_four": with_four,
                                     "non_flat_cycles": len(non_flat)}}
     if reasons:
@@ -301,7 +303,7 @@ def evaluate(ordinary: SimResult, stressed: SimResult, panel: Panel, cycles: lis
                 "note": "Datakravet i research/h0023-protokoll.md är inte uppfyllt. Inget beslut, aldrig MORE_RESEARCH. Inga prestandasiffror redovisas."}
     r = [rec["r"] for rec in ordinary.cycles]
     n = len(r)
-    t, t_req = cycle_t(r), t_required(attempts, n)
+    t, t_req = cycle_t(r), LOCKED_T_REQUIRED          # frysta gränsen; aldrig dagens register och aldrig den oavrundade kvantilen
     port_values = {}
     for rec in ordinary.cycles:
         port_values[rec["fill"]] = rec["v_start"]
@@ -320,7 +322,7 @@ def evaluate(ordinary: SimResult, stressed: SimResult, panel: Panel, cycles: lis
     boots = [float(np.mean(rng.choice(r, size=n, replace=True))) for _ in range(n_boot)]
     daily_ret = ordinary.daily.pct_change().dropna()
     return {**base, "valid": True, "decision": decide(criteria), "criteria": criteria, "meets_all_criteria": all(criteria.values()),
-            "t_over_cycles": t, "t_required": t_req, "t_bonferroni": stats.t_krav(attempts), "beta_btc": beta, "cagr": cagr, "span_days": span_days,
+            "t_over_cycles": t, "t_required": t_req, "t_bonferroni": stats.t_krav(LOCKED_ATTEMPTS), "t_quantile_unrounded": t_required(LOCKED_ATTEMPTS, n), "beta_btc": beta, "cagr": cagr, "span_days": span_days,
             "stressed_total_return": stressed_total, "total_return": ordinary.v_final / ordinary.start_capital - 1,
             "cycle_returns": r, "positive_cycles": int(sum(1 for x in r if x > 0)), "mean_cycle_return": statistics.fmean(r),
             "mean_cycle_return_ci": [float(np.percentile(boots, 2.5)), float(np.percentile(boots, 97.5))],
@@ -361,7 +363,7 @@ def run(repo: Path, *, confirm_registered_run: bool = False) -> Path:
     try:
         ordinary = simulate(panel, cycles, sizes)
         stressed = simulate(panel, cycles, sizes, costs=Costs().stressed())
-        out = {**base, **evaluate(ordinary, stressed, panel, cycles, attempts=reg.attempts)}
+        out = {**base, **evaluate(ordinary, stressed, panel, cycles), "registry_attempts_now": reg.attempts}
     except InvalidRun as exc:
         out = {**base, "valid": False, "decision": "OGILTIG", "invalid_reasons": [str(exc)],
                "note": "Datakravet i research/h0023-protokoll.md är inte uppfyllt. Inget beslut, aldrig MORE_RESEARCH. Inga prestandasiffror redovisas."}

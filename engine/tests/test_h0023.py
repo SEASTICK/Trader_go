@@ -184,14 +184,14 @@ def test_riskstopp_stänger_vid_nästa_öppning_med_full_kostnad_och_standardgr�
 
 def test_stopp_ger_reject_via_kriteriet_och_aldrig_morgonbeslut():
     ordinary, stressed = _run(stop_ratio=0.4), _run(stop_ratio=0.4, costs=h.Costs().stressed())
-    out = h.evaluate(ordinary, stressed, mkpanel(), CYCLES, attempts=23, n_boot=50, min_coin_cycles=10, min_cycles_four=1)
+    out = h.evaluate(ordinary, stressed, mkpanel(), CYCLES, n_boot=50, min_coin_cycles=10, min_cycles_four=1)
     assert out["valid"] and out["criteria"]["no_risk_stop"] is False and out["decision"] == "REJECT"
 
 
 # ------------------------------------------------------------------ datakrav som fail-closed, ogiltig utan siffror
 def test_datakrav_4_ger_ogiltig_utan_prestandasiffror_och_aldrig_more_research():
     ordinary, stressed = _run(), _run(costs=h.Costs().stressed())
-    out = h.evaluate(ordinary, stressed, mkpanel(), CYCLES, attempts=23, n_boot=50)                          # standardkrav 46 av 91 och 10 av 13
+    out = h.evaluate(ordinary, stressed, mkpanel(), CYCLES, n_boot=50)                          # standardkrav 46 av 91 och 10 av 13
     assert out["valid"] is False and out["decision"] == "OGILTIG" and any("Datakrav 4" in r for r in out["invalid_reasons"])
     for forbidden in ("t_over_cycles", "cagr", "beta_btc", "total_return", "stressed_total_return", "cycle_returns", "criteria", "positions"):
         assert forbidden not in out
@@ -202,16 +202,16 @@ def test_saknad_btc_stapel_för_beta_ger_ogiltig():
     p = mkpanel()
     p.btc = p.btc.drop(pd.Timestamp("2022-06-25", tz="UTC"))                                                 # T_2 = F_3
     ordinary, stressed = _run(mkpanel()), _run(mkpanel(), costs=h.Costs().stressed())
-    out = h.evaluate(ordinary, stressed, p, CYCLES, attempts=23, n_boot=50, min_coin_cycles=10, min_cycles_four=2)
+    out = h.evaluate(ordinary, stressed, p, CYCLES, n_boot=50, min_coin_cycles=10, min_cycles_four=2)
     assert out["decision"] == "OGILTIG" and any("Datakrav 8" in r and "2022-06-25" in r for r in out["invalid_reasons"])
     assert "beta_btc" not in out
 
 
 def test_giltig_syntetisk_körning_ger_siffror_och_beslut_enligt_kriterierna():
     ordinary, stressed = _run(), _run(costs=h.Costs().stressed())
-    out = h.evaluate(ordinary, stressed, mkpanel(), CYCLES, attempts=23, n_boot=200, min_coin_cycles=10, min_cycles_four=2)
+    out = h.evaluate(ordinary, stressed, mkpanel(), CYCLES, n_boot=200, min_coin_cycles=10, min_cycles_four=2)
     assert out["valid"] and out["n_cycles"] == 3 and len(out["cycle_returns"]) == 3 and out["cycle_returns"][1] == 0.0
-    assert out["t_required"] == pytest.approx(h.t_required(23, 3)) and out["decision"] == h.decide(out["criteria"])
+    assert out["t_required"] == h.LOCKED_T_REQUIRED == 3.45 and out["decision"] == h.decide(out["criteria"])
     assert out["span_days"] == (pd.Timestamp("2022-09-23") - pd.Timestamp("2022-01-15")).days
     assert out["cagr"] == pytest.approx((ordinary.v_final / 140000.0) ** (365 / out["span_days"]) - 1)
 
@@ -236,9 +236,9 @@ def _btc_panel(cal):
 def test_cykelstatistik_t_beta_cagr_och_beslut_på_de_14_cyklerna_med_x14_som_slutpunkt():
     rs = [0.01, 0.0, 0.012, 0.011, 0.009, 0.013, 0.01, 0.012, 0.008, 0.011, 0.01, 0.012, 0.009, 0.011]
     sim, cal = _fake(rs)
-    out = h.evaluate(sim, sim, _btc_panel(cal), cal, attempts=23, n_boot=500)
+    out = h.evaluate(sim, sim, _btc_panel(cal), cal, n_boot=500)
     assert out["valid"] and out["n_cycles"] == 14
-    assert out["t_over_cycles"] == pytest.approx(h.cycle_t(rs)) and out["t_required"] == pytest.approx(3.4452, abs=1e-3)
+    assert out["t_over_cycles"] == pytest.approx(h.cycle_t(rs)) and out["t_required"] == 3.45 and out["t_quantile_unrounded"] == pytest.approx(3.4452, abs=1e-3) and out["attempts"] == 23
     assert h.t_required(23, 14) == pytest.approx(max(2.8518, 3.4452), abs=1e-3)
     win = cycle_windows(cal)
     port = {r["fill"]: r["v_start"] for r in sim.cycles}
@@ -317,3 +317,39 @@ def test_reglertabellen_pekar_på_kod_och_tester_som_finns():
         assert f"def {n}" in tests, n
     for fn in ("simulate", "evaluate", "decide", "t_required", "cycle_t", "assert_before_holdout", "run", "position_size", "ledger_run", "margin_ratio"):
         assert f"def {fn}" in code and fn in doc, fn
+
+
+# ------------------------------------------------------------------ låst beslutsgräns (granskningsfynd P1)
+def _rs_with_t(t_target):
+    """14 cykelavkastningar med exakt det önskade t (t är skalinvariant: medelvärdet sätts efter standardavvikelsen)."""
+    d = np.array([1, -1, 2, -2, 0.5, -0.5, 1.5, -1.5, 1, -1, 0.2, -0.2, 0.7, -0.7])
+    sd = float(np.std(d, ddof=1))
+    return list(0.001 * (d + t_target * sd / math.sqrt(14)))
+
+
+@pytest.mark.parametrize("t_target, expected", [(3.4452, False), (3.4499, False), (3.4501, True), (3.60, True)])
+def test_beslutsgränsen_är_det_frysta_3_45_inte_den_oavrundade_kvantilen(t_target, expected):
+    rs = _rs_with_t(t_target)
+    assert h.cycle_t(rs) == pytest.approx(t_target, abs=1e-9)
+    sim, cal = _fake(rs)
+    out = h.evaluate(sim, sim, _btc_panel(cal), cal, n_boot=20)
+    assert out["t_required"] == h.LOCKED_T_REQUIRED == 3.45 and out["attempts"] == h.LOCKED_ATTEMPTS == 23
+    assert out["criteria"]["t_over_cycles_at_least_required"] is expected
+
+
+def test_senare_registerrader_ändrar_inte_h0023_gränsen(monkeypatch):
+    """Ett senare registrerat id (N = 24) får varken ändra kravet eller beslutet; registerantalet redovisas bara som information."""
+    from types import SimpleNamespace
+    seen = {}
+    sim, cal = _fake(_rs_with_t(3.4499))
+    monkeypatch.setattr(h, "require_registered", lambda hyp, repo=None: SimpleNamespace(attempts=24, registry_commit="x"))
+    monkeypatch.setattr(h, "load_panel", lambda repo, cycles: (_btc_panel(cal), {}))
+    monkeypatch.setattr(h, "simulate", lambda *a, **k: sim)
+    monkeypatch.setattr(h, "_save", lambda repo, out: seen.setdefault("out", out) and Path("x"))
+    real = h.evaluate
+    monkeypatch.setattr(h, "evaluate", lambda *a, **k: real(*a, **{**k, "n_boot": 20}))
+    assert "attempts" not in real.__code__.co_varnames[:real.__code__.co_argcount + real.__code__.co_kwonlyargcount]
+    h.run(Path(__file__).resolve().parents[2], confirm_registered_run=True)
+    out = seen["out"]
+    assert out["registry_attempts_now"] == 24 and out["attempts"] == 23 and out["t_required"] == 3.45
+    assert out["criteria"]["t_over_cycles_at_least_required"] is False and out["decision"] == "REJECT"
