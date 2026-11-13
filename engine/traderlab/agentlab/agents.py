@@ -56,7 +56,7 @@ def _view(upto: str) -> Panel:
         cut = lambda df: df.loc[:end]
         f = _FULL
         _VIEWS[upto] = Panel(cut(f.open), cut(f.high), cut(f.low), cut(f.close), cut(f.dvol), cut(f.funding), meta={**f.meta, "upto": upto},
-                             funding_known=cut(f.funding_known), funding_rule=f.funding_rule)
+                             funding_known=cut(f.funding_known), funding_rule=f.funding_rule, scope_rule=f.scope_rule)
     return _VIEWS[upto]
 
 
@@ -330,7 +330,8 @@ def data_task(pl: dict) -> dict:
     for name, s in SOURCES.items():
         avail[name] = {"status": s["status"], "description": s["description"], "needs": s["needs"]}
     info = {"symbols": len(pan.symbols), "first": str(pan.close.index[0].date()), "last": str(pan.close.index[-1].date()),
-            "funding_symbols": int((pan.funding.abs().sum() > 0).sum()), "caveat": pan.meta.get("caveat", "")}
+            "funding_symbols": int((pan.funding.abs().sum() > 0).sum()), "caveat": pan.meta.get("caveat", ""),
+            "scope": "USDT-perpar (punkt-i-tid-universum, universe.py)" if pan.scope_rule else "gamla universumet (R001-R004)", "universe_gap": len(pan.meta.get("universe_gap") or []), "universe_gap_symbols": list(pan.meta.get("universe_gap") or [])[:20]}
     return {"agent": "data", "availability": avail, "panel": info, "objections": [], "spawn": [
         {"name": "FundingSpecialist", "goal": "Mät om finansieringsränta förutsäger framtida avkastning (informationskoefficient)", "fn": "funding_specialist", "payload": {}},
         {"name": "OrderbookSpecialist", "goal": "Kontrollera om orderboksdata finns och föreslå hur den skaffas", "fn": "orderbook_specialist", "payload": {}},
@@ -405,7 +406,7 @@ def leakage_specialist(pl: dict) -> dict:
     for frac in (0.55, 0.7, 0.85):
         cut = int(n * frac)
         sub = Panel(pan.open.iloc[:cut], pan.high.iloc[:cut], pan.low.iloc[:cut], pan.close.iloc[:cut], pan.dvol.iloc[:cut], pan.funding.iloc[:cut], meta=pan.meta,
-                    funding_known=pan.funding_known.iloc[:cut], funding_rule=pan.funding_rule)
+                    funding_known=pan.funding_known.iloc[:cut], funding_rule=pan.funding_rule, scope_rule=pan.scope_rule)
         Ws = build(spec, sub).reindex(columns=W.columns).fillna(0.0)
         a, b = Ws.values, W.iloc[:cut].fillna(0.0).values            # alla rader inklusive den sista: en dags framtidsblick syns bara där
         worst = max(worst, float(np.nanmax(np.abs(a - b))))

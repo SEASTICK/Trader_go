@@ -84,7 +84,7 @@ def preliminary(ev: dict, iteration: int, max_iter: int) -> tuple[str, list[str]
     return "kill", fails or ["inget att rädda"]
 
 
-def final(ev: dict, sealed: dict, *, paper_gate: bool = True) -> dict:
+def final(ev: dict, sealed: dict, *, paper_gate: bool = True, universe_gap=()) -> dict:
     """Slutdom. `sealed` = {"valid": mått, "final": mått eller None}."""
     comp = components(ev, sealed)
     sc = score(comp)
@@ -100,6 +100,9 @@ def final(ev: dict, sealed: dict, *, paper_gate: bool = True) -> dict:
     if verdict == "PROMISING" and vs < 0.5:                  # discovery räcker inte: valideringsåret måste hålla
         verdict = "MORE_RESEARCH"
         fails = list(fails) + [f"valideringsårets Sharpe {vs:.2f} < 0,5 (PROMISING kräver minst 0,5)"]
+    if verdict == "PROMISING" and universe_gap:             # universumsgranskningen: en känd lucka i det historiska universumet blockerar bekräftande påståenden
+        verdict = "MORE_RESEARCH"
+        fails = list(fails) + [f"historiska universumet är inte komplett: {len(universe_gap)} perpar i arkivlistan saknas i panelen ({', '.join(list(universe_gap)[:5])}...)"]
     fin = sealed.get("final")
     notes = list(fails)
     if verdict == "PROMISING" and paper_gate and fin:

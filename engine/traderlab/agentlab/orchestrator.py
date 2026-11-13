@@ -238,7 +238,7 @@ class Orchestrator:
             ev = {"quant": {"disc": r["results"]["discovery"], "neighbors": r["results"]["neighbors"] or [], "turnover_ann": r["results"]["turnover_ann"] or 0.0,
                             "beta_btc": r["results"]["beta_btc"] or 0.0, "baselines": r["results"]["baselines"] or {}},
                   "cost": {"sharpe_grid": r["costs"]["sharpe_grid"] or {}}, "risk": {}, "skeptic": r["adversarial"], "portfolio": r.get("portfolio") or {}}
-            res = judge.final(ev, r["sealed"])
+            res = judge.final(ev, r["sealed"], universe_gap=self.panel.meta.get("universe_gap") or ())
             if res["verdict"] != r["verdict"]:
                 self.registry.append({**{k: r[k] for k in ("run", "key", "parent", "iteration", "control", "hypothesis", "family", "tags", "parameters", "model", "data", "timeframe", "market")},
                                       "stage": "rejudge", "judge_version": judge.JUDGE_VERSION, "verdict": res["verdict"], "previous_verdict": r["verdict"], "score": res["score"],
@@ -356,7 +356,7 @@ class Orchestrator:
                     r = vq.get(f"{c['spec']['key']}:valid").result or {}
                     sealed_all[id(c)]["valid"] = r.get("valid") or {"sharpe": 0.0, "ann_ret": 0.0, "max_dd": 0.0, "invalid": r.get("reason", "inget resultat")}
                     bb.s["spent"]["valid"].append({"run": self.run_id, "key": c["spec"]["key"]})
-            verdict1 = {id(c): judge.final(c["evidence"], {"valid": sealed_all[id(c)]["valid"], "final": None}) for c in survivors}
+            verdict1 = {id(c): judge.final(c["evidence"], {"valid": sealed_all[id(c)]["valid"], "final": None}, universe_gap=self.panel.meta.get("universe_gap") or ()) for c in survivors}
             # --- STEG 2: slutåret 2024, bara för dem som klarade valideringsgrinden (PROMISING), i en egen uppgift
             passers = [c for c in survivors if verdict1[id(c)]["verdict"] == "PROMISING"]
             if passers:
@@ -370,7 +370,7 @@ class Orchestrator:
             bb.s["sealed_looks"] = bb.s.get("sealed_looks", 0) + len(survivors) + len(passers)
             for c in survivors:
                 ev, sealed = c["evidence"], sealed_all[id(c)]
-                res = judge.final(ev, sealed)
+                res = judge.final(ev, sealed, universe_gap=self.panel.meta.get("universe_gap") or ())
                 c["final"], c["sealed"] = res, sealed
                 fam = bb.family(c["spec"]["family"])
                 if not c["control"]:

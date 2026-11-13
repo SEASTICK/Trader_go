@@ -2,7 +2,7 @@
 
 Mäter, per kandidat och totalt, exponeringen (summa av |vikt| över alla dagar och instrument) som (a) saknade nästa öppningskurs (t+1 eller t+2) eller
 (b) saknade känd finansiering under hållperioden. Körningarna R001-R004 fyllde båda med 0. Auditen läser bara det som redan är förbrukat och ändrar inga
-experimentposter. Vikterna återskapas med den gamla universumregeln (`funding_rule=False`) och jämförs mot registrets discovery-Sharpe för att visa att
+experimentposter. Vikterna återskapas med den gamla universumregeln (`funding_rule=False, scope_rule=False`) och jämförs mot registrets discovery-Sharpe för att visa att
 återskapandet är trogen.
 """
 from __future__ import annotations
@@ -21,7 +21,7 @@ from .strategies import make_spec
 
 def run_audit(repo: Path, root: Path) -> dict:
     panel = load_um_panel(repo / "data", cache=repo / "data" / "clean" / "agentlab-panel-v2.pkl")
-    v1 = replace(panel, funding_rule=False, _cache={})                      # körningarna R001-R004: ingen datatäckningsregel
+    v1 = replace(panel, funding_rule=False, scope_rule=False, _cache={})                      # körningarna R001-R004: ingen datatäckningsregel
     agents.set_panel(v1, repo / "data" / "clean" / "agentlab-cache")
     rows, seen = [], {}
     for r in ExperimentRegistry(root / "experiments.jsonl").read():
