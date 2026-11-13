@@ -17,7 +17,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from . import stats
+from . import nyse_sessions, stats
 
 HYPOTHESIS_ID = "H-0024"
 ATTEMPTS = 24                                            # N vid registreringen
@@ -150,12 +150,25 @@ def window_metrics(df: pd.DataFrame, period=PRIMARY, execution: str = "A", cost_
             "placebo_rank": int(1 + sum(v >= placebo[0] for v in others)), "halves_mean_D_m": halves}
 
 
-def check_data(df: pd.DataFrame, period=PRIMARY) -> list[str]:
-    """Protokollets datakrav 1 och 2 för primärperioden. Tom lista = uppfyllt. Datakrav 3 (inget slutprov) är uppfyllt av `clean_prices`."""
+def check_data(df: pd.DataFrame, period=PRIMARY, calendar: pd.DatetimeIndex | None = None) -> list[str]:
+    """Protokollets datakrav 1 och 2 för primärperioden. Tom lista = uppfyllt. Datakrav 3 (inget slutprov) är uppfyllt av `clean_prices`.
+
+    Utöver års- och månadsgränserna jämförs serien mot den fasta, versionshanterade NYSE-sessionskalendern (`nyse_sessions`): varje förväntad session ska finnas och
+    inga andra dagar får finnas. En saknad vanlig session kan annars rymmas inom årsgränsen, och en saknad månadsslutssession skulle flytta `T0` till föregående dag utan att
+    köras bli OGILTIG. Kalendern täcker 2006-01-01..2024-12-31; för en period utanför den görs ingen kalenderkontroll (bara primärperioden avgör något).
+    """
     reasons: list[str] = []
     sel = df[(df.index >= period[0]) & (df.index <= period[1])]
     if sel.empty:
         return ["inga rader i perioden"]
+    cal = nyse_sessions.load() if calendar is None else calendar
+    lo, hi = max(period[0], cal.min()), min(period[1], cal.max())
+    missing = nyse_sessions.missing_sessions(sel.index, cal, lo, hi)
+    if missing:
+        reasons.append(f"{len(missing)} förväntade NYSE-sessioner saknas, först: {', '.join(d.date().isoformat() for d in missing[:5])}")
+    extra = nyse_sessions.unexpected_days(sel.index, cal, lo, hi)
+    if extra:
+        reasons.append(f"{len(extra)} dagar i serien är inga NYSE-sessioner, först: {', '.join(d.date().isoformat() for d in extra[:5])}")
     if sel[["open", "close"]].isna().any().any():
         reasons.append("saknade värden i justerad öppning eller stängning")
     for year in range(period[0].year, period[1].year + 1):
@@ -180,11 +193,11 @@ def decide(valid: bool, criteria: dict | None) -> str:
     return "MORE_RESEARCH" if all(criteria.values()) else "REJECT"
 
 
-def evaluate(prices: pd.DataFrame, strict: bool = False) -> dict:
+def evaluate(prices: pd.DataFrame, strict: bool = False, calendar: pd.DatetimeIndex | None = None) -> dict:
     """Hela beslutet för primärperioden med utförande A. Kapar (eller avvisar) data från 2025-01-01 före all beräkning. Skriver ingenting."""
     df, n_cut = clean_prices(prices, strict=strict)
     base = {"hypothesis": HYPOTHESIS_ID, "rows_cut_holdout": n_cut, "t_required": T_REQUIRED, "attempts": ATTEMPTS}
-    reasons = check_data(df)
+    reasons = check_data(df, PRIMARY, calendar)
     if reasons:
         return {**base, "valid": False, "invalid_reasons": reasons, "decision": decide(False, None),
                 "note": "Datakravet i research/tom-protokoll.md är inte uppfyllt. Inget beslut, aldrig MORE_RESEARCH."}

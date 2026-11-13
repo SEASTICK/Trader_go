@@ -4,20 +4,16 @@ import sys
 import numpy as np
 import pandas as pd
 import pytest
-from pandas.tseries.holiday import (GoodFriday, Holiday, AbstractHolidayCalendar, USLaborDay, USMartinLutherKingJr, USMemorialDay, USPresidentsDay,
-                                    USThanksgivingDay, nearest_workday)
 
-from traderlab import stats, tom
-
-
-class _Nyse(AbstractHolidayCalendar):
-    rules = [Holiday("NewYear", month=1, day=1, observance=nearest_workday), USMartinLutherKingJr, USPresidentsDay, GoodFriday, USMemorialDay,
-             Holiday("July4", month=7, day=4, observance=nearest_workday), USLaborDay, USThanksgivingDay, Holiday("Xmas", month=12, day=25, observance=nearest_workday)]
+from traderlab import nyse_sessions, stats, tom
 
 
 def calendar(start="2005-01-03", end="2025-03-31") -> pd.DatetimeIndex:
-    """Handelsdagar med ungefär börsens helgdagar (cirka 251 per år)."""
-    return pd.bdate_range(start, end, freq="C", holidays=_Nyse().holidays(start, end))
+    """Handelsdagar med samma helgdagsregler och extra stängningar som den fasta NYSE-kalendern (identisk med den inom 2006–2024)."""
+    closed = set(nyse_sessions.SPECIAL_CLOSURES)
+    for y in range(pd.Timestamp(start).year, pd.Timestamp(end).year + 1):
+        closed |= nyse_sessions.holidays(y)
+    return pd.DatetimeIndex([d for d in pd.bdate_range(start, end) if d.date() not in closed])
 
 
 def prices(index, window_boost=0.0, shift=0, noise=0.01, drift=0.0004, seed=1) -> pd.DataFrame:
@@ -188,7 +184,7 @@ def test_datakrav_brott_ger_ogiltig_utan_kriterier():
         tom.clean_prices(dup)
 
 
-def test_helger_ger_249_till_253_dagar_per_ar_i_den_syntetiska_kalendern():
+def test_den_syntetiska_kalendern_ger_249_till_253_dagar_per_ar():
     idx = calendar("2006-01-02", "2024-12-31")
     per_year = pd.Series(1, index=idx).groupby(idx.year).sum()
     assert per_year.min() >= 249 and per_year.max() <= 253
@@ -202,3 +198,75 @@ def test_modulen_hamtar_ingen_data_och_skriver_ingenting():
     assert imported <= {"__future__", "numpy", "pandas", None, ""}, imported                                   # bara numpy/pandas och `from . import stats`
     calls = {n.func.attr if isinstance(n.func, ast.Attribute) else getattr(n.func, "id", "") for n in ast.walk(tree) if isinstance(n, ast.Call)}
     assert not calls & {"open", "to_csv", "write_text", "write_bytes", "urlopen", "load_prices", "dump", "to_json", "read_csv"}, calls
+
+
+# ------------------------------------------------------------------ fast NYSE-sessionskalender (datakrav: varje förväntad session ska finnas)
+def test_sessionskalendern_ar_fast_versionshanterad_och_stammer_med_kanda_antal():
+    cal = nyse_sessions.load()                                                       # kastar om filen ändrats (SHA-256)
+    assert (cal == nyse_sessions.generate()).all() and cal.min() == pd.Timestamp("2006-01-03") and cal.max() == pd.Timestamp("2024-12-31")
+    per_year = pd.Series(1, index=cal).groupby(cal.year).sum().to_dict()
+    assert per_year == nyse_sessions.EXPECTED_PER_YEAR and sum(per_year.values()) == len(cal) == 4781
+    absent = ["2007-01-02", "2012-10-29", "2012-10-30", "2018-12-05", "2022-06-20", "2009-07-03", "2010-07-05", "2010-12-24", "2011-12-26", "2012-01-02", "2017-01-02", "2015-04-03"]
+    assert not any(pd.Timestamp(d) in cal for d in absent)
+    assert all(pd.Timestamp(d) in cal for d in ["2010-12-31", "2021-12-31", "2006-12-29", "2008-12-31"])         # nyårsdagen på lördag stänger inte 31 dec
+    assert nyse_sessions.SESSIONS_FILE.read_bytes().count(b"\r") == 0
+
+
+def test_andrad_sessionskalender_vagras(tmp_path):
+    bad = tmp_path / "nyse.csv"
+    text = nyse_sessions.SESSIONS_FILE.read_text(encoding="utf-8").replace("2013-06-12\n", "")
+    bad.write_text(text, encoding="utf-8")
+    with pytest.raises(ValueError, match="har ändrats"):
+        nyse_sessions.load(bad)
+    crlf = tmp_path / "crlf.csv"
+    crlf.write_bytes(nyse_sessions.SESSIONS_FILE.read_bytes().replace(b"\n", b"\r\n"))
+    assert (nyse_sessions.load(crlf) == nyse_sessions.load()).all()                   # radslut (Windows) ändrar inte hashen
+
+
+def test_saknad_vanlig_session_i_ar_med_252_ger_ogiltig_trots_att_arsgransen_passeras():
+    idx = calendar("2004-01-02", "2025-02-28")
+    base = prices(idx, window_boost=0.004, noise=0.006)
+    assert nyse_sessions.EXPECTED_PER_YEAR[2013] == 252
+    gone = pd.Timestamp("2013-06-12")
+    dropped = base[base.index != gone]
+    assert int((dropped.index.year == 2013).sum()) == 251 and tom.YEAR_DAYS[0] <= 251 <= tom.YEAR_DAYS[1]          # inom 249–253: årsgränsen ser inget
+    out = tom.evaluate(dropped)
+    assert out["valid"] is False and out["decision"] == "OGILTIG" and "criteria" not in out and "metrics" not in out and "stressed" not in out
+    assert any("2013-06-12" in r and "saknas" in r for r in out["invalid_reasons"])
+    assert not any("2013:" in r for r in out["invalid_reasons"])                                                     # det var just kalenderkontrollen som fångade det
+
+
+def test_saknad_manadsslutssession_flyttar_t0_men_ger_ogiltig():
+    idx = calendar("2004-01-02", "2025-02-28")
+    base = prices(idx, window_boost=0.004, noise=0.006)
+    assert tom.evaluate(base)["valid"]
+    gone = pd.Timestamp("2013-05-31")                                                                                # månadens sista handelsdag
+    dropped = base[base.index != gone]
+    df, _ = tom.clean_prices(dropped)
+    t0 = [df.index[i] for i in tom.month_end_positions(df.index)]
+    assert pd.Timestamp("2013-05-30") in t0 and gone not in t0                                                       # utan kalenderkontroll skulle T0 flyttats en dag
+    out = tom.evaluate(dropped)
+    assert out["valid"] is False and out["decision"] == "OGILTIG" and "criteria" not in out and "metrics" not in out
+    assert any("2013-05-31" in r for r in out["invalid_reasons"])
+    assert tom.check_data(df, tom.PRIMARY, nyse_sessions.load()) == out["invalid_reasons"]
+
+
+def test_extra_dag_som_inte_ar_session_ger_ogiltig():
+    idx = calendar("2004-01-02", "2025-02-28")
+    base = prices(idx, window_boost=0.004, noise=0.006)
+    row = base.iloc[[0]].copy()
+    row.index = pd.DatetimeIndex([pd.Timestamp("2013-07-04")])                                                       # helgdag
+    extra = pd.concat([base, row]).sort_index()
+    out = tom.evaluate(extra)
+    assert out["valid"] is False and out["decision"] == "OGILTIG" and any("2013-07-04" in r and "inga NYSE-sessioner" in r for r in out["invalid_reasons"])
+    assert tom.evaluate(base)["valid"] is True                                                                       # och en komplett serie är fortfarande giltig
+
+
+def test_kalenderkontrollen_ar_bara_for_perioden_och_ger_ingen_ny_ogiltighet_for_fullstandig_serie():
+    idx = calendar("2004-01-02", "2025-02-28")
+    base = prices(idx, window_boost=0.004, noise=0.006)
+    out = tom.evaluate(base)
+    assert out["valid"] and out["decision"] == "MORE_RESEARCH"
+    before = base[base.index < "2006-01-01"].iloc[10:]                                                              # luckor före perioden spelar ingen roll
+    holey = pd.concat([before.iloc[::2], base[base.index >= "2006-01-01"]])
+    assert tom.evaluate(holey)["valid"]
