@@ -98,6 +98,28 @@ def _traded(df: pd.DataFrame | None, day: str) -> bool:
     return b is not None and float(b["volume"]) > 0
 
 
+def _px(df: pd.DataFrame | None, day: str, col: str, what: str) -> float:
+    """Ett **använt** prisfält: stapeln måste finnas och värdet vara ändligt och > 0. Annars `InvalidRun` (OGILTIG), aldrig tyst platt eller NaN i beräkningen."""
+    b = _bar(df, day)
+    if b is None:
+        raise InvalidRun(f"{what}: stapel saknas {day}")
+    try:
+        v = float(b[col])
+    except (KeyError, TypeError, ValueError):
+        raise InvalidRun(f"{what}: fältet {col} saknas eller är ogiltigt {day}") from None
+    if not math.isfinite(v) or v <= 0:
+        raise InvalidRun(f"{what}: {col} är inte ett ändligt positivt pris ({v}) {day}")
+    return v
+
+
+def _mark_bar(df: pd.DataFrame | None, day: str, what: str) -> float:
+    """Markprisstapel för en hållen dag: open, high, low och close ändliga och > 0, och high/low förenliga med de andra fälten. Returnerar high."""
+    o, hi, lo, cl = (_px(df, day, c, what) for c in ("open", "high", "low", "close"))
+    if hi < max(o, cl, lo) or lo > min(o, cl, hi):
+        raise InvalidRun(f"{what}: markprisets high/low är inte förenliga med open/close ({o}, {hi}, {lo}, {cl}) {day}")
+    return hi
+
+
 def _days(a: str, b: str) -> list[str]:
     d, out, end = pd.Timestamp(a), [], pd.Timestamp(b)
     while d <= end:
@@ -156,14 +178,13 @@ def _fill_prices(panel: Panel, coin: str, series: str, cycle: dict) -> dict:
         for day in (f, cycle["exit"]):
             if not _traded(df, day):
                 raise InvalidRun(f"{coin} {series}: saknad stapel eller nollvolym för {label} på fyllningsdagen {day} (beslutad position)")
-    for day in _days(_next(f), cycle["exit"]):
-        if _bar(fut, day) is None or _bar(spot, day) is None:
-            raise InvalidRun(f"{coin} {series}: nästa öppning saknas {day} (termin eller spot)")
+    for day in _days(f, cycle["exit"]):                 # alla öppningar som används: fyllning, nästa öppning varje dag (stopp, dagsvärde) och utträde
+        _px(fut, day, "open", f"{coin} {series} termin")
+        _px(spot, day, "open", f"{coin} spot")
     for day in held:
-        if _bar(mark, day) is None:
-            raise InvalidRun(f"{coin} {series}: markpris saknas {day}")
-    return {"spot0": float(_bar(spot, f)["open"]), "fut0": float(_bar(fut, f)["open"]),
-            "spot_exit": float(_bar(spot, x)["open"]), "fut_exit": float(_bar(fut, x)["open"]), "held": held}
+        _mark_bar(mark, day, f"{coin} {series} markpris")
+    return {"spot0": _px(spot, f, "open", f"{coin} spot"), "fut0": _px(fut, f, "open", f"{coin} {series} termin"),
+            "spot_exit": _px(spot, x, "open", f"{coin} spot"), "fut_exit": _px(fut, x, "open", f"{coin} {series} termin"), "held": held}
 
 
 def _check_cycle(c: dict) -> None:
@@ -197,7 +218,7 @@ def simulate(panel: Panel, cycles: list[dict], sizes: dict, *, costs: Costs | No
             stop_day, exit_day = None, c["exit"]
             for day in px["held"]:
                 ratio = margin_ratio(margin_coins=base.margin_coins, contracts=base.contracts, contract_usd=CONTRACT_USD, entry=px["fut0"],
-                                     mark=float(_bar(panel.mark[series], day)["high"]), mmr=mmr)
+                                     mark=_mark_bar(panel.mark[series], day, f"{coin} {series} markpris"), mmr=mmr)
                 if ratio >= stop_ratio:
                     stop_day, exit_day = day, _next(day)
                     stops.append({"cycle": c["cycle"], "coin": coin, "series": series, "day": day, "ratio": ratio, "exit_day": exit_day})
@@ -295,6 +316,11 @@ def evaluate(ordinary: SimResult, stressed: SimResult, panel: Panel, cycles: lis
     for day in sorted({d for w in windows for d in w}):
         if not _traded(panel.btc, day):
             reasons.append(f"Datakrav 8: ingen verifierad BTCUSDT-spotstapel exakt 00:00 UTC med volym {day}")
+        else:
+            try:
+                _px(panel.btc, day, "open", "BTCUSDT spot")
+            except InvalidRun as exc:
+                reasons.append(f"Datakrav 8: {exc}")
     base = {"hypothesis_id": HYPOTHESIS, "attempts": LOCKED_ATTEMPTS, "n_cycles": len(cycles),
             "coverage_diagnostic": {"traded_coin_cycles": ordinary.traded_coin_cycles, "possible_coin_cycles": possible, "cycles_with_four": with_four,
                                     "non_flat_cycles": len(non_flat)}}

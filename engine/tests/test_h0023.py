@@ -353,3 +353,59 @@ def test_senare_registerrader_ändrar_inte_h0023_gränsen(monkeypatch):
     out = seen["out"]
     assert out["registry_attempts_now"] == 24 and out["attempts"] == 23 and out["t_required"] == 3.45
     assert out["criteria"]["t_over_cycles_at_least_required"] is False and out["decision"] == "REJECT"
+
+
+# ------------------------------------------------------------------ prisfälten måste vara ändliga och positiva (granskningsfynd P1)
+def _set(group, key, day, col, value):
+    group[key].loc[pd.Timestamp(day, tz="UTC"), col] = value
+
+
+@pytest.mark.parametrize("bad", [float("nan"), float("inf"), 0.0, -1.0])
+@pytest.mark.parametrize("where", [
+    ("mark", "ADA@S", "2022-02-10", "high"),          # hållen dag: NaN i high ger annars margin_ratio NaN och ett riskstopp som aldrig kan utlösas
+    ("mark", "ADA@S", "2022-01-15", "low"),
+    ("mark", "ADA@S", "2022-03-17", "close"),
+    ("mark", "ADA@S", "2022-02-01", "open"),
+    ("fut", "ADA@S", "2022-01-15", "open"),            # fyllning
+    ("spot", "ADA", "2022-01-15", "open"),
+    ("fut", "ADA@S", "2022-02-10", "open"),            # nästa öppning (stopp och dagsvärde)
+    ("spot", "ADA", "2022-02-10", "open"),
+    ("fut", "ADA@S", "2022-03-18", "open"),            # utträde
+    ("spot", "ADA", "2022-03-18", "open"),
+])
+def test_saknat_nan_oändligt_eller_icke_positivt_använt_pris_ger_ogiltig(where, bad):
+    group, key, day, col = where
+    key = _series_name("ADA", "2022-03-25") if key == "ADA@S" else key
+    p = mkpanel()
+    _set(getattr(p, group), key, day, col, bad)
+    with pytest.raises(h.InvalidRun):
+        h.simulate(p, CYCLES, SIZES)
+
+
+def test_markprisets_high_måste_vara_förenligt_med_övriga_fält():
+    p = mkpanel()
+    sym = _series_name("ADA", "2022-03-25")
+    _set(p.mark, sym, "2022-02-10", "high", p.mark[sym].loc[pd.Timestamp("2022-02-10", tz="UTC"), "low"] * 0.5)      # high under low/open/close
+    with pytest.raises(h.InvalidRun, match="förenliga"):
+        h.simulate(p, CYCLES, SIZES)
+
+
+def test_felaktigt_pris_i_en_icke_beslutad_position_stoppar_inte_körningen():
+    """Priser som inte används (myntet blev platt före fyllningen) kontrolleras inte, bara de som en beslutad position faktiskt läser."""
+    p = mkpanel()
+    sym = _series_name("ADA", "2022-03-25")
+    _set(p.fut, sym, "2022-01-14", "volume", 0.0)                      # ADA ej beslutad (ingen volym beslutsdagen)
+    _set(p.mark, sym, "2022-02-10", "high", float("nan"))
+    res = h.simulate(p, CYCLES, SIZES)
+    assert "ADA" not in {x["coin"] for x in res.cycles[0]["positions"]}
+
+
+@pytest.mark.parametrize("bad", [float("nan"), 0.0, -5.0])
+def test_btc_open_som_inte_är_ett_positivt_ändligt_pris_ger_ogiltig_utan_prestandasiffror(bad):
+    sim, cal = _fake([0.01, 0.0, 0.012, 0.011, 0.009, 0.013, 0.01, 0.012, 0.008, 0.011, 0.01, 0.012, 0.009, 0.011])
+    btc_panel = _btc_panel(cal)
+    day = sim.windows[3][0]
+    btc_panel.btc.loc[pd.Timestamp(day, tz="UTC"), "open"] = bad
+    out = h.evaluate(sim, sim, btc_panel, cal, n_boot=20)
+    assert out["valid"] is False and out["decision"] == "OGILTIG" and any("Datakrav 8" in r and day in r for r in out["invalid_reasons"])
+    assert not {"beta_btc", "t_over_cycles", "cagr"} & set(out)
