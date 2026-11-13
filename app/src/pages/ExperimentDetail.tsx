@@ -5,7 +5,8 @@ import frozenMarket from "../../data/fas1-market.json";
 import type { Candle } from "../lib/candles";
 import { seriesFor } from "../lib/candles";
 import { Icon } from "../components/icons";
-import { Page, Segmented, StatusDot } from "../components/ui";
+import { Outcome, Page, Segmented } from "../components/ui";
+import { outcomeOf } from "../lib/status";
 import { num, pct, type Computed } from "../lib/experiments";
 import registryMd from "../../../research/registry.md?raw";
 import { parseRegistry } from "../lib/registry";
@@ -26,7 +27,7 @@ export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: {
   if (!real) {
     return (
       <Page title={`${exp.id} · ${exp.namn}`} sub={`${exp.strategi} · ${exp.marknad} · ${exp.tidsram} · ${exp.riktning}`}
-        actions={<button className="btn" onClick={onBack}>← Tillbaka till rutorna</button>}>
+        actions={<button className="btn" onClick={onBack}>← Tillbaka till resultaten</button>}>
         <div className="banner-sim" role="note"><b>Inte testad.</b> Den här idén har ingen registrerad hypotes och inget resultat än, så inga siffror visas. Nedan syns marknadens verkliga priser.</div>
         <CandleChart series={series} noSourceReason={`${exp.marknad} har ingen publik datakälla i appen än. Bara Bitcoin samlas in.`} />
       </Page>
@@ -37,7 +38,7 @@ export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: {
     <Page
       title={`${exp.id} · ${exp.namn}`}
       sub={`${exp.strategi} · ${exp.marknad} · ${exp.tidsram} · ${exp.riktning}`}
-      actions={<button className="btn" onClick={onBack}>← Tillbaka till rutorna</button>}
+      actions={<button className="btn" onClick={onBack}>← Tillbaka till resultaten</button>}
     >
       {real ? (
         <div className="banner-real" role="note">
@@ -112,7 +113,7 @@ export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: {
         <section className="card pad">
           <h2>Om testet</h2>
           <dl className="dl" style={{ marginTop: 14 }}>
-            <dt>Status</dt><dd><StatusDot status={real ? (c.hypotes && decisions[c.hypotes]) || "Pågår" : "Idé"} /></dd>
+            <dt>Status</dt><dd><Outcome kind={outcomeOf({ decision: real && c.hypotes ? decisions[c.hypotes] ?? null : null, invalid: false })} /></dd>
             <dt>Hypotes</dt><dd>{real ? <b>{c.hypotes}</b> : <span className="muted">Inte registrerad än (<code>research/registry.md</code>)</span>}</dd>
             {real && c.deflated != null && <><dt>Deflated Sharpe</dt><dd>{num(c.deflated * 100, 0)} % sannolikhet att slå bästa tur efter alla försök</dd></>}
             {real && c.resultatfil && <><dt>Resultatfil</dt><dd><code>{c.resultatfil}</code></dd></>}
@@ -147,7 +148,7 @@ export default function ExperimentDetail({ c, krav: kravAlla, total, onBack }: {
           <li>Slår det baslinjen köp-och-behåll efter kostnader?</li>
           <li>Är kostnader och slippage med, och för terminer finansiering och likvidation?</li>
         </ul>
-        <p className="footnote" style={{ padding: "12px 0 0" }}>Se skillen <code>granska-backtest</code>. <code>REJECT</code> är ett bra utfall.</p>
+        <p className="footnote" style={{ padding: "12px 0 0" }}>Se skillen <code>granska-backtest</code>. Att en idé inte klarar testkraven är ett normalt och bra utfall: inga pengar riskerades.</p>
       </section>
     </Page>
   );

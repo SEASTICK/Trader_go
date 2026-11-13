@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "./components/icons";
 import { Page, Segmented } from "./components/ui";
-import { isDesktop, Paper } from "./desktop";
 import Overview from "./pages/Overview";
 import Research from "./pages/Research";
 import Status from "./pages/Status";
 import Market from "./pages/Market";
-import Investors, { unseenFilings } from "./pages/Investors";
+import Papper from "./pages/Papper";
+import { unseenFilings } from "./pages/Investors";
 import ResearchLab from "./features/research-engine/ResearchLab";
 import { UpdateDialog } from "./features/updates/UpdateDialog";
 import { useUpdater } from "./features/updates/useUpdater";
@@ -15,20 +15,18 @@ import { prefersReducedMotion, readLaunch } from "./lib/launch";
 
 function storage(): Storage | null { try { return window.localStorage; } catch { return null; } }
 
-const NAV = [
-  { id: "Översikt", icon: "home" },
+// Fyra huvudval, grupperade efter vad man vill göra. Avancerat och inställningar ligger under "Mer".
+export const NAV = [
+  { id: "Hem", icon: "home" },
+  { id: "Resultat", icon: "flask" },
+  { id: "Papper", icon: "shield" },
   { id: "Marknad", icon: "candles" },
-  { id: "Research", icon: "flask" },
-  { id: "Investerare", icon: "list" },
+] as const;
+export const MORE = [
   { id: "Research Lab", icon: "lab" },
   { id: "Status", icon: "info" },
 ] as const;
-// Bara i datorprogrammet; webbversionen har ingen Tauri-brygga.
-const DESKTOP_NAV = [
-  { id: "Papper", icon: "shield" },
-] as const;
-const ALL_NAV = isDesktop ? [...NAV, ...DESKTOP_NAV] : NAV;
-type PageId = (typeof NAV)[number]["id"] | (typeof DESKTOP_NAV)[number]["id"];
+type PageId = (typeof NAV)[number]["id"] | (typeof MORE)[number]["id"];
 type Theme = "Ljust" | "Mörkt" | "System";
 
 function loadTheme(): Theme {
@@ -37,7 +35,7 @@ function loadTheme(): Theme {
 }
 
 export default function App() {
-  const [page, setPage] = useState<PageId>("Översikt");
+  const [page, setPage] = useState<PageId>("Hem");
   const [theme, setTheme] = useState<Theme>(loadTheme);
   const [menu, setMenu] = useState(false);
   const [settings, setSettings] = useState(false);
@@ -67,18 +65,22 @@ export default function App() {
     <div className={intro ? "shell behind-intro" : "shell"}>
       <aside className="sidebar">
         <div className="brand"><img src="/logo.svg" className="logo" alt="" /><b>Trader_go</b></div>
-        <nav>
-          {ALL_NAV.map((n) => (
-            <button key={n.id} className={page === n.id ? "nav on" : "nav"} onClick={() => setPage(n.id)}>
-              <Icon name={n.icon} /> {n.id}
-              {n.id === "Investerare" && page !== "Investerare" && unseenFilings() > 0 && <span className="nav-badge" aria-label="nya redovisningar">{unseenFilings()}</span>}
+        <nav aria-label="Huvudmeny">
+          {NAV.map((n) => (
+            <button key={n.id} className={page === n.id ? "nav on" : "nav"} aria-current={page === n.id ? "page" : undefined} onClick={() => setPage(n.id)}>
+              <Icon name={n.icon} /> <span>{n.id}</span>
+              {n.id === "Papper" && page !== "Papper" && unseenFilings() > 0 && <span className="nav-badge" role="img" aria-label="nya redovisningar">{unseenFilings()}</span>}
             </button>
           ))}
         </nav>
         <div className="side-foot" ref={menuRef}>
           {menu && (
             <div className="popup" role="menu">
-              <div className="popup-head"><b>Trader_go</b><span className="muted">Privat forskning</span></div>
+              <div className="popup-head"><span className="k">Avancerat</span></div>
+              {MORE.map((m) => (
+                <button key={m.id} role="menuitem" className={page === m.id ? "item on" : "item"} onClick={() => { setPage(m.id); setMenu(false); }}><Icon name={m.icon} /> {m.id}</button>
+              ))}
+              <div className="popup-head"><span className="k">Program</span></div>
               <button className="item" onClick={() => { setSettings(true); setMenu(false); }}><Icon name="settings" /> Inställningar</button>
               <button className="item" onClick={() => setTheme(theme === "Mörkt" ? "Ljust" : "Mörkt")}>
                 <Icon name={theme === "Mörkt" ? "sun" : "moon"} /> Utseende <span className="muted right">{theme}</span>
@@ -90,13 +92,11 @@ export default function App() {
                   <span className="muted right">{updater.notice.status === "ready" ? `v${updater.notice.version} klar` : updater.notice.status === "available" || updater.notice.status === "downloading" ? `Hämtar v${updater.notice.version}` : updater.notice.status === "checking" ? "Söker…" : updater.notice.status === "current" ? "Aktuell" : updater.notice.status === "error" ? "Fel" : ""}</span>
                 </button>
               )}
-              <div className="item static"><Icon name="info" /> Om Trader_go <span className="muted right">v{__APP_VERSION__} · {__COMMIT__}</span></div>
+              <div className="item static"><Icon name="info" /> Om Trader_go <span className="muted right">v{__APP_VERSION__}</span></div>
             </div>
           )}
-          <button className="user" onClick={() => setMenu(!menu)}>
-            <span className="avatar">TG</span>
-            <span className="who"><b>Trader_go</b><span className="muted">Privat forskning</span></span>
-            <span className="dots">···</span>
+          <button className={MORE.some((m) => m.id === page) ? "nav more-btn on" : "nav more-btn"} aria-haspopup="menu" aria-expanded={menu} onClick={() => setMenu(!menu)}>
+            <Icon name="dots" /> <span>Mer</span>
           </button>
         </div>
       </aside>
@@ -110,15 +110,14 @@ export default function App() {
             </button>
           </div>
         )}
-        <div className="topbar"><span className="saved" title="Version och byggcommit. Samma värden hos er båda = samma program."><i />Papper · inga riktiga pengar · v{__APP_VERSION__} ({__COMMIT__})</span></div>
+        <div className="topbar"><span className="saved"><i />Papper · inga riktiga pengar</span></div>
         <div className="page-anim" key={intro ? `${page}-intro` : page}>
-        {page === "Översikt" && <Overview go={(p) => setPage(p)} />}
+        {page === "Hem" && <Overview go={(p) => setPage(p)} />}
+        {page === "Resultat" && <Research />}
+        {page === "Papper" && <Papper />}
         {page === "Marknad" && <Market />}
-        {page === "Research" && <Research />}
-        {page === "Investerare" && <Investors />}
         {page === "Research Lab" && <ResearchLab />}
         {page === "Status" && <Status updater={updater} />}
-        {page === "Papper" && <Page title="Papper" sub="Bara papper. Ingen riktig order läggs."><div className="card pad desk"><Paper /></div></Page>}
         </div>
       </main>
 

@@ -5,7 +5,7 @@ import pelosiData from "../../data/pelosi.json";
 import registryMd from "../../../research/registry.md?raw";
 import { LineChart } from "../components/Charts";
 import { groupRegistry, missingPrices, parseRegistry } from "../lib/registry";
-import { Page } from "../components/ui";
+import { Details, Page } from "../components/ui";
 
 type Holding = { ticker: string; shares: number; value: number };
 type Event = { day: string; filed: string; manager: string; accession: string; top10: { ticker: string | null; weight: number }[] };
@@ -46,7 +46,7 @@ export function unseenFilings(): number {
   return sn.recent_filings.filter((f) => f.filed > seen).length + pel.filings.filter((f) => f.filed > seen).length;
 }
 
-export default function Investors() {
+export default function Investors({ actions }: { actions?: React.ReactNode } = {}) {
   const [openMgr, setOpenMgr] = useState<string | null>(null);
   const [seenBefore] = useState(() => {
     let v = "";
@@ -77,12 +77,11 @@ export default function Investors() {
   const ret = p.value / p.start_capital - 1;
   const spyRet = p.spy_value / p.start_capital - 1;
     return (
-    <Page title="Investerare" sub={`Papperportfölj på ${usd(p.start_capital)} som följer genomsnittet av tio kända investerares största innehav (13F). Inga riktiga pengar.`}>
-      <div className="kpis">
+    <Page title="Papperportfölj" sub={`${usd(p.start_capital)} i papper som följer tio kända investerare (13F). Observation framåt, inga riktiga pengar.`} actions={actions}>
+      <div className="kpis three">
         <div className="card kpi"><span className="k">Värde nu</span><b>{usd(p.value)}</b><span className={ret >= 0 ? "up" : "down"}>{started ? pct(ret) : "Inte startad än"}</span></div>
         <div className="card kpi"><span className="k">S&P 500 (SPY)</span><b>{usd(p.spy_value)}</b><span className="muted">{started ? pct(spyRet) : "Samma start"}</span></div>
         <div className="card kpi"><span className="k">Skillnad mot SPY</span><b className={ret - spyRet >= 0 ? "up" : "down"}>{started ? pct(ret - spyRet) : "–"}</b><span className="muted">Sedan {p.start}</span></div>
-        <div className="card kpi"><span className="k">Innehav</span><b>{p.holdings.length}</b><span className="muted">{p.managers.length} investerare följs</span></div>
       </div>
 
       {!started ? (
@@ -99,6 +98,7 @@ export default function Investors() {
         </section>
       )}
 
+      <Details summary="Visa innehav, investerare och redovisningar">
       <section className="card table-card">
         <div className="card-head"><div><h2>Vad de äger nu</h2><p className="muted">Genomsnitt av de tio investerarnas tio största innehav enligt senaste 13F (samma vikter som portföljen). Uppdaterad {sn.updated_at.slice(0, 10)}.</p></div></div>
         {sn.consensus.slice(0, 15).map((c) => (
@@ -146,6 +146,8 @@ export default function Investors() {
           ))}
         </section>
       </div>
+
+      </Details>
 
       <p className="footnote">Följer: {p.managers.join(", ")}. Regler: <code>{"research/13f-protokoll.md"}</code>. Redovisningarna kommer upp till 45 dagar efter kvartalet, så portföljen ligger alltid efter investerarna. Papperportföljen är en observation framåt från 2026-11-05, inte ett validerat historiskt test, och inget löfte om avkastning.</p>
       <p className="footnote">Historiska tester av idén: {history.map((h) => `${h.id} ${h.invalid ? `ogiltig${h.missing ? ` (${String(h.missing.share).replace(".", ",")} % av vikten utan kurs, gräns ${h.missing.limit} %)` : ""}` : h.decision ?? "pågår"}`).join(" · ")}. Se Research, Hypoteser.</p>

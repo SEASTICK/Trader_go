@@ -27,3 +27,21 @@ export function Page({ title, sub, actions, children }: { title: string; sub?: s
   );
 }
 
+
+import { OUTCOME_LABEL, type Outcome as OutcomeKind } from "../lib/status";
+
+/** Status med en liten punkt och ett begripligt ord (aldrig rått registerord som REJECT). */
+export function Outcome({ kind }: { kind: OutcomeKind }) {
+  const tone = kind === "further" || kind === "paper" ? "good" : kind === "invalid" ? "warn" : "idle";
+  return <span className={`status ${tone}`}><i />{OUTCOME_LABEL[kind]}</span>;
+}
+
+/** Långa förklaringar och tekniska detaljer bakom en tydlig knapp. Fungerar med tangentbord utan JavaScript-tillstånd. */
+export function Details({ summary, children, open }: { summary: string; children: ReactNode; open?: boolean }) {
+  return (
+    <details className="more" open={open}>
+      <summary>{summary}</summary>
+      <div className="more-body">{children}</div>
+    </details>
+  );
+}

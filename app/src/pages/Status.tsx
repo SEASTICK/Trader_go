@@ -1,4 +1,4 @@
-import { Page } from "../components/ui";
+import { Details, Page } from "../components/ui";
 import type { useUpdater } from "../features/updates/useUpdater";
 import { STATE_TEXT, useMarketStatus } from "../features/market/useMarketStatus";
 
@@ -24,15 +24,11 @@ export default function Status({ updater }: { updater: Updater }) {
   const busy = notice.status === "checking" || notice.status === "installing";
   const ready = notice.status === "ready" || (notice.status === "installing" && !!notice.version);
   return (
-    <Page title="Status" sub="Är versionen densamma hos er båda ser ni samma program.">
+    <Page title="Status" sub="Programversion, uppdateringar och datakällor.">
       <section className="card pad">
         <h2>Uppdateringar</h2>
-        <dl className="dl" style={{ marginTop: 16 }}>
-          <dt>Installerad version</dt><dd><b>v{__APP_VERSION__}</b> <span className="muted">({__COMMIT__})</span></dd>
-          <dt>Kanal</dt><dd>{__UPDATE_CHANNEL__ === "test" ? "Test (bara testbyggen)" : "Stable"} <span className="muted">({__UPDATE_FEED__})</span></dd>
-          <dt>Läge</dt><dd>{statusText(updater)}</dd>
-        </dl>
-        <div className="update-actions" style={{ marginTop: 18 }}>
+        <p className="lead-line">Du kör <b>v{__APP_VERSION__}</b>. {statusText(updater)}</p>
+        <div className="update-actions">
           {ready && <button type="button" className="btn accent" disabled={busy} onClick={updater.openPrompt}>{notice.status === "installing" ? "Uppdaterar…" : `Starta om med v${notice.version}`}</button>}
           <button type="button" className="btn" disabled={!updater.enabled || busy} onClick={() => { void updater.checkNow(false); }}>Sök efter uppdateringar</button>
         </div>
@@ -41,23 +37,20 @@ export default function Status({ updater }: { updater: Updater }) {
             <i style={{ width: `${Math.round(notice.progress * 100)}%` }} />
           </div>
         )}
-        {diagnostics && (
-          <p className="footnote" style={{ padding: "16px 0 0" }}>
-            Senaste kontrollen {new Date(diagnostics.checkedAt).toLocaleTimeString("sv-SE")}:{" "}
-            {diagnostics.result === "available" ? `ny version v${diagnostics.version}` : diagnostics.result === "current" ? "ingen ny version" : "fel"}
-            {diagnostics.detail ? ` (${diagnostics.detail})` : ""}
-          </p>
-        )}
       </section>
       <MarketData />
-      <section className="card pad">
-        <h2>Det här bygget</h2>
-        <dl className="dl" style={{ marginTop: 16 }}>
+      <Details summary="Visa tekniska detaljer">
+        <dl className="dl compact">
+          <dt>Byggcommit</dt><dd><code>{__COMMIT__}</code> <span className="muted">Samma värde hos er båda betyder samma program.</span></dd>
           <dt>Senaste ändring</dt><dd>{__COMMIT_MSG__ || "okänd"}</dd>
           <dt>Byggd</dt><dd>{new Date(__BUILT_AT__).toLocaleString("sv-SE")}</dd>
+          <dt>Kanal</dt><dd>{__UPDATE_CHANNEL__ === "test" ? "Test (bara testbyggen)" : "Stable"} <span className="muted">({__UPDATE_FEED__})</span></dd>
+          {diagnostics && (<><dt>Senaste kontrollen</dt><dd>{new Date(diagnostics.checkedAt).toLocaleTimeString("sv-SE")}:{" "}
+            {diagnostics.result === "available" ? `ny version v${diagnostics.version}` : diagnostics.result === "current" ? "ingen ny version" : "fel"}
+            {diagnostics.detail ? ` (${diagnostics.detail})` : ""}</dd></>)}
           <dt>Läge</dt><dd>Forskning. Inga riktiga pengar, inga börskonton, inga order.</dd>
         </dl>
-      </section>
+      </Details>
     </Page>
   );
 }
@@ -72,21 +65,25 @@ function MarketData() {
     <section className="card pad">
       <h2>Marknadsdata</h2>
       {!available ? (
-        <p className="muted" style={{ marginTop: 12 }}>Insamlingen körs bara i skrivbordsprogrammet.</p>
+        <p className="lead-line">Insamlingen körs bara i skrivbordsprogrammet.</p>
       ) : !m ? (
-        <p className="muted" style={{ marginTop: 12 }}>Väntar på status från insamlingen…</p>
+        <p className="lead-line">Väntar på status från insamlingen…</p>
       ) : (
-        <dl className="dl" style={{ marginTop: 16 }}>
-          <dt>Läge</dt><dd><b>{STATE_TEXT[m.state]}</b>{m.ready ? " · redo som analysunderlag" : " · inte redo"}{m.message ? ` (${m.message})` : ""}</dd>
-          <dt>Källa</dt><dd>{m.provider} {m.market} {m.symbol} {m.interval} <span className="muted">(publik data, inga nycklar)</span></dd>
-          <dt>Senast mottaget</dt><dd>{time(m.last_received_at)} <span className="muted">(serverns händelsetid {utc(m.last_event_time)})</span></dd>
-          <dt>Senaste stängda stapel</dt><dd>{utc(m.last_closed_open_time)} <span className="muted">({m.closed_bars} stängda staplar sparade)</span></dd>
-          <dt>Pågående stapel</dt><dd>{utc(m.live_open_time)} <span className="muted">(används inte som analysunderlag)</span></dd>
-          <dt>Kvalitet</dt><dd>{m.gaps.length} öppna luckor, {m.confirmed_gaps} luckor som källan saknar, {m.corrections} rättelser, {m.rejected} avvisade meddelanden, {m.reconnects} återanslutningar</dd>
-          <dt>Sparas i</dt><dd className="muted">{m.database}</dd>
-        </dl>
+        <>
+          <p className="lead-line"><b>{STATE_TEXT[m.state]}</b>{m.ready ? ", redo som analysunderlag." : ", inte redo som analysunderlag."}{m.message ? ` (${m.message})` : ""}{m.gaps.length > 0 ? ` ${m.gaps.length} öppna luckor i datan.` : ""}</p>
+          <Details summary="Visa insamlingsdetaljer">
+            <dl className="dl compact">
+              <dt>Källa</dt><dd>{m.provider} {m.market} {m.symbol} {m.interval} <span className="muted">(publik data, inga nycklar)</span></dd>
+              <dt>Senast mottaget</dt><dd>{time(m.last_received_at)} <span className="muted">(serverns händelsetid {utc(m.last_event_time)})</span></dd>
+              <dt>Senaste stängda stapel</dt><dd>{utc(m.last_closed_open_time)} <span className="muted">({m.closed_bars} stängda staplar sparade)</span></dd>
+              <dt>Pågående stapel</dt><dd>{utc(m.live_open_time)} <span className="muted">(används inte som analysunderlag)</span></dd>
+              <dt>Kvalitet</dt><dd>{m.gaps.length} öppna luckor, {m.confirmed_gaps} luckor som källan saknar, {m.corrections} rättelser, {m.rejected} avvisade meddelanden, {m.reconnects} återanslutningar</dd>
+              <dt>Sparas i</dt><dd className="muted">{m.database}</dd>
+            </dl>
+          </Details>
+        </>
       )}
-      <p className="footnote" style={{ padding: "16px 0 0" }}>Varje dator samlar in själv. Det finns ingen gemensam server, så era datorer har inte en gemensam papperssession.</p>
+      <p className="footnote">Varje dator samlar in själv. Det finns ingen gemensam server, så era datorer har inte en gemensam papperssession.</p>
     </section>
   );
 }
