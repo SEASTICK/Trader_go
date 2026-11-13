@@ -23,7 +23,7 @@ button { font:inherit; color:inherit; cursor:pointer; }
 code { background:var(--hover); border-radius:5px; padding:1px 5px; font-size:12px; }
 h1,h2,h3,h4,p { margin:0; }
 .muted { color:var(--muted); }
-.shell { display:grid; grid-template-columns:272px 1fr; height:100%; min-width:760px; }
+.shell { display:grid; grid-template-columns:232px minmax(0,1fr); height:100%; }
 .sidebar { background:var(--side); border-right:1px solid var(--line); display:flex; flex-direction:column; padding:20px 14px 14px; }
 .brand { display:flex; align-items:center; gap:12px; padding:0 8px 24px; font-size:17px; }
 .logo { width:36px; height:36px; border-radius:10px; display:block; }
@@ -267,7 +267,7 @@ h2 { font-size:17px; font-weight:650; letter-spacing:-.01em; }
 /* Hypoteslistan: en rad per hypotes, klick fäller ut detaljer. */
 .hyp-list { padding:4px 0; }
 .hyp + .hyp { border-top:1px solid var(--line); }
-.hyp-row { display:grid; grid-template-columns:70px 1fr 26px 120px 130px; gap:12px; align-items:center; width:100%; padding:12px 20px;
+.hyp-row { display:grid; grid-template-columns:70px 1fr 230px; gap:12px; align-items:center; width:100%; padding:12px 20px;
   border:0; background:none; text-align:left; transition:background .15s; }
 .hyp-row:hover { background:var(--hover); }
 .hyp-id { font-size:13px; } .hyp-title { font-size:13.5px; line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
@@ -279,7 +279,7 @@ h2 { font-size:17px; font-weight:650; letter-spacing:-.01em; }
 .hyp.open { background:color-mix(in srgb,var(--hover) 55%,transparent); }
 .calc summary { cursor:pointer; list-style:none; display:flex; gap:10px; align-items:baseline; } .calc summary::-webkit-details-marker { display:none; }
 .calc { margin-top:16px; }
-@media (max-width:900px) { .hyp-row { grid-template-columns:60px 1fr 90px; } .hyp-goal, .hyp-t { display:none; } .hyp-detail { padding-left:20px; } }
+@media (max-width:900px) { .hyp-row { grid-template-columns:60px 1fr; } .hyp-dec { grid-column:2; } .hyp-detail { padding-left:20px; } }
 
 
 /* Närmast målet på Översikt. */
@@ -301,3 +301,129 @@ h2 { font-size:17px; font-weight:650; letter-spacing:-.01em; }
 .hyp-row.inv-mgr { grid-template-columns:200px 1fr 260px; }
 .inv-mgr-detail { padding:0 0 10px; animation:rise .25s ease-out both; }
 @media (max-width:900px) { .hyp-row.inv-mgr { grid-template-columns:1fr; } }
+
+
+/* =====================================================================
+   Förenkling: lugn, konsekvent skala. Få ytor och bårder, en accentfärg för handlingar.
+   Typskala 12 / 13 / 15 / 17 / 24 / 36, avstånd i steg om 8.
+   ===================================================================== */
+:root { --fs-1:12px; --fs-2:13px; --fs-3:15px; --fs-4:17px; --fs-5:24px; --fs-6:36px; --r:12px; }
+body { font-size:var(--fs-3); line-height:1.5; }
+:focus-visible { outline:2px solid var(--accent); outline-offset:2px; border-radius:6px; }
+button:focus:not(:focus-visible) { outline:none; }
+.sidebar { background:var(--bg); padding:24px 12px 16px; }
+.brand { padding:0 12px 24px; font-size:var(--fs-4); gap:12px; }
+.logo { width:32px; height:32px; border-radius:9px; }
+.nav { gap:12px; padding:10px 12px; border-radius:10px; font-size:var(--fs-3); font-weight:500; }
+.nav svg { flex:none; }
+.nav.on { background:var(--hover); color:var(--ink); font-weight:600; }
+.nav.on svg { color:var(--accent); }
+.side-foot .nav { color:var(--muted); }
+.popup { bottom:52px; right:0; border-radius:14px; padding:6px; min-width:240px; }
+.popup-head { padding:8px 12px 4px; border:0; margin:0; }
+.popup-head .k { font-size:var(--fs-1); }
+.item.on { background:var(--hover); font-weight:600; }
+.topbar { padding:16px 40px 0; justify-content:flex-start; }
+.saved { font-size:var(--fs-1); }
+.page { padding:8px 40px 64px; max-width:1040px; }
+.page-head { margin:16px 0 24px; }
+h1 { font-size:var(--fs-5); line-height:1.25; letter-spacing:-.02em; font-weight:650; }
+.sub { font-size:var(--fs-3); max-width:60ch; margin-top:8px; }
+h2 { font-size:var(--fs-4); font-weight:600; }
+.card { box-shadow:none; border-radius:var(--r); }
+.pad { padding:24px; }
+.btn { border-radius:10px; padding:10px 16px; font-weight:600; }
+.segmented { border-radius:12px; }
+.small { font-size:var(--fs-2); }
+.k { font-size:var(--fs-1); letter-spacing:.04em; }
+.kpis.three { grid-template-columns:repeat(3,1fr); }
+.kpi { padding:16px 20px; }
+.kpi b { font-size:24px; }
+
+/* Startsidan: tre huvudmått, ett besked var. */
+.stats { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:32px; margin:8px 0 24px; }
+.stat { display:flex; flex-direction:column; gap:8px; padding-top:16px; border-top:1px solid var(--line); }
+.stat .big { font-size:var(--fs-6); line-height:1.1; letter-spacing:-.03em; font-weight:650; }
+.stat .big.warn { color:var(--warn); }
+.stat p { color:var(--ink); font-size:var(--fs-3); }
+.stat .src { color:var(--muted); font-size:var(--fs-1); }
+.note { margin:0 0 16px; padding:12px 16px; border-radius:var(--r); background:var(--hover); font-size:var(--fs-2); line-height:1.5; }
+.note.warn { background:color-mix(in srgb,var(--warn) 12%,transparent); border:1px solid color-mix(in srgb,var(--warn) 40%,transparent); }
+.link-line { margin:0 0 16px; }
+.textbtn { border:0; background:none; padding:0; color:var(--accent); font-weight:600; text-decoration:underline; text-underline-offset:3px; }
+.lead-line { margin:12px 0 16px; font-size:var(--fs-3); }
+.mini { font-size:var(--fs-2); margin:20px 0 8px; font-weight:600; }
+.flow { display:flex; gap:8px 16px; flex-wrap:wrap; list-style:none; padding:0; margin:0 0 12px; counter-reset:f; }
+.flow li { counter-increment:f; color:var(--muted); font-size:var(--fs-2); } .flow li::before { content:counter(f) ". "; }
+.plain { margin:8px 0; padding-left:20px; line-height:1.7; }
+.dl.compact { gap:12px 24px; font-size:var(--fs-2); }
+
+/* "Visa detaljer": lugn knapp, innehållet fälls ut på plats. */
+.more { margin:8px 0 24px; border-top:1px solid var(--line); }
+.more > summary { list-style:none; cursor:pointer; padding:16px 0; color:var(--accent); font-weight:600; font-size:var(--fs-2); display:flex; align-items:center; gap:8px; }
+.more > summary::-webkit-details-marker { display:none; }
+.more > summary::before { content:""; width:7px; height:7px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(-45deg); transition:transform .15s; margin-right:2px; }
+.more[open] > summary::before { transform:rotate(45deg); }
+.more-body { padding:0 0 8px; font-size:var(--fs-2); line-height:1.6; }
+.more-body .card { margin-top:16px; }
+
+/* Resultat: en rad per idé, inga färgrutor. */
+.group { margin:24px 0 32px; } .group > h2 { margin-bottom:4px; }
+.result-list { margin-top:12px; border-top:1px solid var(--line); }
+.result-row { display:grid; grid-template-columns:minmax(0,1fr) 220px 110px; gap:16px; align-items:center; width:100%; padding:14px 4px; border:0; border-bottom:1px solid var(--line); background:none; text-align:left; }
+.result-row:hover { background:var(--hover); }
+.rr-main { display:flex; flex-direction:column; gap:2px; min-width:0; } .rr-main b { font-size:var(--fs-3); } .rr-main .muted { font-size:var(--fs-2); }
+.rr-num { text-align:right; font-variant-numeric:tabular-nums; } .rr-num .k { display:block; }
+.outcome-tag { font-size:var(--fs-2); color:var(--muted); } .outcome-tag.good { color:var(--good); font-weight:600; }
+
+/* Papperportfölj och detaljer: lugnare ytor. */
+.hyp-list, .table-card { border-radius:var(--r); }
+.inv-card { display:none; }
+
+/* Smala skärmar: undermenyn blir en fast flik-rad längst ned och sidan får plats i bredd. */
+@media (max-width:820px) {
+  .shell { grid-template-columns:minmax(0,1fr); }
+  .sidebar { position:fixed; z-index:30; left:0; right:0; bottom:0; padding:6px 8px calc(6px + env(safe-area-inset-bottom)); flex-direction:row; align-items:stretch; gap:4px; border-right:0; border-top:1px solid var(--line); background:var(--bg); }
+  .brand { display:none; }
+  nav { flex-direction:row; gap:2px; flex:4; min-width:0; }
+  .nav { flex-direction:column; justify-content:center; gap:2px; padding:6px 2px; font-size:11px; text-align:center; border-radius:10px; min-width:0; position:relative; }
+  .nav .nav-badge { position:absolute; top:2px; right:calc(50% - 22px); margin:0; }
+  .side-foot { flex:1; display:flex; } .side-foot .nav { width:100%; }
+  .popup { position:fixed; left:12px; right:12px; bottom:calc(68px + env(safe-area-inset-bottom)); min-width:0; }
+  main { padding-bottom:84px; }
+  .topbar { padding:12px 16px 0; }
+  .page { padding:4px 16px 32px; }
+  h1 { font-size:22px; }
+  .page-head { margin:12px 0 20px; gap:12px; }
+  .page-head .actions { width:100%; } .page-head .actions .btn { width:100%; } .page-head .segmented { width:100%; } .segmented button { flex:1; }
+  .stats, .kpis.three, .kpis, .split { grid-template-columns:minmax(0,1fr); gap:20px; }
+  .stat .big { font-size:30px; }
+  .result-row { grid-template-columns:minmax(0,1fr) auto; gap:4px 12px; } .result-row .outcome-tag { grid-column:1; grid-row:2; } .result-row .rr-num { grid-column:2; grid-row:1 / span 2; }
+  .hyp-row { grid-template-columns:56px minmax(0,1fr); padding:12px 4px; } .hyp-dec { grid-column:2; }
+  .hyp-detail { padding:4px 4px 16px; }
+  .dl { grid-template-columns:minmax(0,1fr); gap:2px 0; } .dl dd { margin-bottom:10px; overflow-wrap:anywhere; }
+  .inv-row { grid-template-columns:64px minmax(0,1fr) auto; } .inv-row > :nth-child(4) { display:none; }
+  .inv-row.cons { grid-template-columns:64px minmax(0,1fr) auto; }
+  .hyp-row.inv-mgr { grid-template-columns:minmax(0,1fr); }
+  .modal { grid-template-columns:1fr; } .modal-side { display:none; } .modal-body { padding:20px; }
+  .update-banner { padding:10px 16px; flex-wrap:wrap; }
+  .candle-box { height:300px; }
+  .chart { padding:0 8px; } .legend { padding:10px 8px 0; flex-wrap:wrap; } .card-head { padding:16px 16px 4px; } .pad { padding:16px; }
+  .ttable { overflow-x:auto; }
+  .page table { display:block; max-width:100%; overflow-x:auto; }
+  .card, .page section { min-width:0; }
+}
+
+.nb { white-space:nowrap; }
+.card .footnote, .card.pad .footnote { padding:12px 0 0; }
+
+/* Marknad: källa, aktualitet och obligatorisk attribution under diagrammet. */
+.candle-meta { line-height:1.5; }
+.attrib { font-size:var(--fs-1); } .attrib a { color:inherit; text-decoration:underline; text-underline-offset:2px; }
+.candle-foot span { overflow-wrap:anywhere; }
+@media (max-width:820px) { .candle-head { padding:12px 12px 6px; } .candle-tools { gap:6px; } .candle-tools button { padding:6px 10px; font-size:13px; } .candle-ohlc { padding:0 12px 6px; gap:8px 12px; } .candle-meta, .candle-foot { padding-left:12px; padding-right:12px; } }
+.candle-source { display:flex; flex-direction:column; gap:2px; padding:10px 16px 0; font-size:12px; color:var(--muted); line-height:1.5; } .candle-source b { color:var(--ink); font-weight:600; }
+@media (max-width:820px) {
+  .candle-tools { flex-wrap:nowrap; overflow-x:auto; max-width:100%; padding-bottom:4px; -webkit-overflow-scrolling:touch; scrollbar-width:thin; } .candle-tools button { flex:none; }
+  .candle-source { padding:10px 12px 0; } .page-head .candle-card { margin:0; }
+}

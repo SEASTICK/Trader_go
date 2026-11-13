@@ -96,3 +96,7 @@ läses som förut med `binance.load`.
 - **Ingen gemensam server.** Edwins och Philips datorer samlar in var för sig. Det är alltså två lokala
   insamlingar, inte en gemensam papperssession.
 - **Inga strategisignaler eller diagram ännu.** Det är punkt 3.
+
+## Vilka instrument Marknad visar
+
+Instrumentvalet på sidan Marknad i datorprogrammet visar **bara serier som hela datavägen stöder: Binance spot** (BTCUSDT och ETHUSDT, tidsramarna ovan). Insamlingen, `market_bars` och `Config::validate` läser bara spot. Finns samma symbol och tidsram på en annan marknad i datalagret (till exempel terminer) erbjuds den inte, och `CandleChart` ritar aldrig en serie som inte är spot (den visar "Marknaden stöds inte i datavägen" i stället för en felmärkt graf). I webbläsaren visas den medföljande historiken för BTCUSDT USDⓈ-M terminer (4h, 2022–2024), tydligt märkt som historik. Vill vi visa terminer live måste insamlingen, `market_bars` och valideringen först stödja `market` hela vägen.

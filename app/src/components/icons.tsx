@@ -14,6 +14,7 @@ const P: Record<string, ReactNode> = {
   lab: <><rect x="4" y="4" width="16" height="16" rx="3" /><path d="M8 15l3-3 2 2 3-4" /></>,
   candles: <path d="M7 4v3M7 15v5M17 4v5M17 17v3M5 7h4v8H5zM15 9h4v8h-4z" />,
   shield: <path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6z" />,
+  dots: <path d="M5 12h.01M12 12h.01M19 12h.01" strokeWidth="2.6" />,
   alert: <><path d="M12 3 2 20h20z" /><path d="M12 10v4M12 17h.01" /></>,
 };
 

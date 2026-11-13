@@ -1,14 +1,14 @@
 import { useMemo, useState } from "react";
 import registryMd from "../../../research/registry.md?raw";
-import { Segmented, StatusDot } from "../components/ui";
+import { Outcome, Segmented } from "../components/ui";
+import { outcomeOf } from "../lib/status";
 import { groupRegistry, missingPrices, NO_RUN_HEADING, NO_RUN_TEXT, parseRegistry } from "../lib/registry";
 import { tKrav } from "../lib/stats";
 
 const f = (n: number) => n.toFixed(2).replace(".", ",");
 const reg = parseRegistry(registryMd);
-const FILTERS = ["Alla", "Avvisade", "Pågår", "Ogiltiga", "Vidare"] as const;
+const FILTERS = ["Alla", "Klarade inte kraven", "Väntar", "Kunde inte avgöras", "Gick vidare"] as const;
 type Filter = (typeof FILTERS)[number];
-const MÅL_NAMN: Record<string, string> = { A: "Slå marknaden", B: "Lägre risk", C: "Marknadsneutral" };
 
 /** Registret som en lista: en rad per hypotes (registrering, resultat och beslut ihop). Klick visar allt. */
 export default function Hypotheses() {
@@ -16,19 +16,14 @@ export default function Hypotheses() {
   const [filter, setFilter] = useState<Filter>("Alla");
   const [open, setOpen] = useState<string | null>(null);
   const [n, setN] = useState(Math.max(1, reg.attempts));
-  const shown = all.filter((h) => filter === "Alla" ? true : filter === "Avvisade" ? h.decision === "REJECT"
-    : filter === "Pågår" ? !h.decision && !h.invalid : filter === "Ogiltiga" ? h.invalid
-    : h.decision === "MORE_RESEARCH" || h.decision === "READY_FOR_PAPER");
+  const shown = all.filter((h) => filter === "Alla" ? true : filter === "Klarade inte kraven" ? outcomeOf(h) === "rejected"
+    : filter === "Väntar" ? outcomeOf(h) === "pending" : filter === "Kunde inte avgöras" ? outcomeOf(h) === "invalid"
+    : outcomeOf(h) === "further" || outcomeOf(h) === "paper");
   const avvisade = all.filter((h) => h.decision === "REJECT").length;
   const vidare = all.filter((h) => h.decision === "MORE_RESEARCH" || h.decision === "READY_FOR_PAPER").length;
   return (
     <>
-      <div className="kpis">
-        <div className="card kpi"><span className="k">Registrerade</span><b>{reg.attempts}</b><span className="muted">Alla försök räknas, även avvisade</span></div>
-        <div className="card kpi"><span className="k">Krav på t-värde nu</span><b>{f(tKrav(reg.attempts))}</b><span className="muted">Stiger med antalet försök</span></div>
-        <div className="card kpi"><span className="k">Avvisade</span><b>{avvisade}</b><span className="muted">REJECT är ett bra utfall</span></div>
-        <div className="card kpi"><span className="k">Gått vidare</span><b>{vidare}</b><span className="muted">Till slutprov eller papper</span></div>
-      </div>
+      <p className="lead-line">{reg.attempts} försök är registrerade. Kravet på t-värde är just nu {f(tKrav(reg.attempts))} och stiger med antalet försök. {avvisade} klarade inte testkraven{vidare ? `, ${vidare} gick vidare` : ""}.</p>
 
       <div className="toolbar"><Segmented value={filter} options={[...FILTERS]} onChange={setFilter} /></div>
       <section className="card hyp-list">
@@ -38,9 +33,7 @@ export default function Hypotheses() {
             <button type="button" className="hyp-row" onClick={() => setOpen(open === h.id ? null : h.id)} aria-expanded={open === h.id}>
               <b className="hyp-id">{h.id}</b>
               <span className="hyp-title">{h.title}<span className="muted"> · {h.market}</span></span>
-              <span className="hyp-goal" title={MÅL_NAMN[h.track]}>{h.track}</span>
-              <span className="hyp-t">{h.t === null ? "" : <>t {f(h.t)} <i>/ {f(h.krav ?? 0)}</i></>}</span>
-              <span className="hyp-dec">{h.decision ? <StatusDot status={h.decision} /> : h.invalid ? <StatusDot status="OGILTIG" /> : <span className="muted">Pågår</span>}</span>
+                                          <span className="hyp-dec"><Outcome kind={outcomeOf(h)} /></span>
             </button>
             {open === h.id && (
               <div className="hyp-detail">
