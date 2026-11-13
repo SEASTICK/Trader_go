@@ -11,7 +11,7 @@ REPO = Path(__file__).resolve().parents[3]
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["run", "status", "rejudge", "audit", "universe-audit"])
+    ap.add_argument("cmd", choices=["run", "status", "rejudge", "audit", "universe-audit", "sensitivity"])
     ap.add_argument("--ideas", type=int, default=60)
     ap.add_argument("--top", type=int, default=14)
     ap.add_argument("--controls", type=int, default=4)
@@ -27,6 +27,11 @@ def main() -> None:
     if a.cmd == "audit":
         from .audit import run_audit
         print(json.dumps(run_audit(REPO, root), ensure_ascii=False, indent=1)[:3000])
+        return
+    if a.cmd == "sensitivity":
+        from .sensitivity import run_sensitivity
+        rep = run_sensitivity(REPO, root, REPO / "research" / "agentlab" / "sensitivity")
+        print(json.dumps(rep["summary"], ensure_ascii=False, indent=1))
         return
     if a.cmd == "universe-audit":
         from .universe_audit import run_universe_audit
