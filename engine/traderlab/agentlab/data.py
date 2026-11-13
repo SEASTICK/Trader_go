@@ -110,6 +110,15 @@ def _um_symbols(data_dir: Path) -> list[str]:
     return sorted(p.name for p in base.iterdir() if (p / "1d").is_dir() and any((p / "1d").glob("*.zip"))) if base.exists() else []
 
 
+def _cache_end(cache: Path) -> pd.Timestamp:
+    """Exklusiv `end` som cachen byggdes med (sidofil `<cache>.end`). Saknas sidofilen räknas cachen som byggd med standardgränsen (2025-01-01)."""
+    side = cache.with_suffix(cache.suffix + ".end")
+    try:
+        return pd.Timestamp(side.read_text(encoding="utf-8").strip())
+    except (OSError, ValueError):
+        return HOLDOUT
+
+
 def _check_coverage(panel: "Panel", listing: Path | None, until: str = "2024-12") -> None:
     """Sätter `meta["universe_gap"]` (lista, tom = inga kända luckor) och `meta["universe_gap_checked"]`. Utan arkivlista är täckningen okontrollerad (None) och Domaren nekar godkänt."""
     from .universe import load_listing, universe_gap
@@ -125,9 +134,11 @@ def load_um_panel(data_dir: Path, *, symbols: list[str] | None = None, cache: Pa
     from ..data import binance
     end_ts = HOLDOUT if end is None else min(pd.Timestamp(end), HOLDOUT)
     until = (end_ts - pd.Timedelta(days=1)).strftime("%Y-%m")
-    if cache is not None and cache.exists():
+    if cache is not None and cache.exists() and _cache_end(cache) == end_ts:       # en cache får bara läsas om den byggdes med exakt samma exklusiva `end` (sidofil); annars packas den inte upp alls
         with open(cache, "rb") as f:
             panel = pickle.load(f)
+        if len(panel.close) and panel.close.index.max() >= end_ts:
+            raise ValueError("cachad panel går utanför `end`-gränsen")
         _check_coverage(panel, listing, until)           # cacheträff hoppar aldrig över täckningskontrollen: den görs om mot aktuell arkivlista
         return panel
     from .universe import in_scope
@@ -154,10 +165,11 @@ def load_um_panel(data_dir: Path, *, symbols: list[str] | None = None, cache: Pa
                   meta={"source": "data.binance.vision um 1d + fundingRate", "symbols": len(o), "funding_symbols": len(fu),
                         "caveat": "Bara kontrakt som har arkiv lokalt (survivorship). Slutprovet 2025+ är aldrig läst."})
     _check_coverage(panel, listing, until)        # arkivlistan visar vad som borde finnas: det som saknas blockerar bekräftande påståenden (judge)
-    if cache is not None:
+    if cache is not None and (not cache.exists() or _cache_end(cache) == end_ts):     # skriv aldrig över en cache som byggts med en annan gräns
         cache.parent.mkdir(parents=True, exist_ok=True)
         with open(cache, "wb") as f:
             pickle.dump(panel, f)
+        cache.with_suffix(cache.suffix + ".end").write_text(end_ts.isoformat(), encoding="utf-8")
     return panel
 
 

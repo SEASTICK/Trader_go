@@ -92,3 +92,53 @@ def test_överlever_kräver_giltig_täckning_och_alla_trösklar():
     assert not sensitivity.survives({**ok, "t": 1.9})
     assert not sensitivity.survives({**ok, "sharpe_cost_2_5x": 0.0})
     assert not sensitivity.survives({"status": "EJ KÖRBAR"})
+
+
+def _fake_binance(monkeypatch, seen):
+    from traderlab.data import binance
+
+    def fake_load(market, sym, interval, data_dir, start=None, end=None):
+        seen.append(end)
+        idx = pd.date_range(pd.Timestamp("2020-01-01", tz="UTC"), min(pd.Timestamp("2024-12-31", tz="UTC"), end - pd.Timedelta(days=1)), freq="D")
+        return pd.DataFrame({"open": 1.0, "high": 1.0, "low": 1.0, "close": 1.0, "volume": 1.0}, index=idx)
+
+    def fake_funding(sym, data_dir, start=None, end=None):
+        seen.append(end)
+        return pd.Series(0.0001, index=pd.date_range(pd.Timestamp("2020-01-01", tz="UTC"), end - pd.Timedelta(hours=8), freq="8h"))
+
+    monkeypatch.setattr(binance, "load", fake_load)
+    monkeypatch.setattr(binance, "load_funding", fake_funding)
+
+
+def test_full_2024_cache_läses_aldrig_när_end_är_2023_01_01(monkeypatch, tmp_path):
+    import pickle
+    full = synthetic_panel(n_days=1800, n_assets=6, seed=2)                         # 2020-01-01 .. 2024-11 (full cache utan sidofil = standardgräns)
+    assert full.close.index.max() >= pd.Timestamp("2024-01-01", tz="UTC")
+    cache = tmp_path / "panel.pkl"
+    cache.write_bytes(pickle.dumps(full))
+    before = sha(cache)
+    seen, opened = [], []
+    _fake_binance(monkeypatch, seen)
+    real_load = pickle.load
+    monkeypatch.setattr(pickle, "load", lambda f, *a, **k: (opened.append(getattr(f, "name", "")), real_load(f, *a, **k))[1])
+    end = pd.Timestamp("2023-01-01", tz="UTC")
+    panel = data.load_um_panel(tmp_path, symbols=["AUSDT", "BUSDT"], cache=cache, end=end)
+    assert str(cache) not in opened                                                 # den fulla cachen packades aldrig upp
+    assert panel.close.index.max() <= pd.Timestamp("2022-12-31", tz="UTC")           # returnerad panel slutar före gränsen
+    assert seen and all(e == end for e in seen)                                      # inga arkiv efter gränsen öppnades
+    assert sha(cache) == before                                                      # den fulla cachen skrevs inte över
+
+
+def test_cache_byggd_med_end_återanvänds_bara_för_samma_end(monkeypatch, tmp_path):
+    seen = []
+    _fake_binance(monkeypatch, seen)
+    cache = tmp_path / "disc.pkl"
+    end = pd.Timestamp("2023-01-01", tz="UTC")
+    a = data.load_um_panel(tmp_path, symbols=["AUSDT"], cache=cache, end=end)
+    assert a.close.index.max() <= pd.Timestamp("2022-12-31", tz="UTC") and cache.with_suffix(".pkl.end").exists()
+    n = len(seen)
+    b = data.load_um_panel(tmp_path, symbols=["AUSDT"], cache=cache, end=end)       # träff: inga nya arkivanrop
+    assert len(seen) == n and b.close.index.max() == a.close.index.max()
+    c = data.load_um_panel(tmp_path, symbols=["AUSDT"], cache=cache)                # annan gräns (standard): den begränsade cachen används inte
+    assert len(seen) > n and c.close.index.max() >= pd.Timestamp("2024-01-01", tz="UTC")
+    assert data._cache_end(cache) == end                                             # och skrevs inte över
