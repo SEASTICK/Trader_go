@@ -303,7 +303,7 @@ def test_körningen_kräver_bekräftelse_och_skriver_ingen_fil_utan_den(monkeypa
     with pytest.raises(NotRegisteredError):
         h.run(tmp_path, confirm_registered_run=True)                                                       # ingen committad registerfil i tmp_path
     assert saved == []
-    assert not any("H-0023" in p.name for p in (REPO / "research" / "results").glob("*"))                   # ingen resultatfil finns
+    assert len([p for p in (REPO / "research" / "results").glob("*") if "H-0023" in p.name]) == 1           # den enda registrerade körningen, aldrig fler
 
 
 def test_reglertabellen_pekar_på_kod_och_tester_som_finns():

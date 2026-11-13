@@ -51,12 +51,15 @@ def test_n_23_och_t_gränserna_är_beräknade_och_samma_i_protokoll_och_register
     assert "3,42" not in PROTO and "N = 22" not in PROTO.split("## Läget före registreringen")[1].split("##")[0].replace("H-0023 är ett nytt försök", "")
 
 
-def test_registerraden_har_14_kolumner_är_registrering_utan_resultat_och_lämnar_h0022_oförändrad():
+def test_registerraden_har_14_kolumner_registreringen_är_oförändrad_och_resultatet_är_en_tillagd_rad():
     rows = _row("H-0023")
-    assert len(rows) == 1 and rows[0].count("|") == 14
+    assert len(rows) == 2 and all(r.count("|") == 14 for r in rows)
     cells = [c.strip() for c in rows[0].strip().strip("|").split("|")]
-    assert cells[11] == "" and cells[12] == ""                                  # inget resultat och inget beslut
-    assert latest_decisions(REG).get("H-0023") is None
+    assert cells[11] == "" and cells[12] == ""                                  # registreringsraden är orörd: inget resultat och inget beslut
+    result = [c.strip() for c in rows[1].strip().strip("|").split("|")]
+    assert result[3].startswith("Resultat") and result[12] == "REJECT" and latest_decisions(REG).get("H-0023") == "REJECT"
+    fname = re.search(r"research/results/(H-0023-\d{8}T\d{6}Z\.json)", result[11]).group(1)
+    assert (REPO / "research" / "results" / fname).exists()                     # resultatraden pekar på den enda resultatfilen
     h22 = _row("H-0022")
     assert len(h22) == 2 and h22[1].rstrip().endswith("| OGILTIG |")             # förregistreringen och OGILTIG-raden är oförändrade
     for must in ("kalendern valdes efter", "10 av 13", "OGILTIG", "REJECT", "H-0022"):
@@ -68,12 +71,12 @@ def test_protokollet_säger_det_som_ska_sägas_öppet_och_innehåller_inga_resul
                  "H-0022 är `OGILTIG` utan körning", "3be2903", "Ingen basis, avkastning, t-statistik eller beta har räknats"):
         assert must in PROTO, must
     results = REPO / "research" / "results"
-    assert not any("H-0023" in p.name for p in results.glob("*"))               # ingen resultatfil
+    assert len([p for p in results.glob("*") if "H-0023" in p.name]) == 1       # protokollet innehåller inga resultat; den enda körningen ligger i results/
 
 
 def test_statusdokumentet_visar_försöken_och_säger_inte_att_h0016_pågår():
     doc = (REPO / "docs" / "vagen-till-avkastning.md").read_text(encoding="utf-8")
-    for must in ("H-0021", "H-0022", "H-0023", "OGILTIG", "förregistrerad men inte körd"):
+    for must in ("H-0021", "H-0022", "H-0023", "OGILTIG", "körd 2026-11-13, REJECT"):
         assert must in doc, must
     assert "pågår och är inte avgjord" not in doc and "bot/h-0016-tackning" not in doc
     assert "ingen avkastning" in doc.lower() or "Ingen avkastning" in doc
