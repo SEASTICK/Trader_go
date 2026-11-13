@@ -19,7 +19,7 @@ def calendar(start="2005-01-03", end="2025-03-31") -> pd.DatetimeIndex:
 def evaluate(*args, **kwargs):
     """Testerna slår av kravet på verifierad kalender (den riktiga är ännu inte verifierad); testet längst ner visar att standardbeteendet är OGILTIG."""
     kwargs.setdefault("require_verified_calendar", False)
-    return tom.evaluate(*args, **kwargs)
+    return tom._evaluate(*args, **kwargs)
 
 
 def prices(index, window_boost=0.0, shift=0, noise=0.01, drift=0.0004, seed=1) -> pd.DataFrame:
@@ -332,3 +332,32 @@ def test_standardbeteendet_ar_ogiltig_tills_kalendern_ar_verifierad(monkeypatch)
     monkeypatch.setattr(nyse_sessions, "read_ledger", lambda path=nyse_sessions.LEDGER_FILE: led.iloc[1:])          # ledger som inte stämmer av ger OGILTIG även om raderna är verifierade
     bad = tom.evaluate(base)
     assert bad["valid"] is False and bad["calendar_verification"]["consistent"] is False
+
+
+def test_publika_evaluate_har_inga_vagar_runt_den_verifierade_kalendern():
+    import inspect
+    assert list(inspect.signature(tom.evaluate).parameters) == ["prices", "strict"]                                  # ingen kalender- eller verifieringsparameter
+    idx = calendar("2004-01-02", "2025-02-28")
+    base = prices(idx, window_boost=0.004, noise=0.006)
+    with pytest.raises(TypeError):
+        tom.evaluate(base, calendar=idx)
+    with pytest.raises(TypeError):
+        tom.evaluate(base, require_verified_calendar=False)
+
+
+def test_injicerad_kalender_ger_ogiltig_med_standardinstallningar(monkeypatch):
+    idx = calendar("2004-01-02", "2025-02-28")
+    base = prices(idx, window_boost=0.004, noise=0.006)
+    gone = pd.Timestamp("2013-06-12")
+    custom = idx[idx != gone]                                                                                         # egen, oavstämd kalender där en session saknas
+    dropped = base[base.index != gone]                                                                                # serien matchar den egna kalendern, så ingen annan kontroll slår till
+    out = tom._evaluate(dropped, calendar=custom)                                                                    # standardinställningar: require_verified_calendar=True
+    assert out["valid"] is False and out["decision"] == "OGILTIG"
+    assert "criteria" not in out and "metrics" not in out and "stressed" not in out
+    assert any("injicerad kalender" in r for r in out["invalid_reasons"])
+    # även om standardledgern är fullt verifierad öppnar det inte vägen för en injicerad kalender
+    led = nyse_sessions.read_ledger().assign(verified_source="testkälla", verified_by="granskare", verified_date="2026-11-13")
+    monkeypatch.setattr(nyse_sessions, "read_ledger", lambda path=nyse_sessions.LEDGER_FILE: led)
+    assert tom.evaluate(base)["valid"] is True                                                                       # standardvägen släpps igenom när allt är verifierat
+    out2 = tom._evaluate(base, calendar=idx)
+    assert out2["valid"] is False and out2["decision"] == "OGILTIG" and "metrics" not in out2 and "criteria" not in out2
