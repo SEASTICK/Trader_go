@@ -1288,6 +1288,7 @@
   ],
   "spot:BTCUSDT": [
    "2021-03",
+   "2021-06",
    "2021-09",
    "2022-01",
    "2022-03",
@@ -1481,24 +1482,11 @@
  },
  "fetch_missing_from_source": {},
  "checksum_backfill": {
-  "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2021-03.zip": "verifierad mot publicerad checksumma och sparad",
-  "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2021-09.zip": "verifierad mot publicerad checksumma och sparad",
-  "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2022-01.zip": "verifierad mot publicerad checksumma och sparad",
-  "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2022-03.zip": "verifierad mot publicerad checksumma och sparad",
-  "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2022-06.zip": "verifierad mot publicerad checksumma och sparad",
-  "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2022-10.zip": "verifierad mot publicerad checksumma och sparad",
-  "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2022-12.zip": "verifierad mot publicerad checksumma och sparad",
-  "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2023-04.zip": "verifierad mot publicerad checksumma och sparad",
-  "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2023-07.zip": "verifierad mot publicerad checksumma och sparad",
-  "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2023-09.zip": "verifierad mot publicerad checksumma och sparad",
-  "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2023-12.zip": "verifierad mot publicerad checksumma och sparad",
-  "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2024-03.zip": "verifierad mot publicerad checksumma och sparad",
-  "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2024-06.zip": "verifierad mot publicerad checksumma och sparad",
-  "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2024-09.zip": "verifierad mot publicerad checksumma och sparad"
+  "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2021-06.zip": "verifierad mot publicerad checksumma och sparad"
  },
  "inventory": {
-  "required": 1092,
-  "verified": 1092,
+  "required": 1093,
+  "verified": 1093,
   "files": {
    "raw/binance/cm/ADAUSD_210625/1d/ADAUSD_210625-1d-2021-03.zip": "9b1cdd459fa7b453fac300166f00e4a3b43f2a73b901f29c67d4b1efe7512ae6",
    "raw/binance/cm/ADAUSD_210625/1d/ADAUSD_210625-1d-2021-04.zip": "292cfca946a3add31906b2b65ab39491466bc2ce0b887a68240debd589dcb877",
@@ -2411,6 +2399,7 @@
    "raw/binance/spot/BNBUSDT/1d/BNBUSDT-1d-2024-08.zip": "074f124320c2aff60894d49aa3de8a76284c27af73379e41fe88fa0c2f191c28",
    "raw/binance/spot/BNBUSDT/1d/BNBUSDT-1d-2024-09.zip": "c6594d1164647e075218c6c61fd98081c655c27db443fb2fa7d5543fbeae6afd",
    "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2021-03.zip": "f43e48b5efc8e0b06e0520b91aad4e5668844c766933c0c5cf403115dba03303",
+   "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2021-06.zip": "9875e11e890f75ef6eb0188ef7f952e5c0ba6919bd6d72d3da4d6847b84c5ccf",
    "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2021-09.zip": "9f6535a0fe8a417b0909d230e4a02f6a9933eb23c770f54c9f6bf140e8d02257",
    "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2022-01.zip": "a4a2e0432a8f0b42e2da71ac26599b2e6385b579ca4feba692a95cb897decdcd",
    "raw/binance/spot/BTCUSDT/1d/BTCUSDT-1d-2022-03.zip": "452129b478585b18931f728f89daed9d2a19d4824b932af7a099366efd4db639",
@@ -2686,7 +2675,7 @@
    "cm-mark-daily/XRPUSD_230929/2023-08-31": "a5f299d8ac08e3de5ec3313de55d7a3c3ee2c7973bd0e66e84210be44a71c2e0"
   },
   "btc_boundaries": {
-   "days": 14,
+   "days": 15,
    "problems": []
   },
   "complete_coin_cycles": 91,

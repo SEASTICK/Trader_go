@@ -25,7 +25,7 @@ def test_krävda_filer_slutar_senast_2024_09_och_btc_täcker_varje_fönstergrän
     assert all(m <= "2024-09" for months in need.values() for m in months)
     assert min(m for months in need.values() for m in months) >= "2021-03"
     btc = set(need[("spot", "BTCUSDT")])
-    wins = cycle_windows([c for c in CAL if not c["flat"]])
+    wins = cycle_windows(CAL)
     assert {d[:7] for w in wins for d in w} <= btc
     assert ("cm-mark", _series_name("ADA", "2021-06-25")) in need and not any(k[1] == "ETHUSDT" or k[1] == "BTCUSD_210625" for k in need)
 
@@ -155,3 +155,20 @@ def test_saknad_sparad_checksumma_kompletteras_bara_om_filen_stämmer_mot_den_pu
     assert pf._path(tmp_path, "spot", "ADAUSDT", "2021-03").read_bytes() == good                 # filen oförändrad
     inv = pf.inventory(tmp_path, need)
     assert inv["verified"] == 1 and [p["file"].endswith("2021-04.zip") for p in inv["problems"]] == [True]
+
+
+def test_btc_gränsdagarna_är_15_unika_datum_inklusive_den_platta_cykelns_fyllningsdag():
+    days = sorted({d for w in cycle_windows(CAL) for d in w})
+    flat = next(c for c in CAL if c["flat"])
+    assert len(CAL) == 14 and len(days) == 15 and flat["fill"] == "2021-06-26" and flat["fill"] in days and days[-1] == "2024-09-20"
+    assert flat["fill"][:7] in pf.required_files(CAL)[("spot", "BTCUSDT")]
+
+
+def test_saknad_btc_stapel_på_den_platta_cykelns_f2_gör_preflighten_ej_ok():
+    days = pd.date_range("2021-03-01", "2024-09-30", freq="D", tz="UTC")
+    btc = pd.DataFrame({"open": 20000.0, "high": 20100.0, "low": 19900.0, "close": 20000.0, "volume": 5.0}, index=days)
+    panel = h.Panel({}, {}, {}, btc)
+    assert pf.btc_boundary_check(panel, CAL) == {"days": 15, "problems": []}
+    panel.btc = btc.drop(pd.Timestamp("2021-06-26", tz="UTC"))
+    chk = pf.btc_boundary_check(panel, CAL)
+    assert chk["days"] == 15 and [p["day"] for p in chk["problems"]] == ["2021-06-26"]

@@ -53,7 +53,7 @@ def required_files(cycles: list[dict]) -> dict[tuple[str, str], list[str]]:
             add("cm", sym, lookback, _month(c["exit"]))
             add("cm-mark", sym, _month(c["fill"]), _month(c["exit"]))
             add("spot", f"{coin}USDT", lookback, _month(c["exit"]))
-    for a, b in cycle_windows([c for c in cycles if not c["flat"]]):
+    for a, b in cycle_windows(cycles):                  # alla 14 cykler, även den platta: T_1 = F_2 och 15 unika datum (F_1..F_14 och X_14)
         for day in (a, b):
             need.setdefault(("spot", "BTCUSDT"), set()).add(_month(day))
     out = {k: sorted(v) for k, v in need.items()}
@@ -142,7 +142,7 @@ def _daily_fill_files(panel: h0023.Panel) -> dict[str, str]:
 
 def btc_boundary_check(panel: h0023.Panel, cycles: list[dict]) -> dict:
     """BTCUSDT: verifierad stapel exakt 00:00 UTC med volym och ändligt positivt open på varje F_k och T_k (datakrav 8). Inga priser jämförs."""
-    days = sorted({d for w in cycle_windows([c for c in cycles if not c["flat"]]) for d in w})
+    days = sorted({d for w in cycle_windows(cycles) for d in w})       # hela kalendern: även den platta cykelns F_k är gräns för T_(k-1)
     bad = []
     for d in days:
         if not h0023._traded(panel.btc, d):
