@@ -43,3 +43,25 @@ Efter: tre mått (historiska tester, papperportfölj, datans aktualitet), en huv
 | 1280×800 | 390×844 |
 |---|---|
 | ![Mörkt](efter-morkt-desktop-Hem.png) | ![Mörkt](efter-morkt-mobil-Hem.png) |
+
+## Marknad: interaktiv candlestick-graf (TradingView Lightweight Charts)
+
+Grafen finns kvar på Marknad (flyttad från startsidan, inte borttagen). Riktig candlestick-graf med pris- och tidsaxlar, korshår med öppning/högsta/lägsta/stängning/volym, tidsramsval, zoom och panorering. Ingen statisk bild.
+
+| 1280×800: start (4h) | 1280×800: 1d | 1280×800: zoom | 1280×800: panorering |
+|---|---|---|---|
+| ![start](marknad-desktop-1-start.png) | ![1d](marknad-desktop-2-1d.png) | ![zoom](marknad-desktop-3-zoom.png) | ![pan](marknad-desktop-4-pan.png) |
+
+| 390×844: start (4h) | 390×844: 1d | 390×844: zoom | 390×844: panorering |
+|---|---|---|---|
+| ![start](marknad-mobil-1-start.png) | ![1d](marknad-mobil-2-1d.png) | ![zoom](marknad-mobil-3-zoom.png) | ![pan](marknad-mobil-4-pan.png) |
+
+**Instrument och tidsramar (det som faktiskt finns i datalagret):**
+- *Datorprogrammet:* instrumenten kommer från datalagret (`market_series`, Binance spot/terminer som insamlingen har). Tidsramarna är de som instrumentet har. Realtid via insamlingen.
+- *Webbläsaren:* datalagret finns inte, men appen innehåller kontrollsummerad historik för **ett** instrument, Binance USDⓈ-M terminer BTCUSDT, 4h, 2022-01-01 till 2024-12-31 (SHA-256 `6a84c4f4…`). Tidsramarna 8h, 12h, 1d och 1w räknas ur de riktiga stängda 4h-staplarna (första öppning, högsta, lägsta, sista stängning, summerad volym; en ofullständig period fylls aldrig ut). Instrumentvalet visar därför bara ett val, och begränsningen står i bilden. Inga påhittade staplar.
+- *Källa, aktualitet, datafel:* källa, period, SHA-256, senaste stapel och "historik, inte dagens pris" visas under grafen. Ogiltiga priser, luckor eller dubbletter i serien ger ett varningsfält och ingen graf. Fel i datalagret (datorprogrammet) visas som varning.
+- *Attribution:* "Diagram: TradingView Lightweight Charts™, © TradingView, Inc." med länk till tradingview.com syns under varje graf (utan klickbar länk i datorprogrammet, eftersom Tauri-fönstret inte har någon extern länkhantering), plus bibliotekets egen logotyp i hörnet.
+
+**Plattformar som grafkravet är verifierat på:**
+- Webbläsare (Chromium mot produktionsbygget) vid 1280×800 och 390×844: graf, tidsramsval (4h/8h/12h/1d/1w), mushjulszoom och dragpanorering körda i en riktig webbläsare (bilderna ovan). Pekgester (nypning) är **inte** automatiskt provade; biblioteket stödjer dem men jag har inte testat dem på en fysisk enhet.
+- Datorprogrammet (Tauri): instrumentval, tidsramsval från datalagret och felvisning är provade i enhetstester med ersatt datalager. **Inte provat i Windows-appen eller mot en riktig datamapp.**

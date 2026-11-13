@@ -11,6 +11,7 @@ import {
 } from "../lib/candles";
 import { STATE_TEXT, useMarketStatus } from "../features/market/useMarketStatus";
 import { subscribeBars, type Listen } from "../lib/barSubscription";
+import { dataProblems } from "../lib/marketSources";
 
 import { observeChartViewport } from "../lib/chartViewport";
 
@@ -30,6 +31,10 @@ type Props = {
   series: SeriesRef | null;
   /** Verified closed historical bars bundled with the app; disables live IO. */
   historical?: Candle[];
+  /** Verifierad historik per tidsram (riktiga staplar, tidsramarna räknade ur stängda staplar). Ger tidsramsval utan datorprogrammet. */
+  historicalSets?: Record<string, Candle[]>;
+  /** Källa, period och aktualitet för historiken, visas under diagrammet. */
+  historyNote?: React.ReactNode;
   /** Visas när series är null. */
   noSourceReason?: string;
   /** Riktiga affärer från ett registrerat backtest (HISTORIK). Aldrig simulerade. */
@@ -41,7 +46,7 @@ type Props = {
  * Prisdiagram med instrumentets verkliga OHLCV från datalagret. Används av alla detaljvyer för handel.
  * Ingen egen anslutning: staplarna läses med `market_bars` och uppdateras av insamlingens `market-bar`.
  */
-export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, historical }: Props) {
+export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, historical: historicalOne, historicalSets, historyNote }: Props) {
   const desktop = isTauri();
   const { status } = useMarketStatus();
   const [available, setAvailable] = useState<SeriesInfo[] | null>(null);
@@ -53,16 +58,19 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
   const [outside, setOutside] = useState(0);
 
   useEffect(() => setTf(series?.interval ?? ""), [series?.symbol, series?.interval]);
+  const isHist = !!historicalOne || !!historicalSets;
+  const historical = historicalSets ? historicalSets[tf] : historicalOne;
+  const problems = useMemo(() => historical ? dataProblems(historical, tf || series?.interval || "") : [], [historical, tf, series?.interval]);
 
   // Vilka tidsramar datalagret faktiskt har för instrumentet.
   useEffect(() => {
-    if (historical || !desktop || !series) return;
+    if (isHist || !desktop || !series) return;
     let alive = true;
     invoke<SeriesInfo[]>("market_series").then(s => { if (alive) setAvailable(s); }).catch(e => alive && setError(String(e)));
     return () => { alive = false; };
-  }, [desktop, historical, series?.symbol, status?.closed_bars ? 1 : 0]);
+  }, [desktop, isHist, series?.symbol, status?.closed_bars ? 1 : 0]);
 
-  const intervals = useMemo(() => historical && series ? [series.interval] : (available ?? []).filter(s => series && s.provider === series.provider && s.market === series.market && s.symbol === series.symbol).map(s => s.interval), [available, series, historical]);
+  const intervals = useMemo(() => historicalSets ? Object.keys(historicalSets) : historicalOne && series ? [series.interval] : (available ?? []).filter(s => series && s.provider === series.provider && s.market === series.market && s.symbol === series.symbol).map(s => s.interval), [available, series, historical]);
   const current: SeriesRef | null = series && intervals.includes(tf) ? { ...series, interval: tf } : null;
   const step = current ? INTERVAL_MS[current.interval] : 0;
 
@@ -89,7 +97,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
       grid: { vertLines: { color: v("--line") }, horzLines: { color: v("--line") } },
       crosshair: { mode: CrosshairMode.Normal },
       rightPriceScale: { borderColor: v("--line") },
-      timeScale: { borderColor: v("--line"), timeVisible: true, secondsVisible: false, rightOffset: 4, minBarSpacing: historical ? 0.01 : 0.5 },
+      timeScale: { borderColor: v("--line"), timeVisible: true, secondsVisible: false, rightOffset: 4, minBarSpacing: isHist ? 0.01 : 0.5 },
       localization: { locale: "sv-SE", timeFormatter: (t: Time) => utc((t as number) * 1000) },
     });
     const cs = c.addSeries(CandlestickSeries, { upColor: colors.current.up, downColor: colors.current.down, borderUpColor: colors.current.up, borderDownColor: colors.current.down, wickUpColor: colors.current.up, wickDownColor: colors.current.down });
@@ -110,7 +118,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
       chart.current = null; candleS.current = null; volS.current = null; markersApi.current = null; lines.current.clear();
       data.current = []; setCandles([]); setHover(null);
     };
-  }, [current?.symbol, current?.interval, !!historical]);
+  }, [current?.symbol, current?.interval, isHist]);
 
   const toCandle = (x: Candle) => {
     const fade = (col: string) => alpha(col, 0.45);
@@ -137,7 +145,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
   // Historik: senaste sidan, och äldre sidor när man panorerar bakåt.
   useEffect(() => {
     if (!current) return;
-    if (historical) { redraw(historical); viewport.current?.fitWhenVisible(); return; }
+    if (isHist) { redraw(problems.length ? [] : historical ?? []); viewport.current?.fitWhenVisible(); return; }
     let alive = true;
     let loadingOlder = false;
     let initialized = false;
@@ -181,7 +189,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
       ts?.unsubscribeVisibleLogicalRangeChange(onRange);
       sub.close();
     };
-  }, [current?.symbol, current?.interval, historical]);
+  }, [current?.symbol, current?.interval, historical, isHist, problems]);
 
   // Indikatorer: beräknas från stängningspriserna i diagrammet; tomt under uppvärmningen.
   useEffect(() => {
@@ -215,13 +223,14 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
   );
 
   let body: JSX.Element;
-  if (!desktop && !historical) body = empty("Ingen prisdata här", "Prisdiagrammet läser datalagret i skrivbordsappen. I webbläsaren finns ingen riktig OHLCV, och ingen simulerad data visas i stället.");
+  if (!desktop && !isHist) body = empty("Ingen prisdata här", "Prisdiagrammet läser datalagret i skrivbordsappen. I webbläsaren finns ingen riktig OHLCV, och ingen simulerad data visas i stället.");
   else if (!series) body = empty("Ingen datakälla för den här marknaden", noSourceReason ?? "Appen samlar bara in data för marknader med en publik datakälla. Inget simulerat pris visas i stället.");
-  else if (!historical && available === null && !error) body = empty("Läser datalagret…", "");
+  else if (!isHist && available === null && !error) body = empty("Läser datalagret…", "");
   else if (!current) body = empty(
     `${series.symbol} ${tf || series.interval} samlas inte in`,
     intervals.length ? `Datalagret har ${series.symbol} i ${intervals.join(", ")}. Välj en av dem ovan; tidsramen byts aldrig bara på etiketten.` : `Datalagret har ingen data för ${series.symbol} än. Insamlingen styrs i appens datamapp (market/config.json, se docs/marknadsdata.md).`,
   );
+  else if (problems.length) body = empty("Datafel i historiken", problems.join(" "));
   else body = <div className="candle-box" ref={box} />;
 
   return (
@@ -229,8 +238,8 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
       <div className="candle-head">
         <div className="candle-title">
           <b>{series ? series.symbol : "–"}</b>
-          <span className="muted">{series ? `${series.provider === "binance" ? "Binance" : series.provider} ${series.market}` : "ingen leverantör"}</span>
-          <span className="chip-live" title={historical ? "Kontrollsummerade stängda staplar från det historiska datasetet." : "Riktiga priser från datalagret. Resultatet i rutan är fortfarande HISTORIK eller SIM, inte livehandel."}>{historical ? "HISTORIK" : "REALTIDSDATA"}</span>
+          <span className="muted">{series ? `${series.provider === "binance" ? "Binance" : series.provider} ${series.market === "um" ? "USDⓈ-M terminer" : series.market === "spot" ? "spot" : series.market}` : "ingen leverantör"}</span>
+          <span className="chip-live" title={isHist ? "Kontrollsummerade stängda staplar från det historiska datasetet." : "Riktiga priser från datalagret. Resultatet i rutan är fortfarande HISTORIK eller SIM, inte livehandel."}>{isHist ? "HISTORIK" : "REALTIDSDATA"}</span>
           {current && status && sameSeries(status, current) && (
             <span className={`candle-state ${status.ready ? "ok" : "warn"}`}>{STATE_TEXT[status.state]}</span>
           )}
@@ -238,7 +247,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
         {series && intervals.length > 0 && (
           <div className="candle-tools">
             {intervals.map(i => <button key={i} className={i === tf ? "on" : ""} onClick={() => setTf(i)}>{i}</button>)}
-            {historical && <button onClick={() => chart.current?.timeScale().fitContent()}>Hela perioden</button>}
+            {isHist && <button onClick={() => chart.current?.timeScale().fitContent()}>Hela perioden</button>}
             <span className="sep" />
             {INDICATORS.map(i => (
               <button key={i.id} className={active.includes(i.id) ? "on" : ""} onClick={() => setActive(a => a.includes(i.id) ? a.filter(x => x !== i.id) : [...a, i.id])}>{i.label}</button>
@@ -263,12 +272,15 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
         </div>
       )}
       {stale && <div className="candle-warn">Datan är inte färsk: {STATE_TEXT[status!.state].toLowerCase()}{status!.message ? ` (${status!.message})` : ""}. Senast kända data visas tills anslutningen är tillbaka.</div>}
-      {error && <div className="candle-warn">Kunde inte läsa datalagret: {error}</div>}
+      {error && <div className="candle-warn" role="alert">Kunde inte läsa datalagret: {error}</div>}
+      {problems.length > 0 && <div className="candle-warn" role="alert">Datafel i historiken: {problems.join(" ")} Diagrammet ritas inte förrän datan är rättad.</div>}
       {body}
+      {isHist && historyNote && <div className="candle-source">{historyNote}</div>}
 
       {current && (
         <div className="candle-foot">
           <span>Tider i UTC. Halvgenomskinlig stapel = pågående, inte analysunderlag. Strategibeslut tas bara på stängda staplar.</span>
+          <span className="attrib">Diagram: {desktop ? "TradingView Lightweight Charts™" : <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer">TradingView Lightweight Charts™</a>}, © TradingView, Inc. (tradingview.com)</span>
           {INDICATORS.filter(i => active.includes(i.id)).map(i => warmupNote(i, candles.length)).filter(Boolean).map(n => <span key={n} className="warn">{n}</span>)}
           {trades.length > 0 && <span>{tradesLabel ?? "Markörer: registrerade backtest-affärer"}{outside ? ` (${outside} av ${trades.length} ligger utanför den data som finns här)` : ""}.</span>}
         </div>

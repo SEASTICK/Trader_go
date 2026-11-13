@@ -416,3 +416,14 @@ h2 { font-size:var(--fs-4); font-weight:600; }
 
 .nb { white-space:nowrap; }
 .card .footnote, .card.pad .footnote { padding:12px 0 0; }
+
+/* Marknad: källa, aktualitet och obligatorisk attribution under diagrammet. */
+.candle-meta { line-height:1.5; }
+.attrib { font-size:var(--fs-1); } .attrib a { color:inherit; text-decoration:underline; text-underline-offset:2px; }
+.candle-foot span { overflow-wrap:anywhere; }
+@media (max-width:820px) { .candle-head { padding:12px 12px 6px; } .candle-tools { gap:6px; } .candle-tools button { padding:6px 10px; font-size:13px; } .candle-ohlc { padding:0 12px 6px; gap:8px 12px; } .candle-meta, .candle-foot { padding-left:12px; padding-right:12px; } }
+.candle-source { display:flex; flex-direction:column; gap:2px; padding:10px 16px 0; font-size:12px; color:var(--muted); line-height:1.5; } .candle-source b { color:var(--ink); font-weight:600; }
+@media (max-width:820px) {
+  .candle-tools { flex-wrap:nowrap; overflow-x:auto; max-width:100%; padding-bottom:4px; -webkit-overflow-scrolling:touch; scrollbar-width:thin; } .candle-tools button { flex:none; }
+  .candle-source { padding:10px 12px 0; } .page-head .candle-card { margin:0; }
+}
