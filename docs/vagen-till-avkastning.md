@@ -1,7 +1,7 @@
 # Vägen till en app som ger positiv avkastning
 
 Ingen kan lova positiv avkastning. Det vi kan styra är att leta på rätt ställen, mäta ärligt och bara
-släppa igenom det som klarar varje grind. Läget 2026-11-12: alla 19 avgjorda hypoteser är `REJECT` (H-0001–H-0015 och H-0017–H-0020). Tre försök blev `OGILTIGA` och har inget beslut: H-0016 (för många kurser saknas), H-0021 (datahål under hållna positioner) och H-0022 (testets eget datakrav kan inte uppfyllas, ingen körning gjordes). H-0023 är förregistrerad men inte körd. Inget av dem ger någon avkastning att lita på.
+släppa igenom det som klarar varje grind. Läget 2026-11-13: alla 20 avgjorda hypoteser är `REJECT` (H-0001–H-0015, H-0017–H-0020 och H-0023). Tre försök blev `OGILTIGA` och har inget beslut: H-0016 (för många kurser saknas), H-0021 (datahål under hållna positioner) och H-0022 (testets eget datakrav kan inte uppfyllas, ingen körning gjordes). H-0023 (kassa-och-termin med Rullning B) kördes en gång och blev `REJECT`: t 1,37 mot kravet 3,45, CAGR 2,94 % mot kravet över 3 %. Inget försök har klarat de förregistrerade beslutskraven, så ingen avkastning går att lita på. Ett backtest är ingen prognos.
 
 Produktens faser och den bekräftade målbilden beskrivs i [färdplanen](fardplan.md). Grindarna nedan gäller validering av strategier och ger ingen aktivering av livehandel.
 
@@ -56,16 +56,15 @@ investerarna är kända för att ha lyckats. Testen blir därför för optimisti
 
 ## Försök efter H-0020 (läget 2026-11-12)
 
-Alla tre är försök att komma närmare målet, och inget av dem har visat avkastning.
+Alla tre är försök att komma närmare målet. Inget försök har klarat de förregistrerade beslutskraven. H-0023 hade positiv historisk avkastning (+10,6 % totalt och +3,9 % med 2,5 gånger kostnaderna) men blev `REJECT`, eftersom kravet på t och gränsen för CAGR inte uppfylldes. H-0021 och H-0022 blev `OGILTIGA` utan prestandasiffror.
 
 - **H-0021, tidsseriemomentum över många mynt:** `OGILTIG`. I 37 hållna övergångar saknades nästa dags kurs: 32 positioner vid en oförklarad lucka i datan
   (2022-02-26 till 02-28) och 5 serier som tar slut utan en källa som säger varför. Då går testet inte att avgöra, och inga prestandasiffror togs fram.
   Det kan göras om först när luckorna har en förklarande källa.
 - **H-0022, kassa-och-termin på sju altcoins:** `OGILTIG`, ingen körning gjordes. Datagranskningen visade att den serie man rullar in i är för tunt handlad: högst
   9 av 13 kvartal kan ha minst fyra mynt, medan testets eget krav var 10. Det är en diagnos av data, inte ett resultat. Ingen avkastning har räknats.
-- **H-0023, samma idé med en annan tidtabell (förregistrerad, inte körd):** man går in efter att det förra kontraktet löpt ut, i den då närmaste serien, i stället för
-  veckan före. Tidtabellen valdes efter att vi sett H-0022:s volymproblem, och datagranskningen klarar kravet på exakt gränsen: 10 av 13 kvartal (kravet är minst 10 av 13), utan marginal. Testet kan därför fortfarande bli
-  `OGILTIGT`. H-0020 (samma grundidé på BTC och ETH) är `REJECT`. Se `research/h0023-protokoll.md`. Ingen avkastning har räknats och inget löfte ges.
+- **H-0023, samma idé med en annan tidtabell (körd 2026-11-13, REJECT):** man går in efter att det förra kontraktet löpt ut, i den då närmaste serien, i stället för
+  veckan före. Tidtabellen valdes efter att vi sett H-0022:s volymproblem, och datagranskningen klarar kravet på exakt gränsen: 10 av 13 kvartal (kravet är minst 10 av 13), utan marginal. Testet blev giltigt (63 av 91 mynt-cykler, 10 av 13 kvartal) och gav `REJECT`: t 1,37 mot kravet 3,45 och CAGR 2,94 % mot kravet över 3 %. Nästan hela summan kommer från två kvartal (+5,2 % och +5,3 %), de övriga tolv summerar till ungefär noll efter kostnader. Det är en iakttagelse i efterhand, inte en ny hypotes. H-0020 (samma grundidé på BTC och ETH) är `REJECT`. Se `research/h0023-protokoll.md` och `research/results/H-0023-20261113T110747Z.json`. Ett backtest är ingen prognos och inget löfte ges.
 
 ## Nästa idéer i kö (registreras en i taget, aldrig efter att ha sett resultatet)
 
