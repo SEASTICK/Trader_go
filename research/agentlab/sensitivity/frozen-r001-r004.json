@@ -1,0 +1,386 @@
+{
+ "label": "EFTERHANDSDIAGNOSTIK / UTFORSKANDE. Inte en bekräftelse och ingen ny hypotes. R001-R004 och registret är oförändrade.",
+ "period": "2020-10-01..2022-12-31 (discovery). Panelen läses med end=2023-01-01; arkiv från 2023 och senare öppnas inte.",
+ "panel": {
+  "symbols": 166,
+  "first": "2020-01-01",
+  "last": "2022-12-31",
+  "universe_gap_discovery": [],
+  "universe_gap_checked": true,
+  "old_panel_perps": 85
+ },
+ "survive_thresholds": {
+  "sharpe": 1.0,
+  "t": 2.0,
+  "sharpe_cost_2_5x": 0.0
+ },
+ "unchanged_parameters_checked": true,
+ "candidates": [
+  {
+   "id": "X-0081",
+   "run": "R002",
+   "key": "610bac07a444",
+   "family": "ensemble_rank",
+   "parameters": {
+    "members": [
+     "xs_mom",
+     "funding_carry",
+     "lowvol"
+    ],
+    "q": 0.3,
+    "rebal": 3
+   },
+   "verdict_at_the_time": "PROMISING",
+   "old": {
+    "n": 822,
+    "sharpe": 1.7406985204047536,
+    "t": 2.6122397677865945,
+    "ann_ret": 0.4460292504798988,
+    "max_dd": -0.1570851225980976,
+    "turnover_ann": 63.881984162093644,
+    "funding_ann": -0.06222980368372967,
+    "sharpe_cost_2_5x": 1.3650951955381003,
+    "sharpe_cost_1x": 1.7406985204047536
+   },
+   "step_B_old_perps_new_rules": {
+    "symbols_in_panel": 85,
+    "universe": {
+     "mean_eligible_per_day": 30.0,
+     "min_eligible_per_day": 30,
+     "symbols_ever_eligible": 75,
+     "symbols_ever_held": 74
+    },
+    "status": "GILTIG",
+    "status_reason": "",
+    "n": 822,
+    "net_ann_ret": 0.5556896920675737,
+    "net_total": 2.2229558159650664,
+    "sharpe": 2.077191662390223,
+    "t": 3.11720990292379,
+    "max_dd": -0.18972673111121008,
+    "turnover_ann": 62.74987711666543,
+    "funding_ann": -0.07316714573235944,
+    "cost_ann": 0.06274987711666544,
+    "sharpe_cost_2_5x": 1.72280486931237,
+    "net_ann_ret_cost_2_5x": 0.46156487639257554,
+    "coverage": {
+     "gross_exposure": 1000.9999999999999,
+     "blocked_share": 0.0013944388944388945,
+     "gap_filled_share": 0.000444000444000444,
+     "unknown_exit_share": 6.243756243756245e-05,
+     "missing_price_share": 0.001456876456876457,
+     "unknown_funding_share": 0.0001248751248751249,
+     "any_unknown_share": 0.001456876456876457
+    }
+   },
+   "step_C_full_panel_new_rules": {
+    "symbols_in_panel": 166,
+    "universe": {
+     "mean_eligible_per_day": 30.0,
+     "min_eligible_per_day": 30,
+     "symbols_ever_eligible": 99,
+     "symbols_ever_held": 97
+    },
+    "status": "GILTIG",
+    "status_reason": "",
+    "n": 822,
+    "net_ann_ret": 0.4461994798757722,
+    "net_total": 1.501883287234723,
+    "sharpe": 1.6009699600994738,
+    "t": 2.4025512446756845,
+    "max_dd": -0.233458979404371,
+    "turnover_ann": 63.4002371648357,
+    "funding_ann": -0.07997707780510394,
+    "cost_ann": 0.06340023716483571,
+    "sharpe_cost_2_5x": 1.2579101433298436,
+    "net_ann_ret_cost_2_5x": 0.35109912412851874,
+    "coverage": {
+     "gross_exposure": 1000.9999999999999,
+     "blocked_share": 0.0015540015540015542,
+     "gap_filled_share": 0.0004995004995004996,
+     "unknown_exit_share": 5.55000555000555e-05,
+     "missing_price_share": 0.0016095016095016097,
+     "unknown_funding_share": 0.000111000111000111,
+     "any_unknown_share": 0.00160950160950161
+    }
+   },
+   "survives_B": true,
+   "survives_C": true
+  },
+  {
+   "id": "X-0082",
+   "run": "R002",
+   "key": "0051738937c5",
+   "family": "ml_xs",
+   "parameters": {
+    "model": "lgbm",
+    "h": 3,
+    "q": 0.3,
+    "retrain": 60,
+    "uni": 30
+   },
+   "verdict_at_the_time": "REJECT",
+   "old": {
+    "n": 822,
+    "sharpe": 1.6548342805848466,
+    "t": 2.4833846103546393,
+    "ann_ret": 0.3976339834609563,
+    "max_dd": -0.13888789477879881,
+    "turnover_ann": 103.72432221063607,
+    "funding_ann": 0.020838638292443902,
+    "sharpe_cost_2_5x": 1.006002801568737,
+    "sharpe_cost_1x": 1.6548342805848466
+   },
+   "step_B_old_perps_new_rules": {
+    "symbols_in_panel": 85,
+    "universe": {
+     "mean_eligible_per_day": 30.0,
+     "min_eligible_per_day": 30,
+     "symbols_ever_eligible": 75,
+     "symbols_ever_held": 72
+    },
+    "status": "GILTIG",
+    "status_reason": "",
+    "n": 822,
+    "net_ann_ret": 0.39759237729837665,
+    "net_total": 1.2866497497593734,
+    "sharpe": 1.6184167519249306,
+    "t": 2.428733379544252,
+    "max_dd": -0.1806421686769193,
+    "turnover_ann": 101.43329278183293,
+    "funding_ann": 0.006112064033522576,
+    "cost_ann": 0.10143329278183293,
+    "sharpe_cost_2_5x": 0.9959696046784802,
+    "net_ann_ret_cost_2_5x": 0.2454424381256273,
+    "coverage": {
+     "gross_exposure": 770.0000000000001,
+     "blocked_share": 0.0015873015873015873,
+     "gap_filled_share": 0.0005050505050505049,
+     "unknown_exit_share": 7.215007215007214e-05,
+     "missing_price_share": 0.0016594516594516595,
+     "unknown_funding_share": 0.00014430014430014427,
+     "any_unknown_share": 0.0016594516594516595
+    }
+   },
+   "step_C_full_panel_new_rules": {
+    "symbols_in_panel": 166,
+    "universe": {
+     "mean_eligible_per_day": 30.0,
+     "min_eligible_per_day": 30,
+     "symbols_ever_eligible": 99,
+     "symbols_ever_held": 94
+    },
+    "status": "GILTIG",
+    "status_reason": "",
+    "n": 822,
+    "net_ann_ret": 0.3023238479944407,
+    "net_total": 0.8338132470038542,
+    "sharpe": 1.1778419684809276,
+    "t": 1.7675695096922892,
+    "max_dd": -0.22608091049538703,
+    "turnover_ann": 99.992633144093,
+    "funding_ann": -0.00972589697637875,
+    "cost_ann": 0.099992633144093,
+    "sharpe_cost_2_5x": 0.5918274620058043,
+    "net_ann_ret_cost_2_5x": 0.15233489827830116,
+    "coverage": {
+     "gross_exposure": 770.0,
+     "blocked_share": 0.001803751803751804,
+     "gap_filled_share": 0.0006493506493506495,
+     "unknown_exit_share": 7.215007215007215e-05,
+     "missing_price_share": 0.0018759018759018761,
+     "unknown_funding_share": 0.0001443001443001443,
+     "any_unknown_share": 0.0018759018759018761
+    }
+   },
+   "survives_B": true,
+   "survives_C": false
+  },
+  {
+   "id": "X-0122",
+   "run": "R003",
+   "key": "2d3d4d5026e5",
+   "family": "ensemble_rank",
+   "parameters": {
+    "members": [
+     "xs_mom",
+     "funding_carry",
+     "lowvol"
+    ],
+    "q": 0.2,
+    "rebal": 7
+   },
+   "verdict_at_the_time": "REJECT",
+   "old": {
+    "n": 822,
+    "sharpe": 1.7059445973072551,
+    "t": 2.560085084515667,
+    "ann_ret": 0.5675008167673463,
+    "max_dd": -0.22708660331432662,
+    "turnover_ann": 46.19749304831422,
+    "funding_ann": -0.06634329164867193,
+    "sharpe_cost_2_5x": 1.4957869497089098,
+    "sharpe_cost_1x": 1.7059445973072551
+   },
+   "step_B_old_perps_new_rules": {
+    "symbols_in_panel": 85,
+    "universe": {
+     "mean_eligible_per_day": 30.0,
+     "min_eligible_per_day": 30,
+     "symbols_ever_eligible": 75,
+     "symbols_ever_held": 72
+    },
+    "status": "GILTIG",
+    "status_reason": "",
+    "n": 822,
+    "net_ann_ret": 0.6346267629115405,
+    "net_total": 2.6361203010957235,
+    "sharpe": 1.8166547482147355,
+    "t": 2.7262261224427453,
+    "max_dd": -0.2238225908494751,
+    "turnover_ann": 46.539508747537944,
+    "funding_ann": -0.0817671503535946,
+    "cost_ann": 0.04653950874753795,
+    "sharpe_cost_2_5x": 1.6145601006584938,
+    "net_ann_ret_cost_2_5x": 0.5648174997902337,
+    "coverage": {
+     "gross_exposure": 999.5000000000001,
+     "blocked_share": 0.0024012006003001503,
+     "gap_filled_share": 0.0006336501584125396,
+     "unknown_exit_share": 0.00010005002501250625,
+     "missing_price_share": 0.0025012506253126567,
+     "unknown_funding_share": 0.0006003001500750376,
+     "any_unknown_share": 0.0025012506253126563
+    }
+   },
+   "step_C_full_panel_new_rules": {
+    "symbols_in_panel": 166,
+    "universe": {
+     "mean_eligible_per_day": 30.0,
+     "min_eligible_per_day": 30,
+     "symbols_ever_eligible": 99,
+     "symbols_ever_held": 93
+    },
+    "status": "GILTIG",
+    "status_reason": "",
+    "n": 822,
+    "net_ann_ret": 0.5117043926523971,
+    "net_total": 1.7391259371580285,
+    "sharpe": 1.4321001625581409,
+    "t": 2.1491309105141045,
+    "max_dd": -0.3023722510195779,
+    "turnover_ann": 46.8672517668868,
+    "funding_ann": -0.09414415012306657,
+    "cost_ann": 0.046867251766886796,
+    "sharpe_cost_2_5x": 1.232970658365622,
+    "net_ann_ret_cost_2_5x": 0.44140351500206687,
+    "coverage": {
+     "gross_exposure": 999.5000000000001,
+     "blocked_share": 0.002167750541937635,
+     "gap_filled_share": 0.0005836251459062865,
+     "unknown_exit_share": 8.33750208437552e-05,
+     "missing_price_share": 0.0022511255627813906,
+     "unknown_funding_share": 0.0005002501250625312,
+     "any_unknown_share": 0.0022511255627813906
+    }
+   },
+   "survives_B": true,
+   "survives_C": true
+  },
+  {
+   "id": "X-0173",
+   "run": "R004",
+   "key": "108fb9dfbab8",
+   "family": "bab",
+   "parameters": {
+    "vt": 0.2,
+    "k": 60,
+    "q": 0.3,
+    "rebal": 7,
+    "uni": 50
+   },
+   "verdict_at_the_time": "REJECT",
+   "old": {
+    "n": 822,
+    "sharpe": 1.7036523376883612,
+    "t": 2.5566451254047844,
+    "ann_ret": 0.39895383616737556,
+    "max_dd": -0.21261038556827083,
+    "turnover_ann": 32.43826122772112,
+    "funding_ann": 0.004958876306578001,
+    "sharpe_cost_2_5x": 1.492347813436769,
+    "sharpe_cost_1x": 1.7036523376883612
+   },
+   "step_B_old_perps_new_rules": {
+    "symbols_in_panel": 85,
+    "universe": {
+     "mean_eligible_per_day": 48.91970802919708,
+     "min_eligible_per_day": 31,
+     "symbols_ever_eligible": 84,
+     "symbols_ever_held": 82
+    },
+    "status": "GILTIG",
+    "status_reason": "",
+    "n": 822,
+    "net_ann_ret": 0.3526366178345016,
+    "net_total": 1.0681853126245104,
+    "sharpe": 1.4485261177916602,
+    "t": 2.1737810914511826,
+    "max_dd": -0.2343393487679798,
+    "turnover_ann": 34.737374776679026,
+    "funding_ann": 0.0024201893929593865,
+    "cost_ann": 0.03473737477667902,
+    "sharpe_cost_2_5x": 1.2312966638529803,
+    "net_ann_ret_cost_2_5x": 0.30053055566948306,
+    "coverage": {
+     "gross_exposure": 1081.2416672027582,
+     "blocked_share": 0.0023637190849440863,
+     "gap_filled_share": 0.0008353975251561812,
+     "unknown_exit_share": 5.018750331433229e-05,
+     "missing_price_share": 0.002413906588258418,
+     "unknown_funding_share": 0.00012094560760005168,
+     "any_unknown_share": 0.0024139065882584185
+    }
+   },
+   "step_C_full_panel_new_rules": {
+    "symbols_in_panel": 166,
+    "universe": {
+     "mean_eligible_per_day": 48.94038929440389,
+     "min_eligible_per_day": 31,
+     "symbols_ever_eligible": 127,
+     "symbols_ever_held": 123
+    },
+    "status": "GILTIG",
+    "status_reason": "",
+    "n": 822,
+    "net_ann_ret": 0.21867256160575416,
+    "net_total": 0.5404580017030185,
+    "sharpe": 0.9479354404450367,
+    "t": 1.42255228334947,
+    "max_dd": -0.2632469202861377,
+    "turnover_ann": 32.763770254903214,
+    "funding_ann": 0.003383088059184513,
+    "cost_ann": 0.03276377025490322,
+    "sharpe_cost_2_5x": 0.7338063150822027,
+    "net_ann_ret_cost_2_5x": 0.16952690622339928,
+    "coverage": {
+     "gross_exposure": 1042.8051437536988,
+     "blocked_share": 0.0017151643543412566,
+     "gap_filled_share": 0.0006514177737709728,
+     "unknown_exit_share": 2.7814676391162296e-05,
+     "missing_price_share": 0.001742979030732419,
+     "unknown_funding_share": 0.0001427170366763253,
+     "any_unknown_share": 0.001742979030732419
+    }
+   },
+   "survives_B": true,
+   "survives_C": false
+  }
+ ],
+ "summary": {
+  "candidates": 4,
+  "survive_B": 4,
+  "survive_C": 2,
+  "valid_C": 4
+ }
+}
