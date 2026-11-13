@@ -52,3 +52,7 @@ Varje låst regel i `research/h0023-protokoll.md` är kopplad till kod och minst
 * Rapporteringen av dagligt Newey-West-t (inte beslutsgrundande) bygger på en dagsserie med öppning-till-öppning-värden ur kassaboken; den är provad bara för att den finns och är ändlig, inte mot ett facit.
 * Per mynt, per år, in- och utträdesbasis och bootstrap-intervall redovisas via `positions` och `mean_cycle_return_ci` i resultatet. De är rena sammanställningar och styr inget beslut.
 * Datakrav 4 har standardvärdena 46 och 10; parametrarna finns bara så att syntetiska tester med färre cykler kan pröva logiken.
+
+## Datapreflight (separat PR efter motorn)
+
+`engine/traderlab/h0023_preflight.py` kontrollerar arkiv, fönstergränser och `load_panel` på riktiga data **utan** `simulate`, basis, avkastning, t eller beta. Rapport: `research/universe/h0023-datapreflight.md` (ur `research/coverage/h0023-datapreflight.json`). En källa med oprövad luckfyllnad (`Panel.unverified`) blir aldrig verifierad data: den gör att ett mynt inte beslutas (termin/spot), att en beslutad position blir `OGILTIG` (markpris, termin, spot) och att BTC-kravet (datakrav 8) faller. Prov: `engine/tests/test_h0023_preflight.py`.
