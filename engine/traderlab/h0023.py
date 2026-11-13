@@ -68,6 +68,12 @@ class Panel:
     mark: dict[str, pd.DataFrame]
     spot: dict[str, pd.DataFrame]
     btc: pd.DataFrame | None = None
+    unverified: dict[str, str] = field(default_factory=dict)    # {"fut:SYM"|"mark:SYM"|"spot:COIN"|"btc": orsak}: källor med oprövad luckfyllnad eller annan anmärkning
+
+
+def _unverified(panel: Panel, kind: str, key: str = "") -> str | None:
+    """Orsaken om källan har en oprövad luckfyllnad. En sådan källa är **aldrig** verifierad data (varken för beslut eller för en använd position)."""
+    return panel.unverified.get(f"{kind}:{key}" if key else kind)
 
 
 @dataclass
@@ -157,6 +163,9 @@ def _decide_coin(panel: Panel, cycle: dict, coin: str, sizes: dict, *, fraction:
     if coin not in cycle["valid_coins"]:
         return False, "ej i universum (ingen daterad annons eller ej handlad)", 0.0
     fut, spot = panel.fut.get(series), panel.spot.get(coin)
+    for kind, key in (("fut", series), ("spot", coin)):
+        if _unverified(panel, kind, key):
+            return False, f"oprövad luckfyllnad i {kind}-källan ({_unverified(panel, kind, key)})", 0.0
     if not _traded(fut, d):
         return False, "ingen verifierad terminsstapel med volym beslutsdagen", 0.0
     if not _traded(spot, d):
@@ -174,6 +183,9 @@ def _fill_prices(panel: Panel, coin: str, series: str, cycle: dict) -> dict:
     """Priser och dagskontroller för en **redan beslutad** position. Varje brist är `InvalidRun` (OGILTIG), aldrig dold som platt."""
     f, x, held = cycle["fill"], cycle["exit"], _days(cycle["fill"], _next(cycle["exit"], -1))
     fut, spot, mark = panel.fut.get(series), panel.spot.get(coin), panel.mark.get(series)
+    for kind, key in (("fut", series), ("mark", series), ("spot", coin)):
+        if _unverified(panel, kind, key):
+            raise InvalidRun(f"{coin} {series}: oprövad luckfyllnad i {kind}-källan för en beslutad position ({_unverified(panel, kind, key)})")
     for label, df in (("terminen", fut), ("spoten", spot)):
         for day in (f, cycle["exit"]):
             if not _traded(df, day):
@@ -313,6 +325,8 @@ def evaluate(ordinary: SimResult, stressed: SimResult, panel: Panel, cycles: lis
     if with_four < min_cycles_four:                          # standard = protokollets 10 av 13
         reasons.append(f"Datakrav 4: {with_four} av {len(non_flat)} cykler med minst 4 handlade mynt (krav minst {min_cycles_four})")
     windows = ordinary.windows
+    if _unverified(panel, "btc"):
+        reasons.append(f"Datakrav 8: BTCUSDT-källan har en oprövad luckfyllnad ({_unverified(panel, 'btc')})")
     for day in sorted({d for w in windows for d in w}):
         if not _traded(panel.btc, day):
             reasons.append(f"Datakrav 8: ingen verifierad BTCUSDT-spotstapel exakt 00:00 UTC med volym {day}")
@@ -364,16 +378,22 @@ def load_panel(repo: Path, cycles: list[dict]) -> tuple[Panel, dict]:
     data_dir = repo / "data"
     manifest, mark_manifest = gapcheck.load_manifest(repo), hc.load_mark_manifest(repo)
     sizes = {r["contract"]: r for r in json.loads((repo / "research" / "universe" / "coinm-implied-contract-size.json").read_text(encoding="utf-8"))["series"]}
-    fut, mark, spot = {}, {}, {}
+    fut, mark, spot, unverified = {}, {}, {}, {}
+
+    def load(kind: str, key: str, market: str, sym: str, man: dict) -> pd.DataFrame | None:
+        df, note = hc._load(market, sym, data_dir, man, gap_fill=True)
+        if note and note.startswith("oprövad luckfyllnad"):
+            unverified[f"{kind}:{key}" if key else kind] = note       # får aldrig gå vidare som verifierad data
+        return df
     for c in cycles:
         for coin in c["valid_coins"]:
             sym = _series_name(coin, c["expiry"])
-            fut[sym], _ = hc._load("cm", sym, data_dir, manifest, gap_fill=True)
-            mark[sym], _ = hc._load("cm-mark", sym, data_dir, mark_manifest, gap_fill=True)
+            fut[sym] = load("fut", sym, "cm", sym, manifest)
+            mark[sym] = load("mark", sym, "cm-mark", sym, mark_manifest)
             if coin not in spot:
-                spot[coin], _ = hc._load("spot", f"{coin}USDT", data_dir, manifest, gap_fill=True)
-    btc, _ = hc._load("spot", "BTCUSDT", data_dir, manifest, gap_fill=True)
-    return Panel(fut, mark, spot, btc), {k: {"median": v.get("median")} for k, v in sizes.items()}
+                spot[coin] = load("spot", coin, "spot", f"{coin}USDT", manifest)
+    btc = load("btc", "", "spot", "BTCUSDT", manifest)
+    return Panel(fut, mark, spot, btc, unverified), {k: {"median": v.get("median")} for k, v in sizes.items()}
 
 
 def run(repo: Path, *, confirm_registered_run: bool = False) -> Path:
