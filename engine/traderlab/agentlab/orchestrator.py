@@ -139,6 +139,8 @@ class Orchestrator:
                                       key=lambda o: -o["severity"])
             c["evidence"] = ev
             c["errors"] = [t.result["error"] for t in q.all() if t.id.startswith(f"{k}:") and (t.result or {}).get("error") and not (t.result or {}).get("skipped")]
+            inv = [t.result["reason"] for t in q.all() if t.id.startswith(f"{k}:") and ">" not in t.id and (t.result or {}).get("invalid")]
+            c["invalid_reason"] = inv[0] if inv else None
             c["skipped"] = [t.result["error"] for t in q.all() if t.id.startswith(f"{k}:") and (t.result or {}).get("skipped")]
             if ev["quant"].get("disc"):
                 self.bb.s["trials"] += ev["quant"].get("trials", 1)
@@ -289,7 +291,10 @@ class Orchestrator:
                     fam = bb.family(spec["family"])
                     if not c["control"]:
                         fam["tested"] += 1
-                    if c["errors"] or not ev["quant"].get("disc"):
+                    if c.get("invalid_reason"):
+                        # datatäckning: en exponerad position saknar nödvändig data. OGILTIG, aldrig REJECT och aldrig ett resultat.
+                        c["decision"], c["reasons"] = "invalid", [c["invalid_reason"]]
+                    elif c["errors"] or not ev["quant"].get("disc"):
                         c["decision"], c["reasons"] = "kill", c["errors"] or c["skipped"] or ["inget resultat"]
                     else:
                         c["decision"], c["reasons"] = judge.preliminary(ev, c["iter"], self.max_iter)
@@ -309,6 +314,14 @@ class Orchestrator:
                             nxt.append(nc); all_c.append(nc)
                             self.record(c, "discovery", "ITERATED", {"child": m["key"]})
                             continue
+                    if c["decision"] == "invalid":
+                        c["status"] = "invalid"
+                        c["final"] = {"verdict": "OGILTIG", "score": None, "notes": c["reasons"]}
+                        if not c["control"]:
+                            fam["invalid"] = fam.get("invalid", 0) + 1
+                        self.record(c, "discovery", "OGILTIG", {"reasons": c["reasons"]})
+                        bb.say("judge", "all", "verdict", f"{spec['key']} {spec['desc']}: OGILTIG (datatäckning)", c["reasons"][0])
+                        continue
                     if c["decision"] == "kill":
                         c["status"] = "rejected"
                         c["final"] = {"verdict": "REJECT", "score": None, "notes": c["reasons"]}
@@ -341,7 +354,7 @@ class Orchestrator:
                 self.drain(vq, ex)
                 for c in survivors:
                     r = vq.get(f"{c['spec']['key']}:valid").result or {}
-                    sealed_all[id(c)]["valid"] = r.get("valid") or {"sharpe": 0.0, "ann_ret": 0.0, "max_dd": 0.0}
+                    sealed_all[id(c)]["valid"] = r.get("valid") or {"sharpe": 0.0, "ann_ret": 0.0, "max_dd": 0.0, "invalid": r.get("reason", "inget resultat")}
                     bb.s["spent"]["valid"].append({"run": self.run_id, "key": c["spec"]["key"]})
             verdict1 = {id(c): judge.final(c["evidence"], {"valid": sealed_all[id(c)]["valid"], "final": None}) for c in survivors}
             # --- STEG 2: slutåret 2024, bara för dem som klarade valideringsgrinden (PROMISING), i en egen uppgift

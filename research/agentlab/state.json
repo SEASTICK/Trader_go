@@ -1241,7 +1241,9 @@
    "needs": "Kräver en öppen källa; inte vald än."
   }
  },
- "known_issues": [],
+ "known_issues": [
+  "R001-R004: okänd data blev tyst noll (finansiering 0,76 %, pris 0,41 % av bruttoexponeringen) och leveranskontrakt (BTCUSDT_230331 m fl) behandlades som evighetsterminer. Audit: audits/coverage-R001-R004.json. Motorregel v2 gäller från och med nu."
+ ],
  "agents": {
   "data>FundingSpecialist": {
    "name": "FundingSpecialist",

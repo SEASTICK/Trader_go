@@ -360,3 +360,83 @@ def test_äldre_körningar_märks_som_förbrukade_och_återställs_aldrig(tmp_pa
     bb.save()
     assert "legacy_unsealed" in json.loads((tmp_path / "state.json").read_text())
     assert "legacy_unsealed" not in Blackboard(tmp_path / "ny").s                              # nya laboratorier startar utan
+
+
+# ---------------------------------------------------------------- datatäckning (Codex P1): okänd data blir aldrig tyst noll
+def _hold_one(p, col=0, start=200, days=60, w=0.5):
+    W = pd.DataFrame(0.0, index=p.close.index, columns=p.close.columns)
+    W.iloc[start:start + days, col] = w
+    return W
+
+
+def test_okänd_finansiering_debiteras_och_flaggas_aldrig_gratis():
+    p = small(); p.funding.iloc[:, :] = 0.0
+    p.funding_known.iloc[:, 0] = False                       # instrument 0 saknar finansiering (som 34 av 119 kontrakt i riktig data)
+    W = _hold_one(p, w=0.5)
+    r = bt.run(p, W, cost=0.0, strict=False)
+    day = p.close.index[210]
+    assert r.funding[day] == pytest.approx(0.5 * bt.FUNDING_PENALTY)                         # inte noll: en konservativ avgift
+    assert r.coverage["unknown_funding_share"] > 0.9
+    old = bt.run(p, W, cost=0.0, strict=False, penalize=False)                               # den gamla motorn gjorde det gratis
+    assert old.funding[day] == 0.0 and old.coverage["unknown_funding_share"] > 0.9           # ...men måttet fångar det
+    with pytest.raises(bt.CoverageInvalid, match="okänd finansiering"):
+        bt.run(p, W, cost=0.0)                                                               # över toleransen: ogiltig utvärdering
+
+
+def test_avnotering_blockerar_positionen_och_okänt_utträde_är_en_förlust_oavsett_riktning():
+    p = small()
+    W = _hold_one(p, start=205, days=10, w=0.1)             # long på instrument 0 under raderna 205-214
+    q = small(); q.open.iloc[212:, 0] = np.nan              # ingen öppning från rad 212 och framåt (avnotering/utgången leverans): inget senare pris finns
+    for sign in (1.0, -1.0):
+        r = bt.run(q, W * sign, cost=0.0, funding=False, strict=False)
+        c = r.coverage
+        assert c["blocked_exposure"] > 0 and c["unknown_exit_exposure"] > 0 and c["gap_filled_exposure"] == 0
+        # beslut rad 210: öppning t+1 (211) finns men t+2 (212) saknas för alltid: utträdet okänt = förlust på 0,1 oavsett long eller short (aldrig en vinst och aldrig noll)
+        assert r.gross[q.close.index[211]] == pytest.approx(-0.1)
+        # beslut rad 211: öppning t+1 (212) saknas: kontraktet kan inte hållas, vikten blir noll och exponeringen mäts
+        assert r.gross[q.close.index[212]] == 0.0 and r.exposure[q.close.index[212]] == 0.0
+    old = bt.run(q, W, cost=0.0, funding=False, strict=False, penalize=False)
+    assert old.gross[q.close.index[211]] == 0.0                                             # gamla motorn: tyst noll
+    with pytest.raises(bt.CoverageInvalid, match="saknad öppningskurs"):
+        bt.run(q, _hold_one(p, start=205, days=60, w=0.5))                                  # stor exponering på okänd data: ogiltig utvärdering
+
+
+def test_en_datalucka_värderas_mot_nästa_pris_i_stället_för_att_bli_noll_eller_förlust():
+    p = small()
+    W = _hold_one(p, start=205, days=10, w=0.1)
+    q = small(); q.open.iloc[212, 0] = np.nan               # en enda dags datalucka (som arkivhålet 2022-02-26 till 02-28), senare priser finns
+    r = bt.run(q, W, cost=0.0, funding=False, strict=False)
+    exit_px = q.open.iloc[213, 0]                           # utträdet värderas mot nästa tillgängliga öppning
+    assert r.gross[q.close.index[211]] == pytest.approx(0.1 * (exit_px / q.open.iloc[211, 0] - 1))
+    assert r.coverage["gap_filled_exposure"] > 0 and r.coverage["unknown_exit_exposure"] == 0
+
+
+def test_universumet_utesluter_instrument_utan_känd_finansiering_men_inte_vid_gamla_regeln():
+    p = small(); p.funding_known.iloc[:, 3] = False
+    assert not p.universe(25).iloc[400:, 3].any()
+    old = Panel(p.open, p.high, p.low, p.close, p.dvol, p.funding, meta=p.meta, funding_known=p.funding_known, funding_rule=False)
+    assert old.universe(25).iloc[400:, 3].any()
+    W = build_xs = BUILDERS["xs_mom"]({"k": 30, "q": 0.2, "rebal": 7, "uni": 25, "vt": 0, "skip": 0}, p)
+    assert (W.iloc[:, 3].abs() == 0).all()                                                   # strategin kan aldrig välja det
+
+
+def test_täckningsmåttet_ger_exakta_andelar():
+    p = small()
+    W = _hold_one(p, w=0.2, days=20)
+    p.funding_known.iloc[205:215, 0] = False
+    cov = bt.coverage(p, W)
+    assert cov["gross_exposure"] == pytest.approx(0.2 * 20)
+    assert cov["unknown_funding_exposure"] == pytest.approx(0.2 * 10) and cov["unknown_funding_share"] == pytest.approx(0.5, abs=0.06)
+
+
+def test_ogiltig_täckning_ger_ogiltig_i_registret_aldrig_reject_eller_slutsteg(monkeypatch):
+    real = bt.run
+    def boom(*a, **k):
+        raise bt.CoverageInvalid("test: okänd data under exponerad position")
+    monkeypatch.setattr(agents.bt, "run", boom)
+    orch, s, _ = run_lab(1.0)
+    rows = orch.registry.read()
+    assert rows and all(r["verdict"] == "OGILTIG" for r in rows)
+    assert not any(r["stage"] == "final" for r in rows) and orch.bb.s["rejected"] == []
+    assert s["promising"] == [] and "OGILTIG" in s["verdicts"]
+    monkeypatch.setattr(agents.bt, "run", real)

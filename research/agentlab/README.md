@@ -39,6 +39,30 @@ Tre perioder: **discovery** 2020-10 till 2022-12, **valid** 2023, **final** 2024
 **Förbrukad, utforskande data.** R001–R004 byggdes *innan* barriären fanns i koden: alla arbetsprocesser hade hela panelen och 2023/2024 beräknades för **alla** deras kandidater (bara visningen var begränsad). Valideringsåret och slutåret är därför **förbrukade** för alla R001–R004-kandidater, och inga av deras utfall är ett orört prov. Det är markerat i `state.json` (`legacy_unsealed`, `data_status`) och återställs aldrig av koden. Nya körningar loggar varje avslöjande i `spent`, och även de förbrukar data: upprepade körningar mot samma år gör att 2023 och 2024 aldrig blir ett bekräftande prov för dessa familjer.
 **Valda efter utfall.** Deflated Sharpe med effektivt antal försök och domare v2 (valideringsår ≥ 0,5) valdes *efter* att utfall setts. De kan inte retroaktivt bekräfta en kandidat; `ensemble_rank`-kandidatens status (MORE_RESEARCH) är därför en utforskande markering, inte ett resultat. Alla backtester körs med kostnad (10 bp per sida), finansieringsränta och beslut på stängd dag, fyllning vid nästa öppning.
 
+## Datatäckning: audit av R001–R004 och motorregel v2
+
+Codex granskning visade att motorn tyst gjorde okänd data till noll: finansiering saknades för 34 av 119 kontrakt (bara 85 har finansieringsarkiv) och ifylldes med `0.0`, och en saknad nästa öppningskurs blev `fillna(0.0)`. **Audit av redan förbrukad data** (`python -m traderlab.agentlab audit`, `audits/coverage-R001-R004.json`, de gamla experimentposterna är oförändrade). Vikterna för alla 148 kandidater återskapades med den gamla regeln och **alla 148 återgav registrets discovery-Sharpe exakt**, så auditen är trogen. Exponering = summa av |vikt| över alla dagar och instrument:
+
+| Mått (alla 148 kandidater, hela 2020–2024) | Andel av bruttoexponeringen |
+|---|---|
+| Okänd finansiering (saknat arkiv eller dag utan utbetalning) | **0,76 %** (22 kandidater över 1 %, högst 10,8 %) |
+| Blockerad: ingen öppningskurs vid fyllningen (t+1) | 0,34 % |
+| Datalucka i utträdespriset, senare pris finns (till exempel arkivhålet 2022-02-26–28) | 0,05 % |
+| Okänt utträde utan senare pris (avnotering, utgången leverans) | 0,02 % |
+| **Allt okänt tillsammans** | **0,90 %** (median 0,70 % per kandidat, högst 11,4 %, `pairs` värst; 30 kandidater över 1 %) |
+
+De fyra som överlevde discovery hade 0,7–1,3 % okänd exponering (finansiering 0,6–1,1 %, pris 0,1–0,4 %). **Effekt på discovery-Sharpe** när samma vikter körs med motor v2 i stället för tyst noll: i snitt −0,17 (−0,81 till +0,26; sjunker för 109, stiger för 32): `ensemble_rank` 1,74 → 1,44, `ml_xs` 1,65 → 1,37, `ensemble_rank` (q=0,2) 1,71 → 1,40, `bab` 1,70 → 0,93. Det ändrar ingen dom och ger **ingen retroaktiv PROMISING eller READY_FOR_PAPER**. R001–R004 är fortfarande förbrukad, utforskande data.
+
+**Ett annat fel som auditen hittade:** USDⓈ-M-katalogen innehåller **leveranskontrakt** (`BTCUSDT_220930`, `_230331`, `_230630`, `_240628`, `_240927`) som R001–R004 behandlade som evighetsterminer (de går ut och har ingen finansiering). 99 av 148 kandidater hade exponering mot dem (i snitt 0,5 %, högst 2,2 % av exponeringen).
+
+**Motorregel v2 (bestämd i förväg, gäller från och med nu):**
+1. **Universum:** ett instrument får bara handlas dag t om finansieringsutbetalningar finns för minst 5 av de senaste 7 dagarna (`Panel.universe`, `funding_rule`). Det utesluter kontrakt utan finansieringsarkiv och leveranskontrakt, och inget fylls längre med 0.
+2. **Körbarhet:** inget pris vid fyllningen (öppning t+1) betyder att positionen inte kan öppnas eller hållas: vikten blir noll och exponeringen mäts (`blocked`).
+3. **Utträdespris:** saknas öppning t+2 men ett senare pris finns inom 5 dagar värderas positionen mot det (en datalucka; mäts som `gap_filled`). Finns inget senare pris (avnotering, utgången leverans) räknas det som en förlust på positionens vikt, oavsett long eller short (`MISSING_PRICE_LOSS`), aldrig noll och aldrig en vinst.
+4. **Finansiering:** okänd finansiering under en hållen position debiteras 0,3 % per dag och exponeringsenhet, alltid till nackdel (`FUNDING_PENALTY`).
+5. **Ogiltigt:** om mer än **1 %** av bruttoexponeringen vilar på okänd data (blockerad, okänt utträde eller okänd finansiering) är utvärderingen **OGILTIG** (`CoverageInvalid`): kandidaten får domen OGILTIG, aldrig REJECT, aldrig en poäng och aldrig ett slutsteg. `penalize=False` återger den gamla motorn och används bara av auditen.
+Beloppen (1 %, 0,3 %, −100 %) är konservativa antaganden som är satta av mig innan nya körningar och ändras inte efter utfall. De är en övre gräns, inte en uppskattning av det verkliga utfallet.
+
 ## Poängsystem
 
 Poäng 0–100, vikter i `judge.WEIGHTS`: efter-kostnad-avkastning 12, Sharpe 15, max drawdown 8, stabilitet över perioder 10, stabilitet över tillgångar 8, omsättning 5, kostnadskänslighet 12, parameterkänslighet 8, diversifieringsvärde 7, evidenskvalitet 15 (permutationstest, deflated Sharpe, ingen läckage, tillräckligt urval). **Hårda krav (REJECT oavsett poäng):** läckage, discovery-Sharpe ≤ 0,3, olönsam med 2,5× kostnader, slumptest p > 0,15, deflated Sharpe < 0,5, negativ validering. Därefter: poäng < 40 REJECT, 40–55 MORE_RESEARCH, ≥ 55 PROMISING (v2: kräver också valideringsårets Sharpe ≥ 0,5). READY_FOR_PAPER kräver dessutom bra slutår, p ≤ 0,02, deflated Sharpe ≥ 0,9, låg beta eller slår baslinjen, och diversifierande. **Deflated Sharpe** räknas med **effektivt antal oberoende försök** (deltagandekvoten för korrelationsmatrisen av alla försöks avkastningsserier), så att tio varianter av samma idé inte räknas som tio oberoende.

@@ -55,7 +55,8 @@ def _view(upto: str) -> Panel:
         end = pd.Timestamp(PERIODS[upto][1], tz="UTC")
         cut = lambda df: df.loc[:end]
         f = _FULL
-        _VIEWS[upto] = Panel(cut(f.open), cut(f.high), cut(f.low), cut(f.close), cut(f.dvol), cut(f.funding), meta={**f.meta, "upto": upto})
+        _VIEWS[upto] = Panel(cut(f.open), cut(f.high), cut(f.low), cut(f.close), cut(f.dvol), cut(f.funding), meta={**f.meta, "upto": upto},
+                             funding_known=cut(f.funding_known), funding_rule=f.funding_rule)
     return _VIEWS[upto]
 
 
@@ -134,8 +135,8 @@ def quant_task(pl: dict) -> dict:
         for ns in neighbors(spec, 6):
             try:
                 out["neighbors"].append([ns["key"], bt.sharpe(_disc(bt.run(pan, weights(ns)).ret))])
-            except Exception:
-                pass
+            except (bt.CoverageInvalid, ModelUnavailable):
+                pass                                                  # en granne med okänd data räknas inte som ett resultat
         out["trials"] += len(out["neighbors"])
     else:                                                           # ML mot enkla baslinjer med samma uppdrag
         simple = make_spec("xs_mom", {"k": 30, "q": spec["params"].get("q", 0.2), "rebal": spec["params"].get("h", 3), "uni": spec["params"].get("uni", 30)})
@@ -403,7 +404,8 @@ def leakage_specialist(pl: dict) -> dict:
     worst = 0.0
     for frac in (0.55, 0.7, 0.85):
         cut = int(n * frac)
-        sub = Panel(pan.open.iloc[:cut], pan.high.iloc[:cut], pan.low.iloc[:cut], pan.close.iloc[:cut], pan.dvol.iloc[:cut], pan.funding.iloc[:cut], meta=pan.meta)
+        sub = Panel(pan.open.iloc[:cut], pan.high.iloc[:cut], pan.low.iloc[:cut], pan.close.iloc[:cut], pan.dvol.iloc[:cut], pan.funding.iloc[:cut], meta=pan.meta,
+                    funding_known=pan.funding_known.iloc[:cut], funding_rule=pan.funding_rule)
         Ws = build(spec, sub).reindex(columns=W.columns).fillna(0.0)
         a, b = Ws.values, W.iloc[:cut].fillna(0.0).values            # alla rader inklusive den sista: en dags framtidsblick syns bara där
         worst = max(worst, float(np.nanmax(np.abs(a - b))))
@@ -482,5 +484,7 @@ def run_task(fn: str, payload: dict) -> dict:
         return TASKS[fn](payload)
     except ModelUnavailable as exc:
         return {"error": f"modell saknas: {exc}", "skipped": True, "objections": [], "spawn": []}
+    except bt.CoverageInvalid as exc:                  # okänd data under exponerad position: utvärderingen är ogiltig, aldrig ett resultat
+        return {"invalid": True, "reason": str(exc), "objections": [], "spawn": []}
     except Exception as exc:                          # noqa: BLE001
         return {"error": f"{type(exc).__name__}: {exc}", "trace": traceback.format_exc()[-600:], "objections": [], "spawn": []}

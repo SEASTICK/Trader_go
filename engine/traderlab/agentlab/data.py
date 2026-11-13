@@ -33,9 +33,13 @@ class Panel:
     dvol: pd.DataFrame
     funding: pd.DataFrame
     meta: dict = field(default_factory=dict)
+    funding_known: pd.DataFrame | None = None     # True där finansieringsutbetalningar faktiskt finns (inte ifyllt med 0). None = allt känt (syntetiska paneler)
+    funding_rule: bool = True                     # datatäckningsregel v2: bara instrument med känd finansiering får handlas. False reproducerar körningarna R001-R004
     _cache: dict = field(default_factory=dict, repr=False)
 
     def __post_init__(self):
+        if self.funding_known is None:
+            self.funding_known = pd.DataFrame(True, index=self.funding.index, columns=self.funding.columns)
         for df in (self.open, self.high, self.low, self.close, self.dvol, self.funding):
             if len(df) and df.index.max() >= HOLDOUT:
                 raise ValueError("panelen innehåller data från slutprovet (2025 eller senare)")
@@ -61,14 +65,21 @@ class Panel:
         return self.cached(("fund", k), lambda: self.funding.shift(1).rolling(k, min_periods=max(2, k // 2)).mean())
 
     def universe(self, top_n: int = 30, min_age: int = 90) -> pd.DataFrame:
-        """Handlingsbara dag t: minst `min_age` dagar gammal och bland de `top_n` största efter 30 dagars median omsättning (data till och med t)."""
+        """Handlingsbara dag t: minst `min_age` dagar gammal och bland de `top_n` största efter 30 dagars median omsättning (data till och med t).
+        **Datatäckningsregel v2 (bestämd i förväg):** ett instrument får bara handlas dag t om finansieringsutbetalningar finns för minst 5 av de senaste 7 dagarna.
+        Utan känd finansiering kan en position inte värderas, så instrumentet är inte handlingsbart (inget ifyllt med 0)."""
         def make():
             age = self.close.notna().cumsum()
             med = self.dvol.rolling(30, min_periods=20).median()
             med = med.where(age >= min_age)
-            rank = med.rank(axis=1, ascending=False)
-            return (rank <= top_n) & self.close.notna()
-        return self.cached(("uni", top_n, min_age), make)
+            ok = self.close.notna()
+            if self.funding_rule:
+                known = self.funding_known.rolling(7, min_periods=1).sum() >= 5
+                ok = ok & known
+                med = med.where(known)
+            rank = med.where(ok).rank(axis=1, ascending=False)
+            return (rank <= top_n) & ok
+        return self.cached(("uni", top_n, min_age, self.funding_rule), make)
 
     def fwd(self) -> pd.DataFrame:
         """Avkastning öppning(t+1) till öppning(t+2): det en position som beslutas på stängningen av dag t faktiskt tjänar."""
@@ -100,7 +111,7 @@ def load_um_panel(data_dir: Path, *, symbols: list[str] | None = None, cache: Pa
         with open(cache, "rb") as f:
             return pickle.load(f)
     syms = symbols or _um_symbols(data_dir)
-    o, h, l, c, v, fu = {}, {}, {}, {}, {}, {}
+    o, h, l, c, v, fu, fk = {}, {}, {}, {}, {}, {}, {}
     for s in syms:
         try:
             df = binance.load("um", s, "1d", data_dir, start=DATA_START, end=HOLDOUT)
@@ -111,11 +122,14 @@ def load_um_panel(data_dir: Path, *, symbols: list[str] | None = None, cache: Pa
         try:
             f = binance.load_funding(s, data_dir, start=DATA_START, end=HOLDOUT)
             # dagen d = utbetalningar i (d 00:00, d+1 00:00]: en position som fylls vid öppningen 00:00 missar 00:00-utbetalningen vid inträdet och får den vid utträdet
-            fu[s] = f.groupby((f.index - pd.Timedelta(seconds=1)).normalize()).sum()
+            bucket = (f.index - pd.Timedelta(seconds=1)).normalize()
+            fu[s] = f.groupby(bucket).sum()
+            fk[s] = f.groupby(bucket).count() > 0                  # känd = minst en riktig utbetalning den dagen
         except FileNotFoundError:
             pass
     panel = Panel(pd.DataFrame(o).sort_index(), pd.DataFrame(h).sort_index(), pd.DataFrame(l).sort_index(), pd.DataFrame(c).sort_index(),
                   pd.DataFrame(v).sort_index(), pd.DataFrame(fu).reindex(pd.DataFrame(c).sort_index().index).reindex(columns=sorted(c)).fillna(0.0),
+                  funding_known=pd.DataFrame(fk).reindex(pd.DataFrame(c).sort_index().index).reindex(columns=sorted(c)).fillna(False).astype(bool),
                   meta={"source": "data.binance.vision um 1d + fundingRate", "symbols": len(o), "funding_symbols": len(fu),
                         "caveat": "Bara kontrakt som har arkiv lokalt (survivorship). Slutprovet 2025+ är aldrig läst."})
     if cache is not None:
