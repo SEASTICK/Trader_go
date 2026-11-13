@@ -56,7 +56,7 @@ abstracten i PR #132 (markerat "andrahandsuppgift"). Ingen av källorna har vali
 
 **Prövar betalningscykeln (mekanism a)**
 
-* Ogden (1990), *Turn-of-month evaluations of liquid profits and stock returns* (titeln ofullständigt återgiven), Journal of Finance 45(4): enligt SEASTICK:s citat ur förlagets abstract en uttrycklig
+* Ogden (1990), *Turn-of-Month Evaluations of Liquid Profits and Stock Returns: A Common Explanation for the Monthly and January Effects* Journal of Finance 45(4), s. 1259–1272: enligt SEASTICK:s citat ur förlagets abstract en uttrycklig
   prövning av hypotesen att standardiseringen av betalningar vid månadsskiftet förklarar mönstret, med urvalet 1969–1986 (s. 1259–1272). Ogdens urval ligger före 2006 och
   säger inget om perioden 2006–2024.
 
@@ -71,20 +71,19 @@ säsongsmönster (datasnokning, kalenderanomalier som försvinner efter publicer
 
 ## Källverifiering (obligatorisk före körning)
 
-**Status 2026-11-13: ifylld med citat som SEASTICK har läst i originalen och angivit i PR #132; inte läst av Claude.** Jag har inte kunnat öppna källorna själv:
-`papers.ssrn.com` och `onlinelibrary.wiley.com` (tillåtna i sessionens miljö) svarar med Cloudflares robotkontroll ("Just a moment…", HTTP 403) på automatiska anrop, och
-`business.purdue.edu` (PDF:en med själva artikeln, också tillåten) går att nå men serverns certifikatkedja kan inte valideras ("unable to get local issuer certificate"). Ingen robotkontroll
-löses och ingen TLS-kontroll stängs av. Citaten nedan är därför **SEASTICK:s ordagranna återgivning**, kopierad hit utan ändring; sid-/avsnittshänvisningarna är SEASTICK:s egna. Codex
-(eller någon som kan öppna originalen) ska ha kontrollerat dem mot källorna innan körning. Tills dess och tills **"Granskad mot original"** nedan är ifylld är H-0024 registrerad men
-**får inte köras**. Visar originalen att fönstret, perioden eller riktningen avviker från det som står här, ändras inte detta protokoll i efterhand: det blir ett nytt id.
+**Status 2026-11-13: granskad mot originalen av Codex (SEASTICK, PR #132, kommentar 6865588880).** Uppgifterna i tabellen är kontrollerade mot McConnell–Xus publicerade artikel-PDF (urval s. 49, fönsterfras s. 51,
+nyanserad slutsats s. 62) och mot Wileys abstract för Ogden (hypotes och urval 1969–1986). Jag (Claude) har inte kunnat öppna källorna själv: `papers.ssrn.com` och `onlinelibrary.wiley.com` svarar med
+Cloudflares robotkontroll och `business.purdue.edu` har en certifikatkedja som inte kan valideras härifrån. Ingen robotkontroll löstes och ingen TLS-kontroll stängdes av; citaten och hänvisningarna
+kommer från SEASTICK och är granskade av Codex. Källverifieringen är därmed ifylld och granskad. **H-0024 är fortfarande inte körd**, och körning kräver stegen under "Före körning".
+Visar originalen att fönstret, perioden eller riktningen avviker från det som står här, ändras inte detta protokoll i efterhand: det blir ett nytt id.
 
-| Källa | Vad som styrks | Citat och hänvisning (återgivet av SEASTICK, PR #132, 2026-11-13) | Granskad mot original |
+| Källa | Vad som styrks | Citat och hänvisning (återgivet av SEASTICK, PR #132, 2026-11-13; kontrollerat mot originalet) | Granskad mot original |
 |---|---|---|---|
-| McConnell och Xu (2008), *Financial Analysts Journal* 64(2), s. 49–64. [Artikel-PDF](https://business.purdue.edu/faculty/mcconnell/publications/Equity-Returns-at-the-Turn-of-the-Month.pdf), [SSRN 1135217](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1135217) | Urvalsperiod | Abstract, s. 49: urvalet anges som “1926–2005 period”. | (att granska) |
-| samma | Fönstrets definition | Table 1-noten, s. 51: intervallet definieras med frasen “last trading day of the month … third trading day of the following month”. | (att granska) |
-| samma | Vad volym- och fondflödestesterna visar | Slutsatsen, s. 62 (återgiven i sak, inget ordagrant citat lämnat): testerna kunde varken utesluta payday-förklaringen eller ge stöd för den. | (att granska; ordagrant citat saknas) |
-| Ogden (1990), *Journal of Finance* 45(4), s. 1259–1272. [Wiley, förlagets abstract](https://onlinelibrary.wiley.com/doi/10.1111/j.1540-6261.1990.tb02435.x) | Att artikeln prövar betalningscykeln | Förlagets abstract: artikeln “presents and tests a hypothesis that the standardization of payments in the United States at the turn of each calendar month” (citatet är återgivet som det lämnades, meningen fortsätter i originalet). | (att granska) |
-| samma | Urvalsperiod | Samma abstract: urvalet är 1969–1986 (återgivet i sak, inget ordagrant citat lämnat). | (att granska) |
+| McConnell och Xu (2008), *Financial Analysts Journal* 64(2), s. 49–64. [Artikel-PDF](https://business.purdue.edu/faculty/mcconnell/publications/Equity-Returns-at-the-Turn-of-the-Month.pdf), [SSRN 1135217](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1135217) | Urvalsperiod | Abstract, s. 49: urvalet anges som “1926–2005 period”. | Granskad av Codex mot originalet (SEASTICK, PR #132), 2026-11-13 |
+| samma | Fönstrets definition | Table 1-noten, s. 51: intervallet definieras med frasen “last trading day of the month … third trading day of the following month”. | Granskad av Codex mot originalet (SEASTICK, PR #132), 2026-11-13 |
+| samma | Vad volym- och fondflödestesterna visar | Slutsatsen, s. 62 (återgiven i sak, inget ordagrant citat lämnat): testerna kunde varken utesluta payday-förklaringen eller ge stöd för den (nyanserad slutsats, återgiven i sak). | Granskad av Codex mot originalet (SEASTICK, PR #132), 2026-11-13 |
+| Ogden (1990), *Turn-of-Month Evaluations of Liquid Profits and Stock Returns: A Common Explanation for the Monthly and January Effects*, *Journal of Finance* 45(4), s. 1259–1272. [Wiley, förlagets abstract](https://onlinelibrary.wiley.com/doi/10.1111/j.1540-6261.1990.tb02435.x) | Att artikeln prövar betalningscykeln | Förlagets abstract: artikeln “presents and tests a hypothesis that the standardization of payments in the United States at the turn of each calendar month” (meningen fortsätter i originalet). | Granskad av Codex mot originalet (SEASTICK, PR #132), 2026-11-13 |
+| samma | Urvalsperiod | Samma abstract: urvalet är 1969–1986. | Granskad av Codex mot originalet (SEASTICK, PR #132), 2026-11-13 |
 | Ariel (1987), Lakonishok–Smidt (1988), Etula m.fl. (2020) | Inget: bakgrund | Tillskrivs inget specifikt resultat | – |
 
 ## Regler (låsta)
@@ -175,6 +174,10 @@ står i konflikt med artikelns slutsats (s. 62, enligt SEASTICK): testerna kunde
 (2) Källverifieringstabellen är ifylld med SEASTICK:s citat och hänvisningar (McConnell–Xu s. 49, 51 och 62, Ogden s. 1259–1272 med urvalet 1969–1986); de är inte lästa av Claude och kräver granskning mot original.
 **Oförändrat:** alla låsta regler, kriterier, N=24, t-krav och datakrav. En andra rättelserad med samma id läggs till i registret. Det är inget nytt försök.
 
+**Tredje rättelsen (2026-11-13, dokumentation av granskningen av commit `b03552b`):** SEASTICK/Codex har kontrollerat tabellen mot originalen (McConnell–Xu s. 49, 51, 62; Ogden-abstractet) och godkänt källverifieringen sakligt. Kolumnen
+"Granskad mot original" är ifylld, Ogdens fullständiga titel anges och notisen om ofullständig titel är borttagen. **Oförändrat:** alla låsta regler, kriterier, N=24, t-krav och datakrav. En tredje rättelserad med samma id läggs till.
+Det är inget nytt försök, och H-0024 har inte körts.
+
 ## Ren period?
 
 Delvis. SPY:s totalavkastning 2014–2024 har setts som jämförelse i H-0016 och H-0017, men aldrig fönsteravkastningen, placebo-fönstren eller något
@@ -182,7 +185,7 @@ mått för H-0024. Perioden 2020–2024 ingår och är förbrukad i annan forskn
 
 ## Före körning
 
-1. "Källverifiering" ifylld och granskad av Codex (en ny commit, ingen ändring av reglerna ovan).
+1. ~~"Källverifiering" ifylld och granskad av Codex~~ **Klart 2026-11-13** (se "Källverifiering" och tredje rättelsen); inga regler ändrade.
 2. Kod och syntetiska tester i en egen PR, utan kontakt med riktiga SPY-data; test för att data från 2025-01-01 kapas.
 3. Datapreflight (täckning enligt datakraven) i en egen PR, utan kurs- eller avkastningsutskrift.
 4. Därefter en enda körning och en ny registerrad.
