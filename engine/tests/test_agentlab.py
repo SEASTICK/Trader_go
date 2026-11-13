@@ -271,3 +271,92 @@ def test_inbox_tar_emot_idéer_utifrån_och_loggar_ogiltiga_rader(tmp_path):
     got = orch.read_inbox(set())
     assert len(got) == 1 and got[0]["params"]["k"] == 21 and "codex-kommentar" in got[0]["note"]
     assert len(orch.bb.s["known_issues"]) == 2
+
+
+# ---------------------------------------------------------------- informationsbarriär (Codex P1): verklig, inte en visningsregel
+def _poisoned(p: Panel, after: str) -> Panel:
+    """Samma panel men alla värden efter `after` ersatta med en framtidsmarkör. Om en uppgift kan läsa dem ändras dess resultat."""
+    end = pd.Timestamp(after, tz="UTC")
+    def f(df):
+        out = df.copy()
+        out.loc[out.index > end] = out.loc[out.index > end] * 1000.0 + 12345.0
+        return out
+    return Panel(f(p.open), f(p.high), f(p.low), f(p.close), f(p.dvol), f(p.funding), meta=p.meta)
+
+
+SPEC = make_spec("xs_mom", {"k": 30, "q": 0.2, "rebal": 7, "uni": 20})
+
+
+def _round(x):
+    if isinstance(x, float):
+        return round(x, 8)
+    if isinstance(x, dict):
+        return {k: _round(v) for k, v in x.items()}
+    if isinstance(x, (list, tuple)):
+        return [_round(v) for v in x]
+    return x
+
+
+def _same(a, b):
+    """Lika upp till flyttalsbrus (1e-8); en framtidsmarkör skulle ändra resultat med storleksordningar mer."""
+    return json.dumps(_round(a), sort_keys=True, default=float) == json.dumps(_round(b), sort_keys=True, default=float)
+
+
+def test_discovery_uppgifter_kan_inte_läsa_valid_eller_final_även_med_en_framtidsmarkör():
+    from traderlab.agentlab.data import PERIODS
+    p = small(momentum=1.0)
+    q = _poisoned(p, PERIODS["disc"][1])
+    res = {}
+    for name, pan in (("clean", p), ("poisoned", q)):
+        agents.set_panel(pan, None)
+        assert agents.panel().close.index.max() <= pd.Timestamp(PERIODS["disc"][1], tz="UTC")       # uppgifter ser bara discovery
+        res[name] = {fn: agents.run_task(fn, {"spec": SPEC, "n_trials": 5}) for fn in ("quant_task", "cost_task", "risk_task", "skeptic_task")}
+        res[name].update({fn: agents.run_task(fn, {"spec": SPEC}) for fn in ("leakage_specialist", "asset_split_specialist", "crosssection_specialist", "liquidation_specialist")})
+    for fn in res["clean"]:
+        assert not res["clean"][fn].get("error"), (fn, res["clean"][fn])
+        assert _same(res["clean"][fn], res["poisoned"][fn]), fn                                  # markören påverkar ingenting: framtiden är oläsbar
+    assert "sealed" not in res["clean"]["quant_task"]                                          # inga framtida mått skickas tillbaka till Builder
+    port = agents.run_task("portfolio_task", {"specs": [SPEC, make_spec("xs_rev", {"k": 3, "q": 0.2, "rebal": 2, "uni": 20})]})
+    assert all(set(c) <= {"members", "disc"} for c in port["combos"].values())                  # inga valid/final-kombinationer
+
+
+def test_valideringssteget_ser_inte_2024_och_slutsteget_är_ett_eget_steg():
+    from traderlab.agentlab.data import PERIODS
+    p = small(momentum=1.0)
+    out = {}
+    for name, pan in (("clean", p), ("poisoned", _poisoned(p, PERIODS["valid"][1]))):
+        agents.set_panel(pan, None)
+        out[name] = agents.run_task("validate_task", {"spec": SPEC})
+        assert agents.panel().close.index.max() <= pd.Timestamp(PERIODS["disc"][1], tz="UTC")     # vyn återställs efteråt
+    assert _same(out["clean"], out["poisoned"]) and "valid" in out["clean"] and "final" not in out["clean"]
+    agents.set_panel(p, None)
+    fin = agents.run_task("final_task", {"spec": SPEC})
+    assert "final" in fin and "valid" not in fin
+
+
+def test_slutsteget_körs_aldrig_när_valideringen_misslyckas(monkeypatch):
+    called = []
+    monkeypatch.setitem(agents.TASKS, "final_task", lambda pl: called.append(pl["spec"]["key"]) or {"final": {"sharpe": 9.0}})
+    real = agents.TASKS["validate_task"]
+    monkeypatch.setitem(agents.TASKS, "validate_task", lambda pl: {"valid": {"sharpe": -1.0, "ann_ret": -0.2, "max_dd": -0.3}, "key": pl["spec"]["key"]})
+    orch, s, _ = run_lab(1.0)
+    assert s["promising"] == [] and called == []                                              # inget slutår öppnades
+    assert any(r["stage"] == "final" for r in orch.registry.read()) and all(r["sealed"]["final"] is None for r in orch.registry.read() if r["stage"] == "final")
+    assert orch.bb.s["spent"]["final"] == [] and orch.bb.s["spent"]["valid"]                  # valideringen är förbrukad, slutåret inte
+    monkeypatch.setitem(agents.TASKS, "validate_task", real)
+
+
+def test_slutsteget_körs_för_dem_som_klarar_valideringen_och_förbrukningen_loggas():
+    orch, s, _ = run_lab(1.0)
+    spent = orch.bb.s["spent"]
+    assert s["promising"] and spent["final"] and {e["key"] for e in spent["final"]} <= {e["key"] for e in spent["valid"]}
+
+
+def test_äldre_körningar_märks_som_förbrukade_och_återställs_aldrig(tmp_path):
+    (tmp_path / "state.json").write_text(json.dumps({"runs": 4, "trials": 770}), encoding="utf-8")
+    bb = Blackboard(tmp_path)
+    assert bb.s["legacy_unsealed"]["runs"] == ["R001", "R002", "R003", "R004"] and "FÖRBRUKAD" in bb.s["data_status"]["valid"]
+    assert "efter att utfall setts" in bb.s["legacy_unsealed"]["note"]
+    bb.save()
+    assert "legacy_unsealed" in json.loads((tmp_path / "state.json").read_text())
+    assert "legacy_unsealed" not in Blackboard(tmp_path / "ny").s                              # nya laboratorier startar utan

@@ -106,6 +106,17 @@ class Blackboard:
         p = root / self.FILE
         if p.exists():
             self.s.update(json.loads(p.read_text(encoding="utf-8")))
+        self.s.setdefault("spent", {"valid": [], "final": []})
+        self.s.setdefault("data_status", {
+            "disc": "utforskande: flera körningar och många försök har använt den",
+            "valid": "FÖRBRUKAD: sedd av tidigare körningar (se spent.valid och legacy_unsealed)",
+            "final": "FÖRBRUKAD: sedd av tidigare körningar (se spent.final och legacy_unsealed)"})
+        if self.s["runs"] and "legacy_unsealed" not in self.s:
+            # R001-R004 byggdes innan informationsbarriären fanns i koden: alla arbetsprocesser hade hela panelen och 2023/2024 beräknades för
+            # ALLA kandidater, och bara visningen begränsades. Valideringsåret och slutåret är därför förbrukade (utforskande), för alla deras kandidater.
+            self.s["legacy_unsealed"] = {"runs": [f"R{i:03d}" for i in range(1, self.s["runs"] + 1)],
+                                         "note": "Barriären var bara en visningsregel i dessa körningar. 2023 och 2024 är förbrukade för alla deras kandidater. "
+                                                 "Deflated Sharpe med effektivt antal försök och domare v2 valdes efter att utfall setts och kan inte retroaktivt bekräfta en kandidat."}
 
     # ---- skriv
     def say(self, sender: str, to: str, kind: str, subject: str, body: str = "", channel: str = "blackboard") -> None:

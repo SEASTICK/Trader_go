@@ -332,16 +332,32 @@ class Orchestrator:
                 bb.s["portfolio"] = {k: v for k, v in pf.items() if k in ("combos", "max_corr", "div_value")}
                 for c in survivors:
                     c["evidence"]["portfolio"] = {"div_value": pf.get("div_value", {}).get(c["spec"]["key"], 0.0), "max_corr": pf.get("max_corr", {}).get(c["spec"]["key"], 0.0)}
+            # --- STEG 1: valideringsåret 2023, bara för discovery-överlevare, i en egen uppgift med en panel som slutar 2023-12-31 (2024 finns inte där)
+            sealed_all = {id(c): {"valid": None, "final": None} for c in survivors}
+            if survivors:
+                vq = TaskQueue()
+                for c in survivors:
+                    vq.add("judge", "validate_task", {"spec": c["spec"]}, tid=f"{c['spec']['key']}:valid")
+                self.drain(vq, ex)
+                for c in survivors:
+                    r = vq.get(f"{c['spec']['key']}:valid").result or {}
+                    sealed_all[id(c)]["valid"] = r.get("valid") or {"sharpe": 0.0, "ann_ret": 0.0, "max_dd": 0.0}
+                    bb.s["spent"]["valid"].append({"run": self.run_id, "key": c["spec"]["key"]})
+            verdict1 = {id(c): judge.final(c["evidence"], {"valid": sealed_all[id(c)]["valid"], "final": None}) for c in survivors}
+            # --- STEG 2: slutåret 2024, bara för dem som klarade valideringsgrinden (PROMISING), i en egen uppgift
+            passers = [c for c in survivors if verdict1[id(c)]["verdict"] == "PROMISING"]
+            if passers:
+                fq = TaskQueue()
+                for c in passers:
+                    fq.add("judge", "final_task", {"spec": c["spec"]}, tid=f"{c['spec']['key']}:final")
+                self.drain(fq, ex)
+                for c in passers:
+                    sealed_all[id(c)]["final"] = (fq.get(f"{c['spec']['key']}:final").result or {}).get("final")
+                    bb.s["spent"]["final"].append({"run": self.run_id, "key": c["spec"]["key"]})
+            bb.s["sealed_looks"] = bb.s.get("sealed_looks", 0) + len(survivors) + len(passers)
             for c in survivors:
-                ev = c["evidence"]
-                sealed = {"valid": ev["quant"]["sealed"]["valid"], "final": None}
-                bb.s.setdefault("sealed_looks", 0)
-                bb.s["sealed_looks"] += 1
+                ev, sealed = c["evidence"], sealed_all[id(c)]
                 res = judge.final(ev, sealed)
-                if res["verdict"] == "PROMISING":                        # slutåret öppnas bara för dem som klarat valideringsåret
-                    sealed["final"] = ev["quant"]["sealed"]["final"]
-                    bb.s["sealed_looks"] += 1
-                    res = judge.final(ev, sealed)
                 c["final"], c["sealed"] = res, sealed
                 fam = bb.family(c["spec"]["family"])
                 if not c["control"]:
@@ -413,7 +429,7 @@ class Orchestrator:
              f"* Idéer genererade: **{s['ideas_generated']}**, utvalda: **{s['ideas_selected']}** (+ {s['controls']} negativa kontroller), utvärderade versioner inklusive iterationer: **{s['evaluated_versions']}**",
              f"* Domslut: {s['verdicts']}", f"* Försök som räknas (inklusive grannparametrar): **{s['trials']}**, registrerade experiment: **{s['experiments_registered']}**",
              f"* Sub-agenter som skapades: **{s['agents_spawned']}**, parallella arbetsprocesser: **{s['workers']}**, tid: {s['seconds']} s",
-             f"* Slutprovsblickar i den förseglade datan (valideringsåret/slutåret): {s['sealed_looks']}", ""]
+             f"* Förbrukad data denna körning: validerings- och slutårsmått beräknades bara efter sina grindar ({s['sealed_looks']} beräkningar). Hela historiken: se `data_status` och `spent` i state.json.", ""]
         L += ["## Vad systemet lärde sig", ""] + [f"* {x}" for x in s["learnings"]] + [""]
         L += ["## Familjer", "", "| Familj | Testade | REJECT | Gick vidare | Bästa discovery-Sharpe |", "|---|---|---|---|---|"]
         for f, v in sorted(s["families"].items()):

@@ -37,14 +37,45 @@ AGENT_DEFS = {
 }
 
 
-def set_panel(p: Panel, cache: Path | None = None) -> None:
-    global _PANEL, _CACHE
-    _PANEL, _CACHE = p, cache
+_FULL: Panel | None = None
+_VIEWS: dict[str, Panel] = {}
+_ACTIVE = "disc"
+
+
+def set_panel(p: Panel | None, cache: Path | None = None) -> None:
+    """Sparar hela panelen bara som källa för begränsade vyer. Uppgifter får aldrig den hela: se `panel()`."""
+    global _FULL, _CACHE, _VIEWS, _ACTIVE
+    _FULL, _CACHE, _VIEWS, _ACTIVE = p, cache, {}, "disc"
+
+
+def _view(upto: str) -> Panel:
+    """Panelen avskuren efter periodens slutdatum: `disc` slutar 2022-12-31, `valid` 2023-12-31, `final` är hela. Det som ligger efter finns inte i processen."""
+    assert _FULL is not None, "ingen panel inladdad"
+    if upto not in _VIEWS:
+        end = pd.Timestamp(PERIODS[upto][1], tz="UTC")
+        cut = lambda df: df.loc[:end]
+        f = _FULL
+        _VIEWS[upto] = Panel(cut(f.open), cut(f.high), cut(f.low), cut(f.close), cut(f.dvol), cut(f.funding), meta={**f.meta, "upto": upto})
+    return _VIEWS[upto]
 
 
 def panel() -> Panel:
-    assert _PANEL is not None, "ingen panel inladdad"
-    return _PANEL
+    """Den panel den aktuella uppgiften får se. Standard är discovery; bara `validate_task` och `final_task` byter vy, och bara i sin egen uppgift."""
+    return _view(_ACTIVE)
+
+
+class use:
+    """Byter vy tillfälligt (bara för valideringssteget och slutsteget). Återställs alltid till discovery."""
+    def __init__(self, upto: str):
+        self.upto = upto
+
+    def __enter__(self):
+        global _ACTIVE
+        _ACTIVE = self.upto
+
+    def __exit__(self, *exc):
+        global _ACTIVE
+        _ACTIVE = "disc"
 
 
 def weights(spec: dict) -> pd.DataFrame:
@@ -90,12 +121,11 @@ def quant_task(pl: dict) -> dict:
     pan = panel()
     W = weights(spec)
     res = bt.run(pan, W)
-    m = bt.by_period(res.ret)
-    disc = m["disc"]
+    disc = bt.metrics(_disc(res.ret))                       # bara discovery: panelen slutar 2022-12-31
     d_idx = period_slice(res.ret.index, "disc")
     turnover = float(res.turnover[d_idx].mean() * 365)
     beta = _beta(res.ret, pan)
-    out = {"agent": "quant" if spec["family"] != "ml_xs" else "ml", "key": spec["key"], "disc": disc, "sealed": {"valid": m["valid"], "final": m["final"]},
+    out = {"agent": "quant" if spec["family"] != "ml_xs" else "ml", "key": spec["key"], "disc": disc,
            "disc_returns": [round(float(x), 6) for x in res.ret[d_idx].fillna(0.0).values],
            "turnover_ann": turnover, "beta_btc": beta, "trials": 1, "neighbors": [], "objections": [], "spawn": []}
     base = bt.baselines(pan)
@@ -288,7 +318,7 @@ def portfolio_task(pl: dict) -> dict:
             sub = R[ks].dropna()
             w = (1 / sub[period_slice(sub.index, "disc")].std()); w = w / w.sum()
             pr = (sub * w).sum(axis=1)
-            out["combos"][name] = {"members": ks, **{p: bt.metrics(pr[period_slice(pr.index, p)]) for p in ("disc", "valid", "final")}}
+            out["combos"][name] = {"members": ks, "disc": bt.metrics(pr[period_slice(pr.index, "disc")])}
     return out
 
 
@@ -423,7 +453,26 @@ def oi_specialist(pl: dict) -> dict:
     return _source_check("OISpecialist", "Ingen open interest lokalt. Förslag: data.binance.vision futures/um/daily/metrics (OI, long/short-kvot) som dagsfiler per symbol.")
 
 
-TASKS = {f.__name__: f for f in (quant_task, cost_task, risk_task, skeptic_task, portfolio_task, data_task, idea_task, crosssection_specialist, pairs_specialist,
+# ================================================================ FÖRSEGLADE STEG (körs separat efter sina grindar)
+def _reveal(spec: dict, period: str) -> dict:
+    """Beräknar bara en periods mått. Panelen är avskuren efter periodens slut, och resultatet innehåller inget annat än den perioden."""
+    with use(period):
+        pan = panel()
+        res = bt.run(pan, weights(spec))
+        return {"agent": "judge", "key": spec["key"], period: bt.metrics(res.ret[period_slice(res.ret.index, period)]), "objections": [], "spawn": []}
+
+
+def validate_task(pl: dict) -> dict:
+    """Valideringsåret 2023. Körs bara för kandidater som passerat discovery-grinden. Panelen slutar 2023-12-31, så 2024 finns inte här."""
+    return _reveal(pl["spec"], "valid")
+
+
+def final_task(pl: dict) -> dict:
+    """Slutåret 2024. Körs bara för kandidater som klarat valideringsgrinden."""
+    return _reveal(pl["spec"], "final")
+
+
+TASKS = {f.__name__: f for f in (validate_task, final_task, quant_task, cost_task, risk_task, skeptic_task, portfolio_task, data_task, idea_task, crosssection_specialist, pairs_specialist,
                                 liquidation_specialist, leakage_specialist, asset_split_specialist, funding_specialist, orderbook_specialist, oi_specialist)}
 
 
