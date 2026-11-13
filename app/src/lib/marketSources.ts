@@ -64,3 +64,7 @@ export function dataProblems(bars: Candle[], interval: string): string[] {
   if (gaps) out.push(`${gaps} luckor mellan staplarna.`);
   return out;
 }
+
+/** Det hela datavägen faktiskt stöder idag: Binance spot (insamlingen, `market_bars` och `Config::validate` i src-tauri/src/market). */
+export const SUPPORTED_LIVE = { provider: "binance", market: "spot" } as const;
+export const isSupportedLive = (s: { provider: string; market: string }) => s.provider === SUPPORTED_LIVE.provider && s.market === SUPPORTED_LIVE.market;

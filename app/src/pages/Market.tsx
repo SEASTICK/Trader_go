@@ -5,7 +5,7 @@ import { Page, Segmented } from "../components/ui";
 import frozenMarket from "../../data/fas1-market.json";
 import type { Candle, SeriesInfo, SeriesRef } from "../lib/candles";
 import { agoText, ageDays } from "../lib/freshness";
-import { HISTORY_INTERVALS, resample } from "../lib/marketSources";
+import { HISTORY_INTERVALS, isSupportedLive, resample } from "../lib/marketSources";
 
 const ms = (t: number) => new Date(t).toISOString().slice(0, 16).replace("T", " ");
 const label = (s: { symbol: string; market: string }) => `${s.symbol} ${s.market === "spot" ? "spot" : s.market === "um" ? "terminer" : s.market}`;
@@ -53,12 +53,13 @@ function DesktopMarket() {
     return () => { alive = false; };
   }, []);
   const instruments = useMemo(() => {
+    // Bara serier som hela datavägen stöder (Binance spot). `market_bars` läser bara spot, så en annan marknad med samma symbol skulle annars bli en felmärkt graf.
     const seen = new Map<string, SeriesInfo>();
-    for (const s of all ?? []) if (!seen.has(key(s))) seen.set(key(s), s);
+    for (const s of (all ?? []).filter(isSupportedLive)) if (!seen.has(key(s))) seen.set(key(s), s);
     return [...seen.values()];
   }, [all]);
   const chosen = instruments.find((s) => key(s) === pick) ?? instruments.find((s) => s.symbol === "BTCUSDT" && s.market === "spot") ?? instruments[0];
-  const series: SeriesRef | null = chosen ? { provider: "binance", market: chosen.market as SeriesRef["market"], symbol: chosen.symbol, interval: (all ?? []).find((s) => key(s) === key(chosen) && s.interval === "4h")?.interval ?? (all ?? []).find((s) => key(s) === key(chosen))!.interval } : null;
+  const series: SeriesRef | null = chosen ? { provider: "binance", market: chosen.market as SeriesRef["market"], symbol: chosen.symbol, interval: (all ?? []).filter(isSupportedLive).find((s) => key(s) === key(chosen) && s.interval === "4h")?.interval ?? (all ?? []).filter(isSupportedLive).find((s) => key(s) === key(chosen))!.interval } : null;
   return (
     <Page title="Marknad" sub="Riktiga priser från Binance, utan konto och utan nycklar."
       actions={instruments.length > 0 && chosen ? <div role="group" aria-label="Instrument"><Segmented value={label(chosen)} options={instruments.map(label)} onChange={(v) => setPick(key(instruments.find((s) => label(s) === v)!))} /></div> : undefined}>

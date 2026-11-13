@@ -11,7 +11,7 @@ import {
 } from "../lib/candles";
 import { STATE_TEXT, useMarketStatus } from "../features/market/useMarketStatus";
 import { subscribeBars, type Listen } from "../lib/barSubscription";
-import { dataProblems } from "../lib/marketSources";
+import { dataProblems, isSupportedLive } from "../lib/marketSources";
 
 import { observeChartViewport } from "../lib/chartViewport";
 
@@ -71,7 +71,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
   }, [desktop, isHist, series?.symbol, status?.closed_bars ? 1 : 0]);
 
   const intervals = useMemo(() => historicalSets ? Object.keys(historicalSets) : historicalOne && series ? [series.interval] : (available ?? []).filter(s => series && s.provider === series.provider && s.market === series.market && s.symbol === series.symbol).map(s => s.interval), [available, series, historical]);
-  const current: SeriesRef | null = series && intervals.includes(tf) ? { ...series, interval: tf } : null;
+  const current: SeriesRef | null = series && (isHist || isSupportedLive(series)) && intervals.includes(tf) ? { ...series, interval: tf } : null;
   const step = current ? INTERVAL_MS[current.interval] : 0;
 
   const box = useRef<HTMLDivElement>(null);
@@ -224,6 +224,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
 
   let body: JSX.Element;
   if (!desktop && !isHist) body = empty("Ingen prisdata här", "Prisdiagrammet läser datalagret i skrivbordsappen. I webbläsaren finns ingen riktig OHLCV, och ingen simulerad data visas i stället.");
+  else if (series && !isHist && !isSupportedLive(series)) body = empty("Marknaden stöds inte i datavägen", `${series.provider} ${series.market} ${series.symbol} kan inte läsas av datalagret (bara Binance spot stöds). Ingen graf ritas hellre än en felmärkt.`);
   else if (!series) body = empty("Ingen datakälla för den här marknaden", noSourceReason ?? "Appen samlar bara in data för marknader med en publik datakälla. Inget simulerat pris visas i stället.");
   else if (!isHist && available === null && !error) body = empty("Läser datalagret…", "");
   else if (!current) body = empty(
