@@ -6,14 +6,24 @@ registreringen: en ändring av regel, parameter, fönster eller period är ett n
 
 ## Idé
 
-Aktiekurser stiger ojämnt över månaden. Om pengaflödena vid månadsskiftet (löner, pensions- och fondsparande, likviditetsbehov och
-månadsvisa omviktningar) skapar köptryck, ska nästan hela aktiepremien ligga i fyra handelsdagar: månadens sista handelsdag och de tre första
-i nästa månad. Hypotesen är att en portfölj som äger SPY **bara** under de fyra dagarna och annars håller kontanter ger högre Sharpe än
-köp-och-behåll i SPY efter kostnader, och att det beror på timingen och inte på att man äger aktier.
+Aktiekurser stiger ojämnt över månaden. Det empiriska mönster som prövas är att nästan hela aktiepremien i USA ligger i fyra handelsdagar:
+månadens sista handelsdag och de tre första i nästa månad. Hypotesen är att en portfölj som äger SPY **bara** under de fyra dagarna och annars
+håller kontanter ger högre Sharpe än köp-och-behåll i SPY efter kostnader, och att det beror på timingen och inte på att man äger aktier.
 
-Mekanismen skiljer sig från allt som testats tidigare: ingen kryptomarknad, ingen pris- eller fundingsignal, ingen rankning mellan tillgångar
-och ingen trend. Signalen är ren **kalender** (den kräver inget prisdata för att veta när man ska äga) och vilar på kassaflöden, inte på
-prismönster.
+**H-0024 prövar mönstret, inte en förklaring.** Två förklaringar finns i litteraturen och skiljs åt här (rättat 2026-11-13 efter granskning i PR #132,
+se "Rättelse före körning"):
+
+* **(a) Standardiserade betalningar och likviditetsbehov vid månadsskiftet** (löner, utbetalningar, månadsvisa kassaflöden). Ogden (1990) prövar
+  enligt SEASTICK:s läsning uttryckligen betalningscykeln som förklaring (andrahandsuppgift, se "Källverifiering").
+* **(b) Köptryck vid månadsslutet mätt med handelsvolym eller nettoflöden till aktiefonder.** McConnell och Xu (2008) skriver enligt SEASTICK:s läsning
+  av den publicerade abstracten att effekten **inte** förklaras av detta (andrahandsuppgift).
+
+Registerraden för H-0024 skrevs med formuleringen att pengaflöden "skapar köptryck". Den formuleringen gäller inte som hypotes eller belägg. Raden är
+append-only och ändras inte; en rättelserad läggs till. Inget beslutskriterium nedan beror på vilken förklaring som stämmer, och inget i testet kan skilja
+(a) från (b): ett positivt utfall säger inget om mekanismen.
+
+Mekanismen skiljer sig från allt som testats tidigare: ingen kryptomarknad, ingen pris- eller fundingsignal, ingen rankning mellan tillgångar och ingen
+trend. Signalen är ren **kalender** (den kräver inget prisdata för att veta när man ska äga).
 
 ## Överlapp med tidigare försök (jämförelse mot `research/registry.md` och Agentlab)
 
@@ -32,39 +42,47 @@ men SPY för 2020–2024 ligger i testperioden och 2014–2024 har setts som jä
 
 ## Forskningsgrund och vad den inte visar
 
-**Källorna nedan är angivna efter min kännedom och är INTE verifierade mot originaltexterna.** De ger idén och riktningen. Ingen av dem
-har validerat just den här specifikationen (SPY, de fyra dagarna, öppning-till-öppning, 10 bp per sida, perioden 2006–2024).
+**Ingen källa är läst i original av mig.** Uppgifterna om innehållet kommer antingen från min kännedom (markerat) eller från SEASTICK:s läsning av de publicerade
+abstracten i PR #132 (markerat "andrahandsuppgift"). Ingen av källorna har validerat just den här specifikationen (SPY, de fyra dagarna,
+öppning-till-öppning, 10 bp per sida, perioden 2006–2024).
 
-* Ariel (1987), *A monthly effect in stock returns*, Journal of Financial Economics 18(1): månadsmönster i amerikanska aktieindex.
-* Lakonishok och Smidt (1988), *Are seasonal anomalies real? A ninety-year perspective*, Review of Financial Studies 1(4): långt
-  historiskt urval av Dow Jones, med månadsskifte som ett av mönstren.
-* Ogden (1990), *Turn-of-month evaluations of liquid profits and stock returns*, Journal of Finance 45(4): kassaflödesförklaring.
-* McConnell och Xu (2008), *Equity returns at the turn of the month*, Financial Analysts Journal 64(2): fönstret **sista handelsdagen
-  i månaden till och med tredje handelsdagen i nästa månad** i flera länder. Det är fönstret som låses här.
-* Etula, Rinne, Suominen och Vaittinen (2020), *Dash for cash: month-end liquidity needs and the predictability of stock returns*,
-  Review of Financial Studies: likviditetsbehov vid månadsslut som förklaring. Volym och sidor är inte verifierade.
+**Fönster- och urvalskälla**
 
-Vad som inte är känt härifrån: de exakta urvalsperioderna i källorna (särskilt när McConnell och Xus urval slutar), om effekten finns kvar
-i USA efter publiceringen, och om den överlever kostnader. Det finns ett stort kritiskt fält om säsongsmönster (datasnokning, kalenderanomalier
-som försvinner efter publicering). Därför är **huvudperioden** vald efter min kännedom om att McConnell–Xus urval slutar 2005: 2006 och framåt är
-då utanför deras urval. Det antagandet är inte verifierat; om det inte stämmer ändras inget i testet, men slutsatsen "utanför urval" faller.
+* McConnell och Xu (2008), *Equity returns at the turn of the month*, Financial Analysts Journal 64(2): fönstret **sista handelsdagen i månaden till och med
+  tredje handelsdagen i nästa månad** (fönstrets definition enligt min kännedom, ej verifierad i original). Urvalet anges i den publicerade abstracten som
+  **1926–2005** (andrahandsuppgift från SEASTICK), vilket stödjer att 2006 ligger efter deras urval. Abstracten säger enligt SEASTICK också att effekten inte förklaras av månadssluts-köptryck
+  mätt med handelsvolym eller nettoflöden till aktiefonder. Det är därför ingen källa för mekanism (b).
+
+**Prövar betalningscykeln (mekanism a)**
+
+* Ogden (1990), *Turn-of-month evaluations of liquid profits and stock returns* (titeln ofullständigt återgiven), Journal of Finance 45(4): enligt SEASTICK en uttrycklig prövning av
+  standardiserade betalningar som förklaring (andrahandsuppgift, ej verifierad i original).
+
+**Bakgrund, inte belägg** (tillskrivs inget specifikt resultat i detta protokoll; inget kriterium eller val vilar på dem):
+
+* Ariel (1987), *A monthly effect in stock returns*, Journal of Financial Economics 18(1).
+* Lakonishok och Smidt (1988), *Are seasonal anomalies real? A ninety-year perspective*, Review of Financial Studies 1(4).
+* Etula, Rinne, Suominen och Vaittinen (2020), *Dash for cash: month-end liquidity needs and the predictability of stock returns*, Review of Financial Studies (volym och sidor ej verifierade).
+
+Vad som inte är känt: om effekten finns kvar i USA efter 2005, om den överlever kostnader, och vilken förklaring som stämmer. Det finns ett stort kritiskt fält om
+säsongsmönster (datasnokning, kalenderanomalier som försvinner efter publicering). **Huvudperioden** 2006–2024 är vald för att ligga efter urvalet 1926–2005 enligt
+andrahandsuppgiften ovan.
 
 ## Källverifiering (obligatorisk före körning)
 
-**Status 2026-11-13: ej verifierad.** Ett försök att läsa originalen från sessionen misslyckades: SSRN, JSTOR och Google ligger utanför sessionens
-tillåtna nätverksvärdar (DNS-fel), och Crossref och OpenAlex svarade 403 från proxyn. Inget kringgicks. Därför kan inga exakta citat anges
-här, och jag skriver inga i efterhand utifrån minnet.
+**Status 2026-11-13: ej verifierad i original.** Nätverksvärdarna `papers.ssrn.com` och `onlinelibrary.wiley.com` har tillåtits i sessionens miljö efter att
+SEASTICK länkat dem i PR #132, men båda svarar med Cloudflares robotkontroll ("Just a moment…", HTTP 403) på automatiska anrop. Den kringgås inte, och jag
+skriver inga citat ur minnet. SEASTICK har läst abstracten och lämnat två uppgifter som står i tabellen som **andrahandsuppgift**, inte som citat.
 
-Före någon körning ska en ny commit fylla i denna tabell med **exakta citat och referenser** ur originalen (abstract, fönstrets definition,
-urvalsperiod, siffror för USA) av någon som kan läsa dem, och Codex ska ha granskat att de stämmer. Tills dess är H-0024 registrerad men
-**får inte köras**. Om originalen visar att fönstret, perioden eller riktningen avviker från det som står här, ändras inte detta protokoll i
-efterhand: det blir ett nytt id.
+Före körning ska en ny commit ersätta "att fylla i" med **exakta, korta citat och sid-/avsnittshänvisningar** ur originalen, av någon som kan läsa dem (eller inklistrade av
+SEASTICK i PR #132 med angiven källa), och Codex ska ha granskat dem. Tills dess är H-0024 registrerad men **får inte köras**. Om originalen visar att fönstret, perioden eller riktningen avviker
+från det som står här, ändras inte detta protokoll i efterhand: det blir ett nytt id.
 
-| Källa | Exakt citat som styrker fönstret | Urvalsperiod enligt källan | Verifierad av/datum |
+| Källa | Vad som ska styrkas | Uppgift nu (andrahandsuppgift från SEASTICK, PR #132, 2026-11-13) | Exakt citat och hänvisning |
 |---|---|---|---|
-| McConnell och Xu (2008) | (att fylla i) | (att fylla i) | (att fylla i) |
-| Etula m.fl. (2020) | (att fylla i) | (att fylla i) | (att fylla i) |
-| Lakonishok och Smidt (1988) | (att fylla i) | (att fylla i) | (att fylla i) |
+| McConnell och Xu (2008), [SSRN 1135217](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1135217) | (1) Fönstrets exakta definition. (2) Urvalsperiod. (3) Vad effekten inte förklaras av | Urval 1926–2005. Effekten förklaras inte av månadssluts-köptryck mätt med handelsvolym eller nettoflöden till aktiefonder | (att fylla i) |
+| Ogden (1990), [J. Finance 45(4), DOI 10.1111/j.1540-6261.1990.tb02435.x](https://onlinelibrary.wiley.com/doi/10.1111/j.1540-6261.1990.tb02435.x) | Att artikeln prövar betalningscykeln som förklaring | En prövning av standardiserade betalningar som förklaring | (att fylla i) |
+| Ariel, Lakonishok–Smidt, Etula m.fl. | Inget: bakgrund | Tillskrivs inget specifikt resultat | – |
 
 ## Regler (låsta)
 
@@ -139,6 +157,15 @@ fönsteravkastning; fönstrets andel av köp-och-behålls totala log-avkastning.
 6. **Överlapp med tidigare prisdata är begränsat men inte noll:** SPY 2014–2024 har setts som jämförelse. Därför markeras perioden som delvis förbrukad.
 7. **Yahoo-data är inofficiella** och kan ändras. Samma källa gav `OGILTIG` för H-0016 på grund av avnoterade bolag; SPY har inget sådant problem men
    källans justeringar för utdelning kan skilja sig från en officiell totalavkastningsserie.
+
+8. **Förklaringen är obekräftad och delvis motstridig.** Enligt andrahandsuppgiften förklaras McConnell–Xus mönster inte av månadssluts-köptryck (mekanism b), medan betalningscykeln (mekanism a)
+   prövas av Ogden. H-0024 kan inte skilja dem åt; ett positivt utfall är inget belägg för någon av dem.
+
+## Rättelse före körning (2026-11-13, efter granskning i PR #132)
+
+Ändrat: mekanismformuleringen i "Idé" och källbeskrivningen i "Forskningsgrund" och "Källverifiering", så att prövning av mönster skiljs från förklaringar och så att källor utan verifierat
+resultat markeras som bakgrund. **Oförändrat:** instrument, fönster, utförande, kostnader, perioder, jämförelser, kriterier, N=24, t-krav och datakrav. Registerraden för H-0024 (som
+säger "eftersom pengaflöden … skapar köptryck") ändras inte; en rättelserad med samma id läggs till sist. Det är inget nytt försök.
 
 ## Ren period?
 
