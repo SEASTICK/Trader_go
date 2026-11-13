@@ -35,6 +35,7 @@ class Panel:
     meta: dict = field(default_factory=dict)
     funding_known: pd.DataFrame | None = None     # True där finansieringsutbetalningar faktiskt finns (inte ifyllt med 0). None = allt känt (syntetiska paneler)
     funding_rule: bool = True                     # datatäckningsregel v2: bara instrument med känd finansiering får handlas. False reproducerar körningarna R001-R004
+    scope_rule: bool = True                       # universumsregel v3: bara USDT-perpar (inte leveranskontrakt, *SETTLED, BUSD/USDC). False reproducerar körningarna R001-R004
     _cache: dict = field(default_factory=dict, repr=False)
 
     def __post_init__(self):
@@ -66,6 +67,7 @@ class Panel:
 
     def universe(self, top_n: int = 30, min_age: int = 90) -> pd.DataFrame:
         """Handlingsbara dag t: minst `min_age` dagar gammal och bland de `top_n` största efter 30 dagars median omsättning (data till och med t).
+        **Omfång v3:** bara USDT-perpar (`universe.in_scope`). Leveranskontrakt (`BTCUSDT_230331`) räknades som perpar i R001-R004 och är nu uteslutna.
         **Datatäckningsregel v2 (vald efter de första utfallen och auditen, inte förregistrerad för R001-R004):** ett instrument får bara handlas dag t om finansieringsutbetalningar fanns för minst 5 av de 7 dagarna före dag t (bara det som är känt vid beslutet).
         Utan känd finansiering kan en position inte värderas, så instrumentet är inte handlingsbart (inget ifyllt med 0)."""
         def make():
@@ -73,6 +75,9 @@ class Panel:
             med = self.dvol.rolling(30, min_periods=20).median()
             med = med.where(age >= min_age)
             ok = self.close.notna()
+            if self.scope_rule:
+                from .universe import scope_mask
+                ok = ok & scope_mask(self.close.columns).to_numpy()[None, :]
             if self.funding_rule:
                 # bara observationer som finns på beslutsdagen: dag d:s hink innehåller utbetalningen vid d+1 00:00, som sker först efter beslutet (shift 1)
                 known = self.funding_known.shift(1, fill_value=False).rolling(7, min_periods=1).sum() >= 5
@@ -80,7 +85,7 @@ class Panel:
                 med = med.where(known)
             rank = med.where(ok).rank(axis=1, ascending=False)
             return (rank <= top_n) & ok
-        return self.cached(("uni", top_n, min_age, self.funding_rule), make)
+        return self.cached(("uni", top_n, min_age, self.funding_rule, self.scope_rule), make)
 
     def fwd(self) -> pd.DataFrame:
         """Avkastning öppning(t+1) till öppning(t+2): det en position som beslutas på stängningen av dag t faktiskt tjänar."""
@@ -105,13 +110,25 @@ def _um_symbols(data_dir: Path) -> list[str]:
     return sorted(p.name for p in base.iterdir() if (p / "1d").is_dir() and any((p / "1d").glob("*.zip"))) if base.exists() else []
 
 
-def load_um_panel(data_dir: Path, *, symbols: list[str] | None = None, cache: Path | None = None) -> Panel:
+def _check_coverage(panel: "Panel", listing: Path | None) -> None:
+    """Sätter `meta["universe_gap"]` (lista, tom = inga kända luckor) och `meta["universe_gap_checked"]`. Utan arkivlista är täckningen okontrollerad (None) och Domaren nekar godkänt."""
+    from .universe import load_listing, universe_gap
+    if listing is None:
+        panel.meta["universe_gap"], panel.meta["universe_gap_checked"] = None, False
+        return
+    panel.meta["universe_gap"], panel.meta["universe_gap_checked"] = universe_gap(panel, load_listing(listing)), True
+
+
+def load_um_panel(data_dir: Path, *, symbols: list[str] | None = None, cache: Path | None = None, listing: Path | None = None) -> Panel:
     """Läser alla lokala USDⓈ-M-perpar (dagliga staplar, bundet till före 2025). Resultatet cachas som pickle."""
     from ..data import binance
     if cache is not None and cache.exists():
         with open(cache, "rb") as f:
-            return pickle.load(f)
-    syms = symbols or _um_symbols(data_dir)
+            panel = pickle.load(f)
+        _check_coverage(panel, listing)                  # cacheträff hoppar aldrig över täckningskontrollen: den görs om mot aktuell arkivlista
+        return panel
+    from .universe import in_scope
+    syms = [s for s in (symbols or _um_symbols(data_dir)) if in_scope(s)]               # leveranskontrakt, *SETTLED, BUSD/USDC läses inte in
     o, h, l, c, v, fu, fk = {}, {}, {}, {}, {}, {}, {}
     for s in syms:
         try:
@@ -133,6 +150,7 @@ def load_um_panel(data_dir: Path, *, symbols: list[str] | None = None, cache: Pa
                   funding_known=pd.DataFrame(fk).reindex(pd.DataFrame(c).sort_index().index).reindex(columns=sorted(c)).fillna(False).astype(bool),
                   meta={"source": "data.binance.vision um 1d + fundingRate", "symbols": len(o), "funding_symbols": len(fu),
                         "caveat": "Bara kontrakt som har arkiv lokalt (survivorship). Slutprovet 2025+ är aldrig läst."})
+    _check_coverage(panel, listing)               # arkivlistan visar vad som borde finnas: det som saknas blockerar bekräftande påståenden (judge)
     if cache is not None:
         cache.parent.mkdir(parents=True, exist_ok=True)
         with open(cache, "wb") as f:

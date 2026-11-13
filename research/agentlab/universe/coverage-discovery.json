@@ -1,0 +1,2060 @@
+{
+ "note": "Universums- och täckningsaudit, Binance USDⓈ-M, daglig. Filnamnslistan sträcker sig bara till 2024-12; 2025+ är aldrig öppnat. Ändrar inga experimentposter.",
+ "listing": {
+  "fetched_utc": "2026-11-13T13:31Z",
+  "source": "https://s3-ap-northeast-1.amazonaws.com/data.binance.vision (bucket listing, filnamn)",
+  "symbols_in_bucket": 1080,
+  "symbols_with_archive_before_2025": 507
+ },
+ "census": {
+  "by_kind": {
+   "delivery": {
+    "symbols_with_archive_before_2025": 38,
+    "listed_by_2022_12": 20,
+    "with_funding_archive": 0,
+    "without_funding_archive": 38
+   },
+   "other": {
+    "symbols_with_archive_before_2025": 1,
+    "listed_by_2022_12": 0,
+    "with_funding_archive": 1,
+    "without_funding_archive": 0
+   },
+   "perp_busd": {
+    "symbols_with_archive_before_2025": 41,
+    "listed_by_2022_12": 40,
+    "with_funding_archive": 41,
+    "without_funding_archive": 0
+   },
+   "perp_usdc": {
+    "symbols_with_archive_before_2025": 27,
+    "listed_by_2022_12": 0,
+    "with_funding_archive": 27,
+    "without_funding_archive": 0
+   },
+   "perp_usdt": {
+    "symbols_with_archive_before_2025": 396,
+    "listed_by_2022_12": 166,
+    "with_funding_archive": 396,
+    "without_funding_archive": 0
+   },
+   "settled": {
+    "symbols_with_archive_before_2025": 4,
+    "listed_by_2022_12": 3,
+    "with_funding_archive": 0,
+    "without_funding_archive": 4
+   }
+  },
+  "anomalies": {
+   "delivery_with_funding": [],
+   "usdt_perp_without_funding": [],
+   "usdt_perp_funding_shorter_than_klines": [
+    "BNXUSDT",
+    "BTCSTUSDT",
+    "ICPUSDT",
+    "JUPUSDT",
+    "LENDUSDT",
+    "QTUMUSDT",
+    "TLMUSDT"
+   ],
+   "busd_usdc_perps_listed_by_2022_12_without_usdt_perp_on_same_underlying": []
+  },
+  "listing_month_holes": {
+   "BNXUSDTSETTLED": [
+    "2022-09",
+    "2022-10",
+    "2022-11",
+    "2022-12",
+    "2023-01"
+   ],
+   "TLMUSDTSETTLED": [
+    "2022-03",
+    "2022-09",
+    "2022-10",
+    "2022-11",
+    "2022-12",
+    "2023-01"
+   ]
+  }
+ },
+ "delivery_expiry_check": {
+  "checked": 32,
+  "last_bar_on_expiry_date": 26,
+  "last_bar_within_2_days_after": 32,
+  "outside_0_to_2_days": [],
+  "note": "Namnets datum är nominellt utgångsdatum (fredag); sista dagsstapeln kan ligga 1-2 dagar senare (avvecklingshelg). Regeln 'namn SYMBOL_YYMMDD = leveranskontrakt' stöds också av att inget leveranskontrakt har finansieringsarkiv."
+ },
+ "file_coverage": {
+  "in_scope": {
+   "listed_symbol_months": {
+    "2020": 509,
+    "2021": 1404,
+    "2022": 1758,
+    "2023": 2436,
+    "2024": 3599
+   },
+   "local_symbol_months": {
+    "2020": 509,
+    "2021": 1404,
+    "2022": 1758,
+    "2023": 2436,
+    "2024": 3599
+   },
+   "missing_symbol_months": {
+    "2020": 0,
+    "2021": 0,
+    "2022": 0,
+    "2023": 0,
+    "2024": 0
+   },
+   "missing_share": {
+    "2020": 0.0,
+    "2021": 0.0,
+    "2022": 0.0,
+    "2023": 0.0,
+    "2024": 0.0
+   },
+   "symbols_with_missing_months": 0,
+   "kline_months_without_funding_file_in_bucket": {
+    "2020": 2,
+    "2021": 14,
+    "2022": 30,
+    "2023": 3,
+    "2024": 1
+   },
+   "funding_missing_share": {
+    "2020": 0.003929273084479371,
+    "2021": 0.009971509971509971,
+    "2022": 0.017064846416382253,
+    "2023": 0.0012315270935960591,
+    "2024": 0.0002778549597110308
+   },
+   "symbols_missing_locally": []
+  },
+  "out_of_scope": {
+   "listed_symbol_months": {
+    "2020": 0,
+    "2021": 80,
+    "2022": 355,
+    "2023": 521,
+    "2024": 334
+   },
+   "local_symbol_months": {
+    "2020": 0,
+    "2021": 30,
+    "2022": 32,
+    "2023": 42,
+    "2024": 54
+   },
+   "missing_symbol_months": {
+    "2020": 0,
+    "2021": 50,
+    "2022": 323,
+    "2023": 479,
+    "2024": 280
+   },
+   "missing_share": {
+    "2020": 0.0,
+    "2021": 0.625,
+    "2022": 0.9098591549295775,
+    "2023": 0.9193857965451055,
+    "2024": 0.8383233532934131
+   },
+   "symbols_with_missing_months": 83
+  }
+ },
+ "symbol_days": {
+  "per_year": {
+   "2020": {
+    "listed_symbol_days": 14360,
+    "hole_symbol_days": 0,
+    "hole_share": 0.0
+   },
+   "2021": {
+    "listed_symbol_days": 41683,
+    "hole_symbol_days": 0,
+    "hole_share": 0.0
+   },
+   "2022": {
+    "listed_symbol_days": 53046,
+    "hole_symbol_days": 273,
+    "hole_share": 0.005146476642913698
+   },
+   "2023": {
+    "listed_symbol_days": 72598,
+    "hole_symbol_days": 50,
+    "hole_share": 0.0006887242072784374
+   },
+   "2024": {
+    "listed_symbol_days": 107728,
+    "hole_symbol_days": 0,
+    "hole_share": 0.0
+   }
+  },
+  "symbols_with_holes": {
+   "BNXUSDT": {
+    "holes": 26,
+    "first": "2022-04-01",
+    "last": "2024-12-31"
+   },
+   "FILUSDT": {
+    "holes": 5,
+    "first": "2020-10-16",
+    "last": "2024-12-31"
+   },
+   "FLMUSDT": {
+    "holes": 5,
+    "first": "2020-09-29",
+    "last": "2024-12-31"
+   },
+   "FLOWUSDT": {
+    "holes": 5,
+    "first": "2022-02-10",
+    "last": "2024-12-31"
+   },
+   "FTMUSDT": {
+    "holes": 5,
+    "first": "2020-09-24",
+    "last": "2024-12-31"
+   },
+   "GMTUSDT": {
+    "holes": 2,
+    "first": "2022-03-15",
+    "last": "2024-12-31"
+   },
+   "GRTUSDT": {
+    "holes": 5,
+    "first": "2020-12-19",
+    "last": "2024-12-31"
+   },
+   "GTCUSDT": {
+    "holes": 5,
+    "first": "2021-06-11",
+    "last": "2024-12-31"
+   },
+   "HBARUSDT": {
+    "holes": 5,
+    "first": "2021-03-17",
+    "last": "2024-12-31"
+   },
+   "HOTUSDT": {
+    "holes": 5,
+    "first": "2021-03-30",
+    "last": "2024-12-31"
+   },
+   "ICPUSDT": {
+    "holes": 26,
+    "first": "2021-05-11",
+    "last": "2024-12-31"
+   },
+   "IMXUSDT": {
+    "holes": 5,
+    "first": "2022-02-11",
+    "last": "2024-12-31"
+   },
+   "IOTAUSDT": {
+    "holes": 5,
+    "first": "2020-02-12",
+    "last": "2024-12-31"
+   },
+   "KNCUSDT": {
+    "holes": 5,
+    "first": "2020-06-22",
+    "last": "2024-12-31"
+   },
+   "KSMUSDT": {
+    "holes": 5,
+    "first": "2020-10-14",
+    "last": "2024-12-31"
+   },
+   "LINAUSDT": {
+    "holes": 5,
+    "first": "2021-03-19",
+    "last": "2024-12-31"
+   },
+   "LITUSDT": {
+    "holes": 5,
+    "first": "2021-02-18",
+    "last": "2024-12-31"
+   },
+   "LRCUSDT": {
+    "holes": 5,
+    "first": "2020-10-19",
+    "last": "2024-12-31"
+   },
+   "LTCUSDT": {
+    "holes": 5,
+    "first": "2020-01-09",
+    "last": "2024-12-31"
+   },
+   "LUNAUSDT": {
+    "holes": 5,
+    "first": "2021-01-28",
+    "last": "2022-05-13"
+   },
+   "MANAUSDT": {
+    "holes": 5,
+    "first": "2021-03-15",
+    "last": "2024-12-31"
+   },
+   "MASKUSDT": {
+    "holes": 5,
+    "first": "2021-08-27",
+    "last": "2024-12-31"
+   },
+   "MKRUSDT": {
+    "holes": 5,
+    "first": "2020-08-13",
+    "last": "2024-12-31"
+   },
+   "NEARUSDT": {
+    "holes": 5,
+    "first": "2020-10-15",
+    "last": "2024-12-31"
+   },
+   "OCEANUSDT": {
+    "holes": 5,
+    "first": "2020-11-03",
+    "last": "2024-12-31"
+   },
+   "OGNUSDT": {
+    "holes": 5,
+    "first": "2021-04-01",
+    "last": "2024-12-31"
+   },
+   "OMGUSDT": {
+    "holes": 5,
+    "first": "2020-07-02",
+    "last": "2024-12-31"
+   },
+   "ONEUSDT": {
+    "holes": 5,
+    "first": "2021-03-18",
+    "last": "2024-12-31"
+   },
+   "PEOPLEUSDT": {
+    "holes": 5,
+    "first": "2021-12-24",
+    "last": "2024-12-31"
+   },
+   "RLCUSDT": {
+    "holes": 5,
+    "first": "2020-07-31",
+    "last": "2024-12-31"
+   },
+   "ROSEUSDT": {
+    "holes": 5,
+    "first": "2021-12-31",
+    "last": "2024-12-31"
+   },
+   "RSRUSDT": {
+    "holes": 5,
+    "first": "2020-10-19",
+    "last": "2024-12-31"
+   },
+   "RVNUSDT": {
+    "holes": 5,
+    "first": "2021-02-23",
+    "last": "2024-12-31"
+   },
+   "SANDUSDT": {
+    "holes": 5,
+    "first": "2021-01-25",
+    "last": "2024-12-31"
+   },
+   "SKLUSDT": {
+    "holes": 5,
+    "first": "2020-12-08",
+    "last": "2024-12-31"
+   },
+   "SOLUSDT": {
+    "holes": 5,
+    "first": "2020-09-14",
+    "last": "2024-12-31"
+   },
+   "STORJUSDT": {
+    "holes": 5,
+    "first": "2020-09-16",
+    "last": "2024-12-31"
+   },
+   "SUSHIUSDT": {
+    "holes": 5,
+    "first": "2020-09-04",
+    "last": "2024-12-31"
+   },
+   "TLMUSDT": {
+    "holes": 29,
+    "first": "2021-07-16",
+    "last": "2024-12-31"
+   },
+   "TRBUSDT": {
+    "holes": 5,
+    "first": "2020-09-03",
+    "last": "2024-12-31"
+   },
+   "TRXUSDT": {
+    "holes": 5,
+    "first": "2020-01-15",
+    "last": "2024-12-31"
+   },
+   "UNFIUSDT": {
+    "holes": 5,
+    "first": "2021-02-19",
+    "last": "2024-12-31"
+   },
+   "VETUSDT": {
+    "holes": 5,
+    "first": "2020-02-14",
+    "last": "2024-12-31"
+   },
+   "WAVESUSDT": {
+    "holes": 5,
+    "first": "2020-08-12",
+    "last": "2024-12-31"
+   },
+   "XEMUSDT": {
+    "holes": 5,
+    "first": "2021-03-03",
+    "last": "2024-12-31"
+   },
+   "XLMUSDT": {
+    "holes": 5,
+    "first": "2020-01-20",
+    "last": "2024-12-31"
+   },
+   "XRPUSDT": {
+    "holes": 5,
+    "first": "2020-01-06",
+    "last": "2024-12-31"
+   },
+   "YFIIUSDT": {
+    "holes": 5,
+    "first": "2020-09-03",
+    "last": "2022-04-12"
+   },
+   "YFIUSDT": {
+    "holes": 5,
+    "first": "2020-08-31",
+    "last": "2024-12-31"
+   },
+   "ZECUSDT": {
+    "holes": 5,
+    "first": "2020-02-05",
+    "last": "2024-12-31"
+   },
+   "ZENUSDT": {
+    "holes": 5,
+    "first": "2020-11-24",
+    "last": "2024-12-31"
+   },
+   "ZILUSDT": {
+    "holes": 5,
+    "first": "2020-06-18",
+    "last": "2024-12-31"
+   }
+  }
+ },
+ "universe_gap": [],
+ "compare_old_vs_pointintime": {
+  "per_year": {
+   "2020": {
+    "slots_old": 6001,
+    "slots_new": 6651,
+    "old_slots_outside_new": 429,
+    "new_slots_old_could_not_select": 1079,
+    "old_slots_on_non_perp": 0,
+    "new_slots_on_symbols_absent_in_old_panel": 7,
+    "old_slots_outside_new_share": 0.07148808531911348,
+    "new_slots_old_missing_share": 0.1622312434220418,
+    "new_slots_on_absent_share": 0.0010524733122838671
+   },
+   "2021": {
+    "slots_old": 10782,
+    "slots_new": 10950,
+    "old_slots_outside_new": 774,
+    "new_slots_old_could_not_select": 942,
+    "old_slots_on_non_perp": 0,
+    "new_slots_on_symbols_absent_in_old_panel": 522,
+    "old_slots_outside_new_share": 0.07178631051752922,
+    "new_slots_old_missing_share": 0.08602739726027397,
+    "new_slots_on_absent_share": 0.04767123287671233
+   },
+   "2022": {
+    "slots_old": 10950,
+    "slots_new": 10950,
+    "old_slots_outside_new": 2160,
+    "new_slots_old_could_not_select": 2160,
+    "old_slots_on_non_perp": 35,
+    "new_slots_on_symbols_absent_in_old_panel": 2160,
+    "old_slots_outside_new_share": 0.19726027397260273,
+    "new_slots_old_missing_share": 0.19726027397260273,
+    "new_slots_on_absent_share": 0.19726027397260273
+   },
+   "2023": {
+    "slots_old": 10950,
+    "slots_new": 10950,
+    "old_slots_outside_new": 3904,
+    "new_slots_old_could_not_select": 3904,
+    "old_slots_on_non_perp": 17,
+    "new_slots_on_symbols_absent_in_old_panel": 3904,
+    "old_slots_outside_new_share": 0.3565296803652968,
+    "new_slots_old_missing_share": 0.3565296803652968,
+    "new_slots_on_absent_share": 0.3565296803652968
+   },
+   "2024": {
+    "slots_old": 10980,
+    "slots_new": 10980,
+    "old_slots_outside_new": 5438,
+    "new_slots_old_could_not_select": 5438,
+    "old_slots_on_non_perp": 193,
+    "new_slots_on_symbols_absent_in_old_panel": 5438,
+    "old_slots_outside_new_share": 0.495264116575592,
+    "new_slots_old_missing_share": 0.495264116575592,
+    "new_slots_on_absent_share": 0.495264116575592
+   }
+  },
+  "symbols_old_panel": 119,
+  "symbols_old_panel_non_perp": 34,
+  "symbols_new_panel": 396,
+  "symbols_new_not_in_old": 311,
+  "universe_new_never_selected_symbols": 259
+ },
+ "r001_r004_exposure": {
+  "candidates": 148,
+  "outside_reasons_share_of_gross": {
+   "non_perp": 0.006055916826121144,
+   "funding_unknown": 0.001471512417357484,
+   "displaced_by_missing_contracts": 0.26351625845502097
+  },
+  "real_candidates": 140,
+  "per_year": {
+   "2020": {
+    "gross_exposure": 29003.033952807946,
+    "outside_share": 0.05099496885536675,
+    "non_perp_share": 0.0,
+    "positions": 282648,
+    "positions_outside": 17265,
+    "positions_outside_share": 0.06108304321983527
+   },
+   "2021": {
+    "gross_exposure": 41931.143193192576,
+    "outside_share": 0.13160178019057409,
+    "non_perp_share": 0.0008322193147191286,
+    "positions": 672780,
+    "positions_outside": 113678,
+    "positions_outside_share": 0.16896756740687893
+   },
+   "2022": {
+    "gross_exposure": 44644.00562050797,
+    "outside_share": 0.2423054660492284,
+    "non_perp_share": 0.0021249920083584064,
+    "positions": 652873,
+    "positions_outside": 190023,
+    "positions_outside_share": 0.29105660672136846
+   },
+   "2023": {
+    "gross_exposure": 49057.99642930034,
+    "outside_share": 0.35857438126598523,
+    "non_perp_share": 0.00280540644511806,
+    "positions": 685674,
+    "positions_outside": 279365,
+    "positions_outside_share": 0.40743122825132644
+   },
+   "2024": {
+    "gross_exposure": 47487.85519857211,
+    "outside_share": 0.46515537988856437,
+    "non_perp_share": 0.02142050473904251,
+    "positions": 684080,
+    "positions_outside": 354307,
+    "positions_outside_share": 0.5179321132031341
+   }
+  },
+  "candidates_with_outside_share_over_1pct": 112,
+  "candidates_with_outside_share_over_5pct": 112,
+  "candidates_with_any_non_perp_exposure": 99,
+  "max_outside_share": 0.6332888523395805,
+  "mean_outside_share": 0.23629053085334148,
+  "per_candidate": [
+   {
+    "key": "1e5d86fb7081",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 1342.5648189242,
+    "outside_share": 0.2641556962488216,
+    "non_perp_share": 0.00017436235987408657,
+    "positions": 18960,
+    "positions_outside": 4623
+   },
+   {
+    "key": "035fe48512b4",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 2515.553393541965,
+    "outside_share": 0.5475412725531122,
+    "non_perp_share": 0.017658662444932124,
+    "positions": 46928,
+    "positions_outside": 26232
+   },
+   {
+    "key": "f915e6991d82",
+    "family": "trend_ma",
+    "control": false,
+    "gross": 1226.0,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 2192,
+    "positions_outside": 0
+   },
+   {
+    "key": "123800b28405",
+    "family": "ensemble_rank",
+    "control": false,
+    "gross": 1733.9999999999998,
+    "outside_share": 0.2600297962322184,
+    "non_perp_share": 0.009103641456582634,
+    "positions": 19623,
+    "positions_outside": 5332
+   },
+   {
+    "key": "2a9c14525d0b",
+    "family": "ts_mom",
+    "control": false,
+    "gross": 1667.0,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 8234,
+    "positions_outside": 0
+   },
+   {
+    "key": "5a31a06ad38a",
+    "family": "xs_rev",
+    "control": false,
+    "gross": 1343.4675293341277,
+    "outside_share": 0.28178445636082844,
+    "non_perp_share": 0.003731396915097711,
+    "positions": 19572,
+    "positions_outside": 5103
+   },
+   {
+    "key": "cbc20fd20dc6",
+    "family": "donchian",
+    "control": false,
+    "gross": 454.41353320591065,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 5414,
+    "positions_outside": 0
+   },
+   {
+    "key": "7121ab6b68f7",
+    "family": "lowvol",
+    "control": false,
+    "gross": 1732.5000000000002,
+    "outside_share": 0.2126358826358826,
+    "non_perp_share": 0.009764309764309762,
+    "positions": 19614,
+    "positions_outside": 4358
+   },
+   {
+    "key": "a740d00e97d9",
+    "family": "mtf_trend",
+    "control": false,
+    "gross": 388.2137637643674,
+    "outside_share": 0.0004143755739374521,
+    "non_perp_share": 0.0,
+    "positions": 5286,
+    "positions_outside": 3
+   },
+   {
+    "key": "79c521890543",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1503.0000000000005,
+    "outside_share": 0.2700642366061527,
+    "non_perp_share": 0.006570192947438455,
+    "positions": 26514,
+    "positions_outside": 7176
+   },
+   {
+    "key": "be7cf3d8a71a",
+    "family": "vol_regime",
+    "control": false,
+    "gross": 536.0,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 3368,
+    "positions_outside": 0
+   },
+   {
+    "key": "839deeffa5cb",
+    "family": "bab",
+    "control": false,
+    "gross": 1729.0000000000005,
+    "outside_share": 0.2525504466293939,
+    "non_perp_share": 0.004498425551057129,
+    "positions": 29652,
+    "positions_outside": 7749
+   },
+   {
+    "key": "ccaf50b9e6e1",
+    "family": "pairs",
+    "control": false,
+    "gross": 871.5,
+    "outside_share": 0.23197552113214762,
+    "non_perp_share": 0.0,
+    "positions": 10458,
+    "positions_outside": 2426
+   },
+   {
+    "key": "04474bcc8b0b",
+    "family": "funding_fade",
+    "control": false,
+    "gross": 1533.0000000000002,
+    "outside_share": 0.25126588955191054,
+    "non_perp_share": 0.0,
+    "positions": 15019,
+    "positions_outside": 4177
+   },
+   {
+    "key": "0ce3119d0d39",
+    "family": "vol_shock",
+    "control": false,
+    "gross": 496.00000000000006,
+    "outside_share": 0.30621512717990423,
+    "non_perp_share": 0.00035578747628083485,
+    "positions": 797,
+    "positions_outside": 250
+   },
+   {
+    "key": "50b6cdd942f3",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 1732.5000000000002,
+    "outside_share": 0.2502210311734121,
+    "non_perp_share": 0.004489337822671155,
+    "positions": 29736,
+    "positions_outside": 7652
+   },
+   {
+    "key": "44f2ddca506b",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 1636.0411423281162,
+    "outside_share": 0.31760054224302914,
+    "non_perp_share": 0.008319745120021137,
+    "positions": 19584,
+    "positions_outside": 6030
+   },
+   {
+    "key": "d9bc17524b39",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 1708.0,
+    "outside_share": 0.5044800284758894,
+    "non_perp_share": 0.017329555838554413,
+    "positions": 45570,
+    "positions_outside": 24941
+   },
+   {
+    "key": "fa9caa28ed9f",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 2152.6435379401037,
+    "outside_share": 0.49547488387072525,
+    "non_perp_share": 0.010590750439770074,
+    "positions": 46704,
+    "positions_outside": 24250
+   },
+   {
+    "key": "bc0966debb54",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 1184.0869672355009,
+    "outside_share": 0.08229880039099297,
+    "non_perp_share": 0.0,
+    "positions": 13275,
+    "positions_outside": 919
+   },
+   {
+    "key": "0d897a5028c6",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 1729.0,
+    "outside_share": 0.4616988900823487,
+    "non_perp_share": 0.007856178908810487,
+    "positions": 46564,
+    "positions_outside": 23279
+   },
+   {
+    "key": "f29d416cf6bb",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 1732.4999999999998,
+    "outside_share": 0.2860572848668087,
+    "non_perp_share": 0.0062850729517396195,
+    "positions": 29792,
+    "positions_outside": 8811
+   },
+   {
+    "key": "bbbdfe68b142",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 1596.1459688192713,
+    "outside_share": 0.4727876707966828,
+    "non_perp_share": 0.0031860761491098685,
+    "positions": 29886,
+    "positions_outside": 14271
+   },
+   {
+    "key": "5c009b8a9a02",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 1605.3257235874446,
+    "outside_share": 0.3287418693657476,
+    "non_perp_share": 0.008857859140126823,
+    "positions": 19530,
+    "positions_outside": 6155
+   },
+   {
+    "key": "923f8c6cdcba",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 2275.265494332005,
+    "outside_share": 0.5321899045761221,
+    "non_perp_share": 0.018545282581509347,
+    "positions": 45570,
+    "positions_outside": 24941
+   },
+   {
+    "key": "60a32b8d445f",
+    "family": "trend_ma",
+    "control": false,
+    "gross": 1506.0000000000002,
+    "outside_share": 0.00023844011914297286,
+    "non_perp_share": 0.0,
+    "positions": 8786,
+    "positions_outside": 4
+   },
+   {
+    "key": "a12a69b3ce7a",
+    "family": "ensemble_rank",
+    "control": false,
+    "gross": 1733.9999999999998,
+    "outside_share": 0.2638305322128852,
+    "non_perp_share": 0.009886307464162135,
+    "positions": 19707,
+    "positions_outside": 5389
+   },
+   {
+    "key": "d3391b1624d5",
+    "family": "trend_ma",
+    "control": false,
+    "gross": 1409.9999999999998,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 5099,
+    "positions_outside": 0
+   },
+   {
+    "key": "b01872143813",
+    "family": "ensemble_rank",
+    "control": false,
+    "gross": 1732.5000000000002,
+    "outside_share": 0.255873359444788,
+    "non_perp_share": 0.002308802308802308,
+    "positions": 19747,
+    "positions_outside": 5225
+   },
+   {
+    "key": "f438a88c0e73",
+    "family": "trend_ma",
+    "control": false,
+    "gross": 1099.0,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 1982,
+    "positions_outside": 0
+   },
+   {
+    "key": "cd98b6e8ba94",
+    "family": "placebo",
+    "control": true,
+    "gross": 1734.0,
+    "outside_share": 0.25137927720107645,
+    "non_perp_share": 0.005161476355247981,
+    "positions": 19587,
+    "positions_outside": 5110
+   },
+   {
+    "key": "6d167dc3c138",
+    "family": "placebo",
+    "control": true,
+    "gross": 1732.4999999999998,
+    "outside_share": 0.25064454064454067,
+    "non_perp_share": 0.0061952861952861964,
+    "positions": 19614,
+    "positions_outside": 5101
+   },
+   {
+    "key": "0f415b1b59df",
+    "family": "placebo",
+    "control": true,
+    "gross": 1734.0,
+    "outside_share": 0.25249903883121877,
+    "non_perp_share": 0.006372549019607844,
+    "positions": 19587,
+    "positions_outside": 5140
+   },
+   {
+    "key": "cd952e677e73",
+    "family": "placebo",
+    "control": true,
+    "gross": 1732.4999999999998,
+    "outside_share": 0.25002886002886004,
+    "non_perp_share": 0.00404040404040404,
+    "positions": 19614,
+    "positions_outside": 5094
+   },
+   {
+    "key": "9870d0c5fe44",
+    "family": "placebo",
+    "control": true,
+    "gross": 1734.0,
+    "outside_share": 0.2514273356401384,
+    "non_perp_share": 0.003604382929642445,
+    "positions": 19587,
+    "positions_outside": 5120
+   },
+   {
+    "key": "a5ef4bcaa794",
+    "family": "placebo",
+    "control": true,
+    "gross": 1732.5,
+    "outside_share": 0.2506926406926407,
+    "non_perp_share": 0.005387205387205387,
+    "positions": 19614,
+    "positions_outside": 5110
+   },
+   {
+    "key": "03b499cfae9d",
+    "family": "placebo",
+    "control": true,
+    "gross": 1734.0,
+    "outside_share": 0.2426422529796232,
+    "non_perp_share": 0.004930795847750865,
+    "positions": 19587,
+    "positions_outside": 4933
+   },
+   {
+    "key": "2b4a36b0f1c6",
+    "family": "placebo",
+    "control": true,
+    "gross": 1732.5,
+    "outside_share": 0.25947089947089946,
+    "non_perp_share": 0.005723905723905723,
+    "positions": 19614,
+    "positions_outside": 5272
+   },
+   {
+    "key": "fe3f386819ae",
+    "family": "ensemble_rank",
+    "control": false,
+    "gross": 1734.0000000000002,
+    "outside_share": 0.25219455429230514,
+    "non_perp_share": 0.007908016147635524,
+    "positions": 29712,
+    "positions_outside": 7771
+   },
+   {
+    "key": "3e965c3d9604",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1503.0000000000002,
+    "outside_share": 0.27437690756054023,
+    "non_perp_share": 0.007651363938789088,
+    "positions": 26514,
+    "positions_outside": 7287
+   },
+   {
+    "key": "e5caf966d23a",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 1732.5,
+    "outside_share": 0.28460340365102266,
+    "non_perp_share": 0.005836139169472503,
+    "positions": 29820,
+    "positions_outside": 8778
+   },
+   {
+    "key": "18bc45c1b7e4",
+    "family": "ensemble_rank",
+    "control": false,
+    "gross": 1732.5,
+    "outside_share": 0.2541897640598939,
+    "non_perp_share": 0.0035618814406693194,
+    "positions": 29750,
+    "positions_outside": 7822
+   },
+   {
+    "key": "e2c80fd152a3",
+    "family": "trend_ma",
+    "control": false,
+    "gross": 482.467192905716,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 1982,
+    "positions_outside": 0
+   },
+   {
+    "key": "1399020269c6",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 1720.4999999999998,
+    "outside_share": 0.5199928932139559,
+    "non_perp_share": 0.02049441404280114,
+    "positions": 30567,
+    "positions_outside": 17456
+   },
+   {
+    "key": "b392ed621e7d",
+    "family": "trend_ma",
+    "control": false,
+    "gross": 429.1010102134836,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 5099,
+    "positions_outside": 0
+   },
+   {
+    "key": "21702fbc0491",
+    "family": "ts_mom",
+    "control": false,
+    "gross": 463.84416360942095,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 5662,
+    "positions_outside": 0
+   },
+   {
+    "key": "5d24d119a900",
+    "family": "lowvol",
+    "control": false,
+    "gross": 1729.0000000000002,
+    "outside_share": 0.451917568646892,
+    "non_perp_share": 0.01673414304993252,
+    "positions": 46704,
+    "positions_outside": 23019
+   },
+   {
+    "key": "ca61a35e45c9",
+    "family": "donchian",
+    "control": false,
+    "gross": 1595.0,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 5937,
+    "positions_outside": 0
+   },
+   {
+    "key": "c06e40fcb5b6",
+    "family": "mtf_trend",
+    "control": false,
+    "gross": 1108.0,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 3000,
+    "positions_outside": 0
+   },
+   {
+    "key": "bfe0c4ac988e",
+    "family": "xs_rev",
+    "control": false,
+    "gross": 1736.0547856542687,
+    "outside_share": 0.27511635004736307,
+    "non_perp_share": 0.0053795331465358535,
+    "positions": 29766,
+    "positions_outside": 7571
+   },
+   {
+    "key": "0f6acdf9d385",
+    "family": "bab",
+    "control": false,
+    "gross": 1440.150240833278,
+    "outside_share": 0.24772575315440118,
+    "non_perp_share": 0.0006000222521691369,
+    "positions": 19614,
+    "positions_outside": 4950
+   },
+   {
+    "key": "c3c32c09d34b",
+    "family": "funding_fade",
+    "control": false,
+    "gross": 1132.0,
+    "outside_share": 0.26487377831804126,
+    "non_perp_share": 0.0,
+    "positions": 6543,
+    "positions_outside": 1752
+   },
+   {
+    "key": "269dbe5519ff",
+    "family": "pairs",
+    "control": false,
+    "gross": 935.6666666666667,
+    "outside_share": 0.23200926255789095,
+    "non_perp_share": 0.0,
+    "positions": 11228,
+    "positions_outside": 2605
+   },
+   {
+    "key": "47f7352a2da9",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 2003.670797670301,
+    "outside_share": 0.5007769269510852,
+    "non_perp_share": 0.01011937542229888,
+    "positions": 46785,
+    "positions_outside": 24346
+   },
+   {
+    "key": "27fcfdb40901",
+    "family": "vol_regime",
+    "control": false,
+    "gross": 542.0,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 3898,
+    "positions_outside": 0
+   },
+   {
+    "key": "050384bce67c",
+    "family": "vol_shock",
+    "control": false,
+    "gross": 1478.9999999999998,
+    "outside_share": 0.5642880903822789,
+    "non_perp_share": 0.0018377764235959148,
+    "positions": 7136,
+    "positions_outside": 3881
+   },
+   {
+    "key": "c03050811847",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 1732.4999999999998,
+    "outside_share": 0.5135876406254077,
+    "non_perp_share": 0.015684033315612262,
+    "positions": 46928,
+    "positions_outside": 26232
+   },
+   {
+    "key": "7e474a16cdca",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 1628.9907866712542,
+    "outside_share": 0.3278121135581871,
+    "non_perp_share": 0.00945330434467974,
+    "positions": 19600,
+    "positions_outside": 6181
+   },
+   {
+    "key": "50f5c2d41f49",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 1734.0000000000005,
+    "outside_share": 0.27840068348286334,
+    "non_perp_share": 0.006237985390234523,
+    "positions": 29706,
+    "positions_outside": 8605
+   },
+   {
+    "key": "35840c2b5fbd",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 2002.58299458179,
+    "outside_share": 0.5569436706830907,
+    "non_perp_share": 0.022037878003970866,
+    "positions": 30884,
+    "positions_outside": 17802
+   },
+   {
+    "key": "812502bdeae4",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 1718.4999999999998,
+    "outside_share": 0.2957100830827919,
+    "non_perp_share": 0.0072131704005431105,
+    "positions": 19453,
+    "positions_outside": 6038
+   },
+   {
+    "key": "e949ce60b89f",
+    "family": "trend_ma",
+    "control": false,
+    "gross": 446.25925884292093,
+    "outside_share": 0.0004440429717857614,
+    "non_perp_share": 0.0,
+    "positions": 9748,
+    "positions_outside": 7
+   },
+   {
+    "key": "4700e199c34e",
+    "family": "trend_ma",
+    "control": false,
+    "gross": 1643.0,
+    "outside_share": 0.0002864525759030833,
+    "non_perp_share": 0.0,
+    "positions": 11046,
+    "positions_outside": 4
+   },
+   {
+    "key": "bb7584cf8286",
+    "family": "ensemble_rank",
+    "control": false,
+    "gross": 1732.5,
+    "outside_share": 0.2563938706795849,
+    "non_perp_share": 0.002510822510822511,
+    "positions": 19641,
+    "positions_outside": 5208
+   },
+   {
+    "key": "6be56afb0eee",
+    "family": "ts_mom",
+    "control": false,
+    "gross": 448.5306355764359,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 5772,
+    "positions_outside": 0
+   },
+   {
+    "key": "c6fad4ee5e74",
+    "family": "trend_ma",
+    "control": false,
+    "gross": 1080.0,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 1889,
+    "positions_outside": 0
+   },
+   {
+    "key": "5c7be0d87560",
+    "family": "ts_mom",
+    "control": false,
+    "gross": 473.27622974676507,
+    "outside_share": 0.0008887047988518454,
+    "non_perp_share": 0.0,
+    "positions": 10875,
+    "positions_outside": 14
+   },
+   {
+    "key": "cc7da2befafe",
+    "family": "ts_mom",
+    "control": false,
+    "gross": 446.71301504006453,
+    "outside_share": 0.0005762530830945406,
+    "non_perp_share": 0.0,
+    "positions": 10309,
+    "positions_outside": 10
+   },
+   {
+    "key": "957b9eac894b",
+    "family": "ts_mom",
+    "control": false,
+    "gross": 402.4933967351982,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 4557,
+    "positions_outside": 0
+   },
+   {
+    "key": "9a855dabba77",
+    "family": "trend_ma",
+    "control": false,
+    "gross": 459.5738823507319,
+    "outside_share": 0.0003076053836542638,
+    "non_perp_share": 0.0,
+    "positions": 11046,
+    "positions_outside": 4
+   },
+   {
+    "key": "068d6651fdbf",
+    "family": "trend_ma",
+    "control": false,
+    "gross": 452.06196309446455,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 5565,
+    "positions_outside": 0
+   },
+   {
+    "key": "e557e6fa0403",
+    "family": "vol_regime",
+    "control": false,
+    "gross": 1131.0,
+    "outside_share": 0.2791114058355438,
+    "non_perp_share": 0.0031682876510462717,
+    "positions": 13007,
+    "positions_outside": 3750
+   },
+   {
+    "key": "610bac07a444",
+    "family": "ensemble_rank",
+    "control": false,
+    "gross": 1733.9999999999995,
+    "outside_share": 0.26109277192754704,
+    "non_perp_share": 0.0075805634196637675,
+    "positions": 29751,
+    "positions_outside": 8006
+   },
+   {
+    "key": "0051738937c5",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1503.0,
+    "outside_share": 0.27090329922166245,
+    "non_perp_share": 0.006112774451097803,
+    "positions": 26514,
+    "positions_outside": 7194
+   },
+   {
+    "key": "59427e56d85e",
+    "family": "ensemble_rank",
+    "control": false,
+    "gross": 1734.0000000000002,
+    "outside_share": 0.24955245318567118,
+    "non_perp_share": 0.003084696445423088,
+    "positions": 29658,
+    "positions_outside": 7650
+   },
+   {
+    "key": "7da0e0754215",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 2104.964312790016,
+    "outside_share": 0.47921480793431515,
+    "non_perp_share": 0.008684552723845837,
+    "positions": 46564,
+    "positions_outside": 23279
+   },
+   {
+    "key": "20eb6622fa58",
+    "family": "xs_rev",
+    "control": false,
+    "gross": 1734.0,
+    "outside_share": 0.24717896962706648,
+    "non_perp_share": 0.0029219530949634756,
+    "positions": 19570,
+    "positions_outside": 5052
+   },
+   {
+    "key": "7254b3889fb0",
+    "family": "lowvol",
+    "control": false,
+    "gross": 1624.220024912016,
+    "outside_share": 0.24987269396598472,
+    "non_perp_share": 0.00818394591583488,
+    "positions": 29722,
+    "positions_outside": 7325
+   },
+   {
+    "key": "1347dae07a3c",
+    "family": "donchian",
+    "control": false,
+    "gross": 1637.0000000000005,
+    "outside_share": 0.000593135223954297,
+    "non_perp_share": 0.0,
+    "positions": 10431,
+    "positions_outside": 11
+   },
+   {
+    "key": "276a77db4812",
+    "family": "mtf_trend",
+    "control": false,
+    "gross": 390.85881029302584,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 3000,
+    "positions_outside": 0
+   },
+   {
+    "key": "53f492c11f78",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1503.0,
+    "outside_share": 0.2753104901308494,
+    "non_perp_share": 0.005821689953426479,
+    "positions": 17577,
+    "positions_outside": 4855
+   },
+   {
+    "key": "9190134e68d7",
+    "family": "bab",
+    "control": false,
+    "gross": 2036.139233114689,
+    "outside_share": 0.4715522082913399,
+    "non_perp_share": 0.009643372931579063,
+    "positions": 46795,
+    "positions_outside": 23531
+   },
+   {
+    "key": "3d9b8ffbb802",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 1734.0000000000002,
+    "outside_share": 0.28112939140188276,
+    "non_perp_share": 0.006326238160148195,
+    "positions": 29781,
+    "positions_outside": 8660
+   },
+   {
+    "key": "678bfce8593c",
+    "family": "pairs",
+    "control": false,
+    "gross": 1512.1666666666665,
+    "outside_share": 0.19133693375950622,
+    "non_perp_share": 0.0,
+    "positions": 18146,
+    "positions_outside": 3472
+   },
+   {
+    "key": "f572a23de072",
+    "family": "funding_fade",
+    "control": false,
+    "gross": 1453.0,
+    "outside_share": 0.5104651839756312,
+    "non_perp_share": 0.0,
+    "positions": 14564,
+    "positions_outside": 7737
+   },
+   {
+    "key": "2c6df3942e82",
+    "family": "trend_ma",
+    "control": false,
+    "gross": 418.856711128241,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 2249,
+    "positions_outside": 0
+   },
+   {
+    "key": "9e60b8bdc7e3",
+    "family": "ts_mom",
+    "control": false,
+    "gross": 1738.0000000000005,
+    "outside_share": 0.0008442685155796881,
+    "non_perp_share": 0.0,
+    "positions": 17236,
+    "positions_outside": 17
+   },
+   {
+    "key": "6be5a5e07b90",
+    "family": "vol_shock",
+    "control": false,
+    "gross": 778.9999999999999,
+    "outside_share": 0.6332888523395805,
+    "non_perp_share": 0.0002687543079734661,
+    "positions": 1480,
+    "positions_outside": 926
+   },
+   {
+    "key": "119fe6fff8ee",
+    "family": "vol_regime",
+    "control": false,
+    "gross": 1056.0000000000002,
+    "outside_share": 0.00038246585893149507,
+    "non_perp_share": 0.0,
+    "positions": 6504,
+    "positions_outside": 4
+   },
+   {
+    "key": "ed4638b0aaff",
+    "family": "ensemble_rank",
+    "control": false,
+    "gross": 1732.5000000000002,
+    "outside_share": 0.2652302034986017,
+    "non_perp_share": 0.007766554433221099,
+    "positions": 29736,
+    "positions_outside": 8140
+   },
+   {
+    "key": "89ead85f5439",
+    "family": "ensemble_rank",
+    "control": false,
+    "gross": 1732.5000000000007,
+    "outside_share": 0.25590233399757195,
+    "non_perp_share": 0.007721661054994385,
+    "positions": 29771,
+    "positions_outside": 7910
+   },
+   {
+    "key": "decf78427a8e",
+    "family": "ensemble_rank",
+    "control": false,
+    "gross": 1732.5000000000002,
+    "outside_share": 0.2564605236033807,
+    "non_perp_share": 0.008417508417508416,
+    "positions": 19628,
+    "positions_outside": 5271
+   },
+   {
+    "key": "977b8b09f618",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 1702.5000000000002,
+    "outside_share": 0.44222804932056026,
+    "non_perp_share": 0.0033578071463534016,
+    "positions": 30003,
+    "positions_outside": 14364
+   },
+   {
+    "key": "b12576e396e7",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 1242.7314724892105,
+    "outside_share": 0.08004666050186383,
+    "non_perp_share": 0.0,
+    "positions": 13650,
+    "positions_outside": 971
+   },
+   {
+    "key": "d6d8f6bd361c",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 1732.5,
+    "outside_share": 0.2486050986050986,
+    "non_perp_share": 0.003367003367003367,
+    "positions": 19544,
+    "positions_outside": 5032
+   },
+   {
+    "key": "1ae762b211aa",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 1455.792904717346,
+    "outside_share": 0.26709174637027255,
+    "non_perp_share": 0.001143127215965698,
+    "positions": 19474,
+    "positions_outside": 4998
+   },
+   {
+    "key": "bc64ad45c7c5",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 1818.5228836081128,
+    "outside_share": 0.27349933752578504,
+    "non_perp_share": 0.003216404399542761,
+    "positions": 29722,
+    "positions_outside": 7868
+   },
+   {
+    "key": "382d1253c48d",
+    "family": "mtf_trend",
+    "control": false,
+    "gross": 370.94989121122967,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 2692,
+    "positions_outside": 0
+   },
+   {
+    "key": "aa8782e7f9b3",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1502.0,
+    "outside_share": 0.26525743453173545,
+    "non_perp_share": 0.00832223701731025,
+    "positions": 17609,
+    "positions_outside": 4662
+   },
+   {
+    "key": "e16dd8d38cc9",
+    "family": "donchian",
+    "control": false,
+    "gross": 467.7266490051975,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 5937,
+    "positions_outside": 0
+   },
+   {
+    "key": "99cac0a48675",
+    "family": "lowvol",
+    "control": false,
+    "gross": 1729.0,
+    "outside_share": 0.4103303129618918,
+    "non_perp_share": 0.022267206477732792,
+    "positions": 30842,
+    "positions_outside": 13956
+   },
+   {
+    "key": "bc95749962a7",
+    "family": "xs_rev",
+    "control": false,
+    "gross": 1732.0,
+    "outside_share": 0.24941301000769814,
+    "non_perp_share": 0.002886836027713626,
+    "positions": 19574,
+    "positions_outside": 5061
+   },
+   {
+    "key": "d70f5dba1c59",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1502.0,
+    "outside_share": 0.2763714518208526,
+    "non_perp_share": 0.008507175617694925,
+    "positions": 26581,
+    "positions_outside": 7342
+   },
+   {
+    "key": "bad2ed0dfa50",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1502.9999999999995,
+    "outside_share": 0.2793413173652695,
+    "non_perp_share": 0.006320691949434467,
+    "positions": 17562,
+    "positions_outside": 4907
+   },
+   {
+    "key": "2f74bad8e366",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1502.0000000000002,
+    "outside_share": 0.279016866400355,
+    "non_perp_share": 0.006380381713271192,
+    "positions": 17609,
+    "positions_outside": 4937
+   },
+   {
+    "key": "2d3d4d5026e5",
+    "family": "ensemble_rank",
+    "control": false,
+    "gross": 1732.5000000000002,
+    "outside_share": 0.27230948945234656,
+    "non_perp_share": 0.010822510822510819,
+    "positions": 19593,
+    "positions_outside": 5524
+   },
+   {
+    "key": "71dd6e73beb6",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1503.0,
+    "outside_share": 0.2697013380646115,
+    "non_perp_share": 0.006320691949434463,
+    "positions": 26531,
+    "positions_outside": 7174
+   },
+   {
+    "key": "7f0e63fe9594",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 1381.1435965072933,
+    "outside_share": 0.27690121452418226,
+    "non_perp_share": 0.0010109992465977037,
+    "positions": 19362,
+    "positions_outside": 4989
+   },
+   {
+    "key": "828eed5084a9",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 2110.9749295243805,
+    "outside_share": 0.31106873878932073,
+    "non_perp_share": 0.00824439629193769,
+    "positions": 29687,
+    "positions_outside": 8658
+   },
+   {
+    "key": "33d113825485",
+    "family": "ts_mom",
+    "control": false,
+    "gross": 1738.0000000000002,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 8647,
+    "positions_outside": 0
+   },
+   {
+    "key": "35c4bf21e658",
+    "family": "trend_ma",
+    "control": false,
+    "gross": 1562.0000000000002,
+    "outside_share": 0.0004049793285171691,
+    "non_perp_share": 0.0,
+    "positions": 9748,
+    "positions_outside": 7
+   },
+   {
+    "key": "261ecb0215fc",
+    "family": "xs_rev",
+    "control": false,
+    "gross": 1731.9999999999995,
+    "outside_share": 0.07065531177829101,
+    "non_perp_share": 0.0,
+    "positions": 13676,
+    "positions_outside": 978
+   },
+   {
+    "key": "1c66336e44df",
+    "family": "lowvol",
+    "control": false,
+    "gross": 1729.0,
+    "outside_share": 0.23749759012916904,
+    "non_perp_share": 0.011470985155195679,
+    "positions": 19544,
+    "positions_outside": 4855
+   },
+   {
+    "key": "9ce75bb12daf",
+    "family": "mtf_trend",
+    "control": false,
+    "gross": 385.3655414400581,
+    "outside_share": 0.00039910539036779887,
+    "non_perp_share": 0.0,
+    "positions": 5052,
+    "positions_outside": 2
+   },
+   {
+    "key": "b80e10a4d56f",
+    "family": "donchian",
+    "control": false,
+    "gross": 442.243291165393,
+    "outside_share": 0.00019770923348201843,
+    "non_perp_share": 0.0,
+    "positions": 9542,
+    "positions_outside": 3
+   },
+   {
+    "key": "3a2cc9a8722a",
+    "family": "funding_fade",
+    "control": false,
+    "gross": 1559.0,
+    "outside_share": 0.2466187502841274,
+    "non_perp_share": 0.0,
+    "positions": 15418,
+    "positions_outside": 4203
+   },
+   {
+    "key": "ac553030b5e8",
+    "family": "pairs",
+    "control": false,
+    "gross": 1597.333333333333,
+    "outside_share": 0.23205342237061782,
+    "non_perp_share": 0.0,
+    "positions": 9584,
+    "positions_outside": 2224
+   },
+   {
+    "key": "68d1686656ee",
+    "family": "vol_regime",
+    "control": false,
+    "gross": 1100.0,
+    "outside_share": 0.0007197977367559233,
+    "non_perp_share": 0.0,
+    "positions": 6935,
+    "positions_outside": 8
+   },
+   {
+    "key": "d04389fc68c9",
+    "family": "vol_shock",
+    "control": false,
+    "gross": 778.9999999999999,
+    "outside_share": 0.6332888523395805,
+    "non_perp_share": 0.0002687543079734661,
+    "positions": 1480,
+    "positions_outside": 926
+   },
+   {
+    "key": "fa584c72d55b",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1502.9999999999998,
+    "outside_share": 0.26627300953648264,
+    "non_perp_share": 0.007485029940119761,
+    "positions": 17565,
+    "positions_outside": 4681
+   },
+   {
+    "key": "60beab4c2edb",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1503.0000000000005,
+    "outside_share": 0.266895705942612,
+    "non_perp_share": 0.006440822059584532,
+    "positions": 26531,
+    "positions_outside": 7098
+   },
+   {
+    "key": "9094376567ea",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1502.9999999999998,
+    "outside_share": 0.272787757817698,
+    "non_perp_share": 0.004990019960079841,
+    "positions": 17562,
+    "positions_outside": 4792
+   },
+   {
+    "key": "38d1f1fc9626",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1503.0000000000007,
+    "outside_share": 0.2752699627200624,
+    "non_perp_share": 0.005433577289864713,
+    "positions": 26514,
+    "positions_outside": 7307
+   },
+   {
+    "key": "35eacbd54a3c",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1503.0,
+    "outside_share": 0.25914836992681306,
+    "non_perp_share": 0.005710800620980262,
+    "positions": 17577,
+    "positions_outside": 4567
+   },
+   {
+    "key": "f41fe82da176",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1502.9999999999995,
+    "outside_share": 0.2730215494936054,
+    "non_perp_share": 0.007651363938789091,
+    "positions": 26514,
+    "positions_outside": 7252
+   },
+   {
+    "key": "f3c43c24000e",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1502.9999999999998,
+    "outside_share": 0.2615103127079175,
+    "non_perp_share": 0.007318695941450433,
+    "positions": 17562,
+    "positions_outside": 4594
+   },
+   {
+    "key": "856ccb9a3b6a",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 1328.607233689685,
+    "outside_share": 0.07748706522905564,
+    "non_perp_share": 0.0,
+    "positions": 13594,
+    "positions_outside": 979
+   },
+   {
+    "key": "17bc2f0757ff",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 1843.3478299791605,
+    "outside_share": 0.2790234290567132,
+    "non_perp_share": 0.005709086228829715,
+    "positions": 29700,
+    "positions_outside": 7631
+   },
+   {
+    "key": "041952d89f61",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 1729.0,
+    "outside_share": 0.462129453670807,
+    "non_perp_share": 0.009485251590514748,
+    "positions": 46536,
+    "positions_outside": 23362
+   },
+   {
+    "key": "08dadf4f9f5f",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 1678.5,
+    "outside_share": 0.5130827397495241,
+    "non_perp_share": 0.02156931204794318,
+    "positions": 29535,
+    "positions_outside": 16718
+   },
+   {
+    "key": "a59f1cf2d10b",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 1233.152264647347,
+    "outside_share": 0.09244202364780715,
+    "non_perp_share": 0.0,
+    "positions": 13650,
+    "positions_outside": 1066
+   },
+   {
+    "key": "560fd86dade2",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 2097.3427766059535,
+    "outside_share": 0.31516399374262777,
+    "non_perp_share": 0.007796370282485989,
+    "positions": 29820,
+    "positions_outside": 8778
+   },
+   {
+    "key": "29bc6ee37a82",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 1732.4999999999995,
+    "outside_share": 0.2518710918710919,
+    "non_perp_share": 0.004040404040404041,
+    "positions": 19614,
+    "positions_outside": 5130
+   },
+   {
+    "key": "e3fa0cd38ca6",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 1395.9042118444954,
+    "outside_share": 0.27505361793730476,
+    "non_perp_share": 0.004808387163309581,
+    "positions": 19557,
+    "positions_outside": 5027
+   },
+   {
+    "key": "24c2a0a4fa80",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 1810.926133005965,
+    "outside_share": 0.26800874056042745,
+    "non_perp_share": 0.0036145408874221244,
+    "positions": 29624,
+    "positions_outside": 7634
+   },
+   {
+    "key": "b1162662ddd5",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 1734.0,
+    "outside_share": 0.5241430770626273,
+    "non_perp_share": 0.018260459263919473,
+    "positions": 30969,
+    "positions_outside": 17797
+   },
+   {
+    "key": "5ad5972ba49b",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 2048.614707272628,
+    "outside_share": 0.30279196449203954,
+    "non_perp_share": 0.008421107330254756,
+    "positions": 29706,
+    "positions_outside": 8605
+   },
+   {
+    "key": "39a597f0cde6",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 1720.5,
+    "outside_share": 0.29212127921805336,
+    "non_perp_share": 0.0072238136754265775,
+    "positions": 19449,
+    "positions_outside": 5953
+   },
+   {
+    "key": "2bca23e0cceb",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 1732.5000000000002,
+    "outside_share": 0.5147543461829176,
+    "non_perp_share": 0.015336700336700334,
+    "positions": 46900,
+    "positions_outside": 26271
+   },
+   {
+    "key": "d44ccfbc8af1",
+    "family": "funding_carry",
+    "control": false,
+    "gross": 1714.4999999999998,
+    "outside_share": 0.498723971184961,
+    "non_perp_share": 0.01634787706372992,
+    "positions": 45552,
+    "positions_outside": 24918
+   },
+   {
+    "key": "8fac032a197c",
+    "family": "ts_mom",
+    "control": false,
+    "gross": 601.3887616585661,
+    "outside_share": 0.0,
+    "non_perp_share": 0.0,
+    "positions": 8638,
+    "positions_outside": 0
+   },
+   {
+    "key": "80f79228f807",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1502.0000000000002,
+    "outside_share": 0.26077452285841096,
+    "non_perp_share": 0.008322237017310252,
+    "positions": 17609,
+    "positions_outside": 4596
+   },
+   {
+    "key": "62a877ce0588",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1503.0000000000002,
+    "outside_share": 0.2713406520292747,
+    "non_perp_share": 0.007332557108006208,
+    "positions": 26514,
+    "positions_outside": 7200
+   },
+   {
+    "key": "0d80b931cba5",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1502.0000000000002,
+    "outside_share": 0.2862960497114957,
+    "non_perp_share": 0.005548158011540167,
+    "positions": 17609,
+    "positions_outside": 5035
+   },
+   {
+    "key": "43c8cd634567",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1502.000000000001,
+    "outside_share": 0.2917981051719398,
+    "non_perp_share": 0.00591803521230951,
+    "positions": 26581,
+    "positions_outside": 7749
+   },
+   {
+    "key": "4903600c43fc",
+    "family": "xs_mom",
+    "control": false,
+    "gross": 1410.26178838935,
+    "outside_share": 0.2780007755459429,
+    "non_perp_share": 0.005179632491692638,
+    "positions": 19614,
+    "positions_outside": 5130
+   },
+   {
+    "key": "735b57803b0f",
+    "family": "ml_xs",
+    "control": false,
+    "gross": 1501.9999999999998,
+    "outside_share": 0.27380820281952106,
+    "non_perp_share": 0.008322237017310254,
+    "positions": 26581,
+    "positions_outside": 7275
+   },
+   {
+    "key": "108fb9dfbab8",
+    "family": "bab",
+    "control": false,
+    "gross": 1977.3395421758044,
+    "outside_share": 0.47250966170668496,
+    "non_perp_share": 0.00594552326805381,
+    "positions": 46893,
+    "positions_outside": 23535
+   }
+  ]
+ }
+}

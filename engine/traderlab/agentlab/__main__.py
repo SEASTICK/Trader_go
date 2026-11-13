@@ -11,7 +11,7 @@ REPO = Path(__file__).resolve().parents[3]
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["run", "status", "rejudge", "audit"])
+    ap.add_argument("cmd", choices=["run", "status", "rejudge", "audit", "universe-audit"])
     ap.add_argument("--ideas", type=int, default=60)
     ap.add_argument("--top", type=int, default=14)
     ap.add_argument("--controls", type=int, default=4)
@@ -28,11 +28,16 @@ def main() -> None:
         from .audit import run_audit
         print(json.dumps(run_audit(REPO, root), ensure_ascii=False, indent=1)[:3000])
         return
+    if a.cmd == "universe-audit":
+        from .universe_audit import run_universe_audit
+        rep = run_universe_audit(REPO, root)
+        print(json.dumps({k: rep[k] for k in ("universe_gap", "compare_old_vs_pointintime")}, ensure_ascii=False, indent=1, default=float)[:3500])
+        return
     if a.cmd == "rejudge":
         from .orchestrator import Orchestrator as O
         print(json.dumps(O(root, None, workers=1).rejudge(), ensure_ascii=False, indent=1))
         return
-    panel = load_um_panel(REPO / "data", cache=REPO / "data" / "clean" / "agentlab-panel-v2.pkl")
+    panel = load_um_panel(REPO / "data", cache=REPO / "data" / "clean" / "agentlab-panel-v3.pkl", listing=REPO)
     s = Orchestrator(root, panel, workers=a.workers, seed=a.seed, max_iter=a.max_iter, cache=REPO / "data" / "clean" / "agentlab-cache").run(n_ideas=a.ideas, top_k=a.top, controls=a.controls)
     print(json.dumps({k: s[k] for k in ("run", "ideas_generated", "ideas_selected", "evaluated_versions", "verdicts", "trials", "experiments_registered", "agents_spawned", "seconds", "promising", "learnings")},
                      ensure_ascii=False, indent=1))
