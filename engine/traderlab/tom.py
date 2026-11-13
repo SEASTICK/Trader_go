@@ -193,11 +193,18 @@ def decide(valid: bool, criteria: dict | None) -> str:
     return "MORE_RESEARCH" if all(criteria.values()) else "REJECT"
 
 
-def evaluate(prices: pd.DataFrame, strict: bool = False, calendar: pd.DatetimeIndex | None = None) -> dict:
-    """Hela beslutet för primärperioden med utförande A. Kapar (eller avvisar) data från 2025-01-01 före all beräkning. Skriver ingenting."""
+def evaluate(prices: pd.DataFrame, strict: bool = False, calendar: pd.DatetimeIndex | None = None, require_verified_calendar: bool = True) -> dict:
+    """Hela beslutet för primärperioden med utförande A. Kapar (eller avvisar) data från 2025-01-01 före all beräkning. Skriver ingenting.
+
+    `require_verified_calendar=True` (standard, fail-closed): den fasta NYSE-kalendern måste vara avstämd mot officiell källa rad för rad (`nyse_sessions.verification_status()`),
+    annars är körningen OGILTIG. Testerna slår av kravet med `False`; en riktig körning gör det aldrig. Gäller bara standardkalendern (en kalender som skickas in är anroparens ansvar).
+    """
     df, n_cut = clean_prices(prices, strict=strict)
-    base = {"hypothesis": HYPOTHESIS_ID, "rows_cut_holdout": n_cut, "t_required": T_REQUIRED, "attempts": ATTEMPTS}
+    ver = nyse_sessions.verification_status()
+    base = {"hypothesis": HYPOTHESIS_ID, "rows_cut_holdout": n_cut, "t_required": T_REQUIRED, "attempts": ATTEMPTS, "calendar_verification": ver}
     reasons = check_data(df, PRIMARY, calendar)
+    if require_verified_calendar and calendar is None and not ver["fully_verified"]:
+        reasons.append(f"NYSE-sessionskalendern är inte verifierad mot officiell källa ({ver['verified_rows']} av {ver['ledger_rows']} stängningar; konsistent: {ver['consistent']})")
     if reasons:
         return {**base, "valid": False, "invalid_reasons": reasons, "decision": decide(False, None),
                 "note": "Datakravet i research/tom-protokoll.md är inte uppfyllt. Inget beslut, aldrig MORE_RESEARCH."}

@@ -43,22 +43,27 @@ def _observed(d: date) -> date | None:
     return d - timedelta(days=1) if d.weekday() == 5 else d + timedelta(days=1) if d.weekday() == 6 else d
 
 
-def holidays(year: int) -> set[date]:
-    h: set[date] = set()
+def holiday_table(year: int) -> dict[date, tuple[str, str]]:
+    """Ordinarie helgdagar för ett år: datum -> (namn, regel). Samma regler som `holidays`, med text för avstämningen."""
+    t: dict[date, tuple[str, str]] = {}
     new_year = date(year, 1, 1)
     if new_year.weekday() != 5:                                  # nyårsdagen på en lördag stänger inte fredagen den 31 december
-        h.add(_observed(new_year))
-    h.add(_nth_weekday(year, 1, 0, 3))                           # Martin Luther King Jr. Day
-    h.add(_nth_weekday(year, 2, 0, 3))                           # Washington's Birthday
-    h.add(easter(year) - timedelta(days=2))                      # Good Friday
-    h.add(_last_weekday(year, 5, 0))                             # Memorial Day
+        t[_observed(new_year)] = ("New Year's Day", "1 jan; söndag flyttas till måndag; lördag: ingen stängning")
+    t[_nth_weekday(year, 1, 0, 3)] = ("Martin Luther King Jr. Day", "tredje måndagen i januari")
+    t[_nth_weekday(year, 2, 0, 3)] = ("Washington's Birthday", "tredje måndagen i februari")
+    t[easter(year) - timedelta(days=2)] = ("Good Friday", "påskdagen minus 2 dagar")
+    t[_last_weekday(year, 5, 0)] = ("Memorial Day", "sista måndagen i maj")
     if year >= 2022:
-        h.add(_observed(date(year, 6, 19)))                      # Juneteenth
-    h.add(_observed(date(year, 7, 4)))                           # Independence Day
-    h.add(_nth_weekday(year, 9, 0, 1))                           # Labor Day
-    h.add(_nth_weekday(year, 11, 3, 4))                          # Thanksgiving
-    h.add(_observed(date(year, 12, 25)))                         # Christmas
-    return h
+        t[_observed(date(year, 6, 19))] = ("Juneteenth", "19 juni från 2022; lördag flyttas till fredag, söndag till måndag")
+    t[_observed(date(year, 7, 4))] = ("Independence Day", "4 juli; lördag flyttas till fredag, söndag till måndag")
+    t[_nth_weekday(year, 9, 0, 1)] = ("Labor Day", "första måndagen i september")
+    t[_nth_weekday(year, 11, 3, 4)] = ("Thanksgiving", "fjärde torsdagen i november")
+    t[_observed(date(year, 12, 25))] = ("Christmas", "25 dec; lördag flyttas till fredag, söndag till måndag")
+    return t
+
+
+def holidays(year: int) -> set[date]:
+    return set(holiday_table(year))
 
 
 def generate() -> pd.DatetimeIndex:
@@ -88,10 +93,79 @@ def load(path: Path = SESSIONS_FILE, expected_sha256: str | None = None) -> pd.D
 def missing_sessions(index: pd.DatetimeIndex, calendar: pd.DatetimeIndex, start: pd.Timestamp = FIRST, end: pd.Timestamp = LAST) -> list[pd.Timestamp]:
     """Förväntade sessioner i perioden som saknas i `index`."""
     want = calendar[(calendar >= start) & (calendar <= end)]
-    return [d for d in want if d not in set(index)]
+    have = set(index)
+    return [d for d in want if d not in have]
 
 
 def unexpected_days(index: pd.DatetimeIndex, calendar: pd.DatetimeIndex, start: pd.Timestamp = FIRST, end: pd.Timestamp = LAST) -> list[pd.Timestamp]:
     """Dagar i `index` i perioden som inte är NYSE-sessioner."""
     cal = set(calendar)
     return [d for d in index if start <= d <= end and d not in cal]
+
+
+LEDGER_FILE = SESSIONS_FILE.with_name("nyse-closures-ledger.csv")
+LEDGER_COLUMNS = ["date", "name", "rule", "candidate_source", "verified_source", "verified_by", "verified_date"]
+CANDIDATE_SOURCES = {"holiday": "S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours)", "special": "S3 (Sandy) respektive S4 (sorgedagar)"}
+
+
+def closure_ledger() -> pd.DataFrame:
+    """Alla stängningar på vardagar 2006-01-01..2024-12-31: ordinarie helgdagar och de fyra extra. En rad per datum, med regel och kandidatkälla.
+    Kolumnerna `verified_*` fylls i av en granskare som har läst en officiell källa för just det datumet; de lämnas tomma av generatorn."""
+    rows = []
+    for y in range(FIRST.year, LAST.year + 1):
+        for d, (name, rule) in holiday_table(y).items():
+            rows.append((d, name, rule, CANDIDATE_SOURCES["holiday"]))
+    for d, why in SPECIAL_CLOSURES.items():
+        rows.append((d, f"Extra stängning: {why}", "enstaka händelse, inga regler", CANDIDATE_SOURCES["special"]))
+    out = pd.DataFrame(sorted(rows), columns=LEDGER_COLUMNS[:4])
+    for c in LEDGER_COLUMNS[4:]:
+        out[c] = ""
+    return out
+
+
+def ledger_to_csv_text(df: pd.DataFrame) -> str:
+    out = df.copy()
+    out["date"] = out["date"].map(lambda d: pd.Timestamp(d).date().isoformat())
+    return out.to_csv(index=False, lineterminator="\n")
+
+
+def read_ledger(path: Path = LEDGER_FILE) -> pd.DataFrame:
+    return pd.read_csv(path, dtype=str, keep_default_na=False)
+
+
+def reconcile(sessions: pd.DatetimeIndex | None = None, ledger: pd.DataFrame | None = None) -> dict:
+    """Avstämning: sessionerna ska vara exakt alla vardagar 2006-2024 minus ledgerns datum (varje stängning förklarad av en rad), inga ledger-datum får vara helger eller sessioner,
+    och antalet verifierade rader redovisas. `ok` gäller konsistensen; `verified` gäller om en granskare har lagt en officiell källa på varje rad."""
+    sessions = load() if sessions is None else sessions
+    ledger = read_ledger() if ledger is None else ledger
+    dates = pd.DatetimeIndex(pd.to_datetime(ledger["date"]))
+    weekdays = pd.bdate_range(FIRST, LAST)
+    expected = weekdays.difference(dates)
+    problems = []
+    if dates.has_duplicates:
+        problems.append("dubbletter i ledgern")
+    if (dates.dayofweek >= 5).any():
+        problems.append("ledger-datum på helg")
+    if set(dates) & set(sessions):
+        problems.append("ledger-datum som är sessioner")
+    if not expected.equals(pd.DatetimeIndex(sessions)):
+        problems.append("sessionerna är inte vardagar minus ledgern")
+    verified = ledger["verified_source"].astype(str).str.strip().ne("") & ledger["verified_by"].astype(str).str.strip().ne("") & ledger["verified_date"].astype(str).str.strip().ne("")
+    return {"ok": not problems, "problems": problems, "ledger_rows": int(len(ledger)), "verified_rows": int(verified.sum()), "unverified_rows": int((~verified).sum()),
+            "fully_verified": bool(verified.all()), "sessions": int(len(sessions))}
+
+
+def verification_status() -> dict:
+    """Status för kalenderns verifiering mot officiell källa (används av tom.evaluate)."""
+    r = reconcile()
+    return {"fully_verified": r["fully_verified"] and r["ok"], "verified_rows": r["verified_rows"], "ledger_rows": r["ledger_rows"], "consistent": r["ok"]}
+
+
+if __name__ == "__main__":
+    import json
+    import sys
+    if "--write-ledger" in sys.argv:
+        if LEDGER_FILE.exists():
+            raise SystemExit("ledgern finns redan; ta bort den manuellt om den ska skrivas om (verifieringskolumnerna går annars förlorade)")
+        LEDGER_FILE.write_text(ledger_to_csv_text(closure_ledger()), encoding="utf-8", newline="\n")
+    print(json.dumps(reconcile(), ensure_ascii=False, indent=1))

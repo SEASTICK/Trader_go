@@ -16,6 +16,12 @@ def calendar(start="2005-01-03", end="2025-03-31") -> pd.DatetimeIndex:
     return pd.DatetimeIndex([d for d in pd.bdate_range(start, end) if d.date() not in closed])
 
 
+def evaluate(*args, **kwargs):
+    """Testerna slår av kravet på verifierad kalender (den riktiga är ännu inte verifierad); testet längst ner visar att standardbeteendet är OGILTIG."""
+    kwargs.setdefault("require_verified_calendar", False)
+    return tom.evaluate(*args, **kwargs)
+
+
 def prices(index, window_boost=0.0, shift=0, noise=0.01, drift=0.0004, seed=1) -> pd.DataFrame:
     """Syntetisk serie: slumpbrus plus en planterad extra avkastning `window_boost` på fönsterdagarna (T0..T3), förskjutna `shift` handelsdagar."""
     rng = np.random.default_rng(seed)
@@ -99,12 +105,12 @@ def test_placebo_tjugo_forskjutningar_gemensam_c_och_ratt_rang():
     shifted = prices(idx, window_boost=0.004, shift=3, noise=0.006)
     ms = tom.window_metrics(tom.clean_prices(shifted)[0], tom.PRIMARY, "A", 1.0)
     assert not ms["window_is_best_of_21"] and ms["placebo_mean_d"]["3"] == max(ms["placebo_mean_d"].values())     # effekt på +3 vinner placebo, inte fönstret
-    assert tom.evaluate(shifted)["criteria"]["window_best_of_21_placebo"] is False
+    assert evaluate(shifted)["criteria"]["window_best_of_21_placebo"] is False
 
 
 def test_manadsvis_D_t_graensen_och_alla_fem_kriterier():
     idx = calendar("2004-01-02", "2025-02-28")
-    out = tom.evaluate(prices(idx, window_boost=0.004, noise=0.006))
+    out = evaluate(prices(idx, window_boost=0.004, noise=0.006))
     assert out["valid"] and out["t_required"] == 2.87 and round(stats.t_krav(tom.ATTEMPTS), 2) == 2.87 and tom.ATTEMPTS == 24
     assert set(out["criteria"]) == {"t_at_least_required", "stressed_costs_positive", "sharpe_above_buy_and_hold", "window_best_of_21_placebo", "stable_in_both_halves"}
     assert all(out["criteria"].values()) and out["decision"] == "MORE_RESEARCH"
@@ -121,7 +127,7 @@ def test_manadsvis_D_t_graensen_och_alla_fem_kriterier():
 
 def test_brus_ger_reject_och_ett_kriterium_raeknar():
     idx = calendar("2004-01-02", "2025-02-28")
-    out = tom.evaluate(prices(idx, seed=7))
+    out = evaluate(prices(idx, seed=7))
     assert out["valid"] and out["decision"] == "REJECT" and not all(out["criteria"].values())
     assert tom.decide(True, {"a": True, "b": True}) == "MORE_RESEARCH" and tom.decide(True, {"a": True, "b": False}) == "REJECT"
     assert tom.decide(False, {"a": True}) == "OGILTIG" and tom.decide(False, None) == "OGILTIG"
@@ -130,7 +136,7 @@ def test_brus_ger_reject_och_ett_kriterium_raeknar():
 def test_stabilitet_kraver_positivt_i_bada_halvorna():
     idx = calendar("2004-01-02", "2025-02-28")
     df = prices(idx, window_boost=0.004, noise=0.006)
-    out = tom.evaluate(df)
+    out = evaluate(df)
     assert out["metrics"]["halves_mean_D_m"]["first"] > 0 and out["metrics"]["halves_mean_D_m"]["second"] > 0 and out["criteria"]["stable_in_both_halves"]
     neg = df.copy()                                           # från 2015 är fönsterdagarna negativa (varje fönsterdag sänker alla senare öppningar 1,2 %)
     for i0 in tom.month_end_positions(idx):
@@ -138,7 +144,7 @@ def test_stabilitet_kraver_positivt_i_bada_halvorna():
             for k in range(4):
                 if i0 + k + 1 < len(idx):
                     neg.iloc[i0 + k + 1:, 0] *= (1 - 0.012)
-    o2 = tom.evaluate(neg)
+    o2 = evaluate(neg)
     assert o2["metrics"]["halves_mean_D_m"]["second"] < 0 and o2["criteria"]["stable_in_both_halves"] is False and o2["decision"] == "REJECT"
 
 
@@ -148,7 +154,7 @@ def test_data_fran_2025_kapas_innan_beraekning_och_paverkar_inget():
     clean = good[good.index < "2025-01-01"].copy()
     poisoned = good.copy()
     poisoned.loc[poisoned.index >= "2025-01-01", ["open", "close"]] = [1e9, np.nan]                  # giftiga värden efter gränsen
-    a, b = tom.evaluate(clean), tom.evaluate(poisoned)
+    a, b = evaluate(clean), evaluate(poisoned)
     assert b["rows_cut_holdout"] == int((good.index >= "2025-01-01").sum()) > 0 and a["rows_cut_holdout"] == 0
     assert a["decision"] == b["decision"] and a["metrics"] == b["metrics"] and a["stressed"] == b["stressed"]       # identiska: kapade rader används inte
     df, n = tom.clean_prices(poisoned)
@@ -156,7 +162,7 @@ def test_data_fran_2025_kapas_innan_beraekning_och_paverkar_inget():
     with pytest.raises(tom.HoldoutError):
         tom.clean_prices(poisoned, strict=True)
     with pytest.raises(tom.HoldoutError):
-        tom.evaluate(poisoned, strict=True)
+        evaluate(poisoned, strict=True)
     tz = poisoned.copy()
     tz.index = tz.index.tz_localize("UTC")                                                           # tidszon påverkar inte gränsen
     assert tom.clean_prices(tz)[1] == n
@@ -166,19 +172,19 @@ def test_data_fran_2025_kapas_innan_beraekning_och_paverkar_inget():
 def test_datakrav_brott_ger_ogiltig_utan_kriterier():
     idx = calendar("2004-01-02", "2025-02-28")
     base = prices(idx, window_boost=0.004, noise=0.006)
-    assert tom.evaluate(base)["valid"]
+    assert evaluate(base)["valid"]
     gap_year = base[~((base.index >= "2010-03-01") & (base.index <= "2010-12-31"))]                  # nästan ett helt år saknas
-    out = tom.evaluate(gap_year)
+    out = evaluate(gap_year)
     assert out["valid"] is False and out["decision"] == "OGILTIG" and "criteria" not in out and "metrics" not in out
     assert any("2010" in r for r in out["invalid_reasons"])
     nan = base.copy()
     nan.iloc[2000, 0] = np.nan
-    assert tom.evaluate(nan)["decision"] == "OGILTIG" and any("saknade" in r for r in tom.evaluate(nan)["invalid_reasons"])
+    assert evaluate(nan)["decision"] == "OGILTIG" and any("saknade" in r for r in evaluate(nan)["invalid_reasons"])
     thin = base[~((base.index >= "2012-05-08") & (base.index <= "2012-05-31"))]                      # en månad med färre än 15 dagar, året ändå inom 249–253
-    out3 = tom.evaluate(thin)
+    out3 = evaluate(thin)
     assert out3["decision"] == "OGILTIG" and any("2012-05" in r for r in out3["invalid_reasons"])
     short = base[base.index >= "2008-01-01"]
-    assert tom.evaluate(short)["decision"] == "OGILTIG"                                              # 2006–2007 saknas
+    assert evaluate(short)["decision"] == "OGILTIG"                                              # 2006–2007 saknas
     dup = pd.concat([base, base.iloc[[5]]])
     with pytest.raises(tom.InvalidRun):
         tom.clean_prices(dup)
@@ -230,7 +236,7 @@ def test_saknad_vanlig_session_i_ar_med_252_ger_ogiltig_trots_att_arsgransen_pas
     gone = pd.Timestamp("2013-06-12")
     dropped = base[base.index != gone]
     assert int((dropped.index.year == 2013).sum()) == 251 and tom.YEAR_DAYS[0] <= 251 <= tom.YEAR_DAYS[1]          # inom 249–253: årsgränsen ser inget
-    out = tom.evaluate(dropped)
+    out = evaluate(dropped)
     assert out["valid"] is False and out["decision"] == "OGILTIG" and "criteria" not in out and "metrics" not in out and "stressed" not in out
     assert any("2013-06-12" in r and "saknas" in r for r in out["invalid_reasons"])
     assert not any("2013:" in r for r in out["invalid_reasons"])                                                     # det var just kalenderkontrollen som fångade det
@@ -239,13 +245,13 @@ def test_saknad_vanlig_session_i_ar_med_252_ger_ogiltig_trots_att_arsgransen_pas
 def test_saknad_manadsslutssession_flyttar_t0_men_ger_ogiltig():
     idx = calendar("2004-01-02", "2025-02-28")
     base = prices(idx, window_boost=0.004, noise=0.006)
-    assert tom.evaluate(base)["valid"]
+    assert evaluate(base)["valid"]
     gone = pd.Timestamp("2013-05-31")                                                                                # månadens sista handelsdag
     dropped = base[base.index != gone]
     df, _ = tom.clean_prices(dropped)
     t0 = [df.index[i] for i in tom.month_end_positions(df.index)]
     assert pd.Timestamp("2013-05-30") in t0 and gone not in t0                                                       # utan kalenderkontroll skulle T0 flyttats en dag
-    out = tom.evaluate(dropped)
+    out = evaluate(dropped)
     assert out["valid"] is False and out["decision"] == "OGILTIG" and "criteria" not in out and "metrics" not in out
     assert any("2013-05-31" in r for r in out["invalid_reasons"])
     assert tom.check_data(df, tom.PRIMARY, nyse_sessions.load()) == out["invalid_reasons"]
@@ -257,16 +263,68 @@ def test_extra_dag_som_inte_ar_session_ger_ogiltig():
     row = base.iloc[[0]].copy()
     row.index = pd.DatetimeIndex([pd.Timestamp("2013-07-04")])                                                       # helgdag
     extra = pd.concat([base, row]).sort_index()
-    out = tom.evaluate(extra)
+    out = evaluate(extra)
     assert out["valid"] is False and out["decision"] == "OGILTIG" and any("2013-07-04" in r and "inga NYSE-sessioner" in r for r in out["invalid_reasons"])
-    assert tom.evaluate(base)["valid"] is True                                                                       # och en komplett serie är fortfarande giltig
+    assert evaluate(base)["valid"] is True                                                                       # och en komplett serie är fortfarande giltig
 
 
 def test_kalenderkontrollen_ar_bara_for_perioden_och_ger_ingen_ny_ogiltighet_for_fullstandig_serie():
     idx = calendar("2004-01-02", "2025-02-28")
     base = prices(idx, window_boost=0.004, noise=0.006)
-    out = tom.evaluate(base)
+    out = evaluate(base)
     assert out["valid"] and out["decision"] == "MORE_RESEARCH"
     before = base[base.index < "2006-01-01"].iloc[10:]                                                              # luckor före perioden spelar ingen roll
     holey = pd.concat([before.iloc[::2], base[base.index >= "2006-01-01"]])
-    assert tom.evaluate(holey)["valid"]
+    assert evaluate(holey)["valid"]
+
+
+# ------------------------------------------------------------------ avstämning mot källor: ledger, verifieringsstatus och fail-closed
+def test_ledgern_forklarar_varje_stangning_och_stammer_av_mot_sessionerna():
+    r = nyse_sessions.reconcile()
+    assert r["ok"] and r["problems"] == [] and r["ledger_rows"] == 176 and r["sessions"] == 4781
+    assert len(pd.bdate_range(nyse_sessions.FIRST, nyse_sessions.LAST)) - r["ledger_rows"] == r["sessions"]          # vardagar minus ledger = sessioner
+    led = nyse_sessions.read_ledger()
+    assert list(led.columns) == nyse_sessions.LEDGER_COLUMNS and led["date"].is_unique
+    assert (led["name"].str.startswith("Extra stängning")).sum() == 4 and led["candidate_source"].str.len().min() > 0
+    assert nyse_sessions.SESSIONS_FILE.parent / "nyse-closures-ledger.csv" == nyse_sessions.LEDGER_FILE
+    assert nyse_sessions.ledger_to_csv_text(nyse_sessions.closure_ledger()).splitlines()[0] == ",".join(nyse_sessions.LEDGER_COLUMNS)
+
+
+def test_avstamningen_upptacker_ledger_som_inte_stammer():
+    led = nyse_sessions.read_ledger()
+    sessions = nyse_sessions.load()
+    assert nyse_sessions.reconcile(sessions, led.iloc[1:])["ok"] is False                                              # en stängning utan förklaring
+    extra = pd.concat([led, led.iloc[[0]].assign(date="2013-06-12")])                                                  # en session som påstås vara stängd
+    r = nyse_sessions.reconcile(sessions, extra)
+    assert not r["ok"] and any("sessioner" in p for p in r["problems"])
+    weekend = pd.concat([led, led.iloc[[0]].assign(date="2013-06-15")])
+    assert not nyse_sessions.reconcile(sessions, weekend)["ok"]
+    assert not nyse_sessions.reconcile(sessions, pd.concat([led, led.iloc[[0]]]))["ok"]
+
+
+def test_verifieringsstatus_kraver_kalla_person_och_datum_pa_varje_rad():
+    led = nyse_sessions.read_ledger()
+    sessions = nyse_sessions.load()
+    r0 = nyse_sessions.reconcile(sessions, led)
+    assert r0["verified_rows"] == 0 and r0["fully_verified"] is False                                                   # idag: ingen rad är verifierad mot officiell källa
+    full = led.assign(verified_source="testkälla", verified_by="granskare", verified_date="2026-11-13")
+    assert nyse_sessions.reconcile(sessions, full)["fully_verified"] is True
+    part = full.copy()
+    part.loc[0, "verified_date"] = ""
+    r = nyse_sessions.reconcile(sessions, part)
+    assert r["verified_rows"] == 175 and r["fully_verified"] is False
+
+
+def test_standardbeteendet_ar_ogiltig_tills_kalendern_ar_verifierad(monkeypatch):
+    idx = calendar("2004-01-02", "2025-02-28")
+    base = prices(idx, window_boost=0.004, noise=0.006)
+    out = tom.evaluate(base)                                                                                         # standard: require_verified_calendar=True
+    assert out["valid"] is False and out["decision"] == "OGILTIG" and "criteria" not in out and "metrics" not in out
+    assert any("inte verifierad mot officiell källa" in r for r in out["invalid_reasons"]) and out["calendar_verification"]["fully_verified"] is False
+    led = nyse_sessions.read_ledger().assign(verified_source="testkälla", verified_by="granskare", verified_date="2026-11-13")
+    monkeypatch.setattr(nyse_sessions, "read_ledger", lambda path=nyse_sessions.LEDGER_FILE: led)
+    ok = tom.evaluate(base)
+    assert ok["valid"] is True and ok["calendar_verification"]["fully_verified"] is True and ok["decision"] == "MORE_RESEARCH"
+    monkeypatch.setattr(nyse_sessions, "read_ledger", lambda path=nyse_sessions.LEDGER_FILE: led.iloc[1:])          # ledger som inte stämmer av ger OGILTIG även om raderna är verifierade
+    bad = tom.evaluate(base)
+    assert bad["valid"] is False and bad["calendar_verification"]["consistent"] is False
