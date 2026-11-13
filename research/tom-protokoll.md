@@ -15,12 +15,13 @@ se "Rättelse före körning"):
 
 * **(a) Standardiserade betalningar och likviditetsbehov vid månadsskiftet** (löner, utbetalningar, månadsvisa kassaflöden). Ogden (1990) prövar
   enligt SEASTICK:s läsning uttryckligen betalningscykeln som förklaring (andrahandsuppgift, se "Källverifiering").
-* **(b) Köptryck vid månadsslutet mätt med handelsvolym eller nettoflöden till aktiefonder.** McConnell och Xu (2008) skriver enligt SEASTICK:s läsning
-  av den publicerade abstracten att effekten **inte** förklaras av detta (andrahandsuppgift).
+* **(b) Köptryck vid månadsslutet mätt med handelsvolym eller nettoflöden till aktiefonder.** Enligt SEASTICK:s läsning av artikelns slutsats (s. 62) kunde McConnell och Xus tester
+  av volym och fondflöden **varken utesluta payday-förklaringen eller ge stöd för den**. Det är alltså inte belagt att (b) saknar effekt, och inte belagt att (b) förklarar mönstret
+  (SEASTICK:s återgivning, ej läst av Claude).
 
 Registerraden för H-0024 skrevs med formuleringen att pengaflöden "skapar köptryck". Den formuleringen gäller inte som hypotes eller belägg. Raden är
 append-only och ändras inte; en rättelserad läggs till. Inget beslutskriterium nedan beror på vilken förklaring som stämmer, och inget i testet kan skilja
-(a) från (b): ett positivt utfall säger inget om mekanismen.
+(a) från (b): ett positivt utfall säger inget om mekanismen. Jag påstår ingenting om vilken som stämmer.
 
 Mekanismen skiljer sig från allt som testats tidigare: ingen kryptomarknad, ingen pris- eller fundingsignal, ingen rankning mellan tillgångar och ingen
 trend. Signalen är ren **kalender** (den kräver inget prisdata för att veta när man ska äga).
@@ -49,14 +50,15 @@ abstracten i PR #132 (markerat "andrahandsuppgift"). Ingen av källorna har vali
 **Fönster- och urvalskälla**
 
 * McConnell och Xu (2008), *Equity returns at the turn of the month*, Financial Analysts Journal 64(2): fönstret **sista handelsdagen i månaden till och med
-  tredje handelsdagen i nästa månad** (fönstrets definition enligt min kännedom, ej verifierad i original). Urvalet anges i den publicerade abstracten som
-  **1926–2005** (andrahandsuppgift från SEASTICK), vilket stödjer att 2006 ligger efter deras urval. Abstracten säger enligt SEASTICK också att effekten inte förklaras av månadssluts-köptryck
-  mätt med handelsvolym eller nettoflöden till aktiefonder. Det är därför ingen källa för mekanism (b).
+  tredje handelsdagen i nästa månad**. Fönstrets definition (Table 1-noten, s. 51) och urvalet **1926–2005** (abstract, s. 49) är citerade av SEASTICK i PR #132 (se "Källverifiering"), vilket
+  stödjer att 2006 ligger efter deras urval. Artikeln är **ingen källa som visar att mekanism (a) eller (b) gäller**: enligt SEASTICK:s återgivning av slutsatsen på s. 62 gav volym- och fondflödestesterna
+  varken stöd för eller möjlighet att utesluta payday-förklaringen.
 
 **Prövar betalningscykeln (mekanism a)**
 
-* Ogden (1990), *Turn-of-month evaluations of liquid profits and stock returns* (titeln ofullständigt återgiven), Journal of Finance 45(4): enligt SEASTICK en uttrycklig prövning av
-  standardiserade betalningar som förklaring (andrahandsuppgift, ej verifierad i original).
+* Ogden (1990), *Turn-of-month evaluations of liquid profits and stock returns* (titeln ofullständigt återgiven), Journal of Finance 45(4): enligt SEASTICK:s citat ur förlagets abstract en uttrycklig
+  prövning av hypotesen att standardiseringen av betalningar vid månadsskiftet förklarar mönstret, med urvalet 1969–1986 (s. 1259–1272). Ogdens urval ligger före 2006 och
+  säger inget om perioden 2006–2024.
 
 **Bakgrund, inte belägg** (tillskrivs inget specifikt resultat i detta protokoll; inget kriterium eller val vilar på dem):
 
@@ -65,24 +67,25 @@ abstracten i PR #132 (markerat "andrahandsuppgift"). Ingen av källorna har vali
 * Etula, Rinne, Suominen och Vaittinen (2020), *Dash for cash: month-end liquidity needs and the predictability of stock returns*, Review of Financial Studies (volym och sidor ej verifierade).
 
 Vad som inte är känt: om effekten finns kvar i USA efter 2005, om den överlever kostnader, och vilken förklaring som stämmer. Det finns ett stort kritiskt fält om
-säsongsmönster (datasnokning, kalenderanomalier som försvinner efter publicering). **Huvudperioden** 2006–2024 är vald för att ligga efter urvalet 1926–2005 enligt
-andrahandsuppgiften ovan.
+säsongsmönster (datasnokning, kalenderanomalier som försvinner efter publicering). **Huvudperioden** 2006–2024 är vald för att ligga efter McConnell–Xus urval 1926–2005 (citerat av SEASTICK) och Ogdens urval 1969–1986.
 
 ## Källverifiering (obligatorisk före körning)
 
-**Status 2026-11-13: ej verifierad i original.** Nätverksvärdarna `papers.ssrn.com` och `onlinelibrary.wiley.com` har tillåtits i sessionens miljö efter att
-SEASTICK länkat dem i PR #132, men båda svarar med Cloudflares robotkontroll ("Just a moment…", HTTP 403) på automatiska anrop. Den kringgås inte, och jag
-skriver inga citat ur minnet. SEASTICK har läst abstracten och lämnat två uppgifter som står i tabellen som **andrahandsuppgift**, inte som citat.
+**Status 2026-11-13: ifylld med citat som SEASTICK har läst i originalen och angivit i PR #132; inte läst av Claude.** Jag har inte kunnat öppna källorna själv:
+`papers.ssrn.com` och `onlinelibrary.wiley.com` (tillåtna i sessionens miljö) svarar med Cloudflares robotkontroll ("Just a moment…", HTTP 403) på automatiska anrop, och
+`business.purdue.edu` (PDF:en med själva artikeln, också tillåten) går att nå men serverns certifikatkedja kan inte valideras ("unable to get local issuer certificate"). Ingen robotkontroll
+löses och ingen TLS-kontroll stängs av. Citaten nedan är därför **SEASTICK:s ordagranna återgivning**, kopierad hit utan ändring; sid-/avsnittshänvisningarna är SEASTICK:s egna. Codex
+(eller någon som kan öppna originalen) ska ha kontrollerat dem mot källorna innan körning. Tills dess och tills **"Granskad mot original"** nedan är ifylld är H-0024 registrerad men
+**får inte köras**. Visar originalen att fönstret, perioden eller riktningen avviker från det som står här, ändras inte detta protokoll i efterhand: det blir ett nytt id.
 
-Före körning ska en ny commit ersätta "att fylla i" med **exakta, korta citat och sid-/avsnittshänvisningar** ur originalen, av någon som kan läsa dem (eller inklistrade av
-SEASTICK i PR #132 med angiven källa), och Codex ska ha granskat dem. Tills dess är H-0024 registrerad men **får inte köras**. Om originalen visar att fönstret, perioden eller riktningen avviker
-från det som står här, ändras inte detta protokoll i efterhand: det blir ett nytt id.
-
-| Källa | Vad som ska styrkas | Uppgift nu (andrahandsuppgift från SEASTICK, PR #132, 2026-11-13) | Exakt citat och hänvisning |
+| Källa | Vad som styrks | Citat och hänvisning (återgivet av SEASTICK, PR #132, 2026-11-13) | Granskad mot original |
 |---|---|---|---|
-| McConnell och Xu (2008), [SSRN 1135217](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1135217) | (1) Fönstrets exakta definition. (2) Urvalsperiod. (3) Vad effekten inte förklaras av | Urval 1926–2005. Effekten förklaras inte av månadssluts-köptryck mätt med handelsvolym eller nettoflöden till aktiefonder | (att fylla i) |
-| Ogden (1990), [J. Finance 45(4), DOI 10.1111/j.1540-6261.1990.tb02435.x](https://onlinelibrary.wiley.com/doi/10.1111/j.1540-6261.1990.tb02435.x) | Att artikeln prövar betalningscykeln som förklaring | En prövning av standardiserade betalningar som förklaring | (att fylla i) |
-| Ariel, Lakonishok–Smidt, Etula m.fl. | Inget: bakgrund | Tillskrivs inget specifikt resultat | – |
+| McConnell och Xu (2008), *Financial Analysts Journal* 64(2), s. 49–64. [Artikel-PDF](https://business.purdue.edu/faculty/mcconnell/publications/Equity-Returns-at-the-Turn-of-the-Month.pdf), [SSRN 1135217](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=1135217) | Urvalsperiod | Abstract, s. 49: urvalet anges som “1926–2005 period”. | (att granska) |
+| samma | Fönstrets definition | Table 1-noten, s. 51: intervallet definieras med frasen “last trading day of the month … third trading day of the following month”. | (att granska) |
+| samma | Vad volym- och fondflödestesterna visar | Slutsatsen, s. 62 (återgiven i sak, inget ordagrant citat lämnat): testerna kunde varken utesluta payday-förklaringen eller ge stöd för den. | (att granska; ordagrant citat saknas) |
+| Ogden (1990), *Journal of Finance* 45(4), s. 1259–1272. [Wiley, förlagets abstract](https://onlinelibrary.wiley.com/doi/10.1111/j.1540-6261.1990.tb02435.x) | Att artikeln prövar betalningscykeln | Förlagets abstract: artikeln “presents and tests a hypothesis that the standardization of payments in the United States at the turn of each calendar month” (citatet är återgivet som det lämnades, meningen fortsätter i originalet). | (att granska) |
+| samma | Urvalsperiod | Samma abstract: urvalet är 1969–1986 (återgivet i sak, inget ordagrant citat lämnat). | (att granska) |
+| Ariel (1987), Lakonishok–Smidt (1988), Etula m.fl. (2020) | Inget: bakgrund | Tillskrivs inget specifikt resultat | – |
 
 ## Regler (låsta)
 
@@ -158,14 +161,19 @@ fönsteravkastning; fönstrets andel av köp-och-behålls totala log-avkastning.
 7. **Yahoo-data är inofficiella** och kan ändras. Samma källa gav `OGILTIG` för H-0016 på grund av avnoterade bolag; SPY har inget sådant problem men
    källans justeringar för utdelning kan skilja sig från en officiell totalavkastningsserie.
 
-8. **Förklaringen är obekräftad och delvis motstridig.** Enligt andrahandsuppgiften förklaras McConnell–Xus mönster inte av månadssluts-köptryck (mekanism b), medan betalningscykeln (mekanism a)
-   prövas av Ogden. H-0024 kan inte skilja dem åt; ett positivt utfall är inget belägg för någon av dem.
+8. **Förklaringen är obekräftad.** Betalningscykeln (mekanism a) prövas av Ogden på 1969–1986; enligt SEASTICK:s återgivning kunde McConnell–Xus volym- och fondflödestester (mekanism b)
+   varken utesluta payday-förklaringen eller ge stöd för den. H-0024 kan inte skilja dem åt; ett positivt utfall är inget belägg för någon av dem.
 
 ## Rättelse före körning (2026-11-13, efter granskning i PR #132)
 
 Ändrat: mekanismformuleringen i "Idé" och källbeskrivningen i "Forskningsgrund" och "Källverifiering", så att prövning av mönster skiljs från förklaringar och så att källor utan verifierat
 resultat markeras som bakgrund. **Oförändrat:** instrument, fönster, utförande, kostnader, perioder, jämförelser, kriterier, N=24, t-krav och datakrav. Registerraden för H-0024 (som
 säger "eftersom pengaflöden … skapar köptryck") ändras inte; en rättelserad med samma id läggs till sist. Det är inget nytt försök.
+
+**Andra rättelsen (2026-11-13, efter SEASTICK:s kontroll av primärkällorna):** (1) Formuleringen att McConnell–Xu "inte" finner att volym och fondflöden förklarar mönstret var för kategorisk och
+står i konflikt med artikelns slutsats (s. 62, enligt SEASTICK): testerna kunde varken utesluta payday-förklaringen eller ge stöd för den. Den är ersatt i "Idé", "Forskningsgrund" och "Källverifiering".
+(2) Källverifieringstabellen är ifylld med SEASTICK:s citat och hänvisningar (McConnell–Xu s. 49, 51 och 62, Ogden s. 1259–1272 med urvalet 1969–1986); de är inte lästa av Claude och kräver granskning mot original.
+**Oförändrat:** alla låsta regler, kriterier, N=24, t-krav och datakrav. En andra rättelserad med samma id läggs till i registret. Det är inget nytt försök.
 
 ## Ren period?
 
