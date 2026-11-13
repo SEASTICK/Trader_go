@@ -102,7 +102,7 @@ def final(ev: dict, sealed: dict, *, paper_gate: bool = True, universe_gap=()) -
         fails = list(fails) + [f"valideringsårets Sharpe {vs:.2f} < 0,5 (PROMISING kräver minst 0,5)"]
     if verdict == "PROMISING" and universe_gap:             # universumsgranskningen: en känd lucka i det historiska universumet blockerar bekräftande påståenden
         verdict = "MORE_RESEARCH"
-        fails = list(fails) + [f"historiska universumet är inte komplett: {len(universe_gap)} perpar i arkivlistan saknas i panelen ({', '.join(list(universe_gap)[:5])}...)"]
+        fails = list(fails) + [f"historiska universumet är inte komplett: {len(universe_gap)} luckor mot arkivlistan (hela symboler eller symbolmånader 2020-2024) ({', '.join(list(universe_gap)[:5])}...)"]
     fin = sealed.get("final")
     notes = list(fails)
     if verdict == "PROMISING" and paper_gate and fin:

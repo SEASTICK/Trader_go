@@ -94,14 +94,56 @@ def test_finansieringsregeln_kräver_känd_finansiering_före_beslutet():
     assert universe.explain_at(p, IDX[215])["BUSDT"] == "finansiering okänd"
 
 
-def test_universe_gap_listar_perpar_i_arkivlistan_som_saknas_och_ignorerar_leverans_och_senare_noteringar():
-    p = mk({"AUSDT": (0, 399, [])})
-    listing = {"symbols": {"AUSDT": {"klines_1d": ["2021-01", "2021-02"], "funding": []}, "ZUSDT": {"klines_1d": ["2021-05"], "funding": []},
-                           "AUSDT_210625": {"klines_1d": ["2021-03"], "funding": []}, "NEWUSDT": {"klines_1d": ["2023-04"], "funding": []}}}
-    assert universe.universe_gap(p, listing, until="2022-12") == ["ZUSDT"]
-    assert universe.universe_gap(p, listing, until="2023-12") == ["NEWUSDT", "ZUSDT"]
-    p2 = mk({"AUSDT": (0, 399, []), "ZUSDT": (0, 399, [])})
-    assert universe.universe_gap(p2, listing, until="2022-12") == []
+def _listing(**syms):
+    return {"symbols": {k: {"klines_1d": v, "funding": []} for k, v in syms.items()}}
+
+
+def test_universe_gap_hela_symboler_och_saknade_månader_över_alla_år():
+    p = mk({"AUSDT": (0, 399, [])})                       # 2021-01-01 .. 2022-02-04
+    L = _listing(AUSDT=["2021-01", "2021-02"], ZUSDT=["2021-05"], **{"AUSDT_210625": ["2021-03"]}, NEWUSDT=["2023-04"])
+    assert universe.universe_gap(p, L) == ["NEWUSDT", "ZUSDT"]                  # 2023-symbol räknas nu (hela 2020-2024), leverans ignoreras
+    assert universe.universe_gap(p, L, until="2022-12") == ["ZUSDT"]
+    p2 = mk({"AUSDT": (0, 399, []), "ZUSDT": (0, 399, []), "NEWUSDT": (0, 399, [])})
+    assert universe.universe_gap(p2, L) == ["NEWUSDT@2023-04"]                   # symbolen finns, men panelen (slutar 2022) har ingen stapel i den listade månaden 2023-04
+
+
+def test_universe_gap_saknad_månad_för_symbol_som_annars_finns():
+    p = mk({"AUSDT": (0, 399, list(range(31, 59)))})       # februari 2021 helt utan staplar
+    L = _listing(AUSDT=["2021-01", "2021-02", "2021-03"])
+    assert universe.universe_gap(p, L) == ["AUSDT@2021-02"]
+    p3 = mk({"AUSDT": (0, 399, [40])})                     # ett enstaka dagshål är inte en saknad månadsfil
+    assert universe.universe_gap(p3, L) == []
+
+
+def test_cacheträff_hoppar_inte_över_täckningskontrollen_och_gammal_cache_blir_inte_godkänd(tmp_path):
+    import json
+    import pickle
+    from traderlab.agentlab import data
+    full = mk({"AUSDT": (0, 399, []), "BUSDT": (0, 399, [])})
+    cache = tmp_path / "panel.pkl"
+    repo = tmp_path / "repo"
+    (repo / "research/agentlab/universe").mkdir(parents=True)
+    (repo / "research/agentlab/universe/um-listing.json").write_text(json.dumps({"symbols": {"AUSDT": {"klines_1d": ["2021-01"], "funding": []}, "BUSDT": {"klines_1d": ["2021-01"], "funding": []},
+                                                                                    "CUSDT": {"klines_1d": ["2023-06"], "funding": []}}}))
+    cache.write_bytes(pickle.dumps(full))
+    cached = data.load_um_panel(tmp_path, cache=cache, listing=repo)               # cache innehåller inte CUSDT (listad först 2023)
+    assert cached.meta["universe_gap"] == ["CUSDT"] and cached.meta["universe_gap_checked"] is True
+    old = mk({"AUSDT": (0, 399, [])})                                               # gammal cache utan BUSDT
+    cache.write_bytes(pickle.dumps(old))
+    assert data.load_um_panel(tmp_path, cache=cache, listing=repo).meta["universe_gap"] == ["BUSDT", "CUSDT"]
+    nolist = data.load_um_panel(tmp_path, cache=cache)                              # utan arkivlista: okontrollerat
+    assert nolist.meta["universe_gap_checked"] is False and nolist.meta["universe_gap"] is None
+
+
+def test_orchestratorn_blockerar_okontrollerad_och_ofullständig_täckning_men_inte_syntetisk():
+    from traderlab.agentlab.orchestrator import Orchestrator
+    o = Orchestrator.__new__(Orchestrator)
+    o.panel = mk({"AUSDT": (0, 399, [])})
+    assert o._universe_gap() == []                                                  # syntetisk panel: ingen grind
+    o.panel.meta.update({"universe_gap": ["ZUSDT", "AUSDT@2021-02"], "universe_gap_checked": True})
+    assert o._universe_gap() == ["ZUSDT", "AUSDT@2021-02"]
+    o.panel.meta.update({"universe_gap": None, "universe_gap_checked": False})
+    assert len(o._universe_gap()) == 1 and "okontrollerad" in o._universe_gap()[0]
 
 
 def test_domaren_nekar_promising_när_universumet_är_ofullständigt():

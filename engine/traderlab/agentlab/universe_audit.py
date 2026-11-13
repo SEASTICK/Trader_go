@@ -265,5 +265,5 @@ def render_md(rep: dict) -> str:
         r = ex["per_year"][str(y)]
         L.append(f"| {y} | {r['gross_exposure']:.0f} | {pct(r['outside_share'])} | {pct(r['non_perp_share'])} | {r['positions']} | {pct(r['positions_outside_share'])} |")
     L += ["", f"## 6. Kvarstående luckor som blockerar bekräftande påståenden", "",
-          f"Perpar i arkivlistan (USDT, listade senast 2022-12) som saknas i panelen: **{len(rep['universe_gap'] or [])}**." + (" " + ", ".join(rep["universe_gap"]) if rep["universe_gap"] else ""), ""]
+          f"Luckor mot arkivlistan (USDT-perpar och månader 2020-2024) i panelen: **{len(rep["universe_gap"] or [])}**." + (" " + ", ".join(rep["universe_gap"]) if rep["universe_gap"] else ""), ""]
     return "\n".join(L) + "\n"

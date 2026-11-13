@@ -86,7 +86,20 @@ def explain_at(panel, t, min_age: int = 90) -> dict[str, str]:
     return out
 
 
-def universe_gap(panel, listing: dict, *, until: str = "2022-12") -> list[str]:
-    """Perpar (i omfånget) som arkivlistan visar med dagsstaplar senast `until` men som saknas i panelen. Tom lista = panelen innehåller allt arkivet kan visa."""
-    have = set(panel.close.columns)
-    return sorted(s for s, v in listing["symbols"].items() if in_scope(s) and v["klines_1d"] and v["klines_1d"][0] <= until and s not in have)
+def universe_gap(panel, listing: dict, *, until: str = "2024-12") -> list[str]:
+    """Täckningsgrind: arkivlistan (alla perpar i omfånget, alla månader till och med `until`, standard hela 2020-2024) mot det panelen faktiskt innehåller.
+    Returnerar `SYMBOL` för en perp som saknas helt och `SYMBOL@YYYY-MM` för en listad månad utan en enda stapel i panelen. Tom lista = inga kända luckor.
+    Körs mot panelens innehåll (inte mot en cachad flagga), så en gammal cache, en borttagen symbol eller en saknad månadsfil kan inte ge godkänt täckningsläge."""
+    out = []
+    cols = set(panel.close.columns)
+    months = panel.close.index.strftime("%Y-%m")
+    for sym, v in sorted(listing["symbols"].items()):
+        listed = [m for m in v["klines_1d"] if m <= until]
+        if not in_scope(sym) or not listed:
+            continue
+        if sym not in cols:
+            out.append(sym)
+            continue
+        have = set(months[panel.close[sym].notna().to_numpy()])
+        out += [f"{sym}@{m}" for m in listed if m not in have]
+    return out

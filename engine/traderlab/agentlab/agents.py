@@ -331,7 +331,7 @@ def data_task(pl: dict) -> dict:
         avail[name] = {"status": s["status"], "description": s["description"], "needs": s["needs"]}
     info = {"symbols": len(pan.symbols), "first": str(pan.close.index[0].date()), "last": str(pan.close.index[-1].date()),
             "funding_symbols": int((pan.funding.abs().sum() > 0).sum()), "caveat": pan.meta.get("caveat", ""),
-            "scope": "USDT-perpar (punkt-i-tid-universum, universe.py)" if pan.scope_rule else "gamla universumet (R001-R004)", "universe_gap": len(pan.meta.get("universe_gap") or []), "universe_gap_symbols": list(pan.meta.get("universe_gap") or [])[:20]}
+            "scope": "USDT-perpar (punkt-i-tid-universum, universe.py)" if pan.scope_rule else "gamla universumet (R001-R004)", "universe_gap": len(pan.meta.get("universe_gap") or []), "universe_gap_checked": pan.meta.get("universe_gap_checked"), "universe_gap_symbols": list(pan.meta.get("universe_gap") or [])[:20]}
     return {"agent": "data", "availability": avail, "panel": info, "objections": [], "spawn": [
         {"name": "FundingSpecialist", "goal": "Mät om finansieringsränta förutsäger framtida avkastning (informationskoefficient)", "fn": "funding_specialist", "payload": {}},
         {"name": "OrderbookSpecialist", "goal": "Kontrollera om orderboksdata finns och föreslå hur den skaffas", "fn": "orderbook_specialist", "payload": {}},

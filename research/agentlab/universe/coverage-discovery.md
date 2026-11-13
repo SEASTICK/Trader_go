@@ -70,5 +70,5 @@ Skäl (andel av total bruttoexponering): inte USDT-perp 0.6 %, finansiering okä
 
 ## 6. Kvarstående luckor som blockerar bekräftande påståenden
 
-Perpar i arkivlistan (USDT, listade senast 2022-12) som saknas i panelen: **0**.
+Luckor mot arkivlistan (USDT-perpar och månader 2020-2024) i panelen: **0**.
 
