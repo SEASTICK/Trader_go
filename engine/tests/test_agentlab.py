@@ -440,3 +440,28 @@ def test_ogiltig_täckning_ger_ogiltig_i_registret_aldrig_reject_eller_slutsteg(
     assert not any(r["stage"] == "final" for r in rows) and orch.bb.s["rejected"] == []
     assert s["promising"] == [] and "OGILTIG" in s["verdicts"]
     monkeypatch.setattr(agents.bt, "run", real)
+
+
+def test_universumets_finansieringsregel_använder_bara_det_som_finns_på_beslutsdagen():
+    """Dag d:s finansieringshink innehåller utbetalningen vid d+1 00:00, som sker först efter beslutet vid stängningen av d. Ändras bara den,
+    ska universum och vikter för alla dagar till och med d vara oförändrade (inget framtidsblick i instrumenturvalet)."""
+    p = small(momentum=1.0)
+    p.funding_known.iloc[:, :] = True
+    d = 600
+    base_uni = p.universe(15).copy()
+    base_w = BUILDERS["xs_mom"]({"k": 30, "q": 0.2, "rebal": 7, "uni": 15, "vt": 0, "skip": 0}, p)
+    q = small(momentum=1.0)
+    q.funding_known.iloc[:, :] = True
+    q.funding_known.iloc[d - 2:d + 1, :] = False            # hinkarna d-2, d-1 och d saknas; hinken för d (utbetalningen vid d+1 00:00) är den enda som inte finns vid beslutet
+    uni = q.universe(15)
+    w = BUILDERS["xs_mom"]({"k": 30, "q": 0.2, "rebal": 7, "uni": 15, "vt": 0, "skip": 0}, q)
+    assert (uni.iloc[:d] == base_uni.iloc[:d]).all().all()                                   # alla dagar före d oförändrade
+    assert (uni.iloc[d] == base_uni.iloc[d]).all()                                           # dag d använder inte utbetalningen vid d+1 00:00
+    assert np.allclose(w.iloc[:d + 1].fillna(0).values, base_w.iloc[:d + 1].fillna(0).values)  # och inte heller vikterna till och med d
+    # ... men saknade hinkar påverkar FÖLJANDE dagar (regeln är inte död): instrument 3 saknar hinkarna d..d+3 och faller ur universum när de fyra senaste av sju är okända
+    q3 = small(momentum=1.0)
+    q3.funding_known.iloc[:, :] = True
+    q3.funding_known.iloc[d:d + 4, 3] = False
+    u3, ub = q3.universe(15), small(momentum=1.0).universe(15)
+    assert (u3.iloc[:d + 1] == ub.iloc[:d + 1]).all().all()                                  # till och med d oförändrat
+    assert not u3.iloc[d + 4, 3]                                                             # senare är instrumentet uteslutet

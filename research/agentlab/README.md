@@ -55,13 +55,13 @@ De fyra som överlevde discovery hade 0,7–1,3 % okänd exponering (finansierin
 
 **Ett annat fel som auditen hittade:** USDⓈ-M-katalogen innehåller **leveranskontrakt** (`BTCUSDT_220930`, `_230331`, `_230630`, `_240628`, `_240927`) som R001–R004 behandlade som evighetsterminer (de går ut och har ingen finansiering). 99 av 148 kandidater hade exponering mot dem (i snitt 0,5 %, högst 2,2 % av exponeringen).
 
-**Motorregel v2 (bestämd i förväg, gäller från och med nu):**
-1. **Universum:** ett instrument får bara handlas dag t om finansieringsutbetalningar finns för minst 5 av de senaste 7 dagarna (`Panel.universe`, `funding_rule`). Det utesluter kontrakt utan finansieringsarkiv och leveranskontrakt, och inget fylls längre med 0.
+**Motorregel v2 (vald efter att de första utfallen och auditen setts, inte förregistrerad för R001–R004; gäller från och med nu):**
+1. **Universum:** ett instrument får bara handlas dag t om finansieringsutbetalningar fanns för minst 5 av de 7 dagarna *före* t (`Panel.universe`, `funding_rule`). Dag t:s hink innehåller utbetalningen vid t+1 00:00, som sker först efter beslutet, så den används inte (shift 1; gränstest ändrar bara den hinken och visar att universum och vikter till och med t är oförändrade). Det utesluter kontrakt utan finansieringsarkiv och leveranskontrakt, och inget fylls längre med 0.
 2. **Körbarhet:** inget pris vid fyllningen (öppning t+1) betyder att positionen inte kan öppnas eller hållas: vikten blir noll och exponeringen mäts (`blocked`).
 3. **Utträdespris:** saknas öppning t+2 men ett senare pris finns inom 5 dagar värderas positionen mot det (en datalucka; mäts som `gap_filled`). Finns inget senare pris (avnotering, utgången leverans) räknas det som en förlust på positionens vikt, oavsett long eller short (`MISSING_PRICE_LOSS`), aldrig noll och aldrig en vinst.
 4. **Finansiering:** okänd finansiering under en hållen position debiteras 0,3 % per dag och exponeringsenhet, alltid till nackdel (`FUNDING_PENALTY`).
 5. **Ogiltigt:** om mer än **1 %** av bruttoexponeringen vilar på okänd data (blockerad, okänt utträde eller okänd finansiering) är utvärderingen **OGILTIG** (`CoverageInvalid`): kandidaten får domen OGILTIG, aldrig REJECT, aldrig en poäng och aldrig ett slutsteg. `penalize=False` återger den gamla motorn och används bara av auditen.
-Beloppen (1 %, 0,3 %, −100 %) är konservativa antaganden som är satta av mig innan nya körningar och ändras inte efter utfall. De är en övre gräns, inte en uppskattning av det verkliga utfallet.
+**Valda efter utfall:** 1 %-gränsen, 0,3 %-straffet, −100 %-förlusten, 5-av-7-regeln och 5-dagarsgränsen för luckfyllnad valdes efter att de första utfallen och auditen setts. De är inte förregistrerade för R001–R004 och kan inte retroaktivt bekräfta eller dömma om något gammalt resultat. De är konservativa antaganden (en övre gräns, inte en uppskattning av det verkliga utfallet) och ändras inte efter nya utfall. **Auditen ovan gäller den gamla motorn:** vikterna är återskapade med den gamla universumregeln (`funding_rule=False`) och jämförs med `penalize=False` (tyst noll); bara kolumnen "med motor v2" tillämpar luckfyllnad, blockering och avgifter på de gamla vikterna, och universumregeln ingår inte där.
 
 ## Poängsystem
 

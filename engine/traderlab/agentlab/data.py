@@ -66,7 +66,7 @@ class Panel:
 
     def universe(self, top_n: int = 30, min_age: int = 90) -> pd.DataFrame:
         """Handlingsbara dag t: minst `min_age` dagar gammal och bland de `top_n` största efter 30 dagars median omsättning (data till och med t).
-        **Datatäckningsregel v2 (bestämd i förväg):** ett instrument får bara handlas dag t om finansieringsutbetalningar finns för minst 5 av de senaste 7 dagarna.
+        **Datatäckningsregel v2 (vald efter de första utfallen och auditen, inte förregistrerad för R001-R004):** ett instrument får bara handlas dag t om finansieringsutbetalningar fanns för minst 5 av de 7 dagarna före dag t (bara det som är känt vid beslutet).
         Utan känd finansiering kan en position inte värderas, så instrumentet är inte handlingsbart (inget ifyllt med 0)."""
         def make():
             age = self.close.notna().cumsum()
@@ -74,7 +74,8 @@ class Panel:
             med = med.where(age >= min_age)
             ok = self.close.notna()
             if self.funding_rule:
-                known = self.funding_known.rolling(7, min_periods=1).sum() >= 5
+                # bara observationer som finns på beslutsdagen: dag d:s hink innehåller utbetalningen vid d+1 00:00, som sker först efter beslutet (shift 1)
+                known = self.funding_known.shift(1, fill_value=False).rolling(7, min_periods=1).sum() >= 5
                 ok = ok & known
                 med = med.where(known)
             rank = med.where(ok).rank(axis=1, ascending=False)
