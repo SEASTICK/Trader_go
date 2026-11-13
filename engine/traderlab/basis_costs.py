@@ -174,6 +174,12 @@ LEDGER_MIN_SIZE = 10_000.0     # minsta position per mynt (ett kontrakt högst 0
 LEDGER_LIQUIDITY_FRACTION = 0.02
 
 
+def position_size(v: float, *, slots: int, valid: bool, cap: float, min_size: float) -> float:
+    """Kassabokens storleksregel (en enda definition): `A = min(V / slots, cap)` om platsen är valbar, annars 0; under `min_size` blir platsen platt."""
+    size = min(v / slots, cap) if valid else 0.0
+    return size if size >= min_size else 0.0
+
+
 def ledger_run(*, cycles: list[list[dict]], start_capital: float = LEDGER_START_USD, slots: int = LEDGER_SLOTS,
                min_size: float = LEDGER_MIN_SIZE, spot_fee: float = SPOT_FEE, fut_taker: float = LOCKED_FUT_TAKER,
                slippage: float = LOCKED_SLIPPAGE) -> dict:
@@ -196,9 +202,7 @@ def ledger_run(*, cycles: list[list[dict]], start_capital: float = LEDGER_START_
             raise ValueError(f"{len(slots_in_cycle)} platser, väntade {slots}")
         v_start, positions, invested, proceeds = value, [], 0.0, 0.0
         for slot in slots_in_cycle:
-            size = min(v_start / slots, slot["cap"]) if slot["valid"] else 0.0
-            if size < min_size:
-                size = 0.0
+            size = position_size(v_start, slots=slots, valid=slot["valid"], cap=slot["cap"], min_size=min_size)
             if size == 0.0:
                 positions.append({"size": 0.0, "usd_end": 0.0, "ret": 0.0, "contracts": 0})
                 continue
