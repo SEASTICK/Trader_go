@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-11-09T17:16:14+00:00",
+ "updated_at": "2026-11-14T13:45:54+00:00",
  "source": "SEC EDGAR 13F-HR",
  "rules": "research/13f-protokoll.md",
  "managers": [
@@ -74,68 +74,68 @@
   {
    "manager": "Baupost Group",
    "cik": 1061768,
-   "filed": "2026-08-13",
-   "period": "2026-06-30",
+   "filed": "2026-11-13",
+   "period": "2026-09-30",
    "top10": [
     {
      "ticker": "AMZN",
      "name": "AMAZON COM INC",
      "cusip": "023135106",
-     "weight": 0.22
+     "weight": 0.2401
     },
     {
      "ticker": "ELV",
      "name": "ELEVANCE HEALTH INC FORMERLY",
      "cusip": "036752103",
-     "weight": 0.1216
+     "weight": 0.1276
     },
     {
      "ticker": "QSR",
      "name": "RESTAURANT BRANDS INTL INC",
      "cusip": "76131D103",
-     "weight": 0.1207
-    },
-    {
-     "ticker": "GOOG",
-     "name": "ALPHABET INC",
-     "cusip": "02079K107",
-     "weight": 0.1195
-    },
-    {
-     "ticker": "FERG",
-     "name": "FERGUSON ENTERPRISES INC",
-     "cusip": "31488V107",
-     "weight": 0.0849
+     "weight": 0.1236
     },
     {
      "ticker": "GPC",
      "name": "GENUINE PARTS CO",
      "cusip": "372460105",
-     "weight": 0.0819
+     "weight": 0.1003
     },
     {
-     "ticker": "UNP",
-     "name": "UNION PAC CORP",
-     "cusip": "907818108",
-     "weight": 0.0795
+     "ticker": "FERG",
+     "name": "FERGUSON ENTERPRISES INC",
+     "cusip": "31488V107",
+     "weight": 0.09
     },
     {
-     "ticker": "V",
-     "name": "VISA INC",
-     "cusip": "92826C839",
-     "weight": 0.0593
+     "ticker": "GOOG",
+     "name": "ALPHABET INC",
+     "cusip": "02079K107",
+     "weight": 0.0833
     },
     {
      "ticker": "WCC",
      "name": "WESCO INTL INC",
      "cusip": "95082P105",
-     "weight": 0.0565
+     "weight": 0.0665
+    },
+    {
+     "ticker": "V",
+     "name": "VISA INC",
+     "cusip": "92826C839",
+     "weight": 0.0649
+    },
+    {
+     "ticker": "UNP",
+     "name": "UNION PAC CORP",
+     "cusip": "907818108",
+     "weight": 0.0557
     },
     {
      "ticker": "AON",
      "name": "AON PLC",
      "cusip": "G0403H108",
-     "weight": 0.0562
+     "weight": 0.0481
     }
    ]
   },
@@ -210,68 +210,68 @@
   {
    "manager": "Akre Capital",
    "cik": 1112520,
-   "filed": "2026-08-14",
-   "period": "2026-06-30",
+   "filed": "2026-11-13",
+   "period": "2026-09-30",
    "top10": [
     {
      "ticker": "MA",
      "name": "MASTERCARD INCORPORATED",
      "cusip": "57636Q104",
-     "weight": 0.2278
+     "weight": 0.2547
     },
     {
      "ticker": "MCO",
      "name": "MOODYS CORP",
      "cusip": "615369105",
-     "weight": 0.1168
-    },
-    {
-     "ticker": "BN",
-     "name": "BROOKFIELD CORP",
-     "cusip": "11271J107",
-     "weight": 0.1151
+     "weight": 0.1215
     },
     {
      "ticker": "KKR",
      "name": "KKR & CO L P DEL",
      "cusip": "48251W104",
-     "weight": 0.1019
+     "weight": 0.1033
     },
     {
-     "ticker": "FICO",
-     "name": "FAIR ISAAC CORP",
-     "cusip": "303250104",
-     "weight": 0.0964
+     "ticker": "BN",
+     "name": "BROOKFIELD CORP",
+     "cusip": "11271J107",
+     "weight": 0.1005
     },
     {
      "ticker": "ROP",
      "name": "ROPER TECHNOLOGIES INC",
      "cusip": "776696106",
-     "weight": 0.0887
+     "weight": 0.0919
     },
     {
      "ticker": "V",
      "name": "VISA INC",
      "cusip": "92826C839",
-     "weight": 0.085
+     "weight": 0.0877
     },
     {
      "ticker": "CSGP",
      "name": "COSTAR GROUP INC",
      "cusip": "22160N109",
-     "weight": 0.0739
+     "weight": 0.0777
+    },
+    {
+     "ticker": "FICO",
+     "name": "FAIR ISAAC CORP",
+     "cusip": "303250104",
+     "weight": 0.0585
     },
     {
      "ticker": "CPRT",
      "name": "COPART INC",
      "cusip": "217204106",
-     "weight": 0.0502
+     "weight": 0.0531
     },
     {
-     "ticker": "ORLY",
-     "name": "OREILLY AUTOMOTIVE INC",
-     "cusip": "67103H107",
-     "weight": 0.0444
+     "ticker": "CCCS",
+     "name": "CCC INTELLIGENT SOLUTIONS HL",
+     "cusip": "12510Q100",
+     "weight": 0.051
     }
    ]
   },
@@ -776,136 +776,136 @@
   {
    "manager": "Soros Fund Management",
    "cik": 1029160,
-   "filed": "2026-08-14",
-   "period": "2026-06-30",
+   "filed": "2026-11-13",
+   "period": "2026-09-30",
    "top10": [
+    {
+     "ticker": "INTC",
+     "name": "INTEL CORP",
+     "cusip": "458140100",
+     "weight": 0.1892
+    },
     {
      "ticker": "AMZN",
      "name": "AMAZON COM INC",
      "cusip": "023135106",
-     "weight": 0.1582
+     "weight": 0.1462
     },
     {
      "ticker": "TSM",
      "name": "TAIWAN SEMICONDUCTOR MANUFAC",
      "cusip": "874039100",
-     "weight": 0.14
+     "weight": 0.1392
     },
     {
      "ticker": "GOOGL",
      "name": "ALPHABET INC",
      "cusip": "02079K305",
-     "weight": 0.1196
+     "weight": 0.115
     },
     {
      "ticker": "NVDA",
      "name": "NVIDIA CORPORATION",
      "cusip": "67066G104",
-     "weight": 0.1196
-    },
-    {
-     "ticker": "EA",
-     "name": "ELECTRONIC ARTS INC",
-     "cusip": "285512109",
-     "weight": 0.1118
+     "weight": 0.1091
     },
     {
      "ticker": "AAPL",
      "name": "APPLE INC",
      "cusip": "037833100",
-     "weight": 0.086
+     "weight": 0.0729
     },
     {
-     "ticker": "LIN",
-     "name": "LINDE PLC",
-     "cusip": "G54950103",
-     "weight": 0.0779
+     "ticker": "META",
+     "name": "META PLATFORMS INC",
+     "cusip": "30303M102",
+     "weight": 0.0611
     },
     {
-     "ticker": "TKO",
-     "name": "TKO GROUP HOLDINGS INC",
-     "cusip": "87256C101",
-     "weight": 0.0653
+     "ticker": "ETR",
+     "name": "ENTERGY CORP NEW",
+     "cusip": "29364G103",
+     "weight": 0.0588
     },
     {
-     "ticker": null,
-     "name": "SUPER MICRO COMPUTER INC",
-     "cusip": "86800U500",
-     "weight": 0.0626
+     "ticker": "SPY",
+     "name": "STATE STR SPDR S&P 500 ETF T",
+     "cusip": "78462F103",
+     "weight": 0.0577
     },
     {
      "ticker": "AEP",
      "name": "AMERICAN ELEC PWR CO INC",
      "cusip": "025537101",
-     "weight": 0.059
+     "weight": 0.0508
     }
    ]
   },
   {
    "manager": "Carl Icahn",
    "cik": 921669,
-   "filed": "2026-08-14",
-   "period": "2026-06-30",
+   "filed": "2026-11-13",
+   "period": "2026-09-30",
    "top10": [
     {
      "ticker": "IEP",
      "name": "Icahn Enterprises LP",
      "cusip": "451100101",
-     "weight": 0.5473
+     "weight": 0.4718
     },
     {
      "ticker": "CVI",
      "name": "CVR Energy Inc",
      "cusip": "12662P108",
-     "weight": 0.2407
+     "weight": 0.3851
     },
     {
      "ticker": "UAN",
      "name": "CVR Partners, LP",
      "cusip": "126633205",
-     "weight": 0.057
+     "weight": 0.0547
     },
     {
      "ticker": "CTRI",
      "name": "Centuri Holdings, Inc.",
      "cusip": "155923105",
-     "weight": 0.0532
+     "weight": 0.0305
     },
     {
      "ticker": "IFF",
      "name": "International Flavors and Fragrances Inc.",
      "cusip": "459506101",
-     "weight": 0.0416
-    },
-    {
-     "ticker": "SATS",
-     "name": "EchoStar Corporation",
-     "cusip": "278768106",
-     "weight": 0.0175
-    },
-    {
-     "ticker": "JBLU",
-     "name": "JetBlue Airways Corp.",
-     "cusip": "477143101",
-     "weight": 0.0145
-    },
-    {
-     "ticker": "MNRO",
-     "name": "Monro, Inc.",
-     "cusip": "610236101",
-     "weight": 0.0107
+     "weight": 0.0265
     },
     {
      "ticker": "CZR",
      "name": "Caesars Entertainment, Inc.",
      "cusip": "12769G100",
-     "weight": 0.009
+     "weight": 0.0077
+    },
+    {
+     "ticker": "MNRO",
+     "name": "Monro, Inc.",
+     "cusip": "610236101",
+     "weight": 0.0075
     },
     {
      "ticker": "SD",
      "name": "SandRidge Energy, Inc.",
      "cusip": "80007P869",
-     "weight": 0.0085
+     "weight": 0.0073
+    },
+    {
+     "ticker": "SATS",
+     "name": "EchoStar Corporation",
+     "cusip": "278768106",
+     "weight": 0.0047
+    },
+    {
+     "ticker": "BLCO",
+     "name": "Bausch Plus Lomb Corp.",
+     "cusip": "071705107",
+     "weight": 0.0043
     }
    ]
   },
@@ -980,68 +980,68 @@
   {
    "manager": "ARK Invest (Cathie Wood)",
    "cik": 1697748,
-   "filed": "2026-08-14",
-   "period": "2026-06-30",
+   "filed": "2026-11-13",
+   "period": "2026-09-30",
    "top10": [
     {
      "ticker": "TSLA",
      "name": "Tesla Inc",
      "cusip": "88160R101",
-     "weight": 0.191
-    },
-    {
-     "ticker": "AMD",
-     "name": "Advanced Micro Devices Inc",
-     "cusip": "007903107",
-     "weight": 0.1354
+     "weight": 0.1716
     },
     {
      "ticker": null,
-     "name": "Space Exploration Technologies Corp",
+     "name": "Space Exploration Technologies",
      "cusip": "84615Q103",
-     "weight": 0.1259
+     "weight": 0.146
     },
     {
      "ticker": "TEM",
      "name": "Tempus AI Inc",
      "cusip": "88023B103",
-     "weight": 0.0956
-    },
-    {
-     "ticker": "HOOD",
-     "name": "Robinhood Markets Inc",
-     "cusip": "770700102",
-     "weight": 0.0864
-    },
-    {
-     "ticker": "CRSP",
-     "name": "CRISPR Therapeutics AG",
-     "cusip": "H17182108",
-     "weight": 0.0849
-    },
-    {
-     "ticker": "SHOP",
-     "name": "Shopify Inc",
-     "cusip": "82509L107",
-     "weight": 0.0781
+     "weight": 0.1099
     },
     {
      "ticker": "TWST",
      "name": "Twist Bioscience Corp",
      "cusip": "90184D100",
-     "weight": 0.077
+     "weight": 0.0942
+    },
+    {
+     "ticker": "NVDA",
+     "name": "NVIDIA Corp",
+     "cusip": "67066G104",
+     "weight": 0.0839
     },
     {
      "ticker": "TXG",
      "name": "10X Genomics Inc",
      "cusip": "88025U109",
-     "weight": 0.0631
+     "weight": 0.0813
     },
     {
-     "ticker": "AMZN",
-     "name": "Amazon.com Inc",
-     "cusip": "023135106",
-     "weight": 0.0624
+     "ticker": null,
+     "name": "Circle Internet Group Inc",
+     "cusip": "172573107",
+     "weight": 0.0808
+    },
+    {
+     "ticker": "CRSP",
+     "name": "CRISPR Therapeutics AG",
+     "cusip": "H17182108",
+     "weight": 0.0798
+    },
+    {
+     "ticker": "COIN",
+     "name": "Coinbase Global Inc",
+     "cusip": "19260Q107",
+     "weight": 0.0783
+    },
+    {
+     "ticker": "HOOD",
+     "name": "Robinhood Markets Inc",
+     "cusip": "770700102",
+     "weight": 0.0743
     }
    ]
   },
@@ -1116,68 +1116,68 @@
   {
    "manager": "Renaissance Technologies",
    "cik": 1037389,
-   "filed": "2026-08-13",
-   "period": "2026-06-30",
+   "filed": "2026-11-12",
+   "period": "2026-09-30",
    "top10": [
     {
-     "ticker": "NVDA",
-     "name": "NVIDIA CORPORATION",
-     "cusip": "67066G104",
-     "weight": 0.1627
+     "ticker": "MU",
+     "name": "MICRON TECHNOLOGY INC",
+     "cusip": "595112103",
+     "weight": 0.1843
     },
     {
-     "ticker": "META",
-     "name": "META PLATFORMS INC",
-     "cusip": "30303M102",
-     "weight": 0.1307
-    },
-    {
-     "ticker": "INTC",
-     "name": "INTEL CORP",
-     "cusip": "458140100",
-     "weight": 0.1172
+     "ticker": "AMD",
+     "name": "ADVANCED MICRO DEVICES INC",
+     "cusip": "007903107",
+     "weight": 0.1372
     },
     {
      "ticker": "UTHR",
      "name": "UNITED THERAPEUTICS CORP DEL",
      "cusip": "91307C102",
-     "weight": 0.1062
+     "weight": 0.1033
     },
     {
-     "ticker": "PLTR",
-     "name": "PALANTIR TECHNOLOGIES INC",
-     "cusip": "69608A108",
-     "weight": 0.1013
+     "ticker": "INTC",
+     "name": "INTEL CORP",
+     "cusip": "458140100",
+     "weight": 0.095
     },
     {
      "ticker": "GOOGL",
      "name": "ALPHABET INC",
      "cusip": "02079K305",
-     "weight": 0.095
+     "weight": 0.0942
+    },
+    {
+     "ticker": "UNH",
+     "name": "UNITEDHEALTH GROUP INC",
+     "cusip": "91324P102",
+     "weight": 0.093
     },
     {
      "ticker": "EXEL",
      "name": "EXELIXIS INC",
      "cusip": "30161Q104",
-     "weight": 0.0838
+     "weight": 0.085
     },
     {
      "ticker": "VRSN",
      "name": "VERISIGN INC",
      "cusip": "92343E102",
-     "weight": 0.0707
+     "weight": 0.0738
     },
     {
-     "ticker": "KGC",
-     "name": "KINROSS GOLD CORP",
-     "cusip": "496902404",
-     "weight": 0.067
+     "ticker": null,
+     "name": "SPACE EXPLORATION TECHN CORP",
+     "cusip": "84615Q103",
+     "weight": 0.0706
     },
     {
-     "ticker": "CRWD",
-     "name": "CROWDSTRIKE HLDGS INC",
-     "cusip": "22788C105",
-     "weight": 0.0655
+     "ticker": "CORT",
+     "name": "CORCEPT THERAPEUTICS INC",
+     "cusip": "218352102",
+     "weight": 0.0636
     }
    ]
   }
@@ -1186,7 +1186,7 @@
   {
    "ticker": "AMZN",
    "name": "AMAZON COM INC",
-   "weight": 0.1028,
+   "weight": 0.1048,
    "holders": [
     "Baupost Group",
     "Pershing Square",
@@ -1200,7 +1200,7 @@
   {
    "ticker": "GOOG",
    "name": "ALPHABET INC",
-   "weight": 0.0671,
+   "weight": 0.0635,
    "holders": [
     "Berkshire Hathaway",
     "Baupost Group",
@@ -1222,6 +1222,17 @@
    ]
   },
   {
+   "ticker": "V",
+   "name": "VISA INC",
+   "weight": 0.038,
+   "holders": [
+    "Baupost Group",
+    "Akre Capital",
+    "Markel Group",
+    "ValueAct"
+   ]
+  },
+  {
    "ticker": "NTRA",
    "name": "Natera Inc",
    "weight": 0.0379,
@@ -1232,22 +1243,11 @@
   {
    "ticker": "BN",
    "name": "BROOKFIELD CORP",
-   "weight": 0.0377,
+   "weight": 0.0362,
    "holders": [
     "Pershing Square",
     "Akre Capital",
     "Markel Group"
-   ]
-  },
-  {
-   "ticker": "V",
-   "name": "VISA INC",
-   "weight": 0.0372,
-   "holders": [
-    "Baupost Group",
-    "Akre Capital",
-    "Markel Group",
-    "ValueAct"
    ]
   },
   {
@@ -1290,6 +1290,14 @@
    ]
   },
   {
+   "ticker": "MA",
+   "name": "MASTERCARD INCORPORATED",
+   "weight": 0.0255,
+   "holders": [
+    "Akre Capital"
+   ]
+  },
+  {
    "ticker": "UBER",
    "name": "UBER TECHNOLOGIES INC",
    "weight": 0.0248,
@@ -1301,18 +1309,10 @@
   {
    "ticker": "QSR",
    "name": "RESTAURANT BRANDS INTL INC",
-   "weight": 0.0243,
+   "weight": 0.0246,
    "holders": [
     "Baupost Group",
     "Pershing Square"
-   ]
-  },
-  {
-   "ticker": "MA",
-   "name": "MASTERCARD INCORPORATED",
-   "weight": 0.0228,
-   "holders": [
-    "Akre Capital"
    ]
   },
   {
@@ -1350,7 +1350,7 @@
   {
    "ticker": "KKR",
    "name": "KKR & CO L P DEL",
-   "weight": 0.0169,
+   "weight": 0.017,
    "holders": [
     "Akre Capital",
     "ValueAct"
@@ -1359,7 +1359,7 @@
   {
    "ticker": "MCO",
    "name": "MOODYS CORP",
-   "weight": 0.0159,
+   "weight": 0.0164,
    "holders": [
     "Berkshire Hathaway",
     "Akre Capital"
@@ -1390,19 +1390,19 @@
    ]
   },
   {
+   "ticker": "ELV",
+   "name": "ELEVANCE HEALTH INC FORMERLY",
+   "weight": 0.0128,
+   "holders": [
+    "Baupost Group"
+   ]
+  },
+  {
    "ticker": "KO",
    "name": "COCA COLA CO",
    "weight": 0.0123,
    "holders": [
     "Berkshire Hathaway"
-   ]
-  },
-  {
-   "ticker": "ELV",
-   "name": "ELEVANCE HEALTH INC FORMERLY",
-   "weight": 0.0122,
-   "holders": [
-    "Baupost Group"
    ]
   },
   {
@@ -1438,23 +1438,59 @@
    ]
   },
   {
+   "ticker": "GPC",
+   "name": "GENUINE PARTS CO",
+   "weight": 0.01,
+   "holders": [
+    "Baupost Group"
+   ]
+  },
+  {
    "ticker": "EWBC",
    "name": "EAST WEST BANCORP INC",
    "weight": 0.0097,
    "holders": [
     "Himalaya Capital"
    ]
-  },
-  {
-   "ticker": "FICO",
-   "name": "FAIR ISAAC CORP",
-   "weight": 0.0096,
-   "holders": [
-    "Akre Capital"
-   ]
   }
  ],
  "recent_filings": [
+  {
+   "manager": "Baupost Group",
+   "filed": "2026-11-13",
+   "period": "2026-09-30",
+   "in_portfolio": true
+  },
+  {
+   "manager": "Akre Capital",
+   "filed": "2026-11-13",
+   "period": "2026-09-30",
+   "in_portfolio": true
+  },
+  {
+   "manager": "Soros Fund Management",
+   "filed": "2026-11-13",
+   "period": "2026-09-30",
+   "in_portfolio": false
+  },
+  {
+   "manager": "Carl Icahn",
+   "filed": "2026-11-13",
+   "period": "2026-09-30",
+   "in_portfolio": false
+  },
+  {
+   "manager": "ARK Invest (Cathie Wood)",
+   "filed": "2026-11-13",
+   "period": "2026-09-30",
+   "in_portfolio": false
+  },
+  {
+   "manager": "Renaissance Technologies",
+   "filed": "2026-11-12",
+   "period": "2026-09-30",
+   "in_portfolio": false
+  },
   {
    "manager": "Markel Group",
    "filed": "2026-10-30",
@@ -1538,42 +1574,6 @@
    "filed": "2026-08-14",
    "period": "2026-06-30",
    "in_portfolio": false
-  },
-  {
-   "manager": "Baupost Group",
-   "filed": "2026-08-13",
-   "period": "2026-06-30",
-   "in_portfolio": true
-  },
-  {
-   "manager": "Renaissance Technologies",
-   "filed": "2026-08-13",
-   "period": "2026-06-30",
-   "in_portfolio": false
-  },
-  {
-   "manager": "Markel Group",
-   "filed": "2026-07-31",
-   "period": "2026-06-30",
-   "in_portfolio": true
-  },
-  {
-   "manager": "Berkshire Hathaway",
-   "filed": "2026-05-15",
-   "period": "2026-03-31",
-   "in_portfolio": true
-  },
-  {
-   "manager": "Pershing Square",
-   "filed": "2026-05-15",
-   "period": "2026-03-31",
-   "in_portfolio": true
-  },
-  {
-   "manager": "Himalaya Capital",
-   "filed": "2026-05-15",
-   "period": "2026-03-31",
-   "in_portfolio": true
   }
  ]
 }

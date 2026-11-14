@@ -1,0 +1,58 @@
+{
+ "hypothesis": "H-0024",
+ "kind": "datapreflight (täckning enligt protokollets datakrav; inga kurser, ingen avkastning, inget beslut)",
+ "status": "UPPFYLLT",
+ "source": "Yahoo chart-API (SPY)",
+ "request": {
+  "url_period1": "2006-01-01",
+  "url_period2_exclusive": "2025-01-01"
+ },
+ "rows_cut_holdout": 0,
+ "rows_in_period": 4781,
+ "requirements": {
+  "1_alla_sessioner_och_inga_saknade_varden": true,
+  "1b_249_253_dagar_per_ar": true,
+  "2_minst_15_dagar_per_manad": true,
+  "2b_varje_cykel_har_T0_T4": true,
+  "3_inget_fran_2025_anvant": true,
+  "helhet_datakravet_uppfyllt": true
+ },
+ "invalid_reasons": [],
+ "per_year_days": {
+  "2006": 251,
+  "2007": 251,
+  "2008": 253,
+  "2009": 252,
+  "2010": 252,
+  "2011": 252,
+  "2012": 250,
+  "2013": 252,
+  "2014": 252,
+  "2015": 252,
+  "2016": 252,
+  "2017": 251,
+  "2018": 251,
+  "2019": 252,
+  "2020": 253,
+  "2021": 252,
+  "2022": 251,
+  "2023": 250,
+  "2024": 252
+ },
+ "months_below_minimum": {},
+ "missing_sessions": [],
+ "unexpected_days": [],
+ "rows_with_missing_fields": 0,
+ "cycles_expected": 227,
+ "cycles_complete": 227,
+ "incomplete_cycles": [],
+ "calendar_verification": {
+  "fully_verified": true,
+  "verified_rows": 176,
+  "ledger_rows": 176,
+  "consistent": true
+ },
+ "series_sha256": "17b4029d522651331a272cac8685893b6b1fa9362ff2fb789e64a2e2977cfde0",
+ "fetched_at_utc": "2026-11-14T15:18:41Z",
+ "note": "Bara täckning. Inga kurser, ingen avkastning, ingen Sharpe, inget t-värde, ingen placebo, inget beslut och ingen registerrad. Slutprovet (2025-01-01 och senare) är inte läst."
+}
