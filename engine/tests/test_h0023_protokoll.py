@@ -40,7 +40,8 @@ def test_kalendertabellen_i_protokollet_är_exakt_rullning_b_ur_universumtabelle
 
 
 def test_n_23_och_t_gränserna_är_beräknade_och_samma_i_protokoll_och_register():
-    assert count_attempts(REG) == 23
+    upto = REG[: REG.index("| H-0023 |")] + _row("H-0023")[0]            # registret fram till och med registreringsraden: senare hypoteser ändrar inte N=23 för H-0023
+    assert count_attempts(upto) == 23 and count_attempts(REG) >= 23
     assert round(t_krav(23), 2) == 2.85
     q = stats.t.ppf(1 - 0.05 / 23, 13)
     assert round(q, 2) == 3.45 and q > t_krav(23)
