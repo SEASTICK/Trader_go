@@ -1,0 +1,3331 @@
+{
+  "hypothesis_id": "H-0030",
+  "registry_commit": "ba9f2163a4f441276be2a0076918827e140b4f22",
+  "run_at": "2026-11-14T14:48:03+00:00",
+  "market": "um BTCUSDT (perpetual)",
+  "period": [
+    "2020-01-01 00:00:00+00:00",
+    "2025-01-01 00:00:00+00:00"
+  ],
+  "costs_bps_per_side": 6.05,
+  "t_required": 3.23,
+  "n_attempts": 79,
+  "baseline_buy_and_hold": {
+    "5m": {
+      "total_return": 12.048633227050242,
+      "max_drawdown": -0.7737130301677682,
+      "sharpe": 1.1207330472306718,
+      "t_daily_nw": 2.5467241993077123
+    },
+    "15m": {
+      "total_return": 12.025542470395191,
+      "max_drawdown": -0.772775571486359,
+      "sharpe": 1.1201923075112175,
+      "t_daily_nw": 2.5454358704186415
+    },
+    "1h": {
+      "total_return": 12.032932244315317,
+      "max_drawdown": -0.7724720571494704,
+      "sharpe": 1.1203662842474056,
+      "t_daily_nw": 2.545795224830065
+    }
+  },
+  "random_label_t": {
+    "5m": 0.523523449833982,
+    "15m": 0.6050705778942613,
+    "1h": -0.048177604144627524
+  },
+  "data_quality": {
+    "5m": {
+      "rows": 526176,
+      "missing_bars": 0,
+      "warnings": [
+        "1053 utstickare att kontrollera mot annan källa",
+        "5 serier med stillastående pris"
+      ]
+    },
+    "15m": {
+      "rows": 175392,
+      "missing_bars": 0,
+      "warnings": [
+        "330 utstickare att kontrollera mot annan källa",
+        "1 serier med stillastående pris"
+      ]
+    },
+    "1h": {
+      "rows": 43848,
+      "missing_bars": 0,
+      "warnings": [
+        "79 utstickare att kontrollera mot annan källa"
+      ]
+    }
+  },
+  "controls": {
+    "H-0027": {
+      "variant": "H-0030-R23",
+      "identical": true
+    },
+    "H-0028": {
+      "variant": "H-0030-O10",
+      "identical": true
+    },
+    "H-0029": {
+      "variant": "H-0030-M05",
+      "identical": true
+    }
+  },
+  "variants": [
+    {
+      "id": "H-0030-R01",
+      "family": "R",
+      "interval": "5m",
+      "params": {
+        "k": 2.5,
+        "hold_hours": 1
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.9412436905238832,
+        "max_drawdown": -0.9461031792997591,
+        "trades": 1555,
+        "win_rate": 0.42508038585209,
+        "avg_trade": -0.0017636888265121647,
+        "t_trades": -6.557819934060894,
+        "t_daily_nw": -6.613717647041267,
+        "sharpe": -2.9255386023080696,
+        "sharpe_ci": [
+          -3.832948668882293,
+          -2.0317525182463334
+        ],
+        "exposure": 0.035296241744666695,
+        "turnover_per_year": 622.0851588170865,
+        "costs": 0.6001417020411726,
+        "funding": 0.00224101327625701,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9965358937592408,
+        "max_drawdown": -0.9966111934826222,
+        "trades": 1555,
+        "win_rate": 0.30803858520900324,
+        "avg_trade": -0.0035791366989317984,
+        "t_trades": -13.306100121706978,
+        "t_daily_nw": -13.333076461261628,
+        "sharpe": -5.898517291803888,
+        "sharpe_ci": [
+          -7.033948132588727,
+          -4.940232362990355
+        ],
+        "exposure": 0.035296241744666695,
+        "turnover_per_year": 622.0851588170865,
+        "costs": 0.8174073965042082,
+        "funding": 0.002180481688613307,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1555,
+      "target_nonzero_bars": 18572
+    },
+    {
+      "id": "H-0030-R02",
+      "family": "R",
+      "interval": "5m",
+      "params": {
+        "k": 2.5,
+        "hold_hours": 3
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.9534577999546142,
+        "max_drawdown": -0.9594061930707785,
+        "trades": 1555,
+        "win_rate": 0.4437299035369775,
+        "avg_trade": -0.001861835008530659,
+        "t_trades": -4.999057156570766,
+        "t_daily_nw": -5.178547409708276,
+        "sharpe": -2.231346012737295,
+        "sharpe_ci": [
+          -3.1173247084016515,
+          -1.3018995273280516
+        ],
+        "exposure": 0.10481113697914192,
+        "turnover_per_year": 622.0851588170865,
+        "costs": 0.6708541535067432,
+        "funding": 0.004376827504169022,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 1.504352198367087e-14
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9972568383793048,
+        "max_drawdown": -0.9973714554637363,
+        "trades": 1555,
+        "win_rate": 0.35884244372990354,
+        "avg_trade": -0.003677103000498184,
+        "t_trades": -9.87181556395809,
+        "t_daily_nw": -10.20896833832516,
+        "sharpe": -4.38911873442217,
+        "sharpe_ci": [
+          -5.356928592400125,
+          -3.442231718979787
+        ],
+        "exposure": 0.10481113697914192,
+        "turnover_per_year": 622.0851588170865,
+        "costs": 0.8991930310561742,
+        "funding": 0.004678384215973527,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1555,
+      "target_nonzero_bars": 55149
+    },
+    {
+      "id": "H-0030-R03",
+      "family": "R",
+      "interval": "5m",
+      "params": {
+        "k": 2.5,
+        "hold_hours": 6
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.9459978520319556,
+        "max_drawdown": -0.954408986761313,
+        "trades": 1555,
+        "win_rate": 0.4733118971061093,
+        "avg_trade": -0.0017019223666493544,
+        "t_trades": -3.62233099738241,
+        "t_daily_nw": -4.060219831546444,
+        "sharpe": -1.6181212242837382,
+        "sharpe_ci": [
+          -2.3745279282381384,
+          -0.8527953737463413
+        ],
+        "exposure": 0.20587827243787712,
+        "turnover_per_year": 622.0851588170865,
+        "costs": 0.7539160083051586,
+        "funding": -0.00012270106747983624,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 3.009726912139854e-10
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9968173801411396,
+        "max_drawdown": -0.9970532153116499,
+        "trades": 1555,
+        "win_rate": 0.397427652733119,
+        "avg_trade": -0.003517284628236978,
+        "t_trades": -7.485350446211385,
+        "t_daily_nw": -8.374609816458173,
+        "sharpe": -3.336110146931997,
+        "sharpe_ci": [
+          -4.140872160642475,
+          -2.531892346984371
+        ],
+        "exposure": 0.20587827243787712,
+        "turnover_per_year": 622.0851588170865,
+        "costs": 0.9682966978183338,
+        "funding": 0.0021955202680019187,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1555,
+      "target_nonzero_bars": 108328
+    },
+    {
+      "id": "H-0030-R04",
+      "family": "R",
+      "interval": "5m",
+      "params": {
+        "k": 3.0,
+        "hold_hours": 1
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.9130784751350198,
+        "max_drawdown": -0.9231189276132122,
+        "trades": 1368,
+        "win_rate": 0.43859649122807015,
+        "avg_trade": -0.0017188175687522832,
+        "t_trades": -5.62436175751076,
+        "t_daily_nw": -5.471683398271859,
+        "sharpe": -2.507774654381312,
+        "sharpe_ci": [
+          -3.440567915395508,
+          -1.6188006901863965
+        ],
+        "exposure": 0.031107521261937568,
+        "turnover_per_year": 547.274917853231,
+        "costs": 0.5778265596799003,
+        "funding": 0.0015604198371509217,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9927981861254259,
+        "max_drawdown": -0.9931217031189751,
+        "trades": 1368,
+        "win_rate": 0.3333333333333333,
+        "avg_trade": -0.003534435639519807,
+        "t_trades": -11.56337819985811,
+        "t_daily_nw": -11.176748451973825,
+        "sharpe": -5.110536479169658,
+        "sharpe_ci": [
+          -6.231311837591917,
+          -4.230602947322454
+        ],
+        "exposure": 0.031107521261937568,
+        "turnover_per_year": 547.274917853231,
+        "costs": 0.8009504440963391,
+        "funding": 0.001302828232685237,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1368,
+      "target_nonzero_bars": 16368
+    },
+    {
+      "id": "H-0030-R05",
+      "family": "R",
+      "interval": "5m",
+      "params": {
+        "k": 3.0,
+        "hold_hours": 3
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.9202338323396828,
+        "max_drawdown": -0.9331739125428672,
+        "trades": 1368,
+        "win_rate": 0.46345029239766083,
+        "avg_trade": -0.0017266058758447385,
+        "t_trades": -4.141219058292447,
+        "t_daily_nw": -4.00325814647072,
+        "sharpe": -1.8478700343758936,
+        "sharpe_ci": [
+          -2.8173616872805374,
+          -0.8742632763702151
+        ],
+        "exposure": 0.09181356012733406,
+        "turnover_per_year": 547.274917853231,
+        "costs": 0.6104342875467054,
+        "funding": 0.004554604256443441,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 5.600520047721602e-12
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.993391782155867,
+        "max_drawdown": -0.993725399294597,
+        "trades": 1368,
+        "win_rate": 0.38377192982456143,
+        "avg_trade": -0.00354209925595938,
+        "t_trades": -8.495017432988304,
+        "t_daily_nw": -8.179122272273275,
+        "sharpe": -3.7699129564944465,
+        "sharpe_ci": [
+          -4.8360010176405215,
+          -2.757500675966682
+        ],
+        "exposure": 0.09181356012733406,
+        "turnover_per_year": 547.274917853231,
+        "costs": 0.832922755079356,
+        "funding": 0.004377318628624086,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1368,
+      "target_nonzero_bars": 48310
+    },
+    {
+      "id": "H-0030-R06",
+      "family": "R",
+      "interval": "5m",
+      "params": {
+        "k": 3.0,
+        "hold_hours": 6
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.8865546440093883,
+        "max_drawdown": -0.9087197395099209,
+        "trades": 1368,
+        "win_rate": 0.4868421052631579,
+        "avg_trade": -0.0014042319342458542,
+        "t_trades": -2.709760207393037,
+        "t_daily_nw": -2.940954435241638,
+        "sharpe": -1.210536608327072,
+        "sharpe_ci": [
+          -2.0152454079754407,
+          -0.46189761594399953
+        ],
+        "exposure": 0.17826768660616715,
+        "turnover_per_year": 547.274917853231,
+        "costs": 0.7184771280136091,
+        "funding": 0.0013632302231277949,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 7.781573718723678e-08
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9906010243656446,
+        "max_drawdown": -0.9913357856280129,
+        "trades": 1368,
+        "win_rate": 0.4137426900584795,
+        "avg_trade": -0.0032200209557187503,
+        "t_trades": -6.213308415420757,
+        "t_daily_nw": -6.693139246020031,
+        "sharpe": -2.767182788353396,
+        "sharpe_ci": [
+          -3.619220711189184,
+          -2.0165129112482143
+        ],
+        "exposure": 0.17826768660616715,
+        "turnover_per_year": 547.274917853231,
+        "costs": 0.9008146187859798,
+        "funding": 0.0026540682811365406,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1368,
+      "target_nonzero_bars": 93800
+    },
+    {
+      "id": "H-0030-R07",
+      "family": "R",
+      "interval": "5m",
+      "params": {
+        "k": 4.0,
+        "hold_hours": 1
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.8534353739392705,
+        "max_drawdown": -0.8660879994336363,
+        "trades": 967,
+        "win_rate": 0.4467425025853154,
+        "avg_trade": -0.0018928761344766103,
+        "t_trades": -4.410214513993521,
+        "t_daily_nw": -4.5403516050928685,
+        "sharpe": -1.9626234291439135,
+        "sharpe_ci": [
+          -2.783253620985233,
+          -1.1626351696369135
+        ],
+        "exposure": 0.021933767282748134,
+        "turnover_per_year": 386.85295728368015,
+        "costs": 0.5545032027760587,
+        "funding": 0.0015271618844964363,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 7.438494264988549e-15
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9748082750201242,
+        "max_drawdown": -0.9760406935108318,
+        "trades": 967,
+        "win_rate": 0.36297828335056875,
+        "avg_trade": -0.003708474240302552,
+        "t_trades": -8.639992110005219,
+        "t_daily_nw": -8.648414627452858,
+        "sharpe": -3.7951908386549134,
+        "sharpe_ci": [
+          -4.7099976633881155,
+          -2.9826319407956947
+        ],
+        "exposure": 0.021933767282748134,
+        "turnover_per_year": 386.85295728368015,
+        "costs": 0.7931725021230326,
+        "funding": 0.0014094738574494728,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 967,
+      "target_nonzero_bars": 11541
+    },
+    {
+      "id": "H-0030-R08",
+      "family": "R",
+      "interval": "5m",
+      "params": {
+        "k": 4.0,
+        "hold_hours": 3
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.8439144281450177,
+        "max_drawdown": -0.8624102969808078,
+        "trades": 967,
+        "win_rate": 0.47156153050672184,
+        "avg_trade": -0.0017676763782835422,
+        "t_trades": -3.1797727713757147,
+        "t_daily_nw": -3.2854885568381627,
+        "sharpe": -1.41823692504172,
+        "sharpe_ci": [
+          -2.238758821244025,
+          -0.5630099609827984
+        ],
+        "exposure": 0.06449375207868105,
+        "turnover_per_year": 386.85295728368015,
+        "costs": 0.600696330648254,
+        "funding": 0.0025125682216578355,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 2.4926650743495316e-09
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9731865787196242,
+        "max_drawdown": -0.9747776214027846,
+        "trades": 967,
+        "win_rate": 0.4043433298862461,
+        "avg_trade": -0.0035838485306269063,
+        "t_trades": -6.446535555035652,
+        "t_daily_nw": -6.565147929220303,
+        "sharpe": -2.853877692975498,
+        "sharpe_ci": [
+          -3.702260532973699,
+          -1.9748303652442776
+        ],
+        "exposure": 0.06449375207868105,
+        "turnover_per_year": 386.85295728368015,
+        "costs": 0.8415808164442923,
+        "funding": 0.002415746902508634,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 967,
+      "target_nonzero_bars": 33935
+    },
+    {
+      "id": "H-0030-R09",
+      "family": "R",
+      "interval": "5m",
+      "params": {
+        "k": 4.0,
+        "hold_hours": 6
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.8598919367715042,
+        "max_drawdown": -0.8769361730421699,
+        "trades": 967,
+        "win_rate": 0.4643226473629783,
+        "avg_trade": -0.0018092360764926738,
+        "t_trades": -2.6854065568245913,
+        "t_daily_nw": -2.6660011913371453,
+        "sharpe": -1.1984828049398732,
+        "sharpe_ci": [
+          -2.096601824462426,
+          -0.29636329123428956
+        ],
+        "exposure": 0.12371929491138879,
+        "turnover_per_year": 386.85295728368015,
+        "costs": 0.6352538050876059,
+        "funding": -0.0029775277835060636,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 9.842388626335463e-08
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.975947221391488,
+        "max_drawdown": -0.9775728487627727,
+        "trades": 967,
+        "win_rate": 0.41158221302998965,
+        "avg_trade": -0.0036257216658022633,
+        "t_trades": -5.38097169197179,
+        "t_daily_nw": -5.266340296246844,
+        "sharpe": -2.3889056647829436,
+        "sharpe_ci": [
+          -3.3284124167846616,
+          -1.4593064728862675
+        ],
+        "exposure": 0.12371929491138879,
+        "turnover_per_year": 386.85295728368015,
+        "costs": 0.8568259278035804,
+        "funding": -0.0020359350531973237,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 6.661338147750939e-16
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 967,
+      "target_nonzero_bars": 65098
+    },
+    {
+      "id": "H-0030-R10",
+      "family": "R",
+      "interval": "15m",
+      "params": {
+        "k": 2.5,
+        "hold_hours": 1
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.933200139048063,
+        "max_drawdown": -0.9352507120632225,
+        "trades": 1249,
+        "win_rate": 0.4315452361889512,
+        "avg_trade": -0.002099570208905695,
+        "t_trades": -6.561542697023151,
+        "t_daily_nw": -6.4796550743171535,
+        "sharpe": -2.9164749901038816,
+        "sharpe_ci": [
+          -3.7496765594138615,
+          -2.0224441894421252
+        ],
+        "exposure": 0.028251164540939958,
+        "turnover_per_year": 499.66840087623217,
+        "costs": 0.42116803434994654,
+        "funding": 0.0015998582657742702,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9931280338516916,
+        "max_drawdown": -0.9932908082235887,
+        "trades": 1249,
+        "win_rate": 0.3082465972778223,
+        "avg_trade": -0.003914699828209554,
+        "t_trades": -12.232831178331558,
+        "t_daily_nw": -11.80894751616403,
+        "sharpe": -5.363305892304955,
+        "sharpe_ci": [
+          -6.299043725825833,
+          -4.426371135730696
+        ],
+        "exposure": 0.028251164540939958,
+        "turnover_per_year": 499.66840087623217,
+        "costs": 0.6154102955750169,
+        "funding": 0.0012889035595800037,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1249,
+      "target_nonzero_bars": 4955
+    },
+    {
+      "id": "H-0030-R11",
+      "family": "R",
+      "interval": "15m",
+      "params": {
+        "k": 2.5,
+        "hold_hours": 3
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.937680618404518,
+        "max_drawdown": -0.9434539656420095,
+        "trades": 1249,
+        "win_rate": 0.46036829463570855,
+        "avg_trade": -0.002086513995841196,
+        "t_trades": -4.532928429368993,
+        "t_daily_nw": -4.6141075691358235,
+        "sharpe": -2.0213655059840008,
+        "sharpe_ci": [
+          -2.8774696392624035,
+          -1.1469207003119093
+        ],
+        "exposure": 0.08305443266758271,
+        "turnover_per_year": 499.66840087623217,
+        "costs": 0.45132587512748473,
+        "funding": 0.0006794757511223326,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 8.315570454442422e-13
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9935906207284576,
+        "max_drawdown": -0.9937885669219604,
+        "trades": 1249,
+        "win_rate": 0.37469975980784626,
+        "avg_trade": -0.0039016325432590163,
+        "t_trades": -8.476060927086321,
+        "t_daily_nw": -8.526978618970194,
+        "sharpe": -3.7556769730618895,
+        "sharpe_ci": [
+          -4.645946742743559,
+          -2.8697463002496204
+        ],
+        "exposure": 0.08305443266758271,
+        "turnover_per_year": 499.66840087623217,
+        "costs": 0.6693029316207261,
+        "funding": 0.0015578241803980597,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1249,
+      "target_nonzero_bars": 14567
+    },
+    {
+      "id": "H-0030-R12",
+      "family": "R",
+      "interval": "15m",
+      "params": {
+        "k": 2.5,
+        "hold_hours": 6
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.9168222726309996,
+        "max_drawdown": -0.9222454309174879,
+        "trades": 1249,
+        "win_rate": 0.4707766212970376,
+        "avg_trade": -0.0017952971983272285,
+        "t_trades": -3.2346680862227095,
+        "t_daily_nw": -3.4419035188792857,
+        "sharpe": -1.4446140485163554,
+        "sharpe_ci": [
+          -2.227772384314412,
+          -0.6247228399394126
+        ],
+        "exposure": 0.16072090358114155,
+        "turnover_per_year": 499.66840087623217,
+        "costs": 0.5283004741359539,
+        "funding": -0.005123545845354064,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 4.325096225610281e-09
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9914433822045576,
+        "max_drawdown": -0.9916073618936166,
+        "trades": 1249,
+        "win_rate": 0.40912730184147317,
+        "avg_trade": -0.003610524549612645,
+        "t_trades": -6.504917750690933,
+        "t_daily_nw": -6.844646097758692,
+        "sharpe": -2.894264007572208,
+        "sharpe_ci": [
+          -3.726182777617542,
+          -2.0580857532842103
+        ],
+        "exposure": 0.16072090358114155,
+        "turnover_per_year": 499.66840087623217,
+        "costs": 0.715098814994904,
+        "funding": -0.0028560997442491883,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1249,
+      "target_nonzero_bars": 28189
+    },
+    {
+      "id": "H-0030-R13",
+      "family": "R",
+      "interval": "15m",
+      "params": {
+        "k": 3.0,
+        "hold_hours": 1
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.9025760346216816,
+        "max_drawdown": -0.9051873860016078,
+        "trades": 1016,
+        "win_rate": 0.4281496062992126,
+        "avg_trade": -0.0022141511461947587,
+        "t_trades": -5.786677994284742,
+        "t_daily_nw": -5.812005190523138,
+        "sharpe": -2.567702913497024,
+        "sharpe_ci": [
+          -3.311309377076817,
+          -1.7390432269510125
+        ],
+        "exposure": 0.0229886368171685,
+        "turnover_per_year": 406.45564074479734,
+        "costs": 0.42522431103236713,
+        "funding": 0.0017577643062075953,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9846874170913775,
+        "max_drawdown": -0.985017139480305,
+        "trades": 1016,
+        "win_rate": 0.31299212598425197,
+        "avg_trade": -0.004029439656454171,
+        "t_trades": -10.530515881742101,
+        "t_daily_nw": -10.27615241101949,
+        "sharpe": -4.595202662693979,
+        "sharpe_ci": [
+          -5.4173438461900885,
+          -3.7227016162786977
+        ],
+        "exposure": 0.0229886368171685,
+        "turnover_per_year": 406.45564074479734,
+        "costs": 0.640168072961221,
+        "funding": 0.0012541096649198943,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1016,
+      "target_nonzero_bars": 4032
+    },
+    {
+      "id": "H-0030-R14",
+      "family": "R",
+      "interval": "15m",
+      "params": {
+        "k": 3.0,
+        "hold_hours": 3
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.8880115724028278,
+        "max_drawdown": -0.8939449408648932,
+        "trades": 1016,
+        "win_rate": 0.4478346456692913,
+        "avg_trade": -0.0019989071138674943,
+        "t_trades": -3.646381095549945,
+        "t_daily_nw": -3.723132502166158,
+        "sharpe": -1.6255907443588518,
+        "sharpe_ci": [
+          -2.388267876930906,
+          -0.7688105948989565
+        ],
+        "exposure": 0.06720983402797179,
+        "turnover_per_year": 406.45564074479734,
+        "costs": 0.46086178943467165,
+        "funding": 0.002438879679345396,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 3.379066471076442e-10
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.982399394486262,
+        "max_drawdown": -0.9828039143401872,
+        "trades": 1016,
+        "win_rate": 0.37893700787401574,
+        "avg_trade": -0.003814374130607699,
+        "t_trades": -6.958204197681715,
+        "t_daily_nw": -7.03624389379352,
+        "sharpe": -3.0788254849436005,
+        "sharpe_ci": [
+          -3.866671883205017,
+          -2.229873071177318
+        ],
+        "exposure": 0.06720983402797179,
+        "turnover_per_year": 406.45564074479734,
+        "costs": 0.6794953355327434,
+        "funding": 0.0022180089458760533,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1016,
+      "target_nonzero_bars": 11788
+    },
+    {
+      "id": "H-0030-R15",
+      "family": "R",
+      "interval": "15m",
+      "params": {
+        "k": 3.0,
+        "hold_hours": 6
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.8332512241633776,
+        "max_drawdown": -0.8478546170468488,
+        "trades": 1016,
+        "win_rate": 0.4734251968503937,
+        "avg_trade": -0.0015482384914730753,
+        "t_trades": -2.393437504309145,
+        "t_daily_nw": -2.528851212609384,
+        "sharpe": -1.0689164877289494,
+        "sharpe_ci": [
+          -1.795447436287061,
+          -0.260596786130669
+        ],
+        "exposure": 0.12869531503897008,
+        "turnover_per_year": 406.45564074479734,
+        "costs": 0.6139195864775056,
+        "funding": -0.004472705495550215,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 6.035731808795575e-07
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9737831663939289,
+        "max_drawdown": -0.9748613727001098,
+        "trades": 1016,
+        "win_rate": 0.41732283464566927,
+        "avg_trade": -0.0033639091829511273,
+        "t_trades": -5.1999744966265435,
+        "t_daily_nw": -5.446635693403984,
+        "sharpe": -2.3120618507777944,
+        "sharpe_ci": [
+          -3.077007046407005,
+          -1.4950455512581082
+        ],
+        "exposure": 0.12869531503897008,
+        "turnover_per_year": 406.45564074479734,
+        "costs": 0.8296038420613744,
+        "funding": -0.002494278651185207,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 8.659739592076221e-15
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1016,
+      "target_nonzero_bars": 22572
+    },
+    {
+      "id": "H-0030-R16",
+      "family": "R",
+      "interval": "15m",
+      "params": {
+        "k": 4.0,
+        "hold_hours": 1
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.8036167594989545,
+        "max_drawdown": -0.8106724667745653,
+        "trades": 595,
+        "win_rate": 0.4336134453781513,
+        "avg_trade": -0.0026379495391805645,
+        "t_trades": -4.72689206577136,
+        "t_daily_nw": -4.854998817373491,
+        "sharpe": -2.0877570110249493,
+        "sharpe_ci": [
+          -2.8026932206196897,
+          -1.2875228856868253
+        ],
+        "exposure": 0.013472755158474493,
+        "turnover_per_year": 238.03258488499452,
+        "costs": 0.30393380209699034,
+        "funding": 0.0015506172242079304,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 6.106226635438361e-16
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9336013333983438,
+        "max_drawdown": -0.9353835525359564,
+        "trades": 595,
+        "win_rate": 0.32100840336134456,
+        "avg_trade": -0.004453651486078454,
+        "t_trades": -7.980602902308205,
+        "t_daily_nw": -7.876410601257323,
+        "sharpe": -3.447380818753054,
+        "sharpe_ci": [
+          -4.160306010683748,
+          -2.6933023051289906
+        ],
+        "exposure": 0.013472755158474493,
+        "turnover_per_year": 238.03258488499452,
+        "costs": 0.5306716048813582,
+        "funding": 0.001684509835726345,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 595,
+      "target_nonzero_bars": 2363
+    },
+    {
+      "id": "H-0030-R17",
+      "family": "R",
+      "interval": "15m",
+      "params": {
+        "k": 4.0,
+        "hold_hours": 3
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.7706486852498904,
+        "max_drawdown": -0.7978849049244651,
+        "trades": 595,
+        "win_rate": 0.4403361344537815,
+        "avg_trade": -0.002308361024091856,
+        "t_trades": -3.125967044678657,
+        "t_daily_nw": -3.2402796327777366,
+        "sharpe": -1.3906302347086668,
+        "sharpe_ci": [
+          -2.2145456767668,
+          -0.542175234053329
+        ],
+        "exposure": 0.03928935920315182,
+        "turnover_per_year": 238.03258488499452,
+        "costs": 0.36690938781060417,
+        "funding": 0.0019393362103849018,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 6.310697631128903e-09
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9224747380809746,
+        "max_drawdown": -0.9292528373717628,
+        "trades": 595,
+        "win_rate": 0.3798319327731092,
+        "avg_trade": -0.004124860920469252,
+        "t_trades": -5.586250089158182,
+        "t_daily_nw": -5.668630080358448,
+        "sharpe": -2.456647352823617,
+        "sharpe_ci": [
+          -3.277623493913371,
+          -1.6102532979151924
+        ],
+        "exposure": 0.03928935920315182,
+        "turnover_per_year": 238.03258488499452,
+        "costs": 0.6360257863200507,
+        "funding": 0.0022508110543565988,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 1.1102230246251565e-16
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 595,
+      "target_nonzero_bars": 6891
+    },
+    {
+      "id": "H-0030-R18",
+      "family": "R",
+      "interval": "15m",
+      "params": {
+        "k": 4.0,
+        "hold_hours": 6
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.7692763691100558,
+        "max_drawdown": -0.7803164030085841,
+        "trades": 595,
+        "win_rate": 0.453781512605042,
+        "avg_trade": -0.002188714358802704,
+        "t_trades": -2.3018285289216425,
+        "t_daily_nw": -2.5566315560118396,
+        "sharpe": -1.0269701356392602,
+        "sharpe_ci": [
+          -1.812797674563338,
+          -0.2556278544571488
+        ],
+        "exposure": 0.07472447274945693,
+        "turnover_per_year": 238.03258488499452,
+        "costs": 0.38893874911711807,
+        "funding": -0.0014576399192222323,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 5.393186099933445e-07
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9220438008087279,
+        "max_drawdown": -0.9251042275895742,
+        "trades": 595,
+        "win_rate": 0.41008403361344536,
+        "avg_trade": -0.004005836734192447,
+        "t_trades": -4.213780641644486,
+        "t_daily_nw": -4.590807009274706,
+        "sharpe": -1.8685396764217703,
+        "sharpe_ci": [
+          -2.7040156861636344,
+          -1.077017022350364
+        ],
+        "exposure": 0.07472447274945693,
+        "turnover_per_year": 238.03258488499452,
+        "costs": 0.6594909831021138,
+        "funding": -0.0006734536620178063,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 2.4134028109301653e-12
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 595,
+      "target_nonzero_bars": 13106
+    },
+    {
+      "id": "H-0030-R19",
+      "family": "R",
+      "interval": "1h",
+      "params": {
+        "k": 2.5,
+        "hold_hours": 1
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.7359018947878759,
+        "max_drawdown": -0.7390072818070421,
+        "trades": 723,
+        "win_rate": 0.4578146611341632,
+        "avg_trade": -0.001775161658983539,
+        "t_trades": -4.21430129286575,
+        "t_daily_nw": -4.523287435488382,
+        "sharpe": -1.8720473458894793,
+        "sharpe_ci": [
+          -2.681556377877047,
+          -1.1128654668102693
+        ],
+        "exposure": 0.01648915547243825,
+        "turnover_per_year": 289.23959474260676,
+        "costs": 0.5196062208740352,
+        "funding": 0.0029831932091779977,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 4.659828078956707e-12
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9291635091428772,
+        "max_drawdown": -0.9293617173891107,
+        "trades": 723,
+        "win_rate": 0.34163208852005533,
+        "avg_trade": -0.003590174142766699,
+        "t_trades": -8.523880223770133,
+        "t_daily_nw": -8.722457727962613,
+        "sharpe": -3.7073248871743174,
+        "sharpe_ci": [
+          -4.71554033999808,
+          -2.841505611455805
+        ],
+        "exposure": 0.01648915547243825,
+        "turnover_per_year": 289.23959474260676,
+        "costs": 0.8292860300744573,
+        "funding": 0.0024590237523577597,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 723,
+      "target_nonzero_bars": 723
+    },
+    {
+      "id": "H-0030-R20",
+      "family": "R",
+      "interval": "1h",
+      "params": {
+        "k": 2.5,
+        "hold_hours": 3
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.7473071308502346,
+        "max_drawdown": -0.7968913081421853,
+        "trades": 723,
+        "win_rate": 0.4536652835408022,
+        "avg_trade": -0.0017655041440264605,
+        "t_trades": -2.8817782843511517,
+        "t_daily_nw": -3.2700281264212943,
+        "sharpe": -1.283856025916852,
+        "sharpe_ci": [
+          -2.0958262615981993,
+          -0.5143046929232341
+        ],
+        "exposure": 0.04803065204004835,
+        "turnover_per_year": 289.23959474260676,
+        "costs": 0.5807788265222176,
+        "funding": 0.0020153113328096857,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 1.2611034816423228e-07
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9322246029998789,
+        "max_drawdown": -0.9430096249816412,
+        "trades": 723,
+        "win_rate": 0.3665283540802213,
+        "avg_trade": -0.003580335081161611,
+        "t_trades": -5.844685361770447,
+        "t_daily_nw": -6.47142021161759,
+        "sharpe": -2.5756187643471358,
+        "sharpe_ci": [
+          -3.5077152717785087,
+          -1.6784426053664767
+        ],
+        "exposure": 0.04803065204004835,
+        "turnover_per_year": 289.23959474260676,
+        "costs": 0.9404706365876637,
+        "funding": 0.001807750813418898,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 1.0602629885170245e-14
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 723,
+      "target_nonzero_bars": 2106
+    },
+    {
+      "id": "H-0030-R21",
+      "family": "R",
+      "interval": "1h",
+      "params": {
+        "k": 2.5,
+        "hold_hours": 6
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.7626830223554126,
+        "max_drawdown": -0.8544317056482379,
+        "trades": 723,
+        "win_rate": 0.47717842323651455,
+        "avg_trade": -0.001774428659633042,
+        "t_trades": -2.311048955570005,
+        "t_daily_nw": -2.5616021398847337,
+        "sharpe": -1.0316139524849925,
+        "sharpe_ci": [
+          -1.8202142228982081,
+          -0.2820047745487277
+        ],
+        "exposure": 0.09172805437088057,
+        "turnover_per_year": 289.23959474260676,
+        "costs": 0.6427056409917943,
+        "funding": -0.0033192110308203847,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 1.2355174542344471e-06
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9363809807063255,
+        "max_drawdown": -0.9496347035901631,
+        "trades": 723,
+        "win_rate": 0.40802213001383125,
+        "avg_trade": -0.003589635267047764,
+        "t_trades": -4.675234902453466,
+        "t_daily_nw": -5.1115028837655965,
+        "sharpe": -2.074205126957404,
+        "sharpe_ci": [
+          -2.924240888112679,
+          -1.2715900754653053
+        ],
+        "exposure": 0.09172805437088057,
+        "turnover_per_year": 289.23959474260676,
+        "costs": 1.0665677494968473,
+        "funding": -0.0023051087918685193,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 1.9053647548616937e-12
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 723,
+      "target_nonzero_bars": 4022
+    },
+    {
+      "id": "H-0030-R22",
+      "family": "R",
+      "interval": "1h",
+      "params": {
+        "k": 3.0,
+        "hold_hours": 1
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.5964530959883119,
+        "max_drawdown": -0.6014002462566496,
+        "trades": 496,
+        "win_rate": 0.46975806451612906,
+        "avg_trade": -0.001740841792149379,
+        "t_trades": -2.9479072916073727,
+        "t_daily_nw": -3.2467807327546736,
+        "sharpe": -1.311000800496526,
+        "sharpe_ci": [
+          -2.089178862870422,
+          -0.548396431473465
+        ],
+        "exposure": 0.011312062398795814,
+        "turnover_per_year": 198.4271631982475,
+        "costs": 0.4198757647574012,
+        "funding": 0.0032430101053548526,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 1.939723165422791e-08
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.8363517538637515,
+        "max_drawdown": -0.8382129237433233,
+        "trades": 496,
+        "win_rate": 0.34274193548387094,
+        "avg_trade": -0.003555434122837329,
+        "t_trades": -6.021444425955882,
+        "t_daily_nw": -6.343184237020799,
+        "sharpe": -2.627761807776897,
+        "sharpe_ci": [
+          -3.557500633889837,
+          -1.8074431342302588
+        ],
+        "exposure": 0.011312062398795814,
+        "turnover_per_year": 198.4271631982475,
+        "costs": 0.7369220476270235,
+        "funding": 0.0028705924597407758,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 496,
+      "target_nonzero_bars": 496
+    },
+    {
+      "id": "H-0030-R23",
+      "family": "R",
+      "interval": "1h",
+      "params": {
+        "k": 3.0,
+        "hold_hours": 3
+      },
+      "control_of": "H-0027",
+      "summary": {
+        "total_return": -0.44199486338851346,
+        "max_drawdown": -0.6346859029387579,
+        "trades": 496,
+        "win_rate": 0.4576612903225806,
+        "avg_trade": -0.0009975037055609177,
+        "t_trades": -1.1694383088117002,
+        "t_daily_nw": -1.0440570693509343,
+        "sharpe": -0.5225476465800858,
+        "sharpe_ci": [
+          -1.5366758736874118,
+          0.4668273223748146
+        ],
+        "exposure": 0.032932697790042646,
+        "turnover_per_year": 198.4271631982475,
+        "costs": 0.6399847628294149,
+        "funding": 0.004589264809144555,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.00022496560152285294
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.7736603102101575,
+        "max_drawdown": -0.8195712746594155,
+        "trades": 496,
+        "win_rate": 0.375,
+        "avg_trade": -0.0028126758215844217,
+        "t_trades": -3.2981150777397312,
+        "t_daily_nw": -2.9231184939112183,
+        "sharpe": -1.4635917584121065,
+        "sharpe_ci": [
+          -2.5862170215281273,
+          -0.35450530693252974
+        ],
+        "exposure": 0.032932697790042646,
+        "turnover_per_year": 198.4271631982475,
+        "costs": 1.095752878481169,
+        "funding": 0.004337365834621639,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 6.568210636492822e-08
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 496,
+      "target_nonzero_bars": 1444
+    },
+    {
+      "id": "H-0030-R24",
+      "family": "R",
+      "interval": "1h",
+      "params": {
+        "k": 3.0,
+        "hold_hours": 6
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.6063515061564136,
+        "max_drawdown": -0.7668809403260807,
+        "trades": 496,
+        "win_rate": 0.4576612903225806,
+        "avg_trade": -0.0015933381493268956,
+        "t_trades": -1.479948121584702,
+        "t_daily_nw": -1.4617860081748912,
+        "sharpe": -0.6612724444361001,
+        "sharpe_ci": [
+          -1.590916822220705,
+          0.20690636043026428
+        ],
+        "exposure": 0.06242160239012931,
+        "turnover_per_year": 198.4271631982475,
+        "costs": 0.582188233777905,
+        "funding": -0.004146977359239899,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 6.40469556820733e-05
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.8404484569148004,
+        "max_drawdown": -0.8891098777195559,
+        "trades": 496,
+        "win_rate": 0.3911290322580645,
+        "avg_trade": -0.0034085986684091523,
+        "t_trades": -3.166583981136852,
+        "t_daily_nw": -3.098748924258975,
+        "sharpe": -1.4079203239614326,
+        "sharpe_ci": [
+          -2.406204159356902,
+          -0.4694099741018173
+        ],
+        "exposure": 0.06242160239012931,
+        "turnover_per_year": 198.4271631982475,
+        "costs": 1.0406353193285967,
+        "funding": -0.0027854682883596883,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 5.079990322842676e-08
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 496,
+      "target_nonzero_bars": 2737
+    },
+    {
+      "id": "H-0030-R25",
+      "family": "R",
+      "interval": "1h",
+      "params": {
+        "k": 4.0,
+        "hold_hours": 1
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.32958469125746537,
+        "max_drawdown": -0.41699792837383853,
+        "trades": 241,
+        "win_rate": 0.48132780082987553,
+        "avg_trade": -0.0015169059167108874,
+        "t_trades": -1.4050008308265722,
+        "t_daily_nw": -1.62932443179098,
+        "sharpe": -0.6268573600657895,
+        "sharpe_ci": [
+          -1.4748365994771964,
+          0.06194994447420892
+        ],
+        "exposure": 0.005496385157479417,
+        "turnover_per_year": 96.41319824753559,
+        "costs": 0.25996590150837434,
+        "funding": 0.0006338099940962126,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 4.833176641694248e-05
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.5675377367483451,
+        "max_drawdown": -0.5802932949993298,
+        "trades": 241,
+        "win_rate": 0.37344398340248963,
+        "avg_trade": -0.003331129227664684,
+        "t_trades": -3.085857636980791,
+        "t_daily_nw": -3.496156215165144,
+        "sharpe": -1.358525044721678,
+        "sharpe_ci": [
+          -2.2604485683155744,
+          -0.6626623241069504
+        ],
+        "exposure": 0.005496385157479417,
+        "turnover_per_year": 96.41319824753559,
+        "costs": 0.5354518023296638,
+        "funding": 0.0006964649311942638,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 1.0601519273567561e-08
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": true,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 241,
+      "target_nonzero_bars": 241
+    },
+    {
+      "id": "H-0030-R26",
+      "family": "R",
+      "interval": "1h",
+      "params": {
+        "k": 4.0,
+        "hold_hours": 3
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.2200964504416848,
+        "max_drawdown": -0.5115913672241137,
+        "trades": 241,
+        "win_rate": 0.46887966804979253,
+        "avg_trade": -0.0007797892168987455,
+        "t_trades": -0.5334762267429719,
+        "t_daily_nw": -0.4351211685441525,
+        "sharpe": -0.2387692531281923,
+        "sharpe_ci": [
+          -1.4418940223102013,
+          0.7512841681692414
+        ],
+        "exposure": 0.01587337788218122,
+        "turnover_per_year": 96.41319824753559,
+        "costs": 0.33200356338647596,
+        "funding": 0.0034328176214868953,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0018397061582345886
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.4969969391146939,
+        "max_drawdown": -0.6500520585973861,
+        "trades": 241,
+        "win_rate": 0.37344398340248963,
+        "avg_trade": -0.0025957565297665525,
+        "t_trades": -1.7763323942169091,
+        "t_daily_nw": -1.4537542574610902,
+        "sharpe": -0.7910804082556822,
+        "sharpe_ci": [
+          -2.064821307309542,
+          0.287122240385849
+        ],
+        "exposure": 0.01587337788218122,
+        "turnover_per_year": 96.41319824753559,
+        "costs": 0.6840251723542522,
+        "funding": 0.0035173820351476585,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 4.8582612842240636e-05
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 241,
+      "target_nonzero_bars": 696
+    },
+    {
+      "id": "H-0030-R27",
+      "family": "R",
+      "interval": "1h",
+      "params": {
+        "k": 4.0,
+        "hold_hours": 6
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.3997557293290632,
+        "max_drawdown": -0.6310291981371492,
+        "trades": 241,
+        "win_rate": 0.44813278008298757,
+        "avg_trade": -0.0017127343629240945,
+        "t_trades": -0.9277517617045886,
+        "t_daily_nw": -0.8248674885993204,
+        "sharpe": -0.4149917466745918,
+        "sharpe_ci": [
+          -1.5118253956792609,
+          0.5055377922192936
+        ],
+        "exposure": 0.03015029534517755,
+        "turnover_per_year": 96.41319824753559,
+        "costs": 0.3111216587619525,
+        "funding": -0.006333580544269906,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0005164446479914986
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.6130160775556366,
+        "max_drawdown": -0.7348666409101021,
+        "trades": 241,
+        "win_rate": 0.37344398340248963,
+        "avg_trade": -0.003528095314238527,
+        "t_trades": -1.911610349986938,
+        "t_daily_nw": -1.699467389071162,
+        "sharpe": -0.8514438535202112,
+        "sharpe_ci": [
+          -1.9870339851438557,
+          0.1153451063274415
+        ],
+        "exposure": 0.03015029534517755,
+        "turnover_per_year": 96.41319824753559,
+        "costs": 0.6481372205941683,
+        "funding": -0.005162523618354088,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 1.8163941687243668e-05
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 241,
+      "target_nonzero_bars": 1322
+    },
+    {
+      "id": "H-0030-O01",
+      "family": "O",
+      "interval": "5m",
+      "params": {
+        "range_minutes": 30,
+        "exit_hour": 13
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.03904269340592459,
+        "max_drawdown": -0.4541484946979485,
+        "trades": 1193,
+        "win_rate": 0.45934618608549876,
+        "avg_trade": 6.200457430081972e-05,
+        "t_trades": 0.1546965414188525,
+        "t_daily_nw": 0.16559133429765416,
+        "sharpe": 0.06915434257248684,
+        "sharpe_ci": [
+          -0.7664305906391498,
+          0.8778690523739188
+        ],
+        "exposure": 0.06878129899748182,
+        "turnover_per_year": 477.26533406352684,
+        "costs": 1.409475826870593,
+        "funding": -0.015834462277958327,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.010883980759936907
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.8900055254744588,
+        "max_drawdown": -0.8977088932293148,
+        "trades": 1193,
+        "win_rate": 0.3755238893545683,
+        "avg_trade": -0.0017529787604238774,
+        "t_trades": -4.3739498021926915,
+        "t_daily_nw": -4.675902992916411,
+        "sharpe": -1.9498809568698134,
+        "sharpe_ci": [
+          -2.885229597258271,
+          -1.1072615211161447
+        ],
+        "exposure": 0.06878129899748182,
+        "turnover_per_year": 477.26533406352684,
+        "costs": 1.5093332396377501,
+        "funding": -0.006775585267606791,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 2.9738100870702056e-11
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": true,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1193,
+      "target_nonzero_bars": 36191
+    },
+    {
+      "id": "H-0030-O02",
+      "family": "O",
+      "interval": "5m",
+      "params": {
+        "range_minutes": 30,
+        "exit_hour": 16
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": 1.5520409957695969,
+        "max_drawdown": -0.3973024267986802,
+        "trades": 1193,
+        "win_rate": 0.48030176026823135,
+        "avg_trade": 0.0009639769056454631,
+        "t_trades": 1.7596207686501764,
+        "t_daily_nw": 1.812279833662946,
+        "sharpe": 0.7862556852368553,
+        "sharpe_ci": [
+          -0.11230087935528911,
+          1.688497450020146
+        ],
+        "exposure": 0.15040433315912005,
+        "turnover_per_year": 477.26533406352684,
+        "costs": 2.323230925977096,
+        "funding": -0.019839659459648235,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.24450557226314373
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.7074346606892272,
+        "max_drawdown": -0.7414351701772244,
+        "trades": 1193,
+        "win_rate": 0.4157585917854149,
+        "avg_trade": -0.0008510609609924501,
+        "t_trades": -1.5536131622131812,
+        "t_daily_nw": -1.5991178323943416,
+        "sharpe": -0.6942737179688131,
+        "sharpe_ci": [
+          -1.5966183019534288,
+          0.1987416026155518
+        ],
+        "exposure": 0.15040433315912005,
+        "turnover_per_year": 477.26533406352684,
+        "costs": 1.850640503081573,
+        "funding": -0.007052006566425706,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 3.525519484681716e-05
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": true,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1193,
+      "target_nonzero_bars": 79139
+    },
+    {
+      "id": "H-0030-O03",
+      "family": "O",
+      "interval": "5m",
+      "params": {
+        "range_minutes": 60,
+        "exit_hour": 13
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.08418864521528369,
+        "max_drawdown": -0.28872768882275957,
+        "trades": 952,
+        "win_rate": 0.43907563025210083,
+        "avg_trade": -2.5069824489629022e-05,
+        "t_trades": -0.06634922762086849,
+        "t_daily_nw": -0.06562247367148703,
+        "sharpe": -0.02966346483579375,
+        "sharpe_ci": [
+          -0.9574009941584126,
+          0.8794459431007757
+        ],
+        "exposure": 0.043029410367273244,
+        "turnover_per_year": 380.85213581599123,
+        "costs": 1.2501754950201396,
+        "funding": -0.012701577316105184,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.006042342372774623
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.8376413454197524,
+        "max_drawdown": -0.8422585130965958,
+        "trades": 952,
+        "win_rate": 0.3487394957983193,
+        "avg_trade": -0.0018403539180507943,
+        "t_trades": -4.87044252562616,
+        "t_daily_nw": -4.797892882973784,
+        "sharpe": -2.164592858634637,
+        "sharpe_ci": [
+          -3.1921684162110493,
+          -1.1853224984668962
+        ],
+        "exposure": 0.043029410367273244,
+        "turnover_per_year": 380.85213581599123,
+        "costs": 1.4611084122001676,
+        "funding": -0.004514970028638621,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 1.5819123788674005e-11
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": true,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 952,
+      "target_nonzero_bars": 22641
+    },
+    {
+      "id": "H-0030-O04",
+      "family": "O",
+      "interval": "5m",
+      "params": {
+        "range_minutes": 60,
+        "exit_hour": 16
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": 0.1380548595413642,
+        "max_drawdown": -0.3875672280250577,
+        "trades": 952,
+        "win_rate": 0.4569327731092437,
+        "avg_trade": 0.00029178637450139706,
+        "t_trades": 0.5084350429313099,
+        "t_daily_nw": 0.5041922454620734,
+        "sharpe": 0.22729699578595725,
+        "sharpe_ci": [
+          -0.6409216149261115,
+          1.1105677016494606
+        ],
+        "exposure": 0.10816363377203402,
+        "turnover_per_year": 380.85213581599123,
+        "costs": 1.3007701110770138,
+        "funding": -0.012240481049442156,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.02590206826171737
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.7982092474846135,
+        "max_drawdown": -0.80935202167371,
+        "trades": 952,
+        "win_rate": 0.40336134453781514,
+        "avg_trade": -0.0015235959271725915,
+        "t_trades": -2.6549004345471583,
+        "t_daily_nw": -2.6224999151375115,
+        "sharpe": -1.184855241241886,
+        "sharpe_ci": [
+          -2.0793850957592355,
+          -0.2675071770652769
+        ],
+        "exposure": 0.10816363377203402,
+        "turnover_per_year": 380.85213581599123,
+        "costs": 1.4255580954936238,
+        "funding": -0.0037873698819563726,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 2.7183084316817485e-07
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": true,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 952,
+      "target_nonzero_bars": 56913
+    },
+    {
+      "id": "H-0030-O05",
+      "family": "O",
+      "interval": "5m",
+      "params": {
+        "range_minutes": 120,
+        "exit_hour": 13
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.38974245633897775,
+        "max_drawdown": -0.41709270866513504,
+        "trades": 338,
+        "win_rate": 0.3727810650887574,
+        "avg_trade": -0.0014171800652984779,
+        "t_trades": -2.812776464544394,
+        "t_daily_nw": -2.697330424110558,
+        "sharpe": -1.2468704444482066,
+        "sharpe_ci": [
+          -2.237929960750413,
+          -0.39254548278906765
+        ],
+        "exposure": 0.009599467857651922,
+        "turnover_per_year": 135.21851040525738,
+        "costs": 0.3273724478766371,
+        "funding": 0.0015119170826414755,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 4.867688951915028e-08
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.6700727412669152,
+        "max_drawdown": -0.6814291078442305,
+        "trades": 338,
+        "win_rate": 0.28994082840236685,
+        "avg_trade": -0.003232345361122516,
+        "t_trades": -6.415359532239067,
+        "t_daily_nw": -5.915786861585118,
+        "sharpe": -2.73790569442634,
+        "sharpe_ci": [
+          -3.674585151935843,
+          -1.883389033394636
+        ],
+        "exposure": 0.009599467857651922,
+        "turnover_per_year": 135.21851040525738,
+        "costs": 0.622739464721188,
+        "funding": 0.001588627903880783,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": true,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 338,
+      "target_nonzero_bars": 5051
+    },
+    {
+      "id": "H-0030-O06",
+      "family": "O",
+      "interval": "5m",
+      "params": {
+        "range_minutes": 120,
+        "exit_hour": 16
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.393233793095601,
+        "max_drawdown": -0.4973239910444076,
+        "trades": 338,
+        "win_rate": 0.4171597633136095,
+        "avg_trade": -0.0013314726871550269,
+        "t_trades": -1.4402681626780607,
+        "t_daily_nw": -1.4409066693847838,
+        "sharpe": -0.6429221754386963,
+        "sharpe_ci": [
+          -1.5920472736179492,
+          0.18801880390098952
+        ],
+        "exposure": 0.032724853898417824,
+        "turnover_per_year": 135.21851040525738,
+        "costs": 0.29141703371486277,
+        "funding": 0.0013363275531102976,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 3.274617050763595e-05
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.6718979736009163,
+        "max_drawdown": -0.6983919316413905,
+        "trades": 338,
+        "win_rate": 0.3609467455621302,
+        "avg_trade": -0.0031458860508381528,
+        "t_trades": -3.403210993753127,
+        "t_daily_nw": -3.3660116339520467,
+        "sharpe": -1.5020763253155416,
+        "sharpe_ci": [
+          -2.429216745180814,
+          -0.706752336194151
+        ],
+        "exposure": 0.032724853898417824,
+        "turnover_per_year": 135.21851040525738,
+        "costs": 0.5506676130876077,
+        "funding": 0.0014256558582412394,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 3.392123248957546e-10
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 338,
+      "target_nonzero_bars": 17219
+    },
+    {
+      "id": "H-0030-O07",
+      "family": "O",
+      "interval": "15m",
+      "params": {
+        "range_minutes": 30,
+        "exit_hour": 13
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": 0.46351259562073,
+        "max_drawdown": -0.27973486132828773,
+        "trades": 1126,
+        "win_rate": 0.4502664298401421,
+        "avg_trade": 0.0004212978699549934,
+        "t_trades": 1.091475199787053,
+        "t_daily_nw": 1.0772816134347378,
+        "sharpe": 0.48783939355217804,
+        "sharpe_ci": [
+          -0.42849689847895456,
+          1.392009553791027
+        ],
+        "exposure": 0.05999737728845836,
+        "turnover_per_year": 450.4616648411829,
+        "costs": 1.6275101846918871,
+        "funding": -0.015329855178910206,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0837848298032039
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.8106893484966423,
+        "max_drawdown": -0.8164828532524577,
+        "trades": 1126,
+        "win_rate": 0.369449378330373,
+        "avg_trade": -0.0013938595788804862,
+        "t_trades": -3.6110466672726598,
+        "t_daily_nw": -3.5478119525741785,
+        "sharpe": -1.6107225394385298,
+        "sharpe_ci": [
+          -2.6065588194025424,
+          -0.6254484819967788
+        ],
+        "exposure": 0.05999737728845836,
+        "turnover_per_year": 450.4616648411829,
+        "costs": 1.631125935445882,
+        "funding": -0.004973320519309892,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 6.294292087538622e-09
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": true,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1126,
+      "target_nonzero_bars": 10523
+    },
+    {
+      "id": "H-0030-O08",
+      "family": "O",
+      "interval": "15m",
+      "params": {
+        "range_minutes": 30,
+        "exit_hour": 16
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": 2.6390964056525434,
+        "max_drawdown": -0.3005468034379156,
+        "trades": 1126,
+        "win_rate": 0.46625222024866786,
+        "avg_trade": 0.001311406343678151,
+        "t_trades": 2.41904586261902,
+        "t_daily_nw": 2.424663163480224,
+        "sharpe": 1.0803447331440486,
+        "sharpe_ci": [
+          0.19623650134341525,
+          1.949190001831631
+        ],
+        "exposure": 0.13703667805075517,
+        "turnover_per_year": 450.4616648411829,
+        "costs": 2.7630461411149034,
+        "funding": -0.024120690332290376,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.48760560630134725
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.5285542236140632,
+        "max_drawdown": -0.5967121543019387,
+        "trades": 1126,
+        "win_rate": 0.4067495559502664,
+        "avg_trade": -0.000503722158519072,
+        "t_trades": -0.9291487396807897,
+        "t_daily_nw": -0.9285869705675329,
+        "sharpe": -0.41531012602609074,
+        "sharpe_ci": [
+          -1.3413417226797122,
+          0.5059183993481461
+        ],
+        "exposure": 0.13703667805075517,
+        "turnover_per_year": 450.4616648411829,
+        "costs": 2.1576580992129646,
+        "funding": -0.006909960215392762,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0004247791121746447
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": true,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1126,
+      "target_nonzero_bars": 24035
+    },
+    {
+      "id": "H-0030-O09",
+      "family": "O",
+      "interval": "15m",
+      "params": {
+        "range_minutes": 60,
+        "exit_hour": 13
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": 0.07866333509731116,
+        "max_drawdown": -0.26672033032576814,
+        "trades": 851,
+        "win_rate": 0.43595769682726204,
+        "avg_trade": 0.00014927987397261324,
+        "t_trades": 0.3948153898868305,
+        "t_daily_nw": 0.38883578721097306,
+        "sharpe": 0.17651693974024754,
+        "sharpe_ci": [
+          -0.7419900373859358,
+          1.0275553982528074
+        ],
+        "exposure": 0.035623264591683725,
+        "turnover_per_year": 340.446604600219,
+        "costs": 1.1108827311597052,
+        "funding": -0.012348740875480041,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.019368343905121432
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.7701658252661313,
+        "max_drawdown": -0.776779723005316,
+        "trades": 851,
+        "win_rate": 0.3396004700352526,
+        "avg_trade": -0.0016659490430456217,
+        "t_trades": -4.406068103602405,
+        "t_daily_nw": -4.323265543954897,
+        "sharpe": -1.9580844447685346,
+        "sharpe_ci": [
+          -3.013748449701829,
+          -1.004455098710469
+        ],
+        "exposure": 0.035623264591683725,
+        "turnover_per_year": 340.446604600219,
+        "costs": 1.3937567288289556,
+        "funding": -0.005167538349929357,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 1.7434736987453903e-10
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": true,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 851,
+      "target_nonzero_bars": 6248
+    },
+    {
+      "id": "H-0030-O10",
+      "family": "O",
+      "interval": "15m",
+      "params": {
+        "range_minutes": 60,
+        "exit_hour": 16
+      },
+      "control_of": "H-0028",
+      "summary": {
+        "total_return": 0.15764522279878035,
+        "max_drawdown": -0.4383085147839857,
+        "trades": 851,
+        "win_rate": 0.45593419506462984,
+        "avg_trade": 0.00032348170123059565,
+        "t_trades": 0.5410666119268395,
+        "t_daily_nw": 0.5373550287058616,
+        "sharpe": 0.24189359823510345,
+        "sharpe_ci": [
+          -0.6219833744601899,
+          1.1032986275475243
+        ],
+        "exposure": 0.09384746081611942,
+        "turnover_per_year": 340.446604600219,
+        "costs": 0.987108329394926,
+        "funding": -0.009690370496539251,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.02799311546499661
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.7533366211057849,
+        "max_drawdown": -0.7624834255219513,
+        "trades": 851,
+        "win_rate": 0.391304347826087,
+        "avg_trade": -0.0014917430216438315,
+        "t_trades": -2.4952306379517606,
+        "t_daily_nw": -2.466267470150832,
+        "sharpe": -1.1134641439981874,
+        "sharpe_ci": [
+          -1.9998937922761928,
+          -0.2275481613369197
+        ],
+        "exposure": 0.09384746081611942,
+        "turnover_per_year": 340.446604600219,
+        "costs": 1.209753721286725,
+        "funding": -0.0036092956215647656,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 5.54815951847587e-07
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": true,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 851,
+      "target_nonzero_bars": 16460
+    },
+    {
+      "id": "H-0030-O11",
+      "family": "O",
+      "interval": "15m",
+      "params": {
+        "range_minutes": 120,
+        "exit_hour": 13
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.30331294382274576,
+        "max_drawdown": -0.3311882325995724,
+        "trades": 277,
+        "win_rate": 0.37184115523465705,
+        "avg_trade": -0.0012588943042967586,
+        "t_trades": -2.213493647674249,
+        "t_daily_nw": -2.199572410510675,
+        "sharpe": -0.9835035271206627,
+        "sharpe_ci": [
+          -1.8293303823765659,
+          -0.19685434138694982
+        ],
+        "exposure": 0.007183949005365156,
+        "turnover_per_year": 110.81516976998904,
+        "costs": 0.27129850836323427,
+        "funding": 0.0036692211535485028,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 4.28196741841802e-07
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.5791054887166149,
+        "max_drawdown": -0.5940524016398676,
+        "trades": 277,
+        "win_rate": 0.2779783393501805,
+        "avg_trade": -0.0030741071845909332,
+        "t_trades": -5.40457938809216,
+        "t_daily_nw": -5.119528306667252,
+        "sharpe": -2.3175810675032653,
+        "sharpe_ci": [
+          -3.2031557185390604,
+          -1.5535982281124694
+        ],
+        "exposure": 0.007183949005365156,
+        "turnover_per_year": 110.81516976998904,
+        "costs": 0.5397022350910441,
+        "funding": 0.003389272875590286,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": true,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 277,
+      "target_nonzero_bars": 1260
+    },
+    {
+      "id": "H-0030-O12",
+      "family": "O",
+      "interval": "15m",
+      "params": {
+        "range_minutes": 120,
+        "exit_hour": 16
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.35585443114792825,
+        "max_drawdown": -0.4174774085586709,
+        "trades": 277,
+        "win_rate": 0.4223826714801444,
+        "avg_trade": -0.0014307293506056952,
+        "t_trades": -1.3586733915030127,
+        "t_daily_nw": -1.362703372014617,
+        "sharpe": -0.6064988808524135,
+        "sharpe_ci": [
+          -1.466476033992883,
+          0.1780070361888322
+        ],
+        "exposure": 0.026135890667137996,
+        "turnover_per_year": 110.81516976998904,
+        "costs": 0.24662014296056167,
+        "funding": 0.0033788991284633336,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 3.2047923337608086e-05
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.6108842123940302,
+        "max_drawdown": -0.6372253649616695,
+        "trades": 277,
+        "win_rate": 0.35018050541516244,
+        "avg_trade": -0.0032455903438438826,
+        "t_trades": -3.0823231855937157,
+        "t_daily_nw": -3.0494340071670574,
+        "sharpe": -1.3601007580906008,
+        "sharpe_ci": [
+          -2.1910732137009754,
+          -0.6392973443783514
+        ],
+        "exposure": 0.026135890667137996,
+        "turnover_per_year": 110.81516976998904,
+        "costs": 0.4905994294995653,
+        "funding": 0.0031326409509012257,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 6.054715617764828e-10
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": true,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 277,
+      "target_nonzero_bars": 4584
+    },
+    {
+      "id": "H-0030-O13",
+      "family": "O",
+      "interval": "1h",
+      "params": {
+        "range_minutes": 60,
+        "exit_hour": 13
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.4081441602109601,
+        "max_drawdown": -0.4191768252090039,
+        "trades": 513,
+        "win_rate": 0.3762183235867446,
+        "avg_trade": -0.0009906103386906958,
+        "t_trades": -2.8302031004628514,
+        "t_daily_nw": -2.850035213288692,
+        "sharpe": -1.258838224615401,
+        "sharpe_ci": [
+          -2.2889525085160485,
+          -0.40094691628028156
+        ],
+        "exposure": 0.011699774214883572,
+        "turnover_per_year": 205.22809419496164,
+        "costs": 0.5267878979558549,
+        "funding": 0.002058624122754754,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 2.9511497257050934e-07
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.7671525022201107,
+        "max_drawdown": -0.7706284661017178,
+        "trades": 513,
+        "win_rate": 0.253411306042885,
+        "avg_trade": -0.002805532680658697,
+        "t_trades": -8.016689852417398,
+        "t_daily_nw": -7.813925649423967,
+        "sharpe": -3.4340659738115553,
+        "sharpe_ci": [
+          -4.520074325887086,
+          -2.504948199830238
+        ],
+        "exposure": 0.011699774214883572,
+        "turnover_per_year": 205.22809419496164,
+        "costs": 0.8851073230437586,
+        "funding": 0.00213038649679792,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": true,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 513,
+      "target_nonzero_bars": 513
+    },
+    {
+      "id": "H-0030-O14",
+      "family": "O",
+      "interval": "1h",
+      "params": {
+        "range_minutes": 60,
+        "exit_hour": 16
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.2793285328701013,
+        "max_drawdown": -0.4118309665152108,
+        "trades": 513,
+        "win_rate": 0.42105263157894735,
+        "avg_trade": -0.0005054161024567964,
+        "t_trades": -0.7019197402116454,
+        "t_daily_nw": -0.716581903595956,
+        "sharpe": -0.313847878046028,
+        "sharpe_ci": [
+          -1.1637873237157197,
+          0.5283964937180136
+        ],
+        "exposure": 0.04679909685953429,
+        "turnover_per_year": 205.22809419496164,
+        "costs": 0.5191026657997816,
+        "funding": 0.001607199635165552,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0008237248590671209
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.7163749041905876,
+        "max_drawdown": -0.7315485207803877,
+        "trades": 513,
+        "win_rate": 0.34307992202729043,
+        "avg_trade": -0.002320208394541451,
+        "t_trades": -3.222843021890886,
+        "t_daily_nw": -3.277441423545003,
+        "sharpe": -1.4311190614848777,
+        "sharpe_ci": [
+          -2.292510037861417,
+          -0.5926636802983365
+        ],
+        "exposure": 0.04679909685953429,
+        "turnover_per_year": 205.22809419496164,
+        "costs": 0.8553904774367016,
+        "funding": 0.0018779123259594938,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 8.655379635236216e-09
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": true,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 513,
+      "target_nonzero_bars": 2052
+    },
+    {
+      "id": "H-0030-M01",
+      "family": "M",
+      "interval": "1h",
+      "params": {
+        "window_hours": 3,
+        "entry_hour": 12
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.9323082431724564,
+        "max_drawdown": -0.9681922305102587,
+        "trades": 1826,
+        "win_rate": 0.4583789704271632,
+        "avg_trade": -0.0011506928663944512,
+        "t_trades": -1.9357746194540717,
+        "t_daily_nw": -1.9632545462960156,
+        "sharpe": -0.8660995760334379,
+        "sharpe_ci": [
+          -1.80403537318379,
+          -0.003494274881408524
+        ],
+        "exposure": 0.4997377243597053,
+        "turnover_per_year": 730.5,
+        "costs": 1.017855603035749,
+        "funding": 0.0017551516718552415,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 6.497445371289601e-06
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.997566325406457,
+        "max_drawdown": -0.9985666725438785,
+        "trades": 1826,
+        "win_rate": 0.41073384446878425,
+        "avg_trade": -0.002966951065517233,
+        "t_trades": -4.990918046783848,
+        "t_daily_nw": -5.062493314614726,
+        "sharpe": -2.235149447226086,
+        "sharpe_ci": [
+          -3.204596968019173,
+          -1.3596637276073844
+        ],
+        "exposure": 0.4997377243597053,
+        "turnover_per_year": 730.5,
+        "costs": 1.415578363317352,
+        "funding": 0.00041841451562555683,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 1.6359136267851682e-13
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1826,
+      "target_nonzero_bars": 21912
+    },
+    {
+      "id": "H-0030-M02",
+      "family": "M",
+      "interval": "1h",
+      "params": {
+        "window_hours": 3,
+        "entry_hour": 18
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.922950354727616,
+        "max_drawdown": -0.9497713458932265,
+        "trades": 1826,
+        "win_rate": 0.4408543263964951,
+        "avg_trade": -0.0012597949803474743,
+        "t_trades": -3.1756165530530525,
+        "t_daily_nw": -3.0494488443712715,
+        "sharpe": -1.4206433557727836,
+        "sharpe_ci": [
+          -2.3571075834756825,
+          -0.5764378852016231
+        ],
+        "exposure": 0.24986886217985266,
+        "turnover_per_year": 730.5,
+        "costs": 1.0533209055597856,
+        "funding": 0.0,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 3.2968126006949205e-08
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.997225060840149,
+        "max_drawdown": -0.997850888572293,
+        "trades": 1826,
+        "win_rate": 0.3619934282584885,
+        "avg_trade": -0.003075561230892089,
+        "t_trades": -7.751484768738349,
+        "t_daily_nw": -7.445159654458786,
+        "sharpe": -3.4714270242644183,
+        "sharpe_ci": [
+          -4.516926661249482,
+          -2.4910461851573458
+        ],
+        "exposure": 0.24986886217985266,
+        "turnover_per_year": 730.5,
+        "costs": 1.3587636433626291,
+        "funding": 0.0,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1826,
+      "target_nonzero_bars": 10956
+    },
+    {
+      "id": "H-0030-M03",
+      "family": "M",
+      "interval": "1h",
+      "params": {
+        "window_hours": 3,
+        "entry_hour": 21
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.889348377743529,
+        "max_drawdown": -0.9222323210284981,
+        "trades": 1826,
+        "win_rate": 0.4222343921139102,
+        "avg_trade": -0.001130772545739165,
+        "t_trades": -3.953691044197017,
+        "t_daily_nw": -3.8249191662964273,
+        "sharpe": -1.7685218893951211,
+        "sharpe_ci": [
+          -2.730717279196346,
+          -0.8960054500759073
+        ],
+        "exposure": 0.12493443108992633,
+        "turnover_per_year": 730.5,
+        "costs": 1.0492887945737999,
+        "funding": 0.0,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 1.9184104305125516e-09
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9960091265825335,
+        "max_drawdown": -0.9967876376392247,
+        "trades": 1826,
+        "win_rate": 0.31161007667031765,
+        "avg_trade": -0.002946271278850867,
+        "t_trades": -10.30094335578693,
+        "t_daily_nw": -9.967489681370798,
+        "sharpe": -4.6123322813185865,
+        "sharpe_ci": [
+          -5.86746252174364,
+          -3.5423849668396055
+        ],
+        "exposure": 0.12493443108992633,
+        "turnover_per_year": 730.5,
+        "costs": 1.1420650146211133,
+        "funding": 0.0,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1826,
+      "target_nonzero_bars": 5478
+    },
+    {
+      "id": "H-0030-M04",
+      "family": "M",
+      "interval": "1h",
+      "params": {
+        "window_hours": 6,
+        "entry_hour": 12
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.9141128403803971,
+        "max_drawdown": -0.9580525979685928,
+        "trades": 1825,
+        "win_rate": 0.45808219178082193,
+        "avg_trade": -0.0010218018218797152,
+        "t_trades": -1.7188212833680148,
+        "t_daily_nw": -1.6651963458035834,
+        "sharpe": -0.7690962802694774,
+        "sharpe_ci": [
+          -1.6967168543521847,
+          0.11037966841307006
+        ],
+        "exposure": 0.4994640454307022,
+        "turnover_per_year": 730.0999452354873,
+        "costs": 1.1904241086568612,
+        "funding": -0.00814352179808021,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 1.7229371004123806e-05
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9969055543214685,
+        "max_drawdown": -0.9981297155670138,
+        "trades": 1825,
+        "win_rate": 0.40986301369863015,
+        "avg_trade": -0.0028380777479371806,
+        "t_trades": -4.773439330560366,
+        "t_daily_nw": -4.624844624324968,
+        "sharpe": -2.137946000945217,
+        "sharpe_ci": [
+          -3.0719084530871825,
+          -1.256161529843958
+        ],
+        "exposure": 0.4994640454307022,
+        "turnover_per_year": 730.0999452354873,
+        "costs": 1.5307950962634709,
+        "funding": -0.005941656182798035,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 8.716360966332104e-13
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1825,
+      "target_nonzero_bars": 21900
+    },
+    {
+      "id": "H-0030-M05",
+      "family": "M",
+      "interval": "1h",
+      "params": {
+        "window_hours": 6,
+        "entry_hour": 18
+      },
+      "control_of": "H-0029",
+      "summary": {
+        "total_return": -0.9372049363145748,
+        "max_drawdown": -0.9631571085457764,
+        "trades": 1825,
+        "win_rate": 0.4471232876712329,
+        "avg_trade": -0.0013725525240366443,
+        "t_trades": -3.458960705175975,
+        "t_daily_nw": -3.292034526280838,
+        "sharpe": -1.5474239058185957,
+        "sharpe_ci": [
+          -2.523107395077832,
+          -0.6913075538605575
+        ],
+        "exposure": 0.2497320227153511,
+        "turnover_per_year": 730.0999452354873,
+        "costs": 1.0217483041922524,
+        "funding": 0.0,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 8.578250110247154e-09
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9977352603709954,
+        "max_drawdown": -0.9984252910851649,
+        "trades": 1825,
+        "win_rate": 0.3682191780821918,
+        "avg_trade": -0.0031883277230813404,
+        "t_trades": -8.033259757558344,
+        "t_daily_nw": -7.647370739444872,
+        "sharpe": -3.597820257415634,
+        "sharpe_ci": [
+          -4.672991233382131,
+          -2.628433993256702
+        ],
+        "exposure": 0.2497320227153511,
+        "turnover_per_year": 730.0999452354873,
+        "costs": 1.3696024432459213,
+        "funding": 0.0,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1825,
+      "target_nonzero_bars": 10950
+    },
+    {
+      "id": "H-0030-M06",
+      "family": "M",
+      "interval": "1h",
+      "params": {
+        "window_hours": 6,
+        "entry_hour": 21
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.8126238876218276,
+        "max_drawdown": -0.8771317829108767,
+        "trades": 1825,
+        "win_rate": 0.4191780821917808,
+        "avg_trade": -0.0008431751847384478,
+        "t_trades": -2.94760185560037,
+        "t_daily_nw": -2.9579500085586963,
+        "sharpe": -1.3185575641149963,
+        "sharpe_ci": [
+          -2.3060363639344827,
+          -0.4912840276259845
+        ],
+        "exposure": 0.12486601135767555,
+        "turnover_per_year": 730.0999452354873,
+        "costs": 1.325352469425516,
+        "funding": 0.0,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 1.8374064580939375e-07
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.99322327869118,
+        "max_drawdown": -0.9948722531005089,
+        "trades": 1825,
+        "win_rate": 0.31726027397260276,
+        "avg_trade": -0.0026586741984884806,
+        "t_trades": -9.29297743057601,
+        "t_daily_nw": -9.32928022603462,
+        "sharpe": -4.161232361812326,
+        "sharpe_ci": [
+          -5.448283432932116,
+          -3.0713482395756224
+        ],
+        "exposure": 0.12486601135767555,
+        "turnover_per_year": 730.0999452354873,
+        "costs": 1.4188085172549205,
+        "funding": 0.0,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1825,
+      "target_nonzero_bars": 5475
+    },
+    {
+      "id": "H-0030-M07",
+      "family": "M",
+      "interval": "1h",
+      "params": {
+        "window_hours": 12,
+        "entry_hour": 12
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.858931134406788,
+        "max_drawdown": -0.9519392788247909,
+        "trades": 1826,
+        "win_rate": 0.4556407447973713,
+        "avg_trade": -0.0007524533706556989,
+        "t_trades": -1.266108455164677,
+        "t_daily_nw": -1.2586399842764109,
+        "sharpe": -0.5665076628240532,
+        "sharpe_ci": [
+          -1.5131624230536413,
+          0.3435015329127255
+        ],
+        "exposure": 0.4997377243597053,
+        "turnover_per_year": 730.5,
+        "costs": 1.987367498067091,
+        "funding": 0.07499033521191287,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.00012023524968124422
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9949207866467187,
+        "max_drawdown": -0.9971754195006725,
+        "trades": 1826,
+        "win_rate": 0.40744797371303393,
+        "avg_trade": -0.0025687115697784805,
+        "t_trades": -4.322359989753832,
+        "t_daily_nw": -4.296537469274473,
+        "sharpe": -1.9354043349835606,
+        "sharpe_ci": [
+          -2.9156343861579663,
+          -0.984374135132331
+        ],
+        "exposure": 0.4997377243597053,
+        "turnover_per_year": 730.5,
+        "costs": 2.345003603046746,
+        "funding": 0.036181513271514774,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 4.51202408768836e-11
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1826,
+      "target_nonzero_bars": 21912
+    },
+    {
+      "id": "H-0030-M08",
+      "family": "M",
+      "interval": "1h",
+      "params": {
+        "window_hours": 12,
+        "entry_hour": 18
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.7439629594668472,
+        "max_drawdown": -0.8351729283190976,
+        "trades": 1826,
+        "win_rate": 0.4556407447973713,
+        "avg_trade": -0.0006039052489414234,
+        "t_trades": -1.52333855014588,
+        "t_daily_nw": -1.477842007493044,
+        "sharpe": -0.6815052662127092,
+        "sharpe_ci": [
+          -1.6383597357705655,
+          0.1829229460968918
+        ],
+        "exposure": 0.24986886217985266,
+        "turnover_per_year": 730.5,
+        "costs": 1.3306955513898133,
+        "funding": 0.0,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 5.3104064006548324e-05
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.990758203419299,
+        "max_drawdown": -0.9926575560686385,
+        "trades": 1826,
+        "win_rate": 0.37513691128148957,
+        "avg_trade": -0.002419671499486038,
+        "t_trades": -6.103102009034696,
+        "t_daily_nw": -5.921057054751322,
+        "sharpe": -2.7326410224488487,
+        "sharpe_ci": [
+          -3.822621363173643,
+          -1.7700583524576858
+        ],
+        "exposure": 0.24986886217985266,
+        "turnover_per_year": 730.5,
+        "costs": 1.4499915034730742,
+        "funding": 0.0,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 1.9317880628477724e-14
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1826,
+      "target_nonzero_bars": 10956
+    },
+    {
+      "id": "H-0030-M09",
+      "family": "M",
+      "interval": "1h",
+      "params": {
+        "window_hours": 12,
+        "entry_hour": 21
+      },
+      "control_of": null,
+      "summary": {
+        "total_return": -0.44339555221147575,
+        "max_drawdown": -0.6968429806232203,
+        "trades": 1826,
+        "win_rate": 0.43373493975903615,
+        "avg_trade": -0.00024763706040113,
+        "t_trades": -0.8685008037644052,
+        "t_daily_nw": -0.8224639629709303,
+        "sharpe": -0.3885836897681414,
+        "sharpe_ci": [
+          -1.475801382952186,
+          0.5230780942407888
+        ],
+        "exposure": 0.12493443108992633,
+        "turnover_per_year": 730.5,
+        "costs": 2.5734402259030453,
+        "funding": 0.0,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 0.0005815519101599054
+      },
+      "summary_stressed_costs": {
+        "total_return": -0.9798660345924098,
+        "max_drawdown": -0.9825218268663679,
+        "trades": 1826,
+        "win_rate": 0.32858707557502737,
+        "avg_trade": -0.002063135793512832,
+        "t_trades": -7.234943693520797,
+        "t_daily_nw": -6.850864673636699,
+        "sharpe": -3.2393014806526903,
+        "sharpe_ci": [
+          -4.642710584815058,
+          -2.0804419889789676
+        ],
+        "exposure": 0.12493443108992633,
+        "turnover_per_year": 730.5,
+        "costs": 2.015406322416534,
+        "funding": 0.0,
+        "liquidations": 0,
+        "attempts": 79,
+        "t_required": 3.223617673757085,
+        "passes": false,
+        "deflated_sharpe": 2.1094237467877974e-15
+      },
+      "criteria": {
+        "t": false,
+        "stressed_positive": false,
+        "drawdown_40pct_smaller": false,
+        "controls": true
+      },
+      "passes_all": false,
+      "trades_total": 1826,
+      "target_nonzero_bars": 5478
+    }
+  ],
+  "selected": null,
+  "note": "research/intradag-grid-protokoll.md. Ingen variant kan godkännas direkt."
+}
