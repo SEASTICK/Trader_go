@@ -8,7 +8,7 @@
   --bg:#f6f7f6; --side:#f6f7f6; --card:#ffffff; --raise:#ffffff; --line:#e4e7e5; --line-2:#d3d8d5;
   --ink:#141916; --ink-2:#3b443f; --muted:#5f6963; --hover:#eef0ee; --active:#e6eae7;
   --accent:#2d7a47; --accent-h:#256a3d; --on-accent:#fff; --accent-soft:#e3f1e8;
-  --good:#237a3f; --bad:#b83a2b; --warn:#99650f; --idle:#7b847f;
+  --good:#237a3f; --bad:#b83a2b; --warn:#8a5a0b; --idle:#7b847f;
   --good-soft:#e3f1e8; --bad-soft:#f9e6e3; --warn-soft:#f8eed7;
   --shadow:0 1px 2px rgba(16,24,19,.05); --shadow-pop:0 12px 32px rgba(16,24,19,.14);
   --s1:#2d7a47; --s2:#7b847f; --ind1:#a56f10; --ind2:#2a6fb0; --ind3:#8b4fc2; --mark-entry:#2a6fb0; --mark-exit:#a56f10;
