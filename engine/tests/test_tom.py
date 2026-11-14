@@ -323,6 +323,11 @@ def test_verifieringsstatus_kraver_kalla_person_och_datum_pa_varje_rad():
 def test_standardbeteendet_ar_ogiltig_tills_kalendern_ar_verifierad(monkeypatch):
     idx = calendar("2004-01-02", "2025-02-28")
     base = prices(idx, window_boost=0.004, noise=0.006)
+    full = nyse_sessions.read_ledger()
+    assert (full["verified_source"].str.strip() != "").all()                                                         # den committade ledgern är nu fullt verifierad (176/176)
+    partial = full.copy()
+    partial.loc[partial.index[:91], ["verified_source", "verified_by", "verified_date"]] = ""                          # fail-closed ska fortfarande gälla så fort en rad saknar källa
+    monkeypatch.setattr(nyse_sessions, "read_ledger", lambda path=nyse_sessions.LEDGER_FILE: partial)
     out = tom.evaluate(base)                                                                                         # standard: require_verified_calendar=True
     assert out["valid"] is False and out["decision"] == "OGILTIG" and "criteria" not in out and "metrics" not in out
     assert any("inte verifierad mot officiell källa" in r for r in out["invalid_reasons"]) and out["calendar_verification"]["fully_verified"] is False

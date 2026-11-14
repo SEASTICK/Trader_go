@@ -39,25 +39,32 @@ def test_apply_fyller_bara_styrkta_rader_och_skriver_inte_over(tmp_path, monkeyp
     assert (others["verified_source"] == "").all()                                                                     # allt annat förblir overifierat
 
 
-def test_repots_ledger_har_bara_kallor_som_finns_i_evidence_och_fail_closed_gar_kvar():
+def test_repots_ledger_ar_fullt_verifierad_och_varje_rad_har_en_kand_kalla_med_datumet_i_hanvisningen():
     led = nyse_sessions.read_ledger()
     ver = led[led["verified_source"].str.strip() != ""]
-    assert len(ver) >= 85
+    assert len(ver) == len(led) == 176
     human = {h["source"] for h in nv.HUMAN_VERIFIED.values()}
-    assert all(r["verified_source"].split(":")[0] in nv.EVIDENCE or r["verified_source"] in human or r["verified_source"].strip().lower() == "saknas" for _, r in ver.iterrows())
+    for _, r in ver.iterrows():
+        first = r["verified_source"].split(" || ")[0]
+        assert first.split(":")[0] in nv.EVIDENCE or first in human, r["date"]
+        d = pd.Timestamp(r["date"])
+        if first.split(":")[0].startswith(("FINRA-IN-", "FINRA-NTM-", "NASD-UPC-")):                                  # dokumentets egen mening nämner månad och dag, och en tabellrad finns
+            assert d.strftime("%B") in first and f" {d.day}," in first and "s. " in first and "Markets Closed" in first, r["date"]
     assert (ver["verified_by"].str.strip() != "").all() and (ver["verified_date"].str.strip() != "").all()
     r = nyse_sessions.reconcile()
-    assert r["ok"] and (r["fully_verified"] is False or r["verified_rows"] == r["ledger_rows"])
+    assert r["ok"] and r["fully_verified"] is True and r["verified_rows"] == r["ledger_rows"] == 176
 
 
 @pytest.mark.skipif(not os.environ.get("NYSE_EVIDENCE_DIR") or not shutil.which("pdftoppm"), reason="kräver NYSE_EVIDENCE_DIR med dokumenten och poppler")
 def test_avstamning_mot_de_nedladdade_dokumenten(tmp_path):
     pytest.importorskip("PIL")
     r = nv.verify(Path(os.environ["NYSE_EVIDENCE_DIR"]), tmp_path)
-    assert r["problems"] == [] and r["rule_7_2_text_found"] and r["supported_rows"] == 84
+    assert r["problems"] == [] and r["rule_7_2_text_found"] and r["supported_rows"] == 176
     years = sorted({d.year for d in r["supported"]})
-    assert years == [2006, 2007, 2012, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
-    assert date(2012, 10, 30) in r["supported"] and date(2007, 1, 2) in r["supported"] and date(2020, 7, 3) in r["supported"] and date(2018, 12, 5) not in r["supported"]   # 2018-12-05 styrks av en människa, inte av maskinavstämningen
+    assert years == list(range(2006, 2025))                                                                           # varje år 2006-2024 har minst en dokumentstyrkt dag
+    for d in (date(2006, 1, 2), date(2007, 1, 1), date(2008, 3, 21), date(2013, 3, 29), date(2017, 1, 2), date(2012, 10, 30), date(2007, 1, 2), date(2020, 7, 3), date(2018, 12, 5)):
+        assert d in r["supported"], d
+    assert r["supported"][date(2008, 3, 21)][0] == "FINRA-IN-2008" and r["supported"][date(2018, 12, 5)][0] == "FINRA-RN-18-39"
 
 
 def test_manniskoverifierad_rad_markeras_som_det_och_fylls_av_apply(tmp_path, monkeypatch):
@@ -85,7 +92,7 @@ def test_luckorna_listas_datum_for_datum_och_filen_ar_i_synk_med_ledgern():
     assert nv.GAPS_FILE.read_text(encoding="utf-8") == text                                                          # den committade listan är genererad ur den committade ledgern
 
 
-def test_2018_12_05_ar_den_enda_manniskoverifierade_raden_och_resten_ar_overifierat():
+def test_2018_12_05_ar_den_enda_manniskoverifierade_raden_och_resten_ar_maskinavstamt():
     assert list(nv.HUMAN_VERIFIED) == [date(2018, 12, 5)]
     led = nyse_sessions.read_ledger()
     ver = led[led["verified_source"].str.strip() != ""]
@@ -93,7 +100,7 @@ def test_2018_12_05_ar_den_enda_manniskoverifierade_raden_och_resten_ar_overifie
     human = ver[~ver["verified_by"].str.startswith("Claude")]
     assert list(human["date"]) == ["2018-12-05"] and len(machine) == len(ver) - 1                                      # övriga verifierade rader är maskinavstämda
     r = nyse_sessions.reconcile()
-    assert (r["verified_rows"], r["unverified_rows"], r["fully_verified"]) == (85, 91, False)                          # 85/176, resten fail-closed
+    assert (r["verified_rows"], r["unverified_rows"], r["fully_verified"]) == (176, 0, True)                           # 176/176; 2018-12-05 har även maskinavstämd källa
 
 
 PRESS_SAMPLE = """
@@ -139,3 +146,63 @@ def test_tidiga_stangningar_ar_handelsdagar_och_ingen_extra_stangning_finns_i_le
         rows = led[pd.to_datetime(led["date"]).dt.year == y]
         assert (~rows["name"].str.startswith("Extra")).sum() == 9
     assert set(nv.PRESS_RELEASES) <= set(nv.EVIDENCE)
+
+
+NOTICE_SAMPLE = """
+New Year's Day:
+The securities exchanges will be closed on Tuesday, January 1, 2013, in observance of New
+Year's Day.
+
+   Trade Date     Settlement Date    Regulation T Date
+   December 31         January 4          January 8
+   January 1              N/A               N/A
+       2                    7                  9
+\f
+Good Friday:
+The securities exchanges will be closed on Friday, March 29, 2013, in observance of Good Friday.
+
+   March 28            April 2             April 4
+       29              Markets Closed       —
+\f
+Independence Day:
+The securities exchanges will be closed on Thursday, July 4, 2013, in observance of Independence Day.
+
+   July 3                 July 8
+Columbus Day and Veterans Day: Banks will be closed on Monday, October 14, because many of the nation's banking institutions will be closed.
+"""
+
+
+def test_schemats_meningar_ger_datum_med_sida_och_tabellrad_och_bankhelgdagar_ger_inga_datum():
+    got = nv.notice_closures(NOTICE_SAMPLE)
+    assert set(got) == {date(2013, 1, 1), date(2013, 3, 29), date(2013, 7, 4)}
+    assert got[date(2013, 1, 1)][0] == 1 and got[date(2013, 3, 29)][0] == 2 and got[date(2013, 7, 4)][0] == 3
+    assert got[date(2013, 1, 1)][2] is True and got[date(2013, 3, 29)][2] is True                                      # tabellrad med N/A respektive Markets Closed
+    assert got[date(2013, 7, 4)][2] is False                                                                           # meningen finns men tabellen saknar dagens rad
+
+
+def test_notice_problems_fangar_saknade_extra_och_radlosa_datum():
+    got = nv.notice_closures(NOTICE_SAMPLE)
+    want = {date(2013, 1, 1), date(2013, 3, 29), date(2013, 7, 4)}
+    assert [p for p in nv.notice_problems("K", got, want) if "tabellen saknar raden" not in p] == []
+    assert any("tabellen saknar raden" in p and "2013-07-04" in p for p in nv.notice_problems("K", got, want))
+    saknas = nv.notice_problems("K", got, want | {date(2013, 5, 27)})                                                  # ledgern har ett datum som dokumentet inte anger
+    assert any("bara i ledgern [datetime.date(2013, 5, 27)]" in p for p in saknas)
+    extra = nv.notice_problems("K", got, want - {date(2013, 3, 29)})                                                   # dokumentet anger ett datum som ledgern saknar
+    assert any("bara i dokumentet [datetime.date(2013, 3, 29)]" in p for p in extra)
+
+
+def test_memo_och_nasd_motsagelser_fangas_men_kanda_undantag_tillats():
+    memos = {date(2006, 1, 16), date(2006, 7, 4), date(2007, 1, 2)}                                                    # Ford 2007-01-02 saknas medvetet i NASD:s schema
+    nasd = {date(2006, 1, 2), date(2006, 1, 16), date(2006, 7, 4), date(2007, 1, 1)}                                   # 2006-01-02 och 2007-01-01 står bara hos NASD
+    assert nv.memo_nasd_conflicts(memos, nasd) == []
+    assert any("2006-09-04" in p for p in nv.memo_nasd_conflicts(memos, nasd | {date(2006, 9, 4)}))                    # NASD anger en dag som NYSE-memot saknar
+    assert any("2006-07-04" in p for p in nv.memo_nasd_conflicts(memos, nasd - {date(2006, 7, 4)}))                    # NYSE-memot anger en dag som NASD saknar
+
+
+def test_alla_nya_dokument_har_hash_adress_pa_finra_och_tacker_2008_2017():
+    assert sorted(nv.FINRA_NOTICES) == list(range(2008, 2018)) and set(nv.FINRA_NOTICES.values()) <= set(nv.EVIDENCE)
+    assert set(nv.NASD_NOTICES) <= set(nv.EVIDENCE) and "FINRA-RN-18-39" in nv.EVIDENCE
+    for key in [*nv.FINRA_NOTICES.values(), *nv.NASD_NOTICES, "FINRA-RN-18-39"]:
+        e = nv.EVIDENCE[key]
+        assert len(e["sha256"]) == 64 and e["url"].startswith("https://www.finra.org/sites/default/files/") and e["file"].endswith(".pdf")
+    assert len({e["sha256"] for e in nv.EVIDENCE.values()}) == len(nv.EVIDENCE)                                        # inga två dokument med samma hash

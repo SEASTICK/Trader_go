@@ -41,10 +41,46 @@ EVIDENCE = {
                           "what": "NYSE Group press release 2018-12-04, \"2019, 2020 and 2021 holiday and early closings calendar\" (holiday table)"},
     "NYSE-RULES": {"file": "NYSE_Rules.pdf", "url": "https://www.nyse.com/publicdocs/nyse/regulation/nyse/NYSE_Rules.pdf",
                    "sha256": "b57592941c629f7147f8328de96540e8f91278b64b7e442dc54edb5781939a22", "what": "NYSE Rules guide (Rule 7.2; Information Memos 06-xx och 07-05; notis 2007-01-02)"},
+    "FINRA-IN-2008": {"file": "FINRA_Information_Notice_2008_holidays.pdf", "url": "https://www.finra.org/sites/default/files/NoticeDocument/p037658.pdf",
+                     "sha256": "b2e5291350d86625a8bfd00f283dd8ef2f1508806d6d3e2750746ba9a913b5dd", "what": "FINRA Information Notice 12/20/07 (publicerad 2007-12-21), \"2008 Holiday Trade Date, Settlement Date and Margin Extensions Schedule\""},
+    "FINRA-IN-2009": {"file": "FINRA_Information_Notice_2009_holidays.pdf", "url": "https://www.finra.org/sites/default/files/NoticeDocument/p117623.pdf",
+                     "sha256": "29a7d42a4d4d17a11dd89bb12eb62643499e4a6a0a792ae63a87eecec27153cc", "what": "FINRA Information Notice 12/23/08, \"2009 Holiday Trade Date, Settlement Date and Margin Extensions Schedule\""},
+    "FINRA-IN-2010": {"file": "FINRA_Information_Notice_2010_holidays.pdf", "url": "https://www.finra.org/sites/default/files/NoticeDocument/p120549.pdf",
+                     "sha256": "957a6bcda8cc203cbb833e21c81bb9291aa481e92c6f9d8f038a1425b2848f7c", "what": "FINRA Information Notice 12/14/09, \"2010 Holiday Trade Date, Settlement Date and Margin Extensions Schedule\""},
+    "FINRA-IN-2011": {"file": "FINRA_Information_Notice_2011_holidays.pdf", "url": "https://www.finra.org/sites/default/files/NoticeDocument/p122519.pdf",
+                     "sha256": "ab3d323809581fce007d8c1ea96cc8b2ea44ba90c1a7085df23254e46fca693a", "what": "FINRA Information Notice 12/2/10, \"2011 Holiday Trade Date, Settlement Date and Margin Extensions Schedule\""},
+    "FINRA-IN-2012": {"file": "FINRA_Information_Notice_2012_holidays.pdf", "url": "https://www.finra.org/sites/default/files/NoticeDocument/p125272.pdf",
+                     "sha256": "05c8345cac1c879b40107e37d9dd88a79bb5e695c72cda4b52d5b90c05382601", "what": "FINRA Information Notice 12/15/11, \"2012 Holiday Trade Date, Settlement Date and Margin Extensions Schedule\""},
+    "FINRA-IN-2013": {"file": "FINRA_Information_Notice_2013_holidays.pdf", "url": "https://www.finra.org/sites/default/files/NoticeDocument/p197438.pdf",
+                     "sha256": "2491a7ea12354e85d4e74634a2212c2904cf6108f26e41e4d7d4720aef7d1cc2", "what": "FINRA Information Notice 12/10/12, \"2013 Holiday Trade Date, Settlement Date and Margin Extensions Schedule\""},
+    "FINRA-IN-2014": {"file": "FINRA_Information_Notice_2014_holidays.pdf", "url": "https://www.finra.org/sites/default/files/NoticeDocument/p413654.pdf",
+                     "sha256": "231b15b5d42962b4d17815a56456251b839ecdf1bb276ef92a86471ed09e1d65", "what": "FINRA Information Notice 12/23/13, \"2014 Holiday Trade Date, Settlement Date and Margin Extensions Schedule\""},
+    "FINRA-IN-2015": {"file": "FINRA_Information_Notice_2015_holidays.pdf", "url": "https://www.finra.org/sites/default/files/notice_other_file_ref/Notice_Information_122314-Holidays%202014.pdf",
+                     "sha256": "837ce80480061d734883255466b0f10fa39f4cd22c4dc835db103d24595c0671", "what": "FINRA Information Notice 12/23/14, \"2015 Holiday Trade Date, Settlement Date and Margin Extensions Schedule\""},
+    "FINRA-IN-2016": {"file": "FINRA_Information_Notice_2016_holidays.pdf", "url": "https://www.finra.org/sites/default/files/notice_doc_file_ref/Information-Notice_122215.pdf",
+                     "sha256": "a5df095c05cc3557b2735db4bbecce26158813a1c2087cc16ac9a356f701f69f", "what": "FINRA Information Notice 12/22/15, \"2016 Holiday Trade Date, Settlement Date and Margin Extensions Schedule\""},
+    "FINRA-IN-2017": {"file": "FINRA_Information_Notice_2017_holidays.pdf", "url": "https://www.finra.org/sites/default/files/notice_doc_file_ref/Information-Notice-121416.pdf",
+                     "sha256": "9cea38b735baf56e4d67d787d09f97eee869d62ce258fd2b359ddb2c1a81647e", "what": "FINRA Information Notice 12/14/16, \"2017 Holiday Trade Date, Settlement Date and Margin Extensions Schedule\""},
+    "FINRA-NTM-05-81": {"file": "NASD_NTM_05-81_2006_schedule.pdf", "url": "https://www.finra.org/sites/default/files/NoticeDocument/p015761.pdf",
+                     "sha256": "80bc00e6c6b42d3d850b8aa188f098c820f5c7d61fa33dfdb363e989fae9be23", "what": "NASD Notice to Members 05-81 (december 2005), \"2006 Trade Date–Settlement Date Schedule\""},
+    "FINRA-NTM-06-73": {"file": "NASD_NTM_06-73_2007_schedule.pdf", "url": "https://www.finra.org/sites/default/files/NoticeDocument/p018163.pdf",
+                     "sha256": "9019f35a1fe432a246a75d09f04c26b667696cbb06841a35f1c215e23d8a4f31", "what": "NASD Notice to Members 06-73 (december 2006), \"2007 Trade Date–Settlement Date Schedule\""},
+    "NASD-UPC-092-2005": {"file": "NASD_UPC_092-2005_new_years_2006.pdf", "url": "https://www.finra.org/sites/default/files/UPCNotice/p015658_0.pdf",
+                     "sha256": "c97ee3e800966ae32bd0516cdec55796e7db017e709013449444eeabef21d997", "what": "NASD Uniform Practice Advisory UPC #092-2005 (2005-12-07), \"Christmas Day and New Year's Day: Trade Date – Settlement Date Schedule\""},
+    "FINRA-RN-18-39": {"file": "FINRA_Regulatory_Notice_18-39.pdf", "url": "https://www.finra.org/sites/default/files/Regulatory-Notice-18-39.pdf",
+                       "sha256": "5763c6a9e7afe47aeb1b473e301713eb1877d098eb4e617c0ad557a3ba5d6d15", "what": "FINRA Regulatory Notice 18-39 (2018-12-03), \"Unexpected Close of Securities Markets\""},
     "SEC-34-70097": {"file": "34-70097.pdf", "url": "https://www.sec.gov/rules/sro/nysearca/2013/34-70097.pdf",
                      "sha256": "62d4faadddc1beee4d3e7fa6802f5284a8a983f3f8b73deb7340b840b76eb2e1", "what": "SEC Release No. 34-70097, avsnittet Events During Superstorm Sandy (s. 6)"},
 }
 CALENDAR_YEARS = {2020: "NYSE-CAL-2020", 2022: "NYSE-CAL-2022", 2023: "NYSE-CAL-2023", 2024: "NYSE-CAL-2024"}
+# FINRA Information Notices (tillsynsmyndighetens årliga schema, ett per år) för 2008-2017: varje helgdag har en egen mening "The securities exchanges will be closed on <veckodag>, <datum>, in observance of ..."
+# och en tabell med raden "Markets Closed" för samma dag. Dokumentet anger själv datumet; inget härleds ur helgdagsregler.
+FINRA_NOTICES = {y: f"FINRA-IN-{y}" for y in range(2008, 2018)}
+# NASD:s dokument (FINRA:s föregångare) för 2006-2008: {dokument: (hela år som dokumentet täcker, ytterligare enstaka datum som det anger, datum i de åren som det inte anger utan ett annat dokument)}.
+# Samma typ av mening och tabell som i FINRA-schemana.
+NASD_NOTICES = {"NASD-UPC-092-2005": ((), {date(2006, 1, 2)}, set()),
+                "FINRA-NTM-05-81": ((2006,), {date(2007, 1, 1)}, {date(2006, 1, 2)}),
+                "FINRA-NTM-06-73": ((2007,), {date(2008, 1, 1)}, {date(2007, 1, 1)})}
 # Rader som Codex (eller en människa) har läst mot ett dokument som Claude inte kunnat öppna härifrån (nyse.com svarar 403 på automatiska anrop). Redovisas som sådana: verified_by anger vem som läste.
 HUMAN_VERIFIED = {date(2018, 12, 5): {
     "source": ("NYSE Arca Options RB-18-06 / NYSE American RB-18-176 (2018-12-03), s. 1: \"Exchanges will be closed on Wednesday, December 5, 2018 in observance of a National Day of Mourning for President George H. W. Bush.\" "
@@ -174,6 +210,49 @@ def press_release_closures(text: str, years: tuple[int, ...]) -> tuple[dict[int,
     return out, early
 
 
+FULL_DATE_RE = re.compile(WEEKDAY + r",\s*(" + "|".join(MONTH_NAMES) + r")\s+(\d{1,2}),\s*(20\d\d)")
+CLOSED_SENTENCE_RE = re.compile(r"(?:will be|were|is) closed on [^.]*?(?:in observance of[^.]*\.|\.)")
+ROW_RE = re.compile(r"(?:(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+)?(\d{1,2})(?:,\s*20\d\d)?\s+(?:Markets?\s+Closed|N/A)\b")
+
+
+def notice_closures(text: str) -> dict[date, tuple[int, str, bool]]:
+    """Läser ett FINRA/NASD-schema (pdftotext -layout, sidor skilda med formfeed): {datum: (sida, mening, tabellrad)} för varje mening "... closed on <veckodag>, <månad> <dag>, <år>".
+    `tabellrad` är sant om schemats tabell direkt efter meningen har en rad för samma dag där avvecklingsdagen är "Markets Closed" eller "N/A". Datumet måste stå med veckodag och år i
+    meningen; tidiga stängningar och bankhelgdagar (Columbus Day, Veterans Day) ger inga datum."""
+    flat = " ".join(text.replace("\f", " <<SIDA>> ").split())                                   # sidbrytning som ord (formfeed räknas som blanktecken och försvinner annars i split)
+    spans = list(CLOSED_SENTENCE_RE.finditer(flat))
+    out: dict[date, tuple[int, str, bool]] = {}
+    for i, sent in enumerate(spans):
+        page = flat.count("<<SIDA>>", 0, sent.start()) + 1
+        segment = flat[sent.end(): spans[i + 1].start() if i + 1 < len(spans) else len(flat)]
+        rows = {int(m.group(1)) for m in ROW_RE.finditer(segment)}
+        for month, day, year in FULL_DATE_RE.findall(sent.group(0)):
+            d = date(int(year), MONTH_NAMES.index(month) + 1, int(day))
+            out.setdefault(d, (page, sent.group(0), d.day in rows))
+    return out
+
+
+def notice_problems(key: str, closures: dict[date, tuple[int, str, bool]], expected: set[date]) -> list[str]:
+    """Jämför ett dokuments stängda dagar (från 2006 och framåt) med det som ledgern ska innehålla för dokumentet. Fångar saknade datum, extra datum och en dag som meningen anger men
+    som saknar rad i dokumentets egen tabell."""
+    problems = []
+    mine = {d for d in closures if d.year >= 2006}
+    if mine != expected:
+        problems.append(f"{key}: dokumentet och ledgern avviker: bara i dokumentet {sorted(mine - expected)}, bara i ledgern {sorted(expected - mine)}")
+    for d in sorted(mine):
+        if not closures[d][2]:
+            problems.append(f"{key}: meningen anger {d} som stängd men tabellen saknar raden för dagen")
+    return problems
+
+
+def memo_nasd_conflicts(memos: set[date], nasd: set[date]) -> list[str]:
+    """NYSE:s Information Memos (regelboken) och NASD:s scheman är två oberoende källor för 2006-2007 och ska ge samma stängda dagar. Undantag: Ford-dagen 2007-01-02 kom efter NASD:s schema,
+    och 2006-01-02 samt 2007-01-01 står bara i NASD:s dokument."""
+    problems = [f"NYSE-memot anger {d} som stängd men NASD-schemat gör det inte" for d in sorted(memos) if d != date(2007, 1, 2) and d not in nasd]
+    problems += [f"NASD-schemat anger {d} som stängd men NYSE-memot gör det inte" for d in sorted(nasd) if d.year in (2006, 2007) and d not in memos and d not in (date(2006, 1, 2), date(2007, 1, 1))]
+    return problems
+
+
 def verify(evidence_dir: Path, workdir: Path) -> dict:
     """Stäm ledgern av mot dokumenten. Returnerar {datum: (källa, hänvisning)} för rader som styrks, samt avvikelser."""
     hashes = check_hashes(evidence_dir)
@@ -217,8 +296,25 @@ def verify(evidence_dir: Path, workdir: Path) -> dict:
         a, b = parsed["ICE-HOL-2018-2020"][y], parsed["ICE-HOL-2019-2021"][y]
         if a != b:
             problems.append(f"pressmeddelandena avviker sinsemellan för {y}: {a} mot {b}")
+    ordinary = {d for d, n in zip(led["d"], led["name"]) if not n.startswith("Extra")}
+
+    def read_notice(key: str):
+        txt = subprocess.run(["pdftotext", "-layout", str(evidence_dir / EVIDENCE[key]["file"]), "-"], check=True, capture_output=True, text=True).stdout
+        return notice_closures(txt), len([pg for pg in txt.split("\f") if pg.strip()])
+
+    notice_sets: dict[str, set[date]] = {}
+    for key, expected in [(FINRA_NOTICES[y], {d for d in ordinary if d.year == y}) for y in FINRA_NOTICES] + \
+            [(k, ({d for d in ordinary if d.year in years} - not_here) | extra) for k, (years, extra, not_here) in NASD_NOTICES.items()]:
+        closures, pages = read_notice(key)
+        problems += notice_problems(key, closures, expected)
+        notice_sets[key] = {d for d in closures if d.year >= 2006}
+        for d, (page, sent, row) in closures.items():
+            if d in expected and d in ledger_dates and d not in supported and row:
+                supported[d] = (key, f"{EVIDENCE[key]['what']}, s. {page} av {pages}: \"{sent[:170]}\" (dagen har också en tabellrad Markets Closed/N/A)")
     rules = subprocess.run(["pdftotext", "-layout", str(evidence_dir / EVIDENCE["NYSE-RULES"]["file"]), "-"], check=True, capture_output=True, text=True).stdout
     memos = memo_closures(rules, {2006, 2007})
+    nasd = set().union(*(notice_sets[k] for k in NASD_NOTICES))
+    problems += memo_nasd_conflicts(set(memos), nasd)
     for d, phrase in memos.items():
         if d in ledger_dates and d not in supported:
             supported[d] = ("NYSE-RULES", f"NYSE Rules guide, Information Memo {'06-02 (2006-01-12)' if d.year == 2006 else '07-05 (2007-01-19)'}, margin extensions holiday schedule: \"{phrase}\"")
@@ -238,6 +334,13 @@ def verify(evidence_dir: Path, workdir: Path) -> dict:
                 supported[d] = ("SEC-34-70097", "SEC Release No. 34-70097, s. 6: \"On October 29 and 30, 2012 ... all U.S. equities and options markets would be closed for those two days\"")
     else:
         problems.append("hittar inte Sandy-stycket")
+    rn = subprocess.run(["pdftotext", "-layout", str(evidence_dir / EVIDENCE["FINRA-RN-18-39"]["file"]), "-"], check=True, capture_output=True, text=True).stdout
+    bush = re.search(r"unexpectedly close for business, for example, on the national day of mourning declared in memory of President George H\.W\. Bush on December 5, 2018", " ".join(rn.split()))
+    if bush and date(2018, 12, 5) in ledger_dates and date(2018, 12, 5) not in supported:
+        supported[date(2018, 12, 5)] = ("FINRA-RN-18-39", "FINRA Regulatory Notice 18-39 (2018-12-03), s. 1, tillsynsmyndighetens besked till medlemmarna: \"the securities markets may unexpectedly close for business, for example, on the national day of mourning declared in memory of President George H.W. Bush on December 5, 2018\"; "
+                                        "s. 4 behandlar \"the day of closure\" som dag då \"U.S. equity exchanges would be closed\". Ett allmänt besked som anger dagen som exempel, inte börsernas egen kungörelse (den finns i HUMAN_VERIFIED).")
+    elif date(2018, 12, 5) in ledger_dates and date(2018, 12, 5) not in supported:
+        problems.append("hittar inte 2018-12-05-stycket i FINRA Regulatory Notice 18-39")
     return {"hashes": hashes, "supported": supported, "problems": problems, "rule_7_2_text_found": bool(rule72), "ledger_rows": len(ledger_dates), "supported_rows": len([d for d in supported if d in ledger_dates])}
 
 
@@ -253,6 +356,18 @@ def apply(supported: dict[date, tuple[str, str]], verified_by: str, verified_dat
             led.loc[i, "verified_source"] = f"{key}: {ref}"
             led.loc[i, "verified_by"] = verified_by
             led.loc[i, "verified_date"] = day
+            if d in HUMAN_VERIFIED:                                                             # en människa har dessutom läst börsens egen kungörelse: båda källorna står på raden
+                h = HUMAN_VERIFIED[d]
+                led.loc[i, "verified_source"] += f" || Dessutom läst av en människa: {h['source']}"
+                led.loc[i, "verified_by"] += f" || {h['by']}"
+            n += 1
+    for i, row in led.iterrows():                                   # en rad som bara en människa läst får även maskinavstämningens källa, om en sådan finns
+        d = pd.Timestamp(row["date"]).date()
+        src = str(row["verified_source"])
+        if d in supported and src.strip() and d in HUMAN_VERIFIED and supported[d][0] not in src:
+            key, ref = supported[d]
+            led.loc[i, "verified_source"] = f"{src} || Dessutom maskinavstämt: {key}: {ref}"
+            led.loc[i, "verified_by"] = f"{row['verified_by']} || {verified_by}"
             n += 1
     for i, row in led.iterrows():                                   # rader som en människa verifierat mot ett dokument Claude inte kunnat läsa
         d = pd.Timestamp(row["date"]).date()
@@ -272,9 +387,11 @@ def gaps_markdown(led: pd.DataFrame | None = None) -> str:
     led = nyse_sessions.read_ledger() if led is None else led
     src = led["verified_source"].astype(str).str.strip()
     open_ = led[(src == "") | (src.str.lower() == "saknas")]
+    reason = ("Anledning för alla rader: inget dagsdokument från NYSE eller en tillsynsmyndighet har kunnat läsas för just datumet. Rule 7.2 och Rule 51 styrker bara regeln."
+              if len(open_) else "Alla rader har en verifierad källa (dokument och hänvisning står på respektive rad i ledgern). Rule 7.2 och Rule 51 styrker bara regeln och räknas inte som källa för ett datum.")
     lines = ["# Overifierade NYSE-stängningar för H-0024 (genereras ur nyse-closures-ledger.csv)", "",
              f"{len(open_)} av {len(led)} rader saknar verifierad källa. Genereras med `python -m traderlab.nyse_verify --evidence-dir <katalog> --write-gaps`; ändra inte för hand.", "",
-             "Anledning för alla rader: inget dagsdokument från NYSE eller en tillsynsmyndighet har kunnat läsas för just datumet. Rule 7.2 och Rule 51 styrker bara regeln.", ""]
+             reason, ""]
     for year, g in open_.groupby(pd.to_datetime(open_["date"]).dt.year):
         lines.append(f"## {year} ({len(g)})")
         lines += [f"- {r['date']} {r['name']}" for _, r in g.iterrows()]
