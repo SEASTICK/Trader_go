@@ -42,7 +42,7 @@ def test_apply_fyller_bara_styrkta_rader_och_skriver_inte_over(tmp_path, monkeyp
 def test_repots_ledger_har_bara_kallor_som_finns_i_evidence_och_fail_closed_gar_kvar():
     led = nyse_sessions.read_ledger()
     ver = led[led["verified_source"].str.strip() != ""]
-    assert len(ver) >= 58
+    assert len(ver) >= 85
     human = {h["source"] for h in nv.HUMAN_VERIFIED.values()}
     assert all(r["verified_source"].split(":")[0] in nv.EVIDENCE or r["verified_source"] in human or r["verified_source"].strip().lower() == "saknas" for _, r in ver.iterrows())
     assert (ver["verified_by"].str.strip() != "").all() and (ver["verified_date"].str.strip() != "").all()
@@ -54,9 +54,9 @@ def test_repots_ledger_har_bara_kallor_som_finns_i_evidence_och_fail_closed_gar_
 def test_avstamning_mot_de_nedladdade_dokumenten(tmp_path):
     pytest.importorskip("PIL")
     r = nv.verify(Path(os.environ["NYSE_EVIDENCE_DIR"]), tmp_path)
-    assert r["problems"] == [] and r["rule_7_2_text_found"] and r["supported_rows"] == 57
+    assert r["problems"] == [] and r["rule_7_2_text_found"] and r["supported_rows"] == 84
     years = sorted({d.year for d in r["supported"]})
-    assert years == [2006, 2007, 2012, 2020, 2022, 2023, 2024]
+    assert years == [2006, 2007, 2012, 2018, 2019, 2020, 2021, 2022, 2023, 2024]
     assert date(2012, 10, 30) in r["supported"] and date(2007, 1, 2) in r["supported"] and date(2020, 7, 3) in r["supported"] and date(2018, 12, 5) not in r["supported"]   # 2018-12-05 styrks av en människa, inte av maskinavstämningen
 
 
@@ -93,4 +93,49 @@ def test_2018_12_05_ar_den_enda_manniskoverifierade_raden_och_resten_ar_overifie
     human = ver[~ver["verified_by"].str.startswith("Claude")]
     assert list(human["date"]) == ["2018-12-05"] and len(machine) == len(ver) - 1                                      # övriga verifierade rader är maskinavstämda
     r = nyse_sessions.reconcile()
-    assert (r["verified_rows"], r["unverified_rows"], r["fully_verified"]) == (58, 118, False)                         # 58/176, resten fail-closed
+    assert (r["verified_rows"], r["unverified_rows"], r["fully_verified"]) == (85, 91, False)                          # 85/176, resten fail-closed
+
+
+PRESS_SAMPLE = """
+HOLIDAY                             2019                                2020                            2021
+
+New Year’s Day                      Tuesday, January 1                  Wednesday, January 1            Friday, January 1
+
+W a s h i n g t o n ' s Birthday    Monday, February 18                 Monday, February 17             Monday, February 15
+
+Independence Day                    Thursday, July 4*                   Friday, July 3                  Monday, July 5
+                                                                        (July 4 holiday observed)       (July 4 holiday observed)
+
+Christmas Day                       Wednesday, December 25***           Friday, December 25***          Friday, December 24
+                                                                                                        (Christmas holiday observed)
+
+* Each market will close early at 1:00 p.m. (1:15 p.m. for eligible options) on Wednesday, July 3, 2019. Crossing Session orders will be
+accepted beginning at 1:00 p.m.
+
+*** Each market will close early at 1:00 p.m. (1:15 p.m. for eligible options) on Tuesday, December 24, 2019, and Thursday, December 24,
+2020. Crossing Session orders will be accepted beginning at 1:00 p.m.
+
+NYSE Group Markets holidays and hours can be found at: https://www.nyse.com/markets/hours-calendars.
+"""
+
+
+def test_pressmeddelandets_tabell_laser_heldagsstangningar_och_skiljer_dem_fran_tidiga_stangningar():
+    closures, early = nv.press_release_closures(PRESS_SAMPLE, (2019, 2020, 2021))
+    assert closures[2019]["Independence Day"] == date(2019, 7, 4) and closures[2020]["Independence Day"] == date(2020, 7, 3) and closures[2021]["Independence Day"] == date(2021, 7, 5)
+    assert closures[2021]["Christmas Day"] == date(2021, 12, 24) and closures[2019]["W a s h i n g t o n"] == date(2019, 2, 18)
+    assert early == {date(2019, 7, 3), date(2019, 12, 24), date(2020, 12, 24)}                                         # tidiga stängningar (fotnoter) är inte stängda dagar
+    assert not early & {d for y in closures.values() for d in y.values()}                                              # ingen tidig stängning i tabellen över stängda dagar
+    with pytest.raises(ValueError, match="förväntade 3"):
+        nv.press_release_closures(PRESS_SAMPLE.replace("Friday, January 1\n", "\n", 1), (2019, 2020, 2021))             # en tabellrad med färre datum än årskolumner avvisas
+
+
+def test_tidiga_stangningar_ar_handelsdagar_och_ingen_extra_stangning_finns_i_ledgern():
+    early = [date(2018, 7, 3), date(2018, 11, 23), date(2018, 12, 24), date(2019, 7, 3), date(2019, 11, 29), date(2019, 12, 24), date(2020, 11, 27), date(2020, 12, 24), date(2021, 11, 26)]
+    sessions = {t.date() for t in nyse_sessions.load()}
+    ledger = {pd.Timestamp(d).date() for d in nyse_sessions.read_ledger()["date"]}
+    assert all(e in sessions and e not in ledger for e in early)                                                       # dagen före/efter helgdag stängde tidigt men var en handelsdag
+    led = nyse_sessions.read_ledger()
+    for y in (2018, 2019, 2021):                                                                                       # täckta år: ordinarie rader = exakt tabellens nio helgdagar (2018: + Bush som extra)
+        rows = led[pd.to_datetime(led["date"]).dt.year == y]
+        assert (~rows["name"].str.startswith("Extra")).sum() == 9
+    assert set(nv.PRESS_RELEASES) <= set(nv.EVIDENCE)

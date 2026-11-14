@@ -1,6 +1,6 @@
 # Overifierade NYSE-stängningar för H-0024 (genereras ur nyse-closures-ledger.csv)
 
-118 av 176 rader saknar verifierad källa. Genereras med `python -m traderlab.nyse_verify --evidence-dir <katalog> --write-gaps`; ändra inte för hand.
+91 av 176 rader saknar verifierad källa. Genereras med `python -m traderlab.nyse_verify --evidence-dir <katalog> --write-gaps`; ändra inte för hand.
 
 Anledning för alla rader: inget dagsdokument från NYSE eller en tillsynsmyndighet har kunnat läsas för just datumet. Rule 7.2 och Rule 51 styrker bara regeln.
 
@@ -118,36 +118,3 @@ Anledning för alla rader: inget dagsdokument från NYSE eller en tillsynsmyndig
 - 2017-09-04 Labor Day
 - 2017-11-23 Thanksgiving
 - 2017-12-25 Christmas
-
-## 2018 (9)
-- 2018-01-01 New Year's Day
-- 2018-01-15 Martin Luther King Jr. Day
-- 2018-02-19 Washington's Birthday
-- 2018-03-30 Good Friday
-- 2018-05-28 Memorial Day
-- 2018-07-04 Independence Day
-- 2018-09-03 Labor Day
-- 2018-11-22 Thanksgiving
-- 2018-12-25 Christmas
-
-## 2019 (9)
-- 2019-01-01 New Year's Day
-- 2019-01-21 Martin Luther King Jr. Day
-- 2019-02-18 Washington's Birthday
-- 2019-04-19 Good Friday
-- 2019-05-27 Memorial Day
-- 2019-07-04 Independence Day
-- 2019-09-02 Labor Day
-- 2019-11-28 Thanksgiving
-- 2019-12-25 Christmas
-
-## 2021 (9)
-- 2021-01-01 New Year's Day
-- 2021-01-18 Martin Luther King Jr. Day
-- 2021-02-15 Washington's Birthday
-- 2021-04-02 Good Friday
-- 2021-05-31 Memorial Day
-- 2021-07-05 Independence Day
-- 2021-09-06 Labor Day
-- 2021-11-25 Thanksgiving
-- 2021-12-24 Christmas

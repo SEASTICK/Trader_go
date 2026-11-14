@@ -33,6 +33,12 @@ EVIDENCE = {
                       "sha256": "3d28b46a7197424c822087fb7117cdf3f303bd9a73f29660525b605f542bcfe2", "what": "NYSE 2023 Trading Calendar (Exchange Holiday - Market Closed)"},
     "NYSE-CAL-2024": {"file": "ICE_NYSE_2024_Yearly_Trading_Calendar.pdf", "url": "https://www.nyse.com/publicdocs/ICE_NYSE_2024_Yearly_Trading_Calendar.pdf",
                       "sha256": "02282e733512d1f112230372efccfd18f81599c682af94bb6f21fd9bccbfd145", "what": "NYSE 2024 Trading Calendar (Exchange Holiday - Market Closed)"},
+    "ICE-HOL-2018-2020": {"file": "ICE_NYSE_holidays_2018-2020.pdf", "url": "https://s2.q4cdn.com/154085107/files/doc_news/archive/27aaa58b-ebcb-4f53-b505-aee992f54968.pdf",
+                          "sha256": "b13c0181091b10164319992cb537e948e2d4ee8ceff71f61fdfe7989ccd89812",
+                          "what": "NYSE Group press release 2017-11-27, \"2018, 2019 and 2020 holiday and early closings calendar\" (holiday table)"},
+    "ICE-HOL-2019-2021": {"file": "ICE_NYSE_holidays_2019-2021.pdf", "url": "https://s2.q4cdn.com/154085107/files/doc_news/archive/15638cee-2935-4422-bcb4-a3733587eb8b.pdf",
+                          "sha256": "bfc91ff0fef5ecbdce022898e1ae622579c06257918a0bb9995750dc5bafb58a",
+                          "what": "NYSE Group press release 2018-12-04, \"2019, 2020 and 2021 holiday and early closings calendar\" (holiday table)"},
     "NYSE-RULES": {"file": "NYSE_Rules.pdf", "url": "https://www.nyse.com/publicdocs/nyse/regulation/nyse/NYSE_Rules.pdf",
                    "sha256": "b57592941c629f7147f8328de96540e8f91278b64b7e442dc54edb5781939a22", "what": "NYSE Rules guide (Rule 7.2; Information Memos 06-xx och 07-05; notis 2007-01-02)"},
     "SEC-34-70097": {"file": "34-70097.pdf", "url": "https://www.sec.gov/rules/sro/nysearca/2013/34-70097.pdf",
@@ -44,6 +50,7 @@ HUMAN_VERIFIED = {date(2018, 12, 5): {
     "source": ("NYSE Arca Options RB-18-06 / NYSE American RB-18-176 (2018-12-03), s. 1: \"Exchanges will be closed on Wednesday, December 5, 2018 in observance of a National Day of Mourning for President George H. W. Bush.\" "
                "https://www.nyse.com/publicdocs/nyse/markets/arca-options/rule-interpretations/2018/NYSE%20Arca%20Options%2018-06.pdf"),
     "by": "Codex (läste PDF:en via länken; citat och sida återgivna av SEASTICK i PR #133, kommentar 6875755443; Claude har inte kunnat öppna dokumentet, så detta är ingen maskinavstämning)", "date": "2026-11-14"}}
+PRESS_RELEASES = {"ICE-HOL-2018-2020": (2018, 2019, 2020), "ICE-HOL-2019-2021": (2019, 2020, 2021)}      # årskolumnerna i respektive tabell
 DPI = 130
 MONTHS = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"]
 MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -138,6 +145,35 @@ def memo_closures(rules_text: str, years: set[int]) -> dict[date, str]:
     return out
 
 
+WEEKDAY = r"(?:Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day"
+DATE_RE = re.compile(WEEKDAY + r",\s+(" + "|".join(MONTH_NAMES) + r")\s+(\d{1,2})(?:,\s+(20\d\d))?")
+HOLIDAY_ROWS = ["New Year", "Martin Luther King", "W a s h i n g t o n", "Good Friday", "Memorial Day", "Independence Day", "Labor Day", "Thanksgiving Day", "Christmas Day"]
+
+
+def press_release_closures(text: str, years: tuple[int, ...]) -> tuple[dict[int, dict[str, date]], set[date]]:
+    """Läser helgdagstabellen i ett NYSE Group-pressmeddelande: {år: {radnamn: datum}} för heldagsstängningar, och separat de datum som fotnoterna anger som tidiga stängningar
+    (1:00 p.m.) och därför INTE är stängda dagar. Tabellraderna läses före första fotnoten; en rad som radbryts (\"(July 4 holiday observed)\") ger inga extra datum."""
+    head, _, tail = text.partition("\n* ")
+    table = head[head.index("HOLIDAY"):]
+    out: dict[int, dict[str, date]] = {y: {} for y in years}
+    for line in table.splitlines():
+        name = next((n for n in HOLIDAY_ROWS if line.strip().startswith(n)), None)
+        if not name:
+            continue
+        found = DATE_RE.findall(line)
+        if len(found) != len(years):
+            raise ValueError(f"raden '{name}' har {len(found)} datum, förväntade {len(years)}: {line.strip()[:120]}")
+        for y, (month, day, _y) in zip(years, found):
+            out[y][name] = date(y, MONTH_NAMES.index(month) + 1, int(day))
+    flat = " ".join(("* " + tail).split())
+    flat = flat.split("NYSE Group Markets holidays")[0]
+    early: set[date] = set()
+    for m in re.finditer(r"close early at 1:00 p\.m\.[^*]*?(?=\*|$)", flat):
+        for month, day, year in re.findall(WEEKDAY + r",\s+(" + "|".join(MONTH_NAMES) + r")\s+(\d{1,2}),\s+(20\d\d)", m.group(0)):
+            early.add(date(int(year), MONTH_NAMES.index(month) + 1, int(day)))
+    return out, early
+
+
 def verify(evidence_dir: Path, workdir: Path) -> dict:
     """Stäm ledgern av mot dokumenten. Returnerar {datum: (källa, hänvisning)} för rader som styrks, samt avvikelser."""
     hashes = check_hashes(evidence_dir)
@@ -154,6 +190,33 @@ def verify(evidence_dir: Path, workdir: Path) -> dict:
             problems.append(f"{year}: kalendern och ledgern avviker: bara i kalendern {sorted(got - want)}, bara i ledgern {sorted(want - got)}")
         for d in got & want:
             supported[d] = (key, f"{EVIDENCE[key]['what']}: {d.isoformat()} fylld som Exchange Holiday - Market Closed")
+    sessions = {t.date() for t in nyse_sessions.load()}
+    parsed: dict[str, dict[int, dict[str, date]]] = {}
+    for key, years in PRESS_RELEASES.items():
+        txt = subprocess.run(["pdftotext", "-layout", str(evidence_dir / EVIDENCE[key]["file"]), "-"], check=True, capture_output=True, text=True).stdout
+        closures, early = press_release_closures(txt, years)
+        parsed[key] = closures
+        for e in sorted(early):
+            if e not in sessions or e in ledger_dates:
+                problems.append(f"{key}: {e} är en tidig stängning (1:00 p.m.) men ledgern/kalendern behandlar den som stängd")
+        for y in years:
+            listed = set(closures[y].values())
+            ordinary = {d for d, n in zip(led["d"], led["name"]) if d.year == y and not n.startswith("Extra")}
+            if listed != ordinary:
+                problems.append(f"{key} {y}: tabellen och ledgerns ordinarie rader avviker: bara i tabellen {sorted(listed - ordinary)}, bara i ledgern {sorted(ordinary - listed)}")
+            if y in CALENDAR_YEARS and listed != {d for d in ordinary if d.year == y}:
+                problems.append(f"{key} {y}: pressmeddelandet och årskalendern avviker")
+    for y in (2018, 2019, 2021):                                                              # år som bara pressmeddelandena täcker
+        for key in [k for k, ys in PRESS_RELEASES.items() if y in ys]:
+            for name, d in parsed[key][y].items():
+                if d in ledger_dates and d not in supported:
+                    other = [k for k, ys in PRESS_RELEASES.items() if y in ys and k != key]
+                    extra = f" Samma datum anges också av {EVIDENCE[other[0]]['what']}." if other and parsed[other[0]][y].get(name) == d else ""
+                    supported[d] = (key, f"{EVIDENCE[key]['what']}, tabellrad {name} {y}: {d.strftime('%A, %B')} {d.day}; heldagsstängning (tidiga stängningar 1:00 p.m. ingår inte).{extra}")
+    for y in (2019, 2020):                                                                     # åren som anges av båda pressmeddelandena ska stämma sinsemellan
+        a, b = parsed["ICE-HOL-2018-2020"][y], parsed["ICE-HOL-2019-2021"][y]
+        if a != b:
+            problems.append(f"pressmeddelandena avviker sinsemellan för {y}: {a} mot {b}")
     rules = subprocess.run(["pdftotext", "-layout", str(evidence_dir / EVIDENCE["NYSE-RULES"]["file"]), "-"], check=True, capture_output=True, text=True).stdout
     memos = memo_closures(rules, {2006, 2007})
     for d, phrase in memos.items():
