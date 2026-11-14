@@ -235,13 +235,13 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
   const shown = hover ?? last;
   const stale = status && sameSeries(status, current ?? ({} as SeriesRef)) && !status.ready;
   const empty = (title: string, text: string) => (
-    <div className="candle-empty"><span className="empty-icon"><Icon name="candles" size={22} /></span><b>{title}</b>{text && <p>{text}</p>}</div>
+    <div className="candle-empty"><span className="empty-icon"><Icon name="candles" size={22} /></span><b>{title}</b>{text && text !== title && <p>{text}</p>}</div>
   );
 
   let body: JSX.Element;
   if (!desktop && !isHist) body = empty("Ingen prisdata här", "Prisdiagrammet läser datalagret i skrivbordsappen. I webbläsaren finns ingen riktig OHLCV, och ingen simulerad data visas i stället.");
   else if (series && !isHist && !isSupportedLive(series)) body = empty("Marknaden stöds inte i datavägen", `${series.provider} ${series.market} ${series.symbol} kan inte läsas av datalagret (bara Binance spot stöds). Ingen graf ritas hellre än en felmärkt.`);
-  else if (!series) body = empty("Ingen datakälla för den här marknaden", noSourceReason ?? "Appen samlar bara in data för marknader med en publik datakälla. Inget simulerat pris visas i stället.");
+  else if (!series) body = empty("Ingen marknadsdata att visa", "Inget simulerat pris ritas i stället. När datalagret har data för ett instrument visas det här.");
   else if (!isHist && available === null && !error) body = <div className="candle-skeleton" role="status" aria-label="Läser datalagret"><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /></div>;
   else if (!current) body = empty(
     `${series.symbol} ${tf || series.interval} samlas inte in`,
@@ -254,9 +254,9 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
     <div className="candle-card">
       <div className="candle-head">
         <div className="candle-title">
-          <b>{series ? series.symbol : "–"}</b>
-          <span className="muted">{series ? `${series.provider === "binance" ? "Binance" : series.provider} ${series.market === "um" ? "USDⓈ-M terminer" : series.market === "spot" ? "spot" : series.market}` : "ingen leverantör"}</span>
-          <span className="chip-live" title={isHist ? "Kontrollsummerade stängda staplar från det historiska datasetet." : "Riktiga priser från datalagret. Resultatet i rutan är fortfarande HISTORIK eller SIM, inte livehandel."}>{isHist ? "HISTORIK" : "REALTIDSDATA"}</span>
+          <b>{series ? series.symbol : "Ingen marknad vald"}</b>
+          {series && <span className="muted">{`${series.provider === "binance" ? "Binance" : series.provider} ${series.market === "um" ? "USDⓈ-M terminer" : series.market === "spot" ? "spot" : series.market}`}</span>}
+          {series && <span className="chip-live" title={isHist ? "Kontrollsummerade stängda staplar från det historiska datasetet." : "Riktiga priser från datalagret. Resultatet i rutan är fortfarande HISTORIK eller SIM, inte livehandel."}>{isHist ? "HISTORIK" : "REALTIDSDATA"}</span>}
           {current && status && sameSeries(status, current) && (
             <span className={`candle-state ${status.ready ? "ok" : "warn"}`}>{STATE_TEXT[status.state]}</span>
           )}
