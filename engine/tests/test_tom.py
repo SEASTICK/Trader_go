@@ -306,9 +306,10 @@ def test_verifieringsstatus_kraver_kalla_person_och_datum_pa_varje_rad():
     led = nyse_sessions.read_ledger()
     sessions = nyse_sessions.load()
     r0 = nyse_sessions.reconcile(sessions, led)
-    assert r0["verified_rows"] == 0 and r0["fully_verified"] is False                                                   # idag: ingen rad är verifierad mot officiell källa
+    have = int(((led["verified_source"].str.strip() != "") & (led["verified_by"].str.strip() != "") & (led["verified_date"].str.strip() != "")).sum())
+    assert r0["verified_rows"] == have and r0["fully_verified"] is (have == len(led))                                   # repots ledger: verifierade rader räknas, resten gör att grinden förblir stängd
     full = led.assign(verified_source="testkälla", verified_by="granskare", verified_date="2026-11-13")
-    assert nyse_sessions.reconcile(sessions, full)["fully_verified"] is True
+    assert nyse_sessions.reconcile(sessions, full)["fully_verified"] is True and nyse_sessions.reconcile(sessions, full)["verified_rows"] == len(led)
     part = full.copy()
     part.loc[0, "verified_date"] = ""
     r = nyse_sessions.reconcile(sessions, part)
