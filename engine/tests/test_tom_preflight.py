@@ -69,7 +69,7 @@ def test_data_fran_2025_paverkar_inte_utfallet_och_kapas_forst(monkeypatch):
     a, b = pf.preflight(base), pf.preflight(poisoned)
     drop = {"fetched_at_utc", "rows_cut_holdout"}
     assert {k: v for k, v in a.items() if k not in drop} == {k: v for k, v in b.items() if k not in drop}
-    assert b["rows_cut_holdout"] == 3 and a["series_sha256"] == b["series_sha256"]
+    assert b["rows_cut_holdout"] == 3 and a["dates_sha256"] == b["dates_sha256"]
 
 
 @pytest.mark.parametrize("mutate, key, needle", [
@@ -174,8 +174,95 @@ def test_sparat_utfall_beror_inte_pa_nagot_fran_2025_aven_om_servern_skickar_det
     strip = lambda r: {k: v for k, v in r.items() if k not in allowed_diff}
     assert ra["rows_cut_holdout"] != rb["rows_cut_holdout"]                                              # radantalsdiagnostiken får skilja
     assert strip(ra) == strip(rb) == strip(rc)
-    md = lambda r: pf.markdown(r)
-    assert md(ra).replace(str(ra["rows_cut_holdout"]) + " rader kapades", "X") == md(rb).replace(str(rb["rows_cut_holdout"]) + " rader kapades", "X")
+    import re
+    md = lambda r: re.sub(r"hämtad \S+Z", "hämtad T", pf.markdown(r)).replace(str(r["rows_cut_holdout"]) + " rader kapades", "X")           # tidsstämpeln och radantalet får skilja
+    assert md(ra) == md(rb) == md(rc)
     assert "response_sha256" not in ra and "response" not in json.dumps(ra).lower().replace("responsible", "")
     saved = sorted(p.name for p in (tmp_path / "raw").iterdir())
     assert all(n.endswith("-cut.csv") for n in saved)                                                    # bara den kapade serien sparas
+
+
+def test_stabilitet_mellan_tva_hamtningar_mats_utan_att_hasha_varden():
+    base = good_frame()
+    same = pf.stability(base, base.copy())
+    assert same["same_dates"] and same["sufficient"] and same["rows_compared"] == len(base) and same["max_relative_difference"] == 0.0 and same["rows_differing_over_1e-9"] == 0
+    assert same["non_finite_cells"] == 0 and same["dates_only_in_first"] == same["dates_only_in_second"] == 0
+    shifted = base.copy()
+    shifted["open"] = shifted["open"] * (1 + 1e-6)                                               # som Yahoo: små skillnader i justerade värden mellan anrop
+    st = pf.stability(base, shifted)
+    assert st["rows_differing_over_1e-9"] == len(base) and 0.9e-6 < st["max_relative_difference"] < 1.1e-6
+    r = pf.preflight(base, 0, shifted)
+    assert r["value_stability"] == st and "series_sha256" not in r
+    md = pf.markdown(r)
+    assert "inte bitvis stabila" in md and "hashas inga värden" in md
+    assert pf.dates_sha256(base) == pf.dates_sha256(shifted)                                       # fingeravtrycket beror bara på datum, inte på värdena
+
+
+def test_andra_hamtningen_med_rader_efter_2025_paverkar_inte_stabiliteten():
+    base = good_frame()
+    poisoned = pd.concat([base, pd.DataFrame({"open": [1e9, 7.0], "close": [3.0, 1e9]}, index=pd.DatetimeIndex(["2025-02-03", "2025-02-04"]))])
+    assert pf.preflight(base, 0, base.copy())["value_stability"] == pf.preflight(base, 0, poisoned)["value_stability"]
+
+
+def _lonely_stability(second_mutator):
+    base = good_frame()
+    second = base.copy()
+    second_mutator(second)
+    return base, second, pf.stability(base, second)
+
+
+def test_saknade_varden_i_andra_hamtningen_blir_aldrig_noll_skillnad():
+    d = pd.Timestamp("2012-05-15")
+    base, second, st = _lonely_stability(lambda s: s.loc.__setitem__((d, "open"), np.nan))
+    assert st["non_finite_cells"] == 1 and st["rows_with_non_finite"] == 1 and st["sufficient"] is False
+    assert st["rows_differing_over_1e-9"] == 0 and st["same_dates"] is True                       # inga giltiga par skiljer sig, men mätningen räknas inte som stabil
+    md = pf.markdown(pf.preflight(base, 0, second))
+    assert "otillräcklig" in md and "1 celler saknar giltigt värdepar" in md and "inte bitvis stabila" not in md
+
+
+def test_ickefinita_varden_inf_och_noll_i_forsta_hamtningen_raknas_separat():
+    d = pd.Timestamp("2012-05-15")
+    _, _, inf = _lonely_stability(lambda s: s.loc.__setitem__((d, "close"), np.inf))
+    assert inf["non_finite_cells"] == 1 and inf["sufficient"] is False
+    base = good_frame()
+    base.loc[d, "open"] = 0.0                                                                    # delning med noll i första hämtningen: inget giltigt par
+    st = pf.stability(base, good_frame())
+    assert st["non_finite_cells"] == 1 and st["sufficient"] is False
+
+
+def test_datum_som_saknas_i_den_ena_hamtningen_gor_matningen_otillracklig():
+    base = good_frame()
+    short = base.drop(pd.Timestamp("2013-06-12"))
+    st = pf.stability(base, short)
+    assert st["dates_only_in_first"] == 1 and st["dates_only_in_second"] == 0 and st["same_dates"] is False and st["sufficient"] is False
+    st2 = pf.stability(short, base)
+    assert st2["dates_only_in_second"] == 1 and st2["sufficient"] is False
+    extra = pd.concat([base, pd.DataFrame({"open": [1.0], "close": [1.0]}, index=pd.DatetimeIndex(["2013-07-04"]))]).sort_index()
+    assert pf.stability(base, extra)["dates_only_in_second"] == 1
+
+
+def test_inga_giltiga_par_ger_ingen_skillnad_att_redovisa_och_otillracklig():
+    base = good_frame()
+    empty = base.copy()
+    empty[["open", "close"]] = np.nan
+    st = pf.stability(base, empty)
+    assert st["max_relative_difference"] is None and st["sufficient"] is False and st["non_finite_cells"] == 2 * len(base)
+    assert "Inga giltiga par" in pf.markdown(pf.preflight(base, 0, empty))
+
+
+def test_hela_flodet_med_saknade_varden_i_andra_svaret_ar_otillrackligt(tmp_path, monkeypatch):
+    monkeypatch.setattr(pf, "CACHE_DIR", tmp_path / "raw")
+    cal = nyse_sessions.load()
+    n = len(cal)
+    o = list(np.linspace(100, 200, n))
+    answers = iter([yahoo_json(cal, open_=o, poison_after=False), yahoo_json(cal, open_=[None if i == 100 else v for i, v in enumerate(o)], poison_after=False)])
+    r = pf.run(opener=lambda req: next(answers), write=False)
+    v = r["value_stability"]
+    assert v["sufficient"] is False and v["non_finite_cells"] == 1 and v["same_dates"] is True
+    assert r["requirements"]["helhet_datakravet_uppfyllt"] is True                                  # första hämtningen är komplett; bara stabilitetsmätningen är otillräcklig
+
+
+def test_saknat_varde_efter_2025_i_andra_hamtningen_paverkar_inte_stabiliteten():
+    base = good_frame()
+    second = pd.concat([base, pd.DataFrame({"open": [np.nan, np.inf], "close": [np.nan, 1.0]}, index=pd.DatetimeIndex(["2025-02-03", "2025-02-04"]))])
+    assert pf.preflight(base, 0, base.copy())["value_stability"] == pf.preflight(base, 0, second)["value_stability"]

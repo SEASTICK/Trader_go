@@ -52,7 +52,18 @@
   "ledger_rows": 176,
   "consistent": true
  },
- "series_sha256": "17b4029d522651331a272cac8685893b6b1fa9362ff2fb789e64a2e2977cfde0",
- "fetched_at_utc": "2026-11-14T15:18:41Z",
+ "dates_sha256": "da4038952f91edf0f409ebc8c9d16c1de646aa972d5186b6944e21e935951627",
+ "value_stability": {
+  "same_dates": true,
+  "rows_compared": 4781,
+  "dates_only_in_first": 0,
+  "dates_only_in_second": 0,
+  "non_finite_cells": 0,
+  "rows_with_non_finite": 0,
+  "sufficient": true,
+  "max_relative_difference": 1.02e-06,
+  "rows_differing_over_1e-9": 3968
+ },
+ "fetched_at_utc": "2026-11-14T16:27:36Z",
  "note": "Bara täckning. Inga kurser, ingen avkastning, ingen Sharpe, inget t-värde, ingen placebo, inget beslut och ingen registerrad. Slutprovet (2025-01-01 och senare) är inte läst."
 }
