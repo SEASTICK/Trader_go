@@ -26,6 +26,9 @@ export const STRATEGY_NAMES: Record<string, StrategyName> = {
   "H-0021": { name: "Varje mynts egen trend", idea: "Varje vecka: äg de mynt som själva stigit senaste månaden och sälj blankt de som fallit." },
   "H-0022": { name: "Kassa och termin på altcoins", idea: "Samma kassa-och-termin-idé på sju mindre mynt med kvartalskontrakt." },
   "H-0023": { name: "Kassa och termin på altcoins, version B", idea: "Kassa och termin på sju mindre mynt, med en fast regel för när positionen byts." },
+  "H-0024": { name: "Månadsskiftet i S&P 500", idea: "Äg S&P 500 kring varje månadsskifte och stå utanför resten av månaden." },
+  "H-0025": { name: "Utbrott efter lugn period, med riskstopp", idea: "Utbrott efter en lugn period i Bitcoin, med fast risk per affär och stopp om förlusterna blir för stora." },
+  "H-0026": { name: "Riskstyrd Bitcoin-trend", idea: "Äg Bitcoin när priset stigit senaste veckan, två veckorna och månaden, med lägre vikt när det svänger mycket och stopp vid stora förluster." },
 };
 
 export const strategyName = (id: string, fallback: string): StrategyName =>
