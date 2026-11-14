@@ -180,12 +180,12 @@ def _exception_kind(typ, msg: str) -> str:
     return "Failed" if msg.lstrip().startswith(("Failed", "DID NOT RAISE")) else "okänd"   # pytest.raises/pytest.fail
 
 
-def _pytest(py, cwd, k=None):
+def _pytest(py, cwd, k=None, extra=()):
     """Kör D1-proven. Returnerar exitkod, sammanfattning utan körtid och första fallerade prov med undantagstyp ur
     pytests JUnit-XML (failure/error-elementens type-attribut), eller None."""
     xml = Path(cwd) / "_d1_junit.xml"
     p = subprocess.run([str(py), "-m", "pytest", "-p", "no:cacheprovider", "-o", "addopts=", "-q", "-x",
-                        f"--junitxml={xml}", *(["-k", k] if k else []), *TESTS], cwd=cwd, capture_output=True, text=True)
+                        f"--junitxml={xml}", *(["-k", k] if k else []), *TESTS, *extra], cwd=cwd, capture_output=True, text=True)
     out = p.stdout + p.stderr
     lines = [l for l in out.splitlines() if " passed" in l or " failed" in l or " error" in l]
     summary = re.sub(r" in [0-9.]+s( \([0-9:]+\))?$", "", lines[-1].strip()) if lines else ""   # körtid ej reproducerbar
@@ -207,24 +207,28 @@ def _node(test_id: str) -> str:
     return mod.replace(".", "/") + ".py::" + name
 
 
-def _twin_passes(py, dst: Path, rel: str, original: str, k) -> bool:
-    """Kör exakt samma provurval (samma -k eller hela D1-sviten, samma ordning) i en tvillingkopia av samma
-    arbetsyta där bara mutationen är återställd. Allt annat (testfiler, fixturer, resurser, eventuella injicerade fel,
-    också sådana som beror på ordningen mellan prov) är identiskt. Tvillingen måste passera helt."""
-    with tempfile.TemporaryDirectory() as tmp:
-        twin = Path(tmp) / dst.name
-        shutil.copytree(dst, twin, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache", "_d1_junit.xml"))
-        for extra in ("docs",):                                   # resurser utanför engine/ följer med
-            if (dst.parent / extra).exists():
-                shutil.copytree(dst.parent / extra, Path(tmp) / extra)
-        (twin / "traderlab" / rel).write_text(original)
-        code, _, _ = _pytest(py, twin, k)
-        return code == 0
+def _snapshot(dst: Path, tmp: Path, rel: str, original: str) -> Path:
+    """Kontrollgren: kopia av arbetsytan tagen INNAN något prov har körts, med bara mutationen återställd. Allt annat
+    (testfiler, fixturer, resurser, eventuella injicerade fel) är identiskt med mutantgrenens utgångsläge."""
+    twin = tmp / "kontroll" / dst.name
+    shutil.copytree(dst, twin, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache", "_d1_junit.xml"))
+    for extra in ("docs",):                                   # resurser utanför engine/ följer med
+        if (dst.parent / extra).exists():
+            shutil.copytree(dst.parent / extra, tmp / "kontroll" / extra)
+    (twin / "traderlab" / rel).write_text(original)
+    return twin
 
 
-def classify(py, dst: Path, rel: str, original: str, code: int, summary: str, first, scope: str, k=None) -> dict:
+def _twin_passes(py, twin: Path, k, extra=()) -> bool:
+    """Kör exakt samma provurval (samma -k eller hela D1-sviten, samma ordning) i kontrollgrenen. Den har inte rörts
+    av mutantens körning och måste passera helt."""
+    code, _, _ = _pytest(py, twin, k, extra)
+    return code == 0
+
+
+def classify(py, twin: Path, code: int, summary: str, first, scope: str, k=None, extra=()) -> dict:
     """FÅNGAD kräver att ett prov fallerar eller får fel med mutanten och att exakt samma provurval, i samma ordning,
-    passerar helt i tvillingen utan mutationen. Annars är felet inte orsakat av mutationen: MILJÖFEL, oavsett fas (setup, anrop, nedstädning)
+    passerar helt i kontrollgrenen: samma orörda utgångsläge som mutanten, med bara mutationen återställd. Annars är felet inte orsakat av mutationen: MILJÖFEL, oavsett fas (setup, anrop, nedstädning)
     och undantagstyp."""
     if code == 0:
         return {"utfall": "MISSAD", "pytest": summary, "körda_prov": scope}
@@ -233,7 +237,7 @@ def classify(py, dst: Path, rel: str, original: str, code: int, summary: str, fi
     test_id, kind, tag = first
     row = {"pytest": summary, "första_fel": test_id, "orsak": kind, "fas": "anrop" if tag == "failure" else "setup/nedstädning",
            "körda_prov": scope}
-    if _twin_passes(py, dst, rel, original, k):
+    if _twin_passes(py, twin, k, extra):
         return {"utfall": "FÅNGAD", **row, "tvilling_utan_mutation": "passerar"}
     return {"utfall": "MILJÖFEL", **row, "tvilling_utan_mutation": "fallerar också"}
 
@@ -246,44 +250,45 @@ def baseline(py) -> str:
     return summary
 
 
-SELFTEST_FAULTS = ("RuntimeError", "AssertionError", "FileNotFoundError")
+_FIXTURE = "import pytest\nfrom pathlib import Path\n\n_n = [0]\n\n\n@pytest.fixture(autouse=True)\ndef _synthetic():\n{body}\n"
+SELFTEST_FAULTS = {
+    "setup RuntimeError": "    raise RuntimeError(\"synthetic missing test resource\")",
+    "setup AssertionError": "    raise AssertionError(\"synthetic missing test resource\")",
+    "setup FileNotFoundError": "    raise FileNotFoundError(\"synthetic missing test resource\")",
+    "ordningsberoende (andra provet)": "    _n[0] += 1\n    if _n[0] == 2:\n        raise RuntimeError(\"synthetic fault on the second test\")",
+    # Resurs vid första användning: saknas markören skapas den och felet kastas. En kopia efter körningen skulle ärva
+    # markören och passera; kontrollgrenen tas före körningen och fallerar därför också.
+    "första användning, setup": "    m = Path(__file__).with_name(\"_marker_setup\")\n    if not m.exists():\n        m.write_text(\"x\")\n        raise RuntimeError(\"synthetic first-use resource failure\")",
+    "första användning, anrop": "    yield                                  # felet ligger i provet test_zz_first_use (nedan)",
+    "första användning, nedstädning": "    m = Path(__file__).with_name(\"_marker_teardown\")\n    first = not m.exists()\n    yield\n    if first:\n        m.write_text(\"x\")\n        raise RuntimeError(\"synthetic first-use teardown failure\")",
+}
 
 
 def env_selftest(py) -> dict:
-    """Ett fel i testuppsättningen utan beteendemutation får aldrig bli FÅNGAD. För varje undantagstyp: neutral
-    kommentarändring i källan plus en autouse-fixtur som kastar felet; kräver MILJÖFEL. Kontroll åt andra hållet:
-    en verklig mutation utan injicerat fel ska bli FÅNGAD."""
+    """Ett fel som inte orsakas av en beteendemutation får aldrig bli FÅNGAD. För varje fall: neutral kommentarändring
+    i källan plus en injicerad autouse-fixtur; kräver MILJÖFEL. Kontroll åt andra hållet: en verklig mutation utan
+    injicerat fel ska bli FÅNGAD."""
     out = {}
     rel, marker = "momentum_control.py", 'VERSION = "mom-control/1.0.0"\n'
-    for fault in SELFTEST_FAULTS:
+    for name, body in SELFTEST_FAULTS.items():
         with tempfile.TemporaryDirectory() as tmp:
             dst = _workspace(Path(tmp))
             f = dst / "traderlab" / rel
             original = f.read_text()
             f.write_text(original.replace(marker, marker + "# neutral kommentar (självtest)\n", 1))
-            (dst / "tests" / "conftest.py").write_text(
-                "import pytest\n\n\n@pytest.fixture(autouse=True)\ndef _synthetic_env_fault():\n"
-                f"    raise {fault}(\"synthetic missing test resource\")\n")
-            code, summary, first = _pytest(py, dst)
-            res = classify(py, dst, rel, original, code, summary, first, "hela D1-sviten")
+            (dst / "tests" / "conftest.py").write_text(_FIXTURE.format(body=body))
+            if name == "första användning, anrop":         # anropsfel vid första användning: provet självt fallerar
+                (dst / "tests" / "test_zz_first_use.py").write_text(
+                    "from pathlib import Path\n\n\ndef test_first_use():\n"
+                    "    m = Path(__file__).with_name(\"_marker_call_test\")\n"
+                    "    if not m.exists():\n        m.write_text(\"x\")\n        raise RuntimeError(\"synthetic first-use call failure\")\n")
+            twin = _snapshot(dst, Path(tmp), rel, original)
+            extra = ["tests/test_zz_first_use.py"] if name == "första användning, anrop" else []
+            code, summary, first = _pytest(py, dst, None, extra)
+            res = classify(py, twin, code, summary, first, "hela D1-sviten", None, extra)
         if res["utfall"] != "MILJÖFEL":
-            sys.exit(f"Självtestet klassade ett setupfel ({fault}) utan beteendemutation som {res['utfall']}: {res}")
-        out[fault] = res["utfall"]
-    # Ordningsberoende setupfel: fixturen fallerar först vid andra provet. Prövat ensamt passerar det fallerande provet,
-    # men samma urval i samma ordning fallerar i tvillingen också: MILJÖFEL.
-    with tempfile.TemporaryDirectory() as tmp:
-        dst = _workspace(Path(tmp))
-        f = dst / "traderlab" / rel
-        original = f.read_text()
-        f.write_text(original.replace(marker, marker + "# neutral kommentar (självtest)\n", 1))
-        (dst / "tests" / "conftest.py").write_text(
-            "import pytest\n\n_n = [0]\n\n\n@pytest.fixture(autouse=True)\ndef _sequence_fault():\n"
-            "    _n[0] += 1\n    if _n[0] == 2:\n        raise RuntimeError(\"synthetic fault on the second test\")\n")
-        code, summary, first = _pytest(py, dst)
-        res = classify(py, dst, rel, original, code, summary, first, "hela D1-sviten")
-    if res["utfall"] != "MILJÖFEL":
-        sys.exit(f"Självtestet klassade ett ordningsberoende setupfel som {res['utfall']}: {res}")
-    out["ordningsberoende RuntimeError"] = res["utfall"]
+            sys.exit(f"Självtestet klassade {name} utan beteendemutation som {res['utfall']}: {res}")
+        out[name] = res["utfall"]
     n, f_rel, o, w = MUTATIONS[0]
     real = run_one(py, n, f_rel, o, w)
     if real["utfall"] != "FÅNGAD":
@@ -300,12 +305,13 @@ def run_one(py, name, rel, old, new):
         if src.count(old) != 1:
             return {"utfall": "MÖNSTER_SAKNAS"}
         f.write_text(src.replace(old, new))
+        twin = _snapshot(dst, Path(tmp), rel, src)            # före varje provkörning
         scope, k = "riktade", TARGETS.get(name)
         code, summary, first = _pytest(py, dst, k)
         if code == 0 or (code == 5 and not first):          # riktade prov passerade (eller inga valdes): hela sviten
             scope, k = "hela D1-sviten", None
             code, summary, first = _pytest(py, dst)
-        return classify(py, dst, rel, src, code, summary, first, scope, k)
+        return classify(py, twin, code, summary, first, scope, k)
 
 
 def main():

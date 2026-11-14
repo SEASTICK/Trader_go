@@ -188,6 +188,20 @@ och `--check` ger PASS.
 **Id på main:** sedan 2026-11-14 heter den här hypotesen **H-0026** på main (tidigare H-0017 på Edwins gren); se
 `research/id-omnumrering.md` på main. Filnamn och id i den här grenens historik är oförändrade.
 
+## Rättning D1-10 (revision 7)
+
+Underlag: [Codex granskning av fcbbb02](momentum-D1-granskning-fcbbb02.md). Tvillingen kopierades efter mutantens
+körning och ärvde därmed filer och resurser som provet skapat. Nu tas kontrollgrenen som en ögonblicksbild innan
+något prov körs, med bara mutationen återställd, och båda grenarna startar från samma orörda utgångsläge. Samma
+provurval och ordning gäller som tidigare.
+
+Självtestet omfattar sju felfall utan beteendemutation, och alla ger MILJÖFEL:
+- setupfel med RuntimeError, AssertionError och FileNotFoundError;
+- ett ordningsberoende fel;
+- resursfel vid första användning i setup, i anrop och vid nedstädning (markören skapas och felet kastas).
+
+En verklig mutation blir FÅNGAD. Utfallet: 31 fångade, 0 missade, 1 ekvivalent.
+
 ## Inte i D1
 
 - buy_and_hold, ema_legacy och bb_legacy samt no_vol.

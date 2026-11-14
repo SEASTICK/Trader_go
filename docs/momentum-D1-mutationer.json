@@ -7,10 +7,13 @@
   ],
   "baslinje": "65 passed",
   "miljöfel_självtest": {
-    "RuntimeError": "MILJÖFEL",
-    "AssertionError": "MILJÖFEL",
-    "FileNotFoundError": "MILJÖFEL",
-    "ordningsberoende RuntimeError": "MILJÖFEL",
+    "setup RuntimeError": "MILJÖFEL",
+    "setup AssertionError": "MILJÖFEL",
+    "setup FileNotFoundError": "MILJÖFEL",
+    "ordningsberoende (andra provet)": "MILJÖFEL",
+    "första användning, setup": "MILJÖFEL",
+    "första användning, anrop": "MILJÖFEL",
+    "första användning, nedstädning": "MILJÖFEL",
     "verklig mutation": "FÅNGAD"
   },
   "felprov": [
