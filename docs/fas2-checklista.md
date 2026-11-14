@@ -1,10 +1,10 @@
 # Fas 2 – Utvecklingsplan
 
-**38 av 40 uppgifter verifierade · 8 arbetsområden.**
+**40 av 40 uppgifter verifierade · 8 arbetsområden.**
 
-H-0013 · Kontrollerad 2026-11-03 · Granskad kodversion `9471e51`.
+H-0013 · Kontrollerad 2026-11-03 · Granskad kodversion `72107ed`.
 
-A1/A2/A3 och riktig H-0013 verifierade. Avbrott av aktiv process provat i riktig kö; 1H-katalogens behörighetsfel rättat med uttryckligt ja. H-0013 ca59d441 genomförd efter separat godkännande, försök 1, 516 s, ett resultat. Oberoende omräkning bekräftar alla fem fallna krav och REJECT; appens strikta läsare rapporterar inga saknade delar. Slutprovet oläst. En worker b44d3ce, tom kö. Stable-publicering och slutligt Fas 2-godkännande återstår. H-0013 REJECT registrerat i 82bd03f efter granskning 5ce848e. Releaseanteckningar och manuell testkanalshandoff förberedda; F2-804/805 pågår, inget publicerat.
+Fas 2 slutgodkänd av Edwin 2026-11-03 efter Codex tekniska granskning: 40/40 verifierade inom dokumenterade begränsningar. A1/A2/A3 och riktig H-0013 ca59d441 verifierade, inklusive aktivt avbrott i kön. Stable 0.1.23 från 72107ed publicerad efter Edwins ja och approve (#83), och verifierad i installerad Mac-app; testkanalen och uppdatering 0.1.21 till 0.1.22 kontrollerade. En worker b44d3ce och tom aktiv kö. H-0013 förblir REJECT, alla fem krav faller; slutprovet oläst och ingen paper/live-aktivering. Manuellt Windowsprov saknas och driftlarm är uppskjutna enligt godkända begränsningar. Fas 3 har inte startats.
 
 ## Uppdateringsregler
 
@@ -173,20 +173,20 @@ A1/A2/A3 och riktig H-0013 verifierade. Avbrott av aktiv process provat i riktig
 
 ## 8. Sluttest och godkännande
 
-3/5 verifierade.
+5/5 verifierade.
 
 - [x] **F2-801** Kör relevanta Python-, frontend-, Rust- och databaskontroller
   - Underlag: [docs/fas2-sluttest-granskning-80.md](fas2-sluttest-granskning-80.md) — 4e85f4e (kod 144ab88): klockrättning oberoende godkänd. fmt, clippy, 44 Rust-enhetstester + 4 integrationstester och 20 egna upprepningar passerar; 1 nätverkstest ignorerat. App-/Rust-CI gröna, Windows pågår. Övrig app-/motorkod oförändrad.
   - Underlag: [docs/fas2-a1-granskning-81.md](fas2-a1-granskning-81.md) — 66d59bb: A1 godkänt på 6c16638. CI på identiskt träd grön inklusive Windows; kö/samtidighet, Universe (27 Rust, 2 ignorerade), reproducerbart workerpaket och tidigare kodkontrollkedja verifierade.
   - Underlag: [docs/fas2-a2-utfall-20261103.md](fas2-a2-utfall-20261103.md) — A2-rättning: auth-400 får egen svensk feltext utan ändring av köavvisningar. 123 frontendtester och appbygge passerar; motor/Rust/server oförändrade.
-  - A1 verifierad, A2 och A3 genomförda. Riktig H-0013-körning och Stable återstår.
+  - A1/A2/A3 och riktig H-0013 verifierade. Stable 0.1.23 publicerad och installerad; teknisk slutgranskning godkänd.
 - [x] **F2-802** Verifiera hela flödet från app till worker och sparat H-0013-resultat
   - Underlag: [docs/fas2-a3-utfall-20261103.md](fas2-a3-utfall-20261103.md) — A3: två uttryckligen godkända exploration-jobb från appen sparade var sitt resultat, attempts=1 och utan fel. Identiska stats/kurvor/fingerprints, ledig kö och noll H-0013 efteråt. Jobb 2 hann bli klart före avbrott; molnavbrott inte verifierat.
   - Underlag: [docs/fas2-a3-utfall-20261103.md](fas2-a3-utfall-20261103.md) — Extra uttryckligen godkänt 4H-jobb över 2020–2024 klart på cirka 7,63 s, med exakt ett resultat. Beräkningsprocess observerad men avslutad före avbrottsklick; molnavbrott ännu ej verifierat. Separat 1H-prov godkänt men inte köat: appstyrningens fönsteråtkomst bröts.
   - Underlag: [docs/fas2-a3-utfall-20261103.md](fas2-a3-utfall-20261103.md) — A3 omprov 7bbad445: installerad app visar Körs→Avbruten. Servern ser aktiv process 35173 vid avbrott, därefter processen borta och slot släppt; 0 resultat och ingen sen publicering. Behörighetsfel i föregående jobb bevarat, katalogägare rättad med separat godkännande och skrivprov PASS. En worker PID 30868/b44d3ce, 0 omstarter, tom kö och 0 H-0013.
   - Underlag: [docs/fas2-h0013-forkontroll-20261103.md](fas2-h0013-forkontroll-20261103.md) — Läsande förkontroll som tradergo: 120 frysta utvecklingsarkiv verifierar namn/SHA/CHECKSUM. Ingen träning eller utvärdering. Appens förberedelsekort öppnat med obekräftad ruta; H-0013-köning kräver separat beslut.
   - Underlag: [docs/fas2-h0013-granskning-20261103.md](fas2-h0013-granskning-20261103.md) — Riktig H-0013 ca59d441 genomförd efter uttryckligt ja, försök 1, 516 s, exakt ett resultat. Arkiv/data/revision spårbara, 200 permutationer/81 spelböcker, oberoende omräkning av kriterier och kurva PASS; alla fem krav faller → REJECT. Installerad app visar verkligt resultat, strict reader missing=[]; en worker och tom slot efteråt. Inget slutprov.
-  - Hela riktiga app–kö–worker–sparat H-0013-resultat verifierat och granskat. REJECT efter alla fem fallna krav; slutprovet oläst. Release och Fas 2-slutgodkännande återstår.
+  - Hela riktiga app–kö–worker–sparat H-0013-resultat verifierat och granskat, även i Stable 0.1.23. REJECT; slutprovet oläst.
 - [x] **F2-803** Kontrollera Mac, anslutningsfel och att befintliga Fas 1-funktioner fungerar
   - Underlag: [docs/fas2-a1-granskning-81.md](fas2-a1-granskning-81.md) — 66d59bb: Mac-zip df0436dc…3cfc/signatur verifierade utan start. Backupens 23 innehållsfiler matchar och nio SQLite-integriteter är ok; manifestets felaktiga självpost behöver rättas (P2).
   - Underlag: [docs/fas2-a1-granskning-81.md](fas2-a1-granskning-81.md) — 6ff6b5e: manifestfynd rättat och omgranskat. 23 giltiga poster, 24 filer totalt, manifesthash f86865d5…fec4 och 10 SQLite-integriteter verifierade. A2 ej utfört.
@@ -195,11 +195,16 @@ A1/A2/A3 och riktig H-0013 verifierade. Avbrott av aktiv process provat i riktig
   - Underlag: [docs/fas2-a2-utfall-20261103.md](fas2-a2-utfall-20261103.md) — Installerat 6c16638 visar missvisande köfel vid nekad inloggning. Rättning och 123 gröna frontendtester klara, men nytt installerat prov återstår. Wi-Fi-prov gav inget observerat fel och sessionen var därefter borta; fel/5-sekundersåterhämtning ej verifierade.
   - Underlag: [docs/fas2-a2-utfall-20261103.md](fas2-a2-utfall-20261103.md) — 9471e51: rättad auth-feltext verifierad i installerad Mac-kopia i ljust/mörkt tema. Zip d9b3670a…ed87, signatur och ny privat backup verifierade. Korrekt inloggning i nya kopian, fysiskt nätprov och utloggning återstår.
   - Underlag: [docs/fas2-a2-utfall-20261103.md](fas2-a2-utfall-20261103.md) — A2 slutförd i 9471e51 (kod mergad som 915cf44): felaktig/riktig inloggning, riktig listläsning, manuellt nätfel/återhämtning med bevarad session och explicit utloggning verifierade. Teman kontrollerade, System återställt. Exakt nätlatens ej uppmätt; ingen installerad Windows-verifiering.
-  - A2 godkänd inom dokumenterad avgränsning. Appen lämnad utloggad. Känd mörk priskarta i ljust tema är oförändrad Stable-begränsning. Riktig köexekvering/H-0013 och Stable-publicering återstår.
-- [ ] **F2-804** Publicera granskad Stable och verifiera installerad kodversion samt uppdaterad checklista **Pågår.**
+  - A2 och installerad Stable 0.1.23 verifierade. Exakt nätlatens ej uppmätt. Inget manuellt Windowsprov; känd mörk priskarta i ljust tema kvarstår.
+- [x] **F2-804** Publicera granskad Stable och verifiera installerad kodversion samt uppdaterad checklista
   - Underlag: [docs/fas2-release-overlamning-20261103.md](fas2-release-overlamning-20261103.md) — Releaseanteckningar och konkret testkanalshandoff förberedda. App/Rust-källkod oförändrad mot installerad 9471e51. Ingen release startad eller publicerad; projektets release-skill kräver att människan startar workflow.
-  - Inväntar Edwins start av test-workflow och verifiering, sedan separat Stable-beslut, publicering och installerat prov. Ingen ny version publicerad.
-- [ ] **F2-805** Dokumentera Fas 2-godkännande och fatta separat beslut om eventuellt slutprov; ingen automatisk paper- eller liveaktivering **Pågår.**
+  - Underlag: [docs/fas2-release-verifiering-20261103.md](fas2-release-verifiering-20261103.md) — Edwin startade test 0.1.21 (41658461455) och 0.1.22 (41681950148) samt Stable 0.1.23 (41683850552) och skrev approve i #83. Alla på 72107ed; taggar, manifest, filhashar och minisign-signaturer verifierade. Testappen 0.1.21 kontrollerad (Fas 1, Marknad, Papper, H-0013 REJECT med kurvor, affärer och spårbarhet) och uppdaterad i appen till 0.1.22. Installerad Stable uppdaterad 0.1.20 → 0.1.23 i appen: Status v0.1.23 (72107ed) kanal Stable, Info.plist 0.1.23, codesign OK, H-0013-resultatet visas.
+  - Underlag: [docs/fas2-release-verifiering-20261103.md](fas2-release-verifiering-20261103.md) — Codex oberoende slutgranskning: GitHub-release/tagg/manifest och installerad Stable 0.1.23 verifierade. Publicerad och installerad Mac-binär byteidentiska; codesign strict PASS. Inloggat H-0013-resultat REJECT med fem affärer och rätt spårbarhet. En worker, tom aktiv kö, ett H-0013-resultat. Ingen ny forskning eller åtkomst till slutprov.
+  - Stable 0.1.23 publicerad efter Edwins ja och approve, verifierad installerad. Begränsningar: inget manuellt Windowsprov, Gatekeeper ej prövat, +ändrad-märkning i releasebyggen.
+- [x] **F2-805** Dokumentera Fas 2-godkännande och fatta separat beslut om eventuellt slutprov; ingen automatisk paper- eller liveaktivering
   - Underlag: [docs/fas2-h0013-granskning-20261103.md](fas2-h0013-granskning-20261103.md) — Riktig H-0013 ca59d441 genomförd efter uttryckligt ja, försök 1, 516 s, exakt ett resultat. Arkiv/data/revision spårbara, 200 permutationer/81 spelböcker, oberoende omräkning av kriterier och kurva PASS; alla fem krav faller → REJECT. Installerad app visar verkligt resultat, strict reader missing=[]; en worker och tom slot efteråt. Inget slutprov.
   - Underlag: [docs/fas2-release-overlamning-20261103.md](fas2-release-overlamning-20261103.md) — H-0013 REJECT registrerat i egen commit 82bd03f efter granskning 5ce848e. Slutprov ska inte öppnas. Samlat godkännande inväntar verifierad release; inga strategier är READY_FOR_PAPER.
-  - Forskningsbeslutet är REJECT enligt förregistrerade kriterier; H-0013 går inte vidare till slutprov. Samlat Fas 2-godkännande inväntar release och verifierad installerad Stable. Ingen paper/live-aktivering.
+  - Underlag: [docs/fas2-release-verifiering-20261103.md](fas2-release-verifiering-20261103.md) — Slutgodkännandeunderlag: H-0013 REJECT, inget slutprov, inget READY_FOR_PAPER, ingen paper/live. Leveransen släppt och verifierad i Stable 0.1.23. Begränsningar redovisade (Windows manuellt, driftlarm, Gatekeeper, +ändrad, ljust tema, Universe publicerad).
+  - Underlag: [docs/fas2-release-verifiering-20261103.md](fas2-release-verifiering-20261103.md) — Codex oberoende slutgranskning: GitHub-release/tagg/manifest och installerad Stable 0.1.23 verifierade. Publicerad och installerad Mac-binär byteidentiska; codesign strict PASS. Inloggat H-0013-resultat REJECT med fem affärer och rätt spårbarhet. En worker, tom aktiv kö, ett H-0013-resultat. Ingen ny forskning eller åtkomst till slutprov.
+  - Underlag: [docs/fas2-release-verifiering-20261103.md](fas2-release-verifiering-20261103.md) — Edwins svar 2026-11-03: ”ja jag godkänner”, på frågan om slutgodkännande av Fas 2 med dokumenterade begränsningar. Codex tekniska granskning redan godkänd; F2-805 avslutad.
+  - Edwin gav uttryckligt slutgodkännande 2026-11-03 efter Codex tekniska granskning, med redovisade begränsningar. Fas 2 är klar. H-0013 förblir REJECT; inget slutprov eller paper/live.
