@@ -71,6 +71,14 @@ jobs:
       # Röktestet styr WebView2 via Chrome DevTools-protokollet med playwright-core (ingen webbläsarnedladdning).
       - name: Installera playwright-core (fast version, utanför repot)
         run: npm install --prefix "$env:RUNNER_TEMP/pw" playwright-core@1.49.1 --no-audit --no-fund --no-package-lock
+      # Programmet samlar annars in publik Binance-data direkt vid start (och söker uppdateringar), och då ritas ett riktigt diagram.
+      # För ett deterministiskt tomt datalager spärras programmets utgående nätverk med en brandväggsregel (bara det här jobbets
+      # temporära körmiljö). Webbvyn läser det inbäddade gränssnittet lokalt och påverkas inte. Misslyckas regeln ska jobbet fallera.
+      - name: Spärra programmets utgående nätverk (tomt datalager, inga uppdateringskontroller)
+        run: |
+          $exe = "$PWD/src-tauri/target/debug/trader-go.exe"
+          New-NetFirewallRule -DisplayName "smoke-block-trader-go" -Direction Outbound -Program (Resolve-Path $exe).Path -Action Block -Profile Any | Out-Null
+          Get-NetFirewallRule -DisplayName "smoke-block-trader-go" | Get-NetFirewallApplicationFilter | Format-List Program
       - name: Röktest av skrivbordsappen (Windows, tomt datalager)
         run: |
           $env:NODE_PATH = "$env:RUNNER_TEMP/pw/node_modules"

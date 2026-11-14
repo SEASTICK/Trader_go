@@ -129,6 +129,7 @@ async function overflow(page) {
       await safeClick(page, page.locator("aside nav button", { hasText: "Marknad" }).first());
       await page.waitForTimeout(1500);
       const text = await page.locator("main").innerText();
+      log(`INFO Marknad (tomt datalager), text: ${text.replace(/\s+/g, " ").slice(0, 400)}`);
       check(await page.locator(".candle-box, canvas").count() === 0, "Marknad utan data: inget diagram och ingen canvas ritas");
       check(/Ingen marknadsdata att visa/.test(text) || /ingen marknadsdata/i.test(text), "Marknad utan data: tomläget säger att marknadsdata saknas");
       check(!/REALTIDSDATA|HISTORIK/.test(text), "Marknad utan data: inget märke (REALTIDSDATA/HISTORIK) antyder att prisdata finns");
