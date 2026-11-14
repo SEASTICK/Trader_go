@@ -81,8 +81,9 @@ export function groupRegistry(reg: Registry): Hypothesis[] {
       h.noRun = false;
       h.decision = d;
       h.result = r.cells["resultat"] ?? null;
-      // "t 1,43 (krav 2,71)" eller "t −1,8023 mot 2,67".
-      const m = (h.result ?? "").match(/\bt (−?-?\d+,\d+) (?:\(krav|mot) (\d+,\d+)/);
+      // "t 1,43 (krav 2,71)", "t −1,8023 mot 2,67" eller med kort beskrivning emellan:
+      // "t 1,43 på överavkastningen (krav 2,75)", "t 1,37 över de 14 cyklerna (krav 3,45)".
+      const m = (h.result ?? "").match(/\bt (−?-?\d+,\d+)(?: [^().;|]{1,40})? (?:\(krav|mot) (\d+,\d+)/);
       if (m) { h.t = num(m[1]); h.krav = num(m[2]); }
     }
   }

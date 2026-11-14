@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { invoke, isTauri } from "@tauri-apps/api/core";
 import { CandleChart } from "../components/CandleChart";
 import { Page, Segmented } from "../components/ui";
+import { StrategyPicker } from "../components/StrategyPicker";
 import frozenMarket from "../../data/fas1-market.json";
 import type { Candle, SeriesInfo, SeriesRef } from "../lib/candles";
 import { agoText, ageDays } from "../lib/freshness";
@@ -16,12 +17,12 @@ const FROZEN: Candle[] = frozenMarket.rows.map(([open_time, open, high, low, clo
 const HISTORY_SERIES: SeriesRef = { provider: "binance", market: "um", symbol: "BTCUSDT", interval: "4h" };
 
 /** Prisdiagram med val av instrument och tidsram. Datorprogrammet läser datalagret, webbläsaren visar den medföljande historiken. */
-export default function Market({ now = new Date() }: { now?: Date }) {
+export default function Market({ now = new Date(), onOpenResults }: { now?: Date; onOpenResults?: () => void }) {
   const desktop = isTauri();
-  return desktop ? <DesktopMarket /> : <WebMarket now={now} />;
+  return desktop ? <DesktopMarket onOpenResults={onOpenResults} /> : <WebMarket now={now} onOpenResults={onOpenResults} />;
 }
 
-function WebMarket({ now }: { now: Date }) {
+function WebMarket({ now, onOpenResults }: { now: Date; onOpenResults?: () => void }) {
   const sets = useMemo(() => Object.fromEntries(HISTORY_INTERVALS.map((i) => [i, resample(FROZEN, "4h", i)])), []);
   const last = FROZEN[FROZEN.length - 1];
   const first = FROZEN[0];
@@ -38,12 +39,13 @@ function WebMarket({ now }: { now: Date }) {
       actions={<div role="group" aria-label="Instrument"><Segmented value={label(HISTORY_SERIES)} options={[label(HISTORY_SERIES)]} onChange={() => {}} /></div>}>
       <CandleChart series={HISTORY_SERIES} historicalSets={sets} historyNote={note} noSourceReason="Ingen datakälla för den här marknaden än." />
       <p className="note" role="note">I webbläsaren finns bara historiken för <b>ett instrument</b>. Fler instrument, fler tidsramar och realtidspriser kommer från datalagret i skrivbordsappen.</p>
+      <StrategyPicker onOpenResults={onOpenResults} />
       <p className="footnote">Riktiga priser betyder inte riktig handel. Allt i Trader_go är papper eller historik.</p>
     </Page>
   );
 }
 
-function DesktopMarket() {
+function DesktopMarket({ onOpenResults }: { onOpenResults?: () => void }) {
   const [all, setAll] = useState<SeriesInfo[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pick, setPick] = useState<string | null>(null);
@@ -66,6 +68,7 @@ function DesktopMarket() {
       {error && <p className="note warn" role="alert"><b>Kunde inte läsa datalagret.</b> {error}</p>}
       {all !== null && instruments.length === 0 && !error && <p className="note warn" role="alert"><b>Datalagret har ingen marknadsdata än.</b> Insamlingen styrs i appens datamapp (se docs/marknadsdata.md).</p>}
       <CandleChart series={series} noSourceReason="Ingen datakälla för den här marknaden än." />
+      <StrategyPicker onOpenResults={onOpenResults} />
       <p className="footnote">Riktiga priser betyder inte riktig handel. Allt i Trader_go är papper eller historik.</p>
     </Page>
   );

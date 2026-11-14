@@ -1,4 +1,5 @@
 import { Details, Page } from "../components/ui";
+import { StrategyPicker } from "../components/StrategyPicker";
 import registryMd from "../../../research/registry.md?raw";
 import { parseRegistry } from "../lib/registry";
 import { agoText, freshness } from "../lib/freshness";
@@ -66,6 +67,8 @@ export default function Overview({ go, now = new Date() }: { go: (p: GoTarget) =
           <span className="src">{filings.date ? <>Investerardata: <D>{filings.date}</D></> : "Investerardata saknas"}</span>
         </section>
       </div>
+
+      <StrategyPicker onOpenResults={() => go("Resultat")} />
 
       {nya > 0 && (
         <p className="link-line"><button type="button" className="textbtn" onClick={() => go("Papper")}>{nya} {nya === 1 ? "ny redovisning" : "nya redovisningar"} sedan du tittade senast</button></p>

@@ -115,7 +115,7 @@ export default function App() {
         {page === "Hem" && <Overview go={(p) => setPage(p)} />}
         {page === "Resultat" && <Research />}
         {page === "Papper" && <Papper />}
-        {page === "Marknad" && <Market />}
+        {page === "Marknad" && <Market onOpenResults={() => setPage("Resultat")} />}
         {page === "Research Lab" && <ResearchLab />}
         {page === "Status" && <Status updater={updater} />}
         </div>
