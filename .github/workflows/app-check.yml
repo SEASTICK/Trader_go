@@ -1,6 +1,8 @@
 name: App check
 
-# Snabb och billig kontroll av gränssnittet på Linux: tester, typkontroll och bygge. Ingen Windows.
+# Kontroll av gränssnittet. Jobbet `check` är snabbt och billigt (Linux: tester, typkontroll, bygge).
+# Jobbet `windows-smoke` bygger den riktiga Tauri-appen på Windows (WebView2) och kör ett röktest i skrivbordsläget.
+# Inget av jobben paketerar, signerar, laddar upp artefakter eller publicerar en release, och inga hemligheter används.
 on:
   pull_request:
     paths:
@@ -37,3 +39,37 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+
+  # Windows-grind: den faktiska Tauri/WebView2-målet, inte bara Vite. Kompilerar utan att paketera och startar programmet.
+  windows-smoke:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - uses: dtolnay/rust-toolchain@stable
+      # Egen cachenyckel (debug-bygge utan --target). Sparas aldrig från PR (save-if), bara läses.
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: app/src-tauri
+          shared-key: app-smoke-windows
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      # Kompilera skrivbordsappen (debug, inbäddat gränssnitt) utan installationsprogram, utan uppdateringsfiler och utan signering.
+      - run: npm run tauri build -- --debug --no-bundle --config '{"bundle":{"createUpdaterArtifacts":false}}'
+      # Röktestet styr WebView2 via Chrome DevTools-protokollet med playwright-core (ingen webbläsarnedladdning).
+      - name: Installera playwright-core (fast version, utanför repot)
+        run: npm install --prefix "$env:RUNNER_TEMP/pw" playwright-core@1.49.1 --no-audit --no-fund --no-package-lock
+      - name: Röktest av skrivbordsappen (Windows, tomt datalager)
+        run: |
+          $env:NODE_PATH = "$env:RUNNER_TEMP/pw/node_modules"
+          node smoke/desktop-smoke.cjs "$PWD/src-tauri/target/debug/trader-go.exe"
