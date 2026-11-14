@@ -5,9 +5,12 @@ Varje fel införs i en kopia av engine/ och de testresurser proven läser (docs/
 katalog med samma struktur, aldrig i källfilerna. Först körs en oförändrad baslinje, som måste passera med exakt det
 antal prov som samlas in; annars avbryts skriptet. Därefter körs per fel först de riktade proven i TARGETS; om de
 passerar körs hela D1-sviten (tests/test_momentum_control.py och tests/test_momentum_control_integration.py), så att
-MISSAD alltid bygger på hela sviten. FÅNGAD kräver att pytest körde proven och att minst ett prov
-fallerade eller fick fel vid körning (exit 1, inga insamlingsfel) med ett undantag som inte tyder på provmiljön
-(FileNotFoundError, ImportError och liknande ger MILJÖFEL); första fallerande prov och undantagstyp sparas. Körtider
+MISSAD alltid bygger på hela sviten. FÅNGAD kräver att ett prov fallerade eller fick fel med
+mutanten (exit 1, inga insamlingsfel) och att exakt samma prov passerar i en tvillingkopia av samma arbetsyta där
+bara mutationen är återställd. Annars är felet inte orsakat av mutationen och blir MILJÖFEL, oavsett fas och
+undantagstyp. Prov, orsak, fas och tvillingens utfall sparas. Ett självtest injicerar setupfel (RuntimeError,
+AssertionError, FileNotFoundError) med en neutral källändring och kräver MILJÖFEL, och kräver FÅNGAD för en verklig
+mutation. Körtider
 sparas inte, eftersom de inte är reproducerbara. MISSAD betyder att alla prov passerade.
 Insamlings- eller miljöfel ger MILJÖFEL och gör att skriptet fallerar. Bevisat ekvivalenta fel är märkta EKVIVALENT
 med motivering. Matrisen skrivs till docs/momentum-D1-mutationer.json.
@@ -156,10 +159,6 @@ NOT_APPLICABLE = []
 
 
 # Undantag som tyder på provmiljön, inte på mutantens beteende. De klassas som MILJÖFEL och gör att skriptet fallerar.
-ENV_ERRORS = {"FileNotFoundError", "ImportError", "ModuleNotFoundError", "PermissionError", "OSError",
-              "IsADirectoryError", "NotADirectoryError", "fixture"}
-
-
 def _workspace(tmp: Path) -> Path:
     dst = tmp / "engine"
     shutil.copytree(ROOT / "engine", dst, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache"))
@@ -202,6 +201,43 @@ def _pytest(py, cwd, k=None):
     return p.returncode, summary, first
 
 
+def _node(test_id: str) -> str:
+    """JUnit 'tests.test_x::test_y[p]' till pytest-nod 'tests/test_x.py::test_y[p]'."""
+    mod, _, name = test_id.partition("::")
+    return mod.replace(".", "/") + ".py::" + name
+
+
+def _twin_passes(py, dst: Path, rel: str, original: str, test_id: str) -> bool:
+    """Kör samma prov i en tvillingkopia av exakt samma arbetsyta där bara mutationen är återställd. Allt annat i
+    arbetsytan (testfiler, fixturer, resurser, eventuella injicerade fel) är identiskt."""
+    with tempfile.TemporaryDirectory() as tmp:
+        twin = Path(tmp) / dst.name
+        shutil.copytree(dst, twin, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache", "_d1_junit.xml"))
+        for extra in ("docs",):                                   # resurser utanför engine/ följer med
+            if (dst.parent / extra).exists():
+                shutil.copytree(dst.parent / extra, Path(tmp) / extra)
+        (twin / "traderlab" / rel).write_text(original)
+        p = subprocess.run([str(py), "-m", "pytest", "-p", "no:cacheprovider", "-o", "addopts=", "-q",
+                            _node(test_id)], cwd=twin, capture_output=True, text=True)
+        return p.returncode == 0
+
+
+def classify(py, dst: Path, rel: str, original: str, code: int, summary: str, first, scope: str) -> dict:
+    """FÅNGAD kräver att ett prov fallerar eller får fel med mutanten och att exakt samma prov passerar i tvillingen
+    utan mutationen. Annars är felet inte orsakat av mutationen: MILJÖFEL, oavsett fas (setup, anrop, nedstädning)
+    och undantagstyp."""
+    if code == 0:
+        return {"utfall": "MISSAD", "pytest": summary, "körda_prov": scope}
+    if code != 1 or not first:
+        return {"utfall": "MILJÖFEL", "pytest": summary, "körda_prov": scope}
+    test_id, kind, tag = first
+    row = {"pytest": summary, "första_fel": test_id, "orsak": kind, "fas": "anrop" if tag == "failure" else "setup/nedstädning",
+           "körda_prov": scope}
+    if _twin_passes(py, dst, rel, original, test_id):
+        return {"utfall": "FÅNGAD", **row, "tvilling_utan_mutation": "passerar"}
+    return {"utfall": "MILJÖFEL", **row, "tvilling_utan_mutation": "fallerar också"}
+
+
 def baseline(py) -> str:
     with tempfile.TemporaryDirectory() as tmp:
         code, summary, _ = _pytest(py, _workspace(Path(tmp)))
@@ -210,17 +246,35 @@ def baseline(py) -> str:
     return summary
 
 
-def env_selftest(py) -> str:
-    """Ett syntetiskt miljöfel (autouse-fixtur med FileNotFoundError) måste klassas som MILJÖFEL, aldrig FÅNGAD."""
-    with tempfile.TemporaryDirectory() as tmp:
-        dst = _workspace(Path(tmp))
-        (dst / "tests" / "conftest.py").write_text(
-            "import pytest\n\n\n@pytest.fixture(autouse=True)\ndef _synthetic_env_fault():\n"
-            "    raise FileNotFoundError(\"synthetic missing test resource\")\n")
-        code, _, first = _pytest(py, dst)
-    if not (code == 1 and first and first[1] in ENV_ERRORS):
-        sys.exit(f"Självtestet klassade inte ett miljöfel som MILJÖFEL: {code} {first}")
-    return f"MILJÖFEL ({first[1]}) som väntat"
+SELFTEST_FAULTS = ("RuntimeError", "AssertionError", "FileNotFoundError")
+
+
+def env_selftest(py) -> dict:
+    """Ett fel i testuppsättningen utan beteendemutation får aldrig bli FÅNGAD. För varje undantagstyp: neutral
+    kommentarändring i källan plus en autouse-fixtur som kastar felet; kräver MILJÖFEL. Kontroll åt andra hållet:
+    en verklig mutation utan injicerat fel ska bli FÅNGAD."""
+    out = {}
+    rel, marker = "momentum_control.py", 'VERSION = "mom-control/1.0.0"\n'
+    for fault in SELFTEST_FAULTS:
+        with tempfile.TemporaryDirectory() as tmp:
+            dst = _workspace(Path(tmp))
+            f = dst / "traderlab" / rel
+            original = f.read_text()
+            f.write_text(original.replace(marker, marker + "# neutral kommentar (självtest)\n", 1))
+            (dst / "tests" / "conftest.py").write_text(
+                "import pytest\n\n\n@pytest.fixture(autouse=True)\ndef _synthetic_env_fault():\n"
+                f"    raise {fault}(\"synthetic missing test resource\")\n")
+            code, summary, first = _pytest(py, dst)
+            res = classify(py, dst, rel, original, code, summary, first, "hela D1-sviten")
+        if res["utfall"] != "MILJÖFEL":
+            sys.exit(f"Självtestet klassade ett setupfel ({fault}) utan beteendemutation som {res['utfall']}: {res}")
+        out[fault] = res["utfall"]
+    n, f_rel, o, w = MUTATIONS[0]
+    real = run_one(py, n, f_rel, o, w)
+    if real["utfall"] != "FÅNGAD":
+        sys.exit(f"Självtestet: en verklig mutation ({n}) blev {real['utfall']}, inte FÅNGAD.")
+    out["verklig mutation"] = "FÅNGAD"
+    return out
 
 
 def run_one(py, name, rel, old, new):
@@ -236,15 +290,7 @@ def run_one(py, name, rel, old, new):
         if code == 0 or (code == 5 and not first):          # riktade prov passerade (eller inga valdes): hela sviten
             scope = "hela D1-sviten"
             code, summary, first = _pytest(py, dst)
-    if code == 0:
-        return {"utfall": "MISSAD", "pytest": summary, "körda_prov": scope}
-    if code == 1 and first:                        # prov fallerade eller fick fel vid körning (inte insamling)
-        test_id, kind, tag = first
-        row = {"pytest": summary, "första_fel": test_id, "orsak": kind, "typ": tag, "körda_prov": scope}
-        if kind in ENV_ERRORS or kind == "okänd":
-            return {"utfall": "MILJÖFEL", **row}
-        return {"utfall": "FÅNGAD", **row}
-    return {"utfall": "MILJÖFEL", "pytest": summary}
+        return classify(py, dst, rel, src, code, summary, first, scope)
 
 
 def main():

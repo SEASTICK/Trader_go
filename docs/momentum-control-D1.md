@@ -159,6 +159,21 @@ Underlag: [Codex granskning av aa2c866](momentum-D1-granskning-aa2c866.md).
 - **Verifiering:** 605 momentumtester och 1 158 motortester passerar, liksom A1-oraklet, 25 av 25 momentum-audits och
   alla fyra checklistor.
 
+## Rättning D1-08 (revision 5)
+
+Underlag: [Codex granskning av c0da851](momentum-D1-granskning-c0da851.md). Svartlistan över undantagsnamn är
+ersatt av en strukturell regel, en tvillingkontroll. När ett prov fallerar eller får fel med mutanten körs exakt
+samma prov i en tvillingkopia av samma arbetsyta, där bara mutationen är återställd. FÅNGAD kräver att provet
+passerar i tvillingen. Ett fel som inte orsakas av mutationen finns kvar i tvillingen och blir MILJÖFEL, oavsett fas
+(setup, anrop eller nedstädning) och undantagstyp. Varje rad sparar prov, orsak, fas och tvillingens utfall.
+
+Självtestet körs varje gång. Det injicerar setupfel med RuntimeError, AssertionError och FileNotFoundError tillsammans
+med en neutral kommentarändring i källan, och alla tre ger MILJÖFEL. Åt andra hållet blir en verklig mutation FÅNGAD.
+
+Utfall: baslinjen är 65 prov. 31 fel fångas, alla i anropsfasen och med tvillingen grön; 0 missas och 1 är
+ekvivalent. `--check` ger PASS. Verifiering: 605 momentumtester och 1 158 motortester passerar, liksom A1-oraklet,
+26 av 26 momentum-audits och alla fyra checklistor.
+
 ## Inte i D1
 
 - buy_and_hold, ema_legacy och bb_legacy samt no_vol.

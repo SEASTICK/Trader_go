@@ -6,7 +6,12 @@
     "tests/test_momentum_control_integration.py"
   ],
   "baslinje": "65 passed",
-  "miljöfel_självtest": "MILJÖFEL (FileNotFoundError) som väntat",
+  "miljöfel_självtest": {
+    "RuntimeError": "MILJÖFEL",
+    "AssertionError": "MILJÖFEL",
+    "FileNotFoundError": "MILJÖFEL",
+    "verklig mutation": "FÅNGAD"
+  },
   "felprov": [
     {
       "fel": "main-s i stället för s_h",
@@ -15,8 +20,9 @@
       "pytest": "1 failed, 64 deselected",
       "första_fel": "tests.test_momentum_control::test_component_signals_match_independent_computation",
       "orsak": "ControlError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "växla 7/14",
@@ -25,8 +31,9 @@
       "pytest": "1 failed, 64 deselected",
       "första_fel": "tests.test_momentum_control::test_component_signals_match_independent_computation",
       "orsak": "AssertionError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "framtida close",
@@ -35,8 +42,9 @@
       "pytest": "1 failed, 64 deselected",
       "första_fel": "tests.test_momentum_control::test_component_signals_match_independent_computation",
       "orsak": "AssertionError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "cap = 1 alltid",
@@ -45,8 +53,9 @@
       "pytest": "1 failed, 64 deselected",
       "första_fel": "tests.test_momentum_control::test_component_signals_match_independent_computation",
       "orsak": "ControlError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "komponentens band avstängt",
@@ -55,8 +64,9 @@
       "pytest": "1 failed, 63 deselected",
       "första_fel": "tests.test_momentum_control::test_O9_component_full_capital_vs_main",
       "orsak": "AssertionError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "komponentens dagsstopp avstängt",
@@ -65,8 +75,9 @@
       "pytest": "1 failed, 63 deselected",
       "första_fel": "tests.test_momentum_control::test_O9_component_full_capital_vs_main",
       "orsak": "AssertionError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "komponentens permanenta stopp avstängt",
@@ -75,8 +86,9 @@
       "pytest": "1 failed, 63 deselected",
       "första_fel": "tests.test_momentum_control_integration::test_day_and_permanent_stop_exact_float_boundaries",
       "orsak": "AssertionError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "A på nya q",
@@ -85,8 +97,9 @@
       "pytest": "1 failed, 63 deselected",
       "första_fel": "tests.test_momentum_control_integration::test_O5_O16_component_entry_decrease_exit[A]",
       "orsak": "AssertionError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "B på gamla q",
@@ -95,8 +108,9 @@
       "pytest": "1 failed, 1 passed, 63 deselected",
       "första_fel": "tests.test_momentum_control_integration::test_O5_O16_component_entry_decrease_exit[B]",
       "orsak": "AssertionError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "normal återupplivad efter riskexit",
@@ -105,8 +119,9 @@
       "pytest": "1 failed, 64 deselected",
       "första_fel": "tests.test_momentum_control_integration::test_O6_component_day_stop_with_normal_intent_and_reset",
       "orsak": "AssertionError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "köp efter permanent stopp",
@@ -115,8 +130,9 @@
       "pytest": "1 failed, 64 deselected",
       "första_fel": "tests.test_momentum_control_integration::test_public_component_run_permanent_stop_holds_over_days_and_other_account_unaffected",
       "orsak": "AssertionError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "startpunkt tappad",
@@ -125,8 +141,9 @@
       "pytest": "1 failed, 63 deselected",
       "första_fel": "tests.test_momentum_control::test_full_horizon_per_component",
       "orsak": "AssertionError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "sista close/terminalpunkt tappad",
@@ -135,8 +152,9 @@
       "pytest": "1 failed, 63 deselected",
       "första_fel": "tests.test_momentum_control::test_full_horizon_per_component",
       "orsak": "AssertionError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "terminalkostnad tappad",
@@ -145,8 +163,9 @@
       "pytest": "1 failed, 63 deselected",
       "första_fel": "tests.test_momentum_control::test_O2_full_capital_entry",
       "orsak": "AssertionError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "kort horisont godtas",
@@ -155,8 +174,9 @@
       "pytest": "1 failed, 55 deselected",
       "första_fel": "tests.test_momentum_control::test_invalid_market_is_rejected_before_any_computation[lucka]",
       "orsak": "Failed",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "otillgänglig signal godtas som platt",
@@ -165,8 +185,9 @@
       "pytest": "1 failed, 64 deselected",
       "första_fel": "tests.test_momentum_control::test_invalid_signal_day_via_constant_window_is_rejected",
       "orsak": "EventError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "adapterns earliest_fill okontrollerad",
@@ -175,8 +196,9 @@
       "pytest": "1 failed, 2 passed, 57 deselected",
       "första_fel": "tests.test_momentum_control_integration::test_adapter_rejects_inconsistent_source_rows[earliest_fill]",
       "orsak": "Failed",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "adapterns koherens okontrollerad",
@@ -185,8 +207,9 @@
       "pytest": "1 failed, 57 deselected",
       "första_fel": "tests.test_momentum_control_integration::test_adapter_rejects_inconsistent_source_rows[s_main]",
       "orsak": "Failed",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "adapterns cap/vol okontrollerad",
@@ -195,8 +218,9 @@
       "pytest": "1 failed, 5 passed, 57 deselected",
       "första_fel": "tests.test_momentum_control_integration::test_adapter_rejects_inconsistent_source_rows[vol_nan]",
       "orsak": "Failed",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "strikt bool available okontrollerad",
@@ -205,8 +229,9 @@
       "pytest": "1 failed, 13 passed, 50 deselected",
       "första_fel": "tests.test_momentum_control_integration::test_direct_construction_is_validated[available_int]",
       "orsak": "Failed",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "underlaget återvalideras inte",
@@ -215,8 +240,9 @@
       "pytest": "1 failed, 64 deselected",
       "första_fel": "tests.test_momentum_control_integration::test_market_owns_a_copy_and_detects_later_mutation",
       "orsak": "Failed",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "underlaget kopieras inte",
@@ -225,8 +251,9 @@
       "pytest": "1 failed, 64 deselected",
       "första_fel": "tests.test_momentum_control_integration::test_market_owns_a_copy_and_detects_later_mutation",
       "orsak": "ControlError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "2025-data i tabeller godtas",
@@ -235,8 +262,9 @@
       "pytest": "1 failed, 2 passed, 55 deselected",
       "första_fel": "tests.test_momentum_control::test_invalid_market_is_rejected_before_any_computation[2025_mark]",
       "orsak": "AssertionError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "2025-funding godtas",
@@ -245,8 +273,9 @@
       "pytest": "1 failed, 3 passed, 55 deselected",
       "första_fel": "tests.test_momentum_control::test_invalid_market_is_rejected_before_any_computation[2025_funding]",
       "orsak": "Failed",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "legacy-identitet saknas",
@@ -255,8 +284,9 @@
       "pytest": "1 failed, 63 deselected",
       "första_fel": "tests.test_momentum_control::test_full_horizon_per_component",
       "orsak": "AssertionError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "pre-start räknas inte",
@@ -265,8 +295,9 @@
       "pytest": "1 failed, 64 deselected",
       "första_fel": "tests.test_momentum_control::test_funding_ids_are_booked_independently_per_account_and_pre_start_counted",
       "orsak": "AssertionError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "delat förlopp och state mellan konton (peak, lås, funding-id)",
@@ -275,8 +306,9 @@
       "pytest": "1 failed, 64 deselected",
       "första_fel": "tests.test_momentum_control::test_components_differ_from_each_other_and_are_isolated",
       "orsak": "AssertionError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "delad kontoidentitet mellan konton",
@@ -285,8 +317,9 @@
       "pytest": "1 failed, 63 deselected",
       "första_fel": "tests.test_momentum_control::test_full_horizon_per_component",
       "orsak": "AssertionError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "peakreset vid årsskifte",
@@ -295,8 +328,9 @@
       "pytest": "1 failed, 64 deselected",
       "första_fel": "tests.test_momentum_control_integration::test_permanent_stop_across_new_year_uses_unbroken_peak",
       "orsak": "AssertionError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "adapterns dubblettkontroll av",
@@ -305,8 +339,9 @@
       "pytest": "1 failed, 64 deselected",
       "första_fel": "tests.test_momentum_control_integration::test_adapter_huge_cap_and_duplicate_days_are_controlled",
       "orsak": "AssertionError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "adapterns numerik efter aritmetik",
@@ -315,8 +350,9 @@
       "pytest": "1 failed, 64 deselected",
       "första_fel": "tests.test_momentum_control_integration::test_adapter_huge_cap_and_duplicate_days_are_controlled",
       "orsak": "OverflowError",
-      "typ": "failure",
-      "körda_prov": "riktade"
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
     },
     {
       "fel": "observationsdagar i stället för kalenderdagar",

@@ -892,6 +892,10 @@
             {
               "file": "research/audits/momentum-d1-c0da851/verification.json",
               "detail": "Revisionslåst git-show-audit: källhashar och skyddad diff; 3 288 Decimal-signaljämförelser, tre fulla referensförlopp och varierande ledger över 6 576 staplar/6 577 closepunkter/1 096 dagar. Alla 31 fångster omprövade; verklig fallback från passerande/tomt riktat urval och neutral överlevare efter 65 prov. Egen setupinjektion: FileNotFoundError ger MILJÖFEL, RuntimeError/AssertionError felaktigt FÅNGAD utan beteendemutation (D1-08). Ny audit --check PASS; totalt 26 av 26 momentum-audits PASS. Mutationsskriptets --check PASS 31/0/1/0 med grön 65-provsbaslinje; alla fyra checklistor PASS."
+            },
+            {
+              "file": "scripts/momentum-d1-mutations.py",
+              "detail": "Rättning av D1-08 från granskningen av c0da851, för Codex omgranskning, inte godkänd: tvillingkontroll i stället för undantagssvartlista (FÅNGAD kräver att samma prov passerar utan mutationen); självtest för RuntimeError/AssertionError/FileNotFoundError i setup (MILJÖFEL) och verklig mutation (FÅNGAD). 31 fångade, 0 missade, 1 ekvivalent."
             }
           ],
           "note": "D1 revision 4 EJ GODKÄND på c0da851. D1-01/D1-02/D1-05 fortsatt stängda; D1-03/D1-06/D1-07 verifierade och stängda inom D1. D1-04:s konkreta FileNotFoundError rättat, men setupklassning kvarstår som D1-08 P2. MOM-D01 kan inte bli done av D1 ensam. buy_and_hold, legacy, no_vol, blandningar och komponent-bound återstår; D1-Q01/Q02 är inte avgjorda här."
