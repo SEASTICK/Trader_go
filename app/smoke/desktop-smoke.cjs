@@ -48,10 +48,17 @@ async function overflow(page) {
       if (!fs.existsSync(EXE)) throw new Error(`Hittar inte programmet: ${EXE}`);
       tmp = fs.mkdtempSync(path.join(os.tmpdir(), "tradergo-smoke-"));
       child = spawn(EXE, [], {
-        stdio: "ignore",
+        stdio: ["ignore", "pipe", "pipe"],
         env: { ...process.env, WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS: `--remote-debugging-port=${PORT} --remote-allow-origins=*`, WEBVIEW2_USER_DATA_FOLDER: path.join(tmp, "webview2") },
       });
       let exited = null; child.on("exit", (c) => { exited = c; });
+      let out = ""; for (const st of [child.stdout, child.stderr]) st.on("data", (d) => { out = (out + d).slice(-4000); });
+      globalThis.__diagnose = () => {
+        log(`--- Diagnos: programmet ${exited === null ? "kör fortfarande" : `avslutades med kod ${exited}`}, pid ${child.pid}`);
+        log(`--- Programmets utdata (sista 4000 tecknen):\n${out || "(ingen)"}`);
+        try { const r = require("node:child_process").execSync(`netstat -ano -p tcp`, { encoding: "utf8" }); log(`--- Lyssnande portar för pid ${child.pid}:\n${r.split(/\r?\n/).filter((l) => /LISTENING/.test(l) && l.trim().endsWith(String(child.pid))).join("\n") || "(inga)"}`); log(`--- Alla lyssnande portar (urval):\n${r.split(/\r?\n/).filter((l) => /LISTENING/.test(l) && /127\.0\.0\.1|\[::1\]/.test(l)).slice(0, 25).join("\n")}`); } catch (e) { log(`netstat misslyckades: ${e.message}`); }
+        try { const r = require("node:child_process").execSync(`powershell -NoProfile -Command "Get-Process | Where-Object { $_.ProcessName -match 'trader|msedgewebview2' } | Select-Object Id,ProcessName,MainWindowTitle | Format-Table -AutoSize | Out-String"`, { encoding: "utf8" }); log(`--- Processer:\n${r}`); } catch (e) { log(`Get-Process misslyckades: ${e.message}`); }
+      };
       await waitFor(async () => { if (exited !== null) throw new Error(`Programmet avslutades med kod ${exited}`); const r = await fetch(`http://127.0.0.1:${PORT}/json/version`); return r.ok; }, 90000, "WebView2 fjärrfelsökning");
       browser = await chromium.connectOverCDP(`http://127.0.0.1:${PORT}`);
       page = await waitFor(async () => browser.contexts().flatMap((c) => c.pages()).find((p) => /^https?:\/\/tauri\.localhost|^tauri:\/\//.test(p.url())), 60000, "Tauri-fönstret");
@@ -119,6 +126,7 @@ async function overflow(page) {
     for (const e of errors) log(`     ${e}`);
   } catch (e) {
     failures.push(String(e && e.message || e)); log(`FEL  ${e && e.stack || e}`);
+    try { globalThis.__diagnose?.(); } catch {}
   } finally {
     try { await browser?.close(); } catch {}
     if (child) { try { child.kill(); } catch {} }
