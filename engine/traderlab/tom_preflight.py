@@ -116,14 +116,26 @@ def dates_sha256(df: pd.DataFrame) -> str:
 
 
 def stability(first: pd.DataFrame, second: pd.DataFrame) -> dict:
-    """Hur lika två hämtningar är (samma period, båda redan kapade): samma datum, och största relativa skillnad i justerad öppning/stängning. Inga kurser, bara skillnaden."""
-    same_dates = bool(first.index.equals(second.index))
+    """Hur lika två hämtningar är (samma period, båda redan kapade). Inga kurser, bara skillnaden.
+
+    Saknade eller icke-finita värden (NaN, inf) och datum som bara finns i den ena hämtningen blir **aldrig** noll skillnad: de räknas och redovisas separat, paret räknas inte som lika, och
+    mätningen markeras `sufficient=False` (otillräcklig) så snart något saknas. Den relativa skillnaden räknas bara över par där båda värdena är finita."""
+    only_first = first.index.difference(second.index)
+    only_second = second.index.difference(first.index)
     both = first.index.intersection(second.index)
-    a, b = first.loc[both, ["open", "close"]], second.loc[both, ["open", "close"]]
-    rel = ((a - b).abs() / a.abs()).to_numpy()
-    rel = np.where(np.isfinite(rel), rel, 0.0)
-    return {"same_dates": same_dates, "rows_compared": int(len(both)), "max_relative_difference": float(f"{float(rel.max()) if rel.size else 0.0:.3g}"),
-            "rows_differing_over_1e-9": int((rel > 1e-9).any(axis=1).sum()) if rel.size else 0}
+    a = first.loc[both, ["open", "close"]].to_numpy(dtype=float)
+    b = second.loc[both, ["open", "close"]].to_numpy(dtype=float)
+    finite = np.isfinite(a) & np.isfinite(b)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        rel = np.abs(a - b) / np.abs(a)
+    rel_ok = finite & np.isfinite(rel)                                              # delning med noll i första hämtningen är också ett par utan giltig skillnad
+    bad_cells = int((~rel_ok).sum())
+    return {"same_dates": bool(len(only_first) == 0 and len(only_second) == 0), "rows_compared": int(len(both)),
+            "dates_only_in_first": int(len(only_first)), "dates_only_in_second": int(len(only_second)),
+            "non_finite_cells": bad_cells, "rows_with_non_finite": int((~rel_ok).any(axis=1).sum()) if rel_ok.size else 0,
+            "sufficient": bool(len(only_first) == 0 and len(only_second) == 0 and len(both) > 0 and bad_cells == 0),
+            "max_relative_difference": float(f"{float(rel[rel_ok].max()):.3g}") if rel_ok.any() else None,
+            "rows_differing_over_1e-9": int(((np.where(rel_ok, rel, 0.0) > 1e-9)).any(axis=1).sum()) if rel_ok.size else 0}
 
 
 def preflight(df: pd.DataFrame, n_cut: int = 0, second: pd.DataFrame | None = None, source_note: str = "Yahoo chart-API (SPY)") -> dict:
@@ -186,6 +198,20 @@ def assert_no_prices(result: dict) -> None:
         raise AssertionError(f"otillåtna nycklar i preflight-resultatet: {sorted(extra)}")
 
 
+def _stability_line(v: dict | None) -> str:
+    if not v:
+        return "Värdestabilitet mellan två hämtningar: inte mätt (andra hämtningen misslyckades)."
+    base = (f"Värdestabilitet mellan två hämtningar: samma datum: {v['same_dates']} ({v['dates_only_in_first']} bara i första, {v['dates_only_in_second']} bara i andra); "
+            f"{v['non_finite_cells']} celler saknar giltigt värdepar (saknade eller icke-finita värden eller delning med noll) i {v['rows_with_non_finite']} rader.")
+    diff = (f" Bland giltiga par skiljer sig {v['rows_differing_over_1e-9']} av {v['rows_compared']} rader med mer än 1e-9 (relativt); största relativa skillnad {v['max_relative_difference']}."
+            if v["max_relative_difference"] is not None else " Inga giltiga par att jämföra.")
+    if not v["sufficient"]:
+        return base + diff + " **Mätningen är otillräcklig** (värden eller datum saknas i någon hämtning), och räknas inte som stabil eller instabil."
+    if v["rows_differing_over_1e-9"] > 0:
+        return base + diff + " Yahoos justerade värden är alltså inte bitvis stabila mellan anrop, och därför hashas inga värden."
+    return base + diff + " Värdena var identiska i den här mätningen, men en värdehash används ändå inte (Yahoo kan ändra justerade värden mellan anrop)."
+
+
 def markdown(r: dict) -> str:
     if r["status"] == "BLOCKERAD":
         return (f"# H-0024 datapreflight: BLOCKERAD\n\nKällan (Yahoo chart-API för SPY, den källa protokollet föreskriver) kunde inte läsas: {r['blocker']}\n\n"
@@ -206,7 +232,7 @@ def markdown(r: dict) -> str:
               f"Rader med saknade fält: {r['rows_with_missing_fields']}", f"Månader under 15 dagar: {len(r['months_below_minimum'])}", f"Cykler: {r['cycles_complete']} av {r['cycles_expected']} kompletta"
               + (f"; ofullständiga: {', '.join(r['incomplete_cycles'][:20])}" if r["incomplete_cycles"] else ""),
               "", "Handelsdagar per år: " + ", ".join(f"{y}: {n}" for y, n in r["per_year_days"].items()), "",
-              ("Värdestabilitet mellan två hämtningar: " + (f"samma datum: {r['value_stability']['same_dates']}; {r['value_stability']['rows_differing_over_1e-9']} av {r['value_stability']['rows_compared']} rader skiljer sig med mer än 1e-9 (relativt); största relativa skillnad {r['value_stability']['max_relative_difference']}. Yahoos justerade värden är alltså inte bitvis stabila mellan anrop, och därför hashas inga värden." if r.get("value_stability") else "inte mätt (andra hämtningen misslyckades)") + ""),
+              _stability_line(r.get("value_stability")),
               "", f"NYSE-kalenderns verifiering: {r['calendar_verification']['verified_rows']} av {r['calendar_verification']['ledger_rows']} stängningar belagda (maskinavstämning).", ""]
     if r["invalid_reasons"]:
         lines += ["## Orsaker som bryter datakravet", ""] + [f"- {x}" for x in r["invalid_reasons"]] + [""]

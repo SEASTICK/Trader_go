@@ -56,9 +56,14 @@
  "value_stability": {
   "same_dates": true,
   "rows_compared": 4781,
-  "max_relative_difference": 1.15e-06,
-  "rows_differing_over_1e-9": 3987
+  "dates_only_in_first": 0,
+  "dates_only_in_second": 0,
+  "non_finite_cells": 0,
+  "rows_with_non_finite": 0,
+  "sufficient": true,
+  "max_relative_difference": 1.02e-06,
+  "rows_differing_over_1e-9": 3968
  },
- "fetched_at_utc": "2026-11-14T15:24:26Z",
+ "fetched_at_utc": "2026-11-14T16:27:36Z",
  "note": "Bara täckning. Inga kurser, ingen avkastning, ingen Sharpe, inget t-värde, ingen placebo, inget beslut och ingen registerrad. Slutprovet (2025-01-01 och senare) är inte läst."
 }
