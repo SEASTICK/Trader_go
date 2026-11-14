@@ -121,6 +121,20 @@ async function overflow(page) {
         check(o.doc <= o.client && o.main <= o.client, `${p.nav} (${mode}): ingen horisontell overflow (dokument ${o.doc}, main ${o.main}, fönster ${o.client})`);
       }
     }
+    // Research Lab och Status ligger under "Mer". Samma kontroller: rubrik och ingen horisontell overflow.
+    for (const width of [null, 700]) {
+      await page.setViewportSize({ width: width ?? 1200, height: width ? 600 : 800 }); await page.waitForTimeout(500);
+      const mode = width ? `${width} px bred` : "normal storlek (1200 px)";
+      for (const [label, h1] of [["Research Lab", /^Research Lab$/], ["Status", /^Status$/]]) {
+        await safeClick(page, page.locator("aside button.more-btn").first());
+        await safeClick(page, page.locator('[role="menuitem"]', { hasText: label }).first());
+        await page.waitForTimeout(600);
+        const t = (await page.locator("h1").first().innerText()).trim();
+        check(h1.test(t), `${label} (${mode}): rubrik "${t}"`);
+        const o = await overflow(page);
+        check(o.doc <= o.client && o.main <= o.client, `${label} (${mode}): ingen horisontell overflow (dokument ${o.doc}, main ${o.main}, fönster ${o.client})`);
+      }
+    }
     if (page.viewportSize()) await page.setViewportSize({ width: 1200, height: 800 });
     await page.waitForTimeout(400);
 

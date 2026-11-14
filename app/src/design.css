@@ -179,3 +179,51 @@ h2 { font-size:16px; font-weight:620; letter-spacing:-.012em; }
   .candle-box, .candle-skeleton { height:320px; }
   .candle-warn { margin-left:14px; margin-right:14px; }
 }
+
+/* ---- Research Lab och Status ---- */
+.stats.two { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.dh-top { display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:4px; }
+.dh-top h2 { font-size:17px; }
+.lead-line { margin:8px 0; font-size:15px; }
+.toolbar { gap:16px; align-items:flex-end; }
+.field { display:flex; flex-direction:column; gap:6px; font-size:12px; font-weight:600; color:var(--muted); letter-spacing:.02em; min-width:180px; flex:1; max-width:340px; }
+.field input,.field select,.research-form input,.research-form select,.research-form textarea { padding:9px 12px; border:1px solid var(--line-2); border-radius:var(--r-sm); background:var(--card); color:var(--ink); font:inherit; font-size:14px; font-weight:400; }
+.field input:focus-visible,.field select:focus-visible,.research-form input:focus-visible,.research-form select:focus-visible,.research-form textarea:focus-visible { outline:none; border-color:var(--accent); box-shadow:var(--ring); }
+.reg-list { margin-top:0; }
+.reg-row { grid-template-columns:minmax(0,1fr) 110px 80px 120px; }
+.reg-row[aria-pressed="true"] { background:var(--accent-soft); box-shadow:inset 3px 0 0 var(--accent); }
+.reg-row .status { justify-self:end; }
+.detail-head { margin-top:20px; }
+.kpi-grid { grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:16px 24px; margin:16px 0 8px; }
+.kpi-grid b { display:block; margin-top:4px; font-size:22px; font-weight:650; letter-spacing:-.025em; font-variant-numeric:tabular-nums; }
+.criteria { list-style:none; padding:0; margin:12px 0; display:grid; gap:8px; }
+.criteria li { display:flex; gap:8px; align-items:baseline; padding:8px 12px; border-radius:var(--r-sm); background:var(--hover); font-size:14px; }
+.criteria li b { font-weight:620; white-space:nowrap; }
+.criteria li.ok b { color:var(--good); } .criteria li.no b { color:var(--bad); }
+.section-title { margin:24px 0 12px; font-size:17px; }
+.card h3.mini { margin-top:20px; }
+.research-table table { font-size:14px; }
+.research-table th { font-size:12px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); }
+.research-table tbody th { text-transform:none; letter-spacing:0; font-size:14px; color:var(--ink-2); font-weight:550; }
+.research-table td,.research-table th { border-bottom-color:var(--line); }
+.research-table .btn { min-width:0; }
+.research-form { gap:12px; }
+.research-form label { font-size:12px; font-weight:600; color:var(--muted); }
+.research-form h2 { font-size:17px; }
+.more-body > .card { margin-top:16px; }
+details summary { cursor:pointer; }
+@media (max-width:1000px) { .stats.two { grid-template-columns:minmax(0,1fr); } }
+@media (max-width:820px) {
+  .segmented { max-width:100%; overflow-x:auto; flex-wrap:nowrap; scrollbar-width:none; }
+  .segmented::-webkit-scrollbar { display:none; }
+  .segmented button { flex:1 0 auto; white-space:nowrap; padding:7px 12px; }
+  .toolbar { gap:12px; } .field { max-width:none; min-width:140px; }
+  .reg-row { grid-template-columns:minmax(0,1fr) auto; gap:6px 12px; }
+  .reg-row .rr-main { grid-column:1 / -1; }
+  .reg-row .status { grid-column:2; grid-row:3; justify-self:end; }
+  .reg-row .rr-num { text-align:left; }
+  .kpi-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .research-table { margin-left:-4px; margin-right:-4px; }
+  .dh-top h2 { font-size:16px; }
+}
+.page > .segmented { margin-bottom:16px; }

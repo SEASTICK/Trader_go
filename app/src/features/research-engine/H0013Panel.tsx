@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { Segmented } from "../../components/ui";
+import { Details, Segmented } from "../../components/ui";
 import { LineChart } from "../../components/Charts";
 import { StatusDot } from "../../components/ui";
 import type { ResearchApi, Run } from "./api";
@@ -69,7 +69,6 @@ export default function H0013Panel({ api, connected, login }: { api: ResearchApi
 
   return <>
     <H0013Intro hasResult={runs.some(r => r.status === "done")} connected={connected} />
-    <ProtocolCard />
     {error && <div className="card pad" role="alert">{error}</div>}
     {!connected ? login : <>
       <PrepareCard runs={runs} preparing={preparing} confirmed={confirmed} busy={busy}
@@ -79,16 +78,17 @@ export default function H0013Panel({ api, connected, login }: { api: ResearchApi
       {current && <RunDetail run={current} payload={payload?.id === current.id ? payload.value : undefined}
         payloadError={payloadError?.id === current.id ? payloadError.message : null} onRetry={() => setRetry(r => r + 1)} />}
     </>}
+    <ProtocolCard />
   </>;
 }
 
 export function H0013Intro({ hasResult, connected }: { hasResult: boolean; connected: boolean }) {
-  return <div className="card pad"><h2>FAS 2 · H-0013 · Registrerad historisk forskning</h2>
+  return <div className="card pad"><div className="dh-top"><h2>Fas 2 · H-0013 · Registrerad historisk forskning</h2><span className={`delta ${hasResult ? "up" : "idle"}`}>{!connected ? "Inloggning krävs" : hasResult ? "Resultat finns" : "Inget resultat ännu"}</span></div>
+    <p className="lead-line">{!connected ? <><b>Logga in</b> för att se körningar och resultat från kön.</>
+      : hasResult ? <>Ett resultat finns och visas nedan.</> : <><b>Inget resultat ännu.</b> Ingen H-0013-körning är klar; inga siffror visas förrän kön har levererat ett verifierat resultat.</>}</p>
     <p className="muted">En inlärd spelbok som väljer EMA / ADX-trend, Bollinger / RSI eller platt per marknadsläge, prövad i
       walk-forward på BTC/USDT-terminer 2022–2024. Skild från Fas 1-resultaten (H-0009–H-0012), tvärsnittshypoteserna
       (H-0014, H-0015) och utforskande körningar. Kandidaterna är REJECT ensamma.</p>
-    <p>{!connected ? "Logga in för att se körningar och resultat från kön."
-      : hasResult ? "Ett resultat finns och visas nedan." : <><b>Inget resultat ännu.</b> Ingen H-0013-körning är klar; inga siffror visas förrän kön har levererat ett verifierat resultat.</>}</p>
   </div>;
 }
 
@@ -107,10 +107,12 @@ export function ProtocolCard() {
     ["Krav", `t ≥ ${number(p.tRequired)} (N = ${p.registeredN}) och fyra jämförelser, se kriterierna`],
     ["Dataset", <code key="d" className="research-hash">{p.dataset}</code>],
   ];
-  return <div className="card pad"><h2>Låsta inställningar</h2>
-    <p className="muted">Fasta i protokollet och i databasens kö. Inget av detta kan ändras i appen; en ändring blir en ny hypotes.</p>
-    <div className="research-table"><table><tbody>{rows.map(([k, v]) => <tr key={k}><th>{k}</th><td className="research-wrap">{v}</td></tr>)}</tbody></table></div>
-  </div>;
+  return <Details summary="Visa låsta inställningar (protokoll)">
+    <div className="card pad"><h2>Låsta inställningar</h2>
+      <p className="muted">Fasta i protokollet och i databasens kö. Inget av detta kan ändras i appen; en ändring blir en ny hypotes.</p>
+      <div className="research-table"><table><tbody>{rows.map(([k, v]) => <tr key={k}><th>{k}</th><td className="research-wrap">{v}</td></tr>)}</tbody></table></div>
+    </div>
+  </Details>;
 }
 
 export function PrepareCard({ runs, preparing, confirmed, busy, onPrepare, onConfirm, onClose, onEnqueue }: {
