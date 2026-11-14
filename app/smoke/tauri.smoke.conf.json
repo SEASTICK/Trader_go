@@ -1,0 +1,16 @@
+{
+  "bundle": { "createUpdaterArtifacts": false },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Trader_go",
+        "width": 1200,
+        "height": 800,
+        "minWidth": 700,
+        "minHeight": 500,
+        "additionalBrowserArgs": "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --remote-debugging-port=9333 --remote-allow-origins=*"
+      }
+    ]
+  }
+}

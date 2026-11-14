@@ -30,7 +30,7 @@ const latestFiling = [sn.recent_filings[0]?.filed ?? "", pel.filings[0]?.filed ?
 const history = groupRegistry(parseRegistry(registryMd)).filter((h) => h.id === "H-0016" || h.id === "H-0017")
   .map((h) => ({ id: h.id, decision: h.decision, invalid: h.invalid, missing: missingPrices(h.result) }));
 const usd = (v: number) => `${Math.round(v).toLocaleString("sv-SE")} USD`;
-const pct = (v: number) => `${v >= 0 ? "+" : ""}${(v * 100).toFixed(2).replace(".", ",")} %`;
+const pct = (v: number) => `${v >= 0 ? "+" : "−"}${Math.abs(v * 100).toFixed(2).replace(".", ",")} %`;
 export const SEEN_KEY = "trader_go.seenFilings";
 /** En 13F äldre än 200 dagar räknas som inaktuell (samma gräns som i research/13f-protokoll.md). */
 export function isStale(filed: string, today = new Date()): boolean {

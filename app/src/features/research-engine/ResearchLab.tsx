@@ -6,7 +6,7 @@ import { Chart, number } from "./ResultViews";
 import { isH0013 } from "./h0013";
 const RegisteredResults = lazy(() => import("./RegisteredResults"));
 const H0013Panel = lazy(() => import("./H0013Panel"));
-const VIEWS = ["Registrerade resultat", "Fas 2 · H-0013", "Utforskning"] as const;
+const VIEWS = ["Resultat", "Fas 2", "Utforskning"] as const;
 
 const NAMES: Record<string, string> = { ema_adx_trend: "EMA / ADX-trend", donchian_breakout: "Donchian-utbrott",
   bb_rsi_reversion: "Bollinger / RSI", squeeze_breakout: "Squeeze-utbrott" };
@@ -16,7 +16,7 @@ const message = (e: unknown) => e instanceof Error ? e.message : "Ett oväntat f
 export default function ResearchLab() {
   const [registeredHypothesis, setRegisteredHypothesis] = useState<string | null>(null);
   const registeredKey = useRef<string | null>(null);
-  const [view, setView] = useState<typeof VIEWS[number]>("Registrerade resultat");
+  const [view, setView] = useState<typeof VIEWS[number]>("Resultat");
   const api = useRef(new ResearchApi()).current;
   const [connected, setConnected] = useState(false);
   const [email, setEmail] = useState(""); const [password, setPassword] = useState("");
@@ -97,8 +97,8 @@ export default function ResearchLab() {
   return <Page title="Research Lab" sub="Registrerad forskning och historisk utforskning. Inga riktiga order."
     actions={connected && <button className="btn" onClick={() => { api.signOut(); setConnected(false); setRuns([]); setSelected(""); setResult(null); setError(""); }}>Logga ut</button>}>
     <Segmented value={view} options={[...VIEWS]} onChange={setView} />
-    {view === "Registrerade resultat" ? <Suspense fallback={<p>Läser registrerade resultat…</p>}><RegisteredResults onReproduce={id => {setRegisteredHypothesis(id);registeredKey.current=null;setView("Utforskning");}} /></Suspense>
-    : view === "Fas 2 · H-0013" ? <Suspense fallback={<p>Läser H-0013…</p>}><H0013Panel api={api} connected={connected} login={loginForm} /></Suspense> : <>
+    {view === "Resultat" ? <Suspense fallback={<p>Läser registrerade resultat…</p>}><RegisteredResults onReproduce={id => {setRegisteredHypothesis(id);registeredKey.current=null;setView("Utforskning");}} /></Suspense>
+    : view === "Fas 2" ? <Suspense fallback={<p>Läser H-0013…</p>}><H0013Panel api={api} connected={connected} login={loginForm} /></Suspense> : <>
     {connected && error && <div className="card pad" role="alert">{error}</div>}
     {connected && connectionError && <div className="card pad" role="alert">{connectionError}</div>}
     {!connected ? loginForm : <>

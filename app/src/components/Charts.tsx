@@ -22,6 +22,24 @@ export function Sparkline({ data, w = 84, h = 26 }: { data: number[]; w?: number
   );
 }
 
+/** Liten yta-kurva för kort (inga axlar). Huvudserien som fylld yta, jämförelseserien streckad. Beskrivs för skärmläsare via `label`. */
+export function AreaSpark({ main, other, label, h = 72 }: { main: number[]; other?: number[]; label: string; h?: number }) {
+  const all = [...main, ...(other ?? [])].filter(Number.isFinite);
+  if (main.length < 2 || !all.length) return null;
+  const w = 320, lo = Math.min(...all), hi = Math.max(...all), span = hi - lo || 1;
+  const X = (i: number, n: number) => (i / (n - 1)) * w;
+  const Y = (v: number) => 4 + (1 - (v - lo) / span) * (h - 8);
+  const line = (d: number[]) => d.map((v, i) => `${i ? "L" : "M"}${X(i, d.length).toFixed(1)},${Y(v).toFixed(1)}`).join("");
+  return (
+    <svg className="area-spark" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" role="img" aria-label={label}>
+      <defs><linearGradient id="spark-fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="var(--accent)" stopOpacity="0.22" /><stop offset="100%" stopColor="var(--accent)" stopOpacity="0" /></linearGradient></defs>
+      <path d={`${line(main)}L${w},${h}L0,${h}Z`} fill="url(#spark-fill)" />
+      {other && other.length > 1 && <path d={line(other)} className="spark-other" vectorEffect="non-scaling-stroke" />}
+      <path d={line(main)} className="spark-main" vectorEffect="non-scaling-stroke" />
+    </svg>
+  );
+}
+
 type Series = { name: string; data: number[]; cls: string };
 
 /** Y-axelns domän. En konstant serie (platt kapital, drawdown som alltid är noll) får ett eget intervall runt

@@ -53,7 +53,10 @@ export function shortTitle(statement: string): string {
   const stripped = statement.replace(/^(Fas \d+,\s*)?[Ss]pår [ABC][^.:]{0,80}[.:]\s*/, "");
   const rest = stripped ? stripped[0].toUpperCase() + stripped.slice(1) : statement;
   const first = rest.split(/(?<=[a-zåäö0-9)])\.\s/)[0];
-  return first.length > 150 ? `${first.slice(0, 147)}…` : first.replace(/\.$/, "");
+  if (first.length <= 150) return first.replace(/\.$/, "");
+  const cut = first.slice(0, 147);
+  const space = cut.lastIndexOf(" ");
+  return `${(space > 100 ? cut.slice(0, space) : cut).replace(/[\s,;:(–-]+$/, "")}…`;                   // klipp vid ordgräns, aldrig mitt i ett ord
 }
 
 export function groupRegistry(reg: Registry): Hypothesis[] {

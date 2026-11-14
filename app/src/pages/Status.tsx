@@ -21,24 +21,32 @@ function statusText(u: Updater): string {
 
 export default function Status({ updater }: { updater: Updater }) {
   const { notice, diagnostics } = updater;
+  const ms = useMarketStatus();
   const busy = notice.status === "checking" || notice.status === "installing";
   const ready = notice.status === "ready" || (notice.status === "installing" && !!notice.version);
+  const updTone = notice.status === "error" || diagnostics?.result === "error" ? "warn" : ready || notice.status === "available" || notice.status === "downloading" ? "up" : "idle";
+  const updWord = ready ? "Ny version redo" : notice.status === "available" || notice.status === "downloading" ? "Ny version finns" : notice.status === "error" || diagnostics?.result === "error" ? "Kontrollen misslyckades" : notice.status === "current" || diagnostics?.result === "current" ? "Aktuell" : updater.enabled ? "Ingen kontroll än" : "Ingen kontroll här";
   return (
-    <Page title="Status" sub="Programversion, uppdateringar och datakällor.">
-      <section className="card pad">
-        <h2>Uppdateringar</h2>
-        <p className="lead-line">Du kör <b>v{__APP_VERSION__}</b>. {statusText(updater)}</p>
-        <div className="update-actions">
-          {ready && <button type="button" className="btn accent" disabled={busy} onClick={updater.openPrompt}>{notice.status === "installing" ? "Uppdaterar…" : `Starta om med v${notice.version}`}</button>}
-          <button type="button" className="btn" disabled={!updater.enabled || busy} onClick={() => { void updater.checkNow(false); }}>Sök efter uppdateringar</button>
-        </div>
-        {notice.status === "downloading" && notice.progress != null && (
-          <div className="progress" style={{ marginTop: 14 }} role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(notice.progress * 100)}>
-            <i style={{ width: `${Math.round(notice.progress * 100)}%` }} />
-          </div>
-        )}
-      </section>
-      <MarketData />
+    <Page title="Status" sub="Programversion, uppdateringar och datakällor."
+      actions={ready
+        ? <button type="button" className="btn accent" disabled={busy} onClick={updater.openPrompt}>{notice.status === "installing" ? "Uppdaterar…" : `Starta om med v${notice.version}`}</button>
+        : <button type="button" className="btn accent" disabled={!updater.enabled || busy} onClick={() => { void updater.checkNow(false); }}>Sök efter uppdateringar</button>}>
+      <div className="stats two">
+        <section className="stat" aria-labelledby="stt-v">
+          <header><span className="k" id="stt-v">Program</span></header>
+          <b className="big">v{__APP_VERSION__}</b>
+          <span className={`delta ${updTone}`}>{updWord}</span>
+          <p>{statusText(updater)}</p>
+          {notice.status === "downloading" && notice.progress != null && (
+            <div className="progress" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(notice.progress * 100)}>
+              <i style={{ width: `${Math.round(notice.progress * 100)}%` }} />
+            </div>
+          )}
+          <span className="src">Uppdateringar hämtas från projektets egna släppflöde</span>
+        </section>
+        <MarketStat ms={ms} />
+      </div>
+      <p className="note" role="note">Läge: forskning. Inga riktiga pengar, inga börskonton, inga order.</p>
       <Details summary="Visa tekniska detaljer">
         <dl className="dl compact">
           <dt>Byggcommit</dt><dd><code>{__COMMIT__}</code> <span className="muted">Samma värde hos er båda betyder samma program.</span></dd>
@@ -48,8 +56,8 @@ export default function Status({ updater }: { updater: Updater }) {
           {diagnostics && (<><dt>Senaste kontrollen</dt><dd>{new Date(diagnostics.checkedAt).toLocaleTimeString("sv-SE")}:{" "}
             {diagnostics.result === "available" ? `ny version v${diagnostics.version}` : diagnostics.result === "current" ? "ingen ny version" : "fel"}
             {diagnostics.detail ? ` (${diagnostics.detail})` : ""}</dd></>)}
-          <dt>Läge</dt><dd>Forskning. Inga riktiga pengar, inga börskonton, inga order.</dd>
         </dl>
+        <MarketDetails ms={ms} />
       </Details>
     </Page>
   );
@@ -58,32 +66,37 @@ export default function Status({ updater }: { updater: Updater }) {
 const time = (ms: number | null) => (ms == null ? "–" : `${new Date(ms).toLocaleString("sv-SE")} (lokal tid)`);
 const utc = (ms: number | null) => (ms == null ? "–" : new Date(ms).toISOString().slice(0, 16).replace("T", " ") + " UTC");
 
+type MarketHook = ReturnType<typeof useMarketStatus>;
+
 /** Insamlingen av publik marknadsdata (src-tauri/src/market). Bara läsning, inga nycklar eller order. */
-function MarketData() {
-  const { status: m, available } = useMarketStatus();
+function MarketStat({ ms }: { ms: MarketHook }) {
+  const { status: m, available } = ms;
+  const tone = !available || !m ? "idle" : m.ready ? "up" : m.state === "error" || m.state === "stale" || m.state === "gap" ? "warn" : "idle";
   return (
-    <section className="card pad">
-      <h2>Marknadsdata</h2>
-      {!available ? (
-        <p className="lead-line">Insamlingen körs bara i skrivbordsprogrammet.</p>
-      ) : !m ? (
-        <p className="lead-line">Väntar på status från insamlingen…</p>
-      ) : (
-        <>
-          <p className="lead-line"><b>{STATE_TEXT[m.state]}</b>{m.ready ? ", redo som analysunderlag." : ", inte redo som analysunderlag."}{m.message ? ` (${m.message})` : ""}{m.gaps.length > 0 ? ` ${m.gaps.length} öppna luckor i datan.` : ""}</p>
-          <Details summary="Visa insamlingsdetaljer">
-            <dl className="dl compact">
-              <dt>Källa</dt><dd>{m.provider} {m.market} {m.symbol} {m.interval} <span className="muted">(publik data, inga nycklar)</span></dd>
-              <dt>Senast mottaget</dt><dd>{time(m.last_received_at)} <span className="muted">(serverns händelsetid {utc(m.last_event_time)})</span></dd>
-              <dt>Senaste stängda stapel</dt><dd>{utc(m.last_closed_open_time)} <span className="muted">({m.closed_bars} stängda staplar sparade)</span></dd>
-              <dt>Pågående stapel</dt><dd>{utc(m.live_open_time)} <span className="muted">(används inte som analysunderlag)</span></dd>
-              <dt>Kvalitet</dt><dd>{m.gaps.length} öppna luckor, {m.confirmed_gaps} luckor som källan saknar, {m.corrections} rättelser, {m.rejected} avvisade meddelanden, {m.reconnects} återanslutningar</dd>
-              <dt>Sparas i</dt><dd className="muted">{m.database}</dd>
-            </dl>
-          </Details>
-        </>
-      )}
-      <p className="footnote">Varje dator samlar in själv. Det finns ingen gemensam server, så era datorer har inte en gemensam papperssession.</p>
+    <section className="stat" aria-labelledby="stt-m">
+      <header><span className="k" id="stt-m">Marknadsdata</span></header>
+      <b className={tone === "warn" ? "big warn" : "big"}>{!available ? "Ej tillgänglig" : !m ? "Väntar…" : STATE_TEXT[m.state]}</b>
+      <span className={`delta ${tone}`}>{!available || !m ? "Bara i skrivbordsappen" : m.ready ? "Redo som analysunderlag" : "Inte redo som analysunderlag"}</span>
+      <p>{!available ? "Insamlingen körs bara i skrivbordsprogrammet." : !m ? "Väntar på status från insamlingen…" : <>Senast mottaget: <span className="nb">{time(m.last_received_at)}</span>{m.message ? ` (${m.message})` : ""}{m.gaps.length > 0 ? ` ${m.gaps.length} öppna luckor i datan.` : ""}</>}</p>
+      <span className="src">Varje dator samlar in själv. Ingen gemensam server, ingen gemensam papperssession.</span>
     </section>
+  );
+}
+
+function MarketDetails({ ms }: { ms: MarketHook }) {
+  const { status: m, available } = ms;
+  if (!available || !m) return null;
+  return (
+    <>
+      <h3 className="mini">Insamlingsdetaljer</h3>
+      <dl className="dl compact">
+        <dt>Källa</dt><dd>{m.provider} {m.market} {m.symbol} {m.interval} <span className="muted">(publik data, inga nycklar)</span></dd>
+        <dt>Senast mottaget</dt><dd>{time(m.last_received_at)} <span className="muted">(serverns händelsetid {utc(m.last_event_time)})</span></dd>
+        <dt>Senaste stängda stapel</dt><dd>{utc(m.last_closed_open_time)} <span className="muted">({m.closed_bars} stängda staplar sparade)</span></dd>
+        <dt>Pågående stapel</dt><dd>{utc(m.live_open_time)} <span className="muted">(används inte som analysunderlag)</span></dd>
+        <dt>Kvalitet</dt><dd>{m.gaps.length} öppna luckor, {m.confirmed_gaps} luckor som källan saknar, {m.corrections} rättelser, {m.rejected} avvisade meddelanden, {m.reconnects} återanslutningar</dd>
+        <dt>Sparas i</dt><dd className="muted">{m.database}</dd>
+      </dl>
+    </>
   );
 }

@@ -14,17 +14,35 @@ import { subscribeBars, type Listen } from "../lib/barSubscription";
 import { dataProblems, isSupportedLive } from "../lib/marketSources";
 
 import { observeChartViewport } from "../lib/chartViewport";
+import { Icon } from "./icons";
 
 const PAGE = 1000;
+/** Snabbval för synligt tidsintervall: antal dygn (null = hela perioden). */
+const RANGES: [string, number | null][] = [["1M", 30], ["3M", 91], ["1Å", 365], ["Allt", null]];
 /** Högst så här ofta ritas strömuppdateringar (ms). */
 const FLUSH_MS = 250;
 const sec = (ms: number) => (ms / 1000) as UTCTimestamp;
+const ageDays_ = (t: number) => Math.max(0, Math.floor((Date.now() - t) / 86_400_000));
 /** "#5aa56f" + 0.5 → "rgba(90,165,111,0.5)". Canvas förstår inte color-mix. */
 const alpha = (hex: string, a: number) => {
   const h = hex.replace("#", "");
   const n = parseInt(h.length === 3 ? h.split("").map(x => x + x).join("") : h, 16);
   return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
 };
+
+/** Ändras när appens tema byts (data-theme eller systemets läge), så att diagrammet ritas om med rätta färger. */
+function useThemeKey() {
+  const [k, setK] = useState(0);
+  useEffect(() => {
+    const bump = () => setK(x => x + 1);
+    const mo = new MutationObserver(bump);
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    const mq = typeof window.matchMedia === "function" ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+    mq?.addEventListener?.("change", bump);
+    return () => { mo.disconnect(); mq?.removeEventListener?.("change", bump); };
+  }, []);
+  return k;
+}
 
 type Props = {
   /** Serien rutan handlar om, eller null om marknaden saknar en datakälla i appen. */
@@ -56,6 +74,8 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
   const [error, setError] = useState<string | null>(null);
   const [hover, setHover] = useState<Candle | null>(null);
   const [outside, setOutside] = useState(0);
+  const [range, setRange] = useState<string>("3M");
+  const themeKey = useThemeKey();
 
   useEffect(() => setTf(series?.interval ?? ""), [series?.symbol, series?.interval]);
   const isHist = !!historicalOne || !!historicalSets;
@@ -98,7 +118,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
       crosshair: { mode: CrosshairMode.Normal },
       rightPriceScale: { borderColor: v("--line") },
       timeScale: { borderColor: v("--line"), timeVisible: true, secondsVisible: false, rightOffset: 4, minBarSpacing: isHist ? 0.01 : 0.5 },
-      localization: { locale: "sv-SE", timeFormatter: (t: Time) => utc((t as number) * 1000) },
+      localization: { locale: "sv-SE", priceFormatter: (p: number) => p.toLocaleString("sv-SE", { maximumFractionDigits: Math.abs(p) < 10 ? 4 : Math.abs(p) < 1000 ? 2 : 0 }), timeFormatter: (t: Time) => utc((t as number) * 1000) },
     });
     const cs = c.addSeries(CandlestickSeries, { upColor: colors.current.up, downColor: colors.current.down, borderUpColor: colors.current.up, borderDownColor: colors.current.down, wickUpColor: colors.current.up, wickDownColor: colors.current.down });
     const vs = c.addSeries(HistogramSeries, { priceFormat: { type: "volume" }, priceLineVisible: false, lastValueVisible: false }, 1);
@@ -118,7 +138,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
       chart.current = null; candleS.current = null; volS.current = null; markersApi.current = null; lines.current.clear();
       data.current = []; setCandles([]); setHover(null);
     };
-  }, [current?.symbol, current?.interval, isHist]);
+  }, [current?.symbol, current?.interval, isHist, themeKey]);
 
   const toCandle = (x: Candle) => {
     const fade = (col: string) => alpha(col, 0.45);
@@ -129,6 +149,21 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
       : { time: sec(x.open_time), open: x.open, high: x.high, low: x.low, close: x.close, color: fade(col), borderColor: col, wickColor: fade(col) };
   };
   const toVol = (x: Candle) => ({ time: sec(x.open_time), value: x.volume, color: alpha(x.close >= x.open ? colors.current.up : colors.current.down, x.closed ? 0.5 : 0.25) });
+
+  /** Visar de senaste `days` dygnen (eller allt). Körs när diagrammet syns, så att en dold flik inte får fel storlek. */
+  const showRange = (label: string, list: Candle[] = data.current) => {
+    const entry = RANGES.find(([l]) => l === label);
+    const lastBar = list[list.length - 1];
+    if (!entry || !lastBar) return;
+    const [, days] = entry;
+    const show = () => {
+      const ts = chart.current?.timeScale();
+      if (!ts) return;
+      if (days === null) ts.fitContent();
+      else ts.setVisibleRange({ from: sec(lastBar.open_time - days * 86_400_000), to: sec(lastBar.open_time + 3 * Math.max(step, 1)) });
+    };
+    viewport.current ? viewport.current.showWhenVisible(show) : show();
+  };
 
   /** Ritar om allt men behåller användarens zoom och position (förskjutet om staplar lagts till före). */
   const redraw = (next: Candle[], addedBefore = 0) => {
@@ -145,7 +180,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
   // Historik: senaste sidan, och äldre sidor när man panorerar bakåt.
   useEffect(() => {
     if (!current) return;
-    if (isHist) { redraw(problems.length ? [] : historical ?? []); viewport.current?.fitWhenVisible(); return; }
+    if (isHist) { const list = problems.length ? [] : historical ?? []; redraw(list); showRange(range, list); return; }
     let alive = true;
     let loadingOlder = false;
     let initialized = false;
@@ -219,14 +254,14 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
   const shown = hover ?? last;
   const stale = status && sameSeries(status, current ?? ({} as SeriesRef)) && !status.ready;
   const empty = (title: string, text: string) => (
-    <div className="candle-empty"><b>{title}</b><p>{text}</p></div>
+    <div className="candle-empty"><span className="empty-icon"><Icon name="candles" size={22} /></span><b>{title}</b>{text && text !== title && <p>{text}</p>}</div>
   );
 
   let body: JSX.Element;
   if (!desktop && !isHist) body = empty("Ingen prisdata här", "Prisdiagrammet läser datalagret i skrivbordsappen. I webbläsaren finns ingen riktig OHLCV, och ingen simulerad data visas i stället.");
   else if (series && !isHist && !isSupportedLive(series)) body = empty("Marknaden stöds inte i datavägen", `${series.provider} ${series.market} ${series.symbol} kan inte läsas av datalagret (bara Binance spot stöds). Ingen graf ritas hellre än en felmärkt.`);
-  else if (!series) body = empty("Ingen datakälla för den här marknaden", noSourceReason ?? "Appen samlar bara in data för marknader med en publik datakälla. Inget simulerat pris visas i stället.");
-  else if (!isHist && available === null && !error) body = empty("Läser datalagret…", "");
+  else if (!series) body = empty("Ingen marknadsdata att visa", "Inget simulerat pris ritas i stället. När datalagret har data för ett instrument visas det här.");
+  else if (!isHist && available === null && !error) body = <div className="candle-skeleton" role="status" aria-label="Läser datalagret"><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /></div>;
   else if (!current) body = empty(
     `${series.symbol} ${tf || series.interval} samlas inte in`,
     intervals.length ? `Datalagret har ${series.symbol} i ${intervals.join(", ")}. Välj en av dem ovan; tidsramen byts aldrig bara på etiketten.` : `Datalagret har ingen data för ${series.symbol} än. Insamlingen styrs i appens datamapp (market/config.json, se docs/marknadsdata.md).`,
@@ -238,21 +273,28 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
     <div className="candle-card">
       <div className="candle-head">
         <div className="candle-title">
-          <b>{series ? series.symbol : "–"}</b>
-          <span className="muted">{series ? `${series.provider === "binance" ? "Binance" : series.provider} ${series.market === "um" ? "USDⓈ-M terminer" : series.market === "spot" ? "spot" : series.market}` : "ingen leverantör"}</span>
-          <span className="chip-live" title={isHist ? "Kontrollsummerade stängda staplar från det historiska datasetet." : "Riktiga priser från datalagret. Resultatet i rutan är fortfarande HISTORIK eller SIM, inte livehandel."}>{isHist ? "HISTORIK" : "REALTIDSDATA"}</span>
+          <b>{series ? series.symbol : "Ingen marknad vald"}</b>
+          {series && <span className="muted">{`${series.provider === "binance" ? "Binance" : series.provider} ${series.market === "um" ? "USDⓈ-M terminer" : series.market === "spot" ? "spot" : series.market}`}</span>}
+          {series && <span className="chip-live" title={isHist ? "Kontrollsummerade stängda staplar från det historiska datasetet." : "Riktiga priser från datalagret. Resultatet i rutan är fortfarande HISTORIK eller SIM, inte livehandel."}>{isHist ? "HISTORIK" : "REALTIDSDATA"}</span>}
+          {isHist && last && ageDays_(last.open_time) > 7 && <span className="chip-stale" title="Det här är sparad historik. Priserna är inte dagens priser.">Historik · senaste stapel {utc(last.open_time).slice(0, 10)} ({ageDays_(last.open_time)} dagar sedan)</span>}
           {current && status && sameSeries(status, current) && (
             <span className={`candle-state ${status.ready ? "ok" : "warn"}`}>{STATE_TEXT[status.state]}</span>
           )}
         </div>
         {series && intervals.length > 0 && (
           <div className="candle-tools">
-            {intervals.map(i => <button key={i} className={i === tf ? "on" : ""} onClick={() => setTf(i)}>{i}</button>)}
-            {isHist && <button onClick={() => chart.current?.timeScale().fitContent()}>Hela perioden</button>}
+            <div className="tool-group" role="group" aria-label="Tidsram">
+              {intervals.map(i => <button key={i} className={i === tf ? "on" : ""} aria-pressed={i === tf} onClick={() => setTf(i)}>{i}</button>)}
+            </div>
+            <div className="tool-group" role="group" aria-label="Tidsintervall att visa">
+              {RANGES.map(([l]) => <button key={l} className={l === range ? "on" : ""} aria-pressed={l === range} title={l === "Allt" ? "Visa hela perioden" : `Visa de senaste ${l === "1Å" ? "12 månaderna" : l === "3M" ? "3 månaderna" : "månaden"}`} onClick={() => { setRange(l); showRange(l); }}>{l}</button>)}
+            </div>
             <span className="sep" />
-            {INDICATORS.map(i => (
-              <button key={i.id} className={active.includes(i.id) ? "on" : ""} onClick={() => setActive(a => a.includes(i.id) ? a.filter(x => x !== i.id) : [...a, i.id])}>{i.label}</button>
-            ))}
+            <div className="tool-group" role="group" aria-label="Indikatorer">
+              {INDICATORS.map(i => (
+                <button key={i.id} className={active.includes(i.id) ? "on" : ""} aria-pressed={active.includes(i.id)} onClick={() => setActive(a => a.includes(i.id) ? a.filter(x => x !== i.id) : [...a, i.id])}>{i.label}</button>
+              ))}
+            </div>
           </div>
         )}
       </div>

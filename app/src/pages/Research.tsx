@@ -19,8 +19,8 @@ function Row({ c, onOpen }: { c: Computed; onOpen: () => void }) {
   return (
     <button type="button" className="result-row" onClick={onOpen} aria-label={`${c.exp.namn}, ${passes ? "klarade testkraven" : "klarade inte testkraven"}, öppna detaljer`}>
       <span className="rr-main"><b>{c.exp.namn}</b><span className="muted">{c.exp.strategi}</span></span>
-      <span className={passes ? "outcome-tag good" : "outcome-tag"}>{passes ? "Klarade testkraven" : "Klarade inte testkraven"}</span>
-      <span className="rr-num"><span className="k">Historik</span>{pct(c.avkastning)}</span>
+      <span className={passes ? "outcome-tag good" : "outcome-tag"}><i />{passes ? "Klarade testkraven" : "Klarade inte testkraven"}</span>
+      <span className="rr-num"><span className="k">Historik</span><b className={c.avkastning >= 0 ? "up" : "down"}>{pct(c.avkastning)}</b></span>
     </button>
   );
 }
