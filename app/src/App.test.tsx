@@ -5,6 +5,7 @@ import { createRoot, Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App, { MORE, NAV } from "./App";
 import Overview from "./pages/Overview";
+import paper13f from "../data/paper13f.json";
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 Object.assign(globalThis, { __APP_VERSION__: "0.0.0", __COMMIT__: "abc1234", __COMMIT_MSG__: "", __BUILT_AT__: new Date().toISOString(), __UPDATE_FEED__: "", __UPDATE_CHANNEL__: "stable" });
@@ -58,9 +59,11 @@ describe("startsidan", () => {
     expect(host.querySelector(".note.warn")?.textContent).toMatch(/aldrig som godkända/);
   });
   it("varnar tydligt när papperdatan är gammal och visar annars att den är aktuell med datum", async () => {
-    await render(new Date("2026-11-10T12:00:00Z"));
-    expect(text()).toContain("Aktuell"); expect(text()).toContain("2026-11-09");
-    await render(new Date("2026-12-20T12:00:00Z"));
+    // Datan uppdateras av en bot, så "nu" räknas från filens eget datum i stället för ett fast datum.
+    const updated = new Date(paper13f.updated_at);
+    await render(new Date(updated.getTime() + 86_400_000));
+    expect(text()).toContain("Aktuell"); expect(text()).toContain(paper13f.updated_at.slice(0, 10));
+    await render(new Date(updated.getTime() + 40 * 86_400_000));
     expect(host.querySelector('[role="alert"]')?.textContent).toMatch(/gammal/);
     expect(text()).toContain("Gammal");
   });
