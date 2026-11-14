@@ -65,7 +65,9 @@ jobs:
       - run: npm test
       - run: npm run build
       # Kompilera skrivbordsappen (debug, inbäddat gränssnitt) utan installationsprogram, utan uppdateringsfiler och utan signering.
-      - run: npm run tauri build -- --debug --no-bundle --config '{"bundle":{"createUpdaterArtifacts":false}}'
+      # smoke/tauri.smoke.conf.json slår bara på WebView2:s fjärrfelsökningsport i det här testbygget (aldrig i ett släpp).
+      # Tauri/wry skickar egna webbläsarargument, så miljövariabeln WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS ensam räcker inte (körning 22adfb3: ingen port).
+      - run: npm run tauri build -- --debug --no-bundle --config smoke/tauri.smoke.conf.json
       # Röktestet styr WebView2 via Chrome DevTools-protokollet med playwright-core (ingen webbläsarnedladdning).
       - name: Installera playwright-core (fast version, utanför repot)
         run: npm install --prefix "$env:RUNNER_TEMP/pw" playwright-core@1.49.1 --no-audit --no-fund --no-package-lock

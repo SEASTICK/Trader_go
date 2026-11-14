@@ -15,7 +15,7 @@ const arg = process.argv[2];
 const WEB_URL = arg === "--url" ? process.argv[3] : null;
 const EXE = WEB_URL ? null : arg;
 if (!arg || (arg === "--url" && !WEB_URL)) { console.error("Användning: desktop-smoke.cjs <exe> | --url <url>"); process.exit(2); }
-const PORT = 9333;
+const PORT = 9333; // samma port som i tauri.smoke.conf.json
 const failures = [];
 const log = (m) => console.log(m);
 const check = (ok, what) => { log(`${ok ? "OK  " : "FEL "} ${what}`); if (!ok) failures.push(what); };
