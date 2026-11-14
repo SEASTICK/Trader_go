@@ -53,7 +53,7 @@ def test_parse_cut_behaller_saknade_falt_som_nan_i_stallet_for_att_tappa_raden()
 
 
 def test_preflight_uppfylld_pa_komplett_serie_och_resultatet_har_inga_kurser():
-    r = pf.preflight(good_frame(), n_cut=3, response_sha256="a" * 64)
+    r = pf.preflight(good_frame(), n_cut=3)
     assert r["status"] == "UPPFYLLT" and all(r["requirements"].values()) and r["rows_cut_holdout"] == 3
     assert r["cycles_expected"] == r["cycles_complete"] == 227 and r["rows_with_missing_fields"] == 0 and r["incomplete_cycles"] == []
     pf.assert_no_prices(r)
@@ -150,3 +150,32 @@ def test_committade_utfallet_ar_i_synk_och_utan_kurser():
     assert r["status"] in ("UPPFYLLT", "EJ UPPFYLLT", "BLOCKERAD")
     assert pf.OUT_MD.read_text(encoding="utf-8") == pf.markdown(r)
     assert not any(isinstance(v, float) for v in r.values())
+
+
+def test_sparat_utfall_beror_inte_pa_nagot_fran_2025_aven_om_servern_skickar_det(tmp_path, monkeypatch):
+    """Två annars identiska Yahoo-svar med olika innehåll efter gränsen (värden, antal rader, extra fält) ger identiskt utfall på allt som sparas, bortsett från tidsstämpeln
+    och radantalsdiagnostiken `rows_cut_holdout`. Fångar bland annat en hash över det råa svaret, som annars skulle bero på värdena efter gränsen."""
+    monkeypatch.setattr(pf, "CACHE_DIR", tmp_path / "raw")
+    cal = nyse_sessions.load()
+    pre_o, pre_c, pre_a = np.linspace(100, 200, len(cal)), np.linspace(100.5, 200.5, len(cal)), np.linspace(90, 190, len(cal))   # identiska värden före gränsen i alla svar
+
+    def response(post_days, post_value):
+        days = cal.append(post_days)
+        k = len(post_days)
+        return yahoo_json(days, open_=[*pre_o, *[post_value] * k], close=[*pre_c, *[post_value] * k], adj=[*pre_a, *[post_value] * k], poison_after=False)
+    a = response(pd.bdate_range("2025-01-02", "2025-03-14"), 123.456)
+    b = response(pd.bdate_range("2025-01-02", "2025-02-07"), 999999.0)                                   # annat antal rader och andra värden efter gränsen
+    c = json.loads(a)
+    c["chart"]["result"][0]["meta"]["detaljer_efter_gransen"] = "annat innehåll"                         # även metadata i svaret får vara olika utan att något sparat ändras
+    ra = pf.run(opener=lambda req: a, write=False)
+    rb = pf.run(opener=lambda req: b, write=False)
+    rc = pf.run(opener=lambda req: json.dumps(c).encode(), write=False)
+    allowed_diff = {"fetched_at_utc", "rows_cut_holdout"}
+    strip = lambda r: {k: v for k, v in r.items() if k not in allowed_diff}
+    assert ra["rows_cut_holdout"] != rb["rows_cut_holdout"]                                              # radantalsdiagnostiken får skilja
+    assert strip(ra) == strip(rb) == strip(rc)
+    md = lambda r: pf.markdown(r)
+    assert md(ra).replace(str(ra["rows_cut_holdout"]) + " rader kapades", "X") == md(rb).replace(str(rb["rows_cut_holdout"]) + " rader kapades", "X")
+    assert "response_sha256" not in ra and "response" not in json.dumps(ra).lower().replace("responsible", "")
+    saved = sorted(p.name for p in (tmp_path / "raw").iterdir())
+    assert all(n.endswith("-cut.csv") for n in saved)                                                    # bara den kapade serien sparas

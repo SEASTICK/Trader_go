@@ -2,7 +2,7 @@
 
 Bara täckning enligt protokollets datakrav. Inga kurser, ingen avkastning, ingen Sharpe, inget t-värde, ingen placebo och inget beslut. Slutprovet (2025-01-01 och senare) är inte läst: förfrågan slutar vid 2025-01-01 (exklusivt), serien kapas före första kontroll (0 rader kapades).
 
-Källa: Yahoo chart-API (SPY); hämtad 2026-11-14T15:06:28Z. Rader i primärperioden 2006-01-01..2024-12-31: 4781. Serie-SHA-256 (justerad öppning och stängning, 6 decimaler): `f265790a693a20d266f8785295cccd25964c5421311dc7d684317bd1117ade00`.
+Källa: Yahoo chart-API (SPY); hämtad 2026-11-14T15:18:41Z. Rader i primärperioden 2006-01-01..2024-12-31: 4781. Serie-SHA-256 (justerad öppning och stängning, 6 decimaler): `17b4029d522651331a272cac8685893b6b1fa9362ff2fb789e64a2e2977cfde0`.
 
 ## Krav
 

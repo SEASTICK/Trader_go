@@ -35,7 +35,7 @@ OUT_MD = Path("research/coverage/h0024-datapreflight.md")
 # Det enda som får skrivas i resultatet: täckning och datakvalitet. Inga kurser, ingen avkastning.
 ALLOWED_RESULT_KEYS = {"hypothesis", "kind", "status", "source", "request", "rows_cut_holdout", "rows_in_period", "requirements", "invalid_reasons", "per_year_days", "months_below_minimum",
                        "missing_sessions", "unexpected_days", "rows_with_missing_fields", "cycles_expected", "cycles_complete", "incomplete_cycles", "calendar_verification",
-                       "series_sha256", "response_sha256", "fetched_at_utc", "note", "blocker"}
+                       "series_sha256", "fetched_at_utc", "note", "blocker"}
 
 
 class SourceUnavailable(RuntimeError):
@@ -72,8 +72,8 @@ def parse_cut(raw: bytes) -> tuple[pd.DataFrame, int]:
     return df, n_cut
 
 
-def fetch(opener=None, cache_dir: Path | None = None) -> tuple[pd.DataFrame, int, str]:
-    """Hämtar SPY 2006-01-01..2025-01-01 (exklusivt) från Yahoo. Returnerar (kapad serie, antal kapade rader, SHA-256 på det råa svaret).
+def fetch(opener=None, cache_dir: Path | None = None) -> tuple[pd.DataFrame, int]:
+    """Hämtar SPY 2006-01-01..2025-01-01 (exklusivt) från Yahoo. Returnerar (kapad serie, antal kapade rader). Ingen hash över det råa svaret beräknas eller sparas (den skulle bero på rader efter gränsen).
 
     Det råa svaret sparas **inte** (det kan i teorin innehålla rader efter gränsen); den kapade serien sparas som CSV och används vid omkörning. Svarar källan inte, kastas `SourceUnavailable`."""
     url = request_url()
@@ -88,11 +88,10 @@ def fetch(opener=None, cache_dir: Path | None = None) -> tuple[pd.DataFrame, int
         df, n_cut = parse_cut(raw)
     except (ValueError, KeyError, TypeError) as exc:
         raise SourceUnavailable(f"oväntat svar från Yahoo: {raw[:60]!r}") from exc
-    sha = hashlib.sha256(raw).hexdigest()
     cache_dir = CACHE_DIR if cache_dir is None else cache_dir
     cache_dir.mkdir(parents=True, exist_ok=True)
     df.to_csv(cache_dir / f"{SYMBOL}-{PERIOD1.date()}-{PERIOD2.date()}-cut.csv")
-    return df, n_cut, sha
+    return df, n_cut
 
 
 def _read(req) -> bytes:
@@ -117,7 +116,7 @@ def series_sha256(df: pd.DataFrame) -> str:
     return hashlib.sha256(text.encode()).hexdigest()
 
 
-def preflight(df: pd.DataFrame, n_cut: int = 0, response_sha256: str | None = None, source_note: str = "Yahoo chart-API (SPY)") -> dict:
+def preflight(df: pd.DataFrame, n_cut: int = 0, source_note: str = "Yahoo chart-API (SPY)") -> dict:
     """Protokollets datakrav 1–3 som sant/falskt med exakta orsaker. Innehåller inga kurser. `df` ska redan vara kapad (`parse_cut`); `tom.clean_prices` kapar ändå på nytt, för säkerhets skull."""
     cut_df, extra_cut = tom.clean_prices(df)                              # kapar på indexet innan något värde används
     period = tom.PRIMARY
@@ -157,7 +156,7 @@ def preflight(df: pd.DataFrame, n_cut: int = 0, response_sha256: str | None = No
             "rows_cut_holdout": int(n_cut + extra_cut), "rows_in_period": int(len(sel)), "requirements": req, "invalid_reasons": reasons,
             "per_year_days": years, "months_below_minimum": below, "missing_sessions": [d.date().isoformat() for d in missing], "unexpected_days": [d.date().isoformat() for d in extra],
             "rows_with_missing_fields": int(isna.sum()), "cycles_expected": len(expected_months) - 1, "cycles_complete": (len(expected_months) - 1) - len(incomplete),
-            "incomplete_cycles": incomplete, "calendar_verification": ver, "series_sha256": series_sha256(sel), "response_sha256": response_sha256,
+            "incomplete_cycles": incomplete, "calendar_verification": ver, "series_sha256": series_sha256(sel),
             "fetched_at_utc": pd.Timestamp.now("UTC").strftime("%Y-%m-%dT%H:%M:%SZ"),
             "note": "Bara täckning. Inga kurser, ingen avkastning, ingen Sharpe, inget t-värde, ingen placebo, inget beslut och ingen registerrad. Slutprovet (2025-01-01 och senare) är inte läst."}
 
@@ -205,8 +204,8 @@ def markdown(r: dict) -> str:
 
 def run(opener=None, write: bool = True) -> dict:
     try:
-        df, n_cut, sha = fetch(opener)
-        result = preflight(df, n_cut, sha)
+        df, n_cut = fetch(opener)
+        result = preflight(df, n_cut)
     except SourceUnavailable as exc:
         result = blocked(str(exc))
     assert_no_prices(result)
