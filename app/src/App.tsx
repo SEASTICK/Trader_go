@@ -113,7 +113,7 @@ export default function App() {
         <div className="topbar"><span className="saved"><i />Papper · inga riktiga pengar</span></div>
         <div className="page-anim" key={intro ? `${page}-intro` : page}>
         {page === "Hem" && <Overview go={(p) => setPage(p)} />}
-        {page === "Resultat" && <Research />}
+        {page === "Resultat" && <Research goPaper={() => setPage("Papper")} />}
         {page === "Papper" && <Papper />}
         {page === "Marknad" && <Market />}
         {page === "Research Lab" && <ResearchLab />}

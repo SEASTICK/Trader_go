@@ -5,9 +5,10 @@ import { Details, Page, Segmented } from "../components/ui";
 import { MÅL, fromResult, målFör, num, pct, type Computed, type Experiment, type RealResult } from "../lib/experiments";
 import ExperimentDetail from "./ExperimentDetail";
 import Hypotheses from "./Hypotheses";
+import Strategies from "./Strategies";
 import { kravFör } from "../lib/experiments";
 
-const VIEWS = ["Testade idéer", "Alla försök"] as const;
+const VIEWS = ["Strategier", "Testade idéer", "Alla försök"] as const;
 type View = (typeof VIEWS)[number];
 const SORTS = ["Standard", "Avkastning"] as const;
 type Sort = (typeof SORTS)[number];
@@ -24,8 +25,8 @@ function Row({ c, onOpen }: { c: Computed; onOpen: () => void }) {
   );
 }
 
-export default function Research() {
-  const [view, setView] = useState<View>("Testade idéer");
+export default function Research({ goPaper }: { goPaper?: () => void } = {}) {
+  const [view, setView] = useState<View>("Strategier");
   const [sort, setSort] = useState<Sort>("Standard");
   const [open, setOpen] = useState<string | null>(null);
   // JSON-filen skrivs av motorn. Bara poster märkta HISTORIK räknas som resultat.
@@ -45,8 +46,9 @@ export default function Research() {
 
   const klarar = all.filter((c) => c.klararMål).length;
   return (
-    <Page title="Resultat" sub={view === "Testade idéer" ? `${all.length} testade idéer med egen resultatrad. ${klarar === 0 ? "Ingen har klarat testkraven." : `${klarar} klarade testkraven.`} Alla registrerade försök finns under Alla försök.` : "Varje idé skrivs ned innan den testas. Alla försök räknas."}
+    <Page title="Resultat" sub={view === "Strategier" ? "Välj en strategi och se hur den står sig. Appen visar bara; den handlar aldrig." : view === "Testade idéer" ? `${all.length} testade idéer med egen resultatrad. ${klarar === 0 ? "Ingen har klarat testkraven." : `${klarar} klarade testkraven.`} Alla registrerade försök finns under Alla försök.` : "Varje idé skrivs ned innan den testas. Alla försök räknas."}
       actions={<Segmented value={view} options={[...VIEWS]} onChange={setView} />}>
+      {view === "Strategier" && <Strategies results={all} onOpenResult={setOpen} goPaper={goPaper} />}
       {view === "Alla försök" && <Hypotheses />}
 
       {view === "Testade idéer" && (

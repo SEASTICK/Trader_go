@@ -49,7 +49,9 @@ const num = (s: string) => Number(s.replace("−", "-").replace(",", "."));
 
 /** Kort rubrik: första meningen, utan inledande "Spår C (...)." eller "Fas 1, spår A.". */
 export function shortTitle(statement: string): string {
-  const rest = statement.replace(/^(Fas \d+,\s*)?[Ss]pår [ABC][^.]*\.\s*/, "");
+  // Bara ett kort inledande spårprefix tas bort ("Spår C (...).", "Spår A med skärpta krav:"), aldrig själva hypotesen.
+  const stripped = statement.replace(/^(Fas \d+,\s*)?[Ss]pår [ABC][^.:]{0,80}[.:]\s*/, "");
+  const rest = stripped ? stripped[0].toUpperCase() + stripped.slice(1) : statement;
   const first = rest.split(/(?<=[a-zåäö0-9)])\.\s/)[0];
   return first.length > 150 ? `${first.slice(0, 147)}…` : first.replace(/\.$/, "");
 }

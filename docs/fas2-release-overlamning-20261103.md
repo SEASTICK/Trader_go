@@ -1,6 +1,8 @@
 # Fas 2 – överlämning till release, 2026-11-03
 
-**38/40 verifierade.** F2-802 är klar efter verklig H-0013-körning och resultatgranskning. F2-804 (publicerad/verifierad Stable) och F2-805 (samlat slutgodkännande) återstår. Ingen testrelease eller Stable har startats i denna session.
+**Historisk överlämning, ersatt av [releaseverifieringen](fas2-release-verifiering-20261103.md): Stable 0.1.23 är nu publicerad och installerad; 40/40 klara, slutgodkända av Edwin 2026-11-03 med dokumenterade begränsningar.**
+
+**Vid överlämningen: 38/40 verifierade.** F2-802 är klar efter verklig H-0013-körning och resultatgranskning. F2-804 (publicerad/verifierad Stable) och F2-805 (samlat slutgodkännande) återstår. Ingen testrelease eller Stable har startats i denna session.
 
 ## Underlag färdigt
 
