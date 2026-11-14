@@ -7,8 +7,8 @@ antal prov som samlas in; annars avbryts skriptet. Därefter körs per fel förs
 passerar körs hela D1-sviten (tests/test_momentum_control.py och tests/test_momentum_control_integration.py), så att
 MISSAD alltid bygger på hela sviten. FÅNGAD kräver att ett prov fallerade eller fick fel med
 mutanten (exit 1, inga insamlingsfel) och att exakt samma prov passerar i en tvillingkopia av samma arbetsyta där
-bara mutationen är återställd. Annars är felet inte orsakat av mutationen och blir MILJÖFEL, oavsett fas och
-undantagstyp. Prov, orsak, fas och tvillingens utfall sparas. Ett självtest injicerar setupfel (RuntimeError,
+bara mutationen är återställd, med samma provurval i samma ordning. Annars är felet inte orsakat av mutationen och
+blir MILJÖFEL, oavsett fas, undantagstyp och ordningsberoende. Prov, orsak, fas och tvillingens utfall sparas. Ett självtest injicerar setupfel (RuntimeError,
 AssertionError, FileNotFoundError) med en neutral källändring och kräver MILJÖFEL, och kräver FÅNGAD för en verklig
 mutation. Körtider
 sparas inte, eftersom de inte är reproducerbara. MISSAD betyder att alla prov passerade.
@@ -207,9 +207,10 @@ def _node(test_id: str) -> str:
     return mod.replace(".", "/") + ".py::" + name
 
 
-def _twin_passes(py, dst: Path, rel: str, original: str, test_id: str) -> bool:
-    """Kör samma prov i en tvillingkopia av exakt samma arbetsyta där bara mutationen är återställd. Allt annat i
-    arbetsytan (testfiler, fixturer, resurser, eventuella injicerade fel) är identiskt."""
+def _twin_passes(py, dst: Path, rel: str, original: str, k) -> bool:
+    """Kör exakt samma provurval (samma -k eller hela D1-sviten, samma ordning) i en tvillingkopia av samma
+    arbetsyta där bara mutationen är återställd. Allt annat (testfiler, fixturer, resurser, eventuella injicerade fel,
+    också sådana som beror på ordningen mellan prov) är identiskt. Tvillingen måste passera helt."""
     with tempfile.TemporaryDirectory() as tmp:
         twin = Path(tmp) / dst.name
         shutil.copytree(dst, twin, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache", "_d1_junit.xml"))
@@ -217,14 +218,13 @@ def _twin_passes(py, dst: Path, rel: str, original: str, test_id: str) -> bool:
             if (dst.parent / extra).exists():
                 shutil.copytree(dst.parent / extra, Path(tmp) / extra)
         (twin / "traderlab" / rel).write_text(original)
-        p = subprocess.run([str(py), "-m", "pytest", "-p", "no:cacheprovider", "-o", "addopts=", "-q",
-                            _node(test_id)], cwd=twin, capture_output=True, text=True)
-        return p.returncode == 0
+        code, _, _ = _pytest(py, twin, k)
+        return code == 0
 
 
-def classify(py, dst: Path, rel: str, original: str, code: int, summary: str, first, scope: str) -> dict:
-    """FÅNGAD kräver att ett prov fallerar eller får fel med mutanten och att exakt samma prov passerar i tvillingen
-    utan mutationen. Annars är felet inte orsakat av mutationen: MILJÖFEL, oavsett fas (setup, anrop, nedstädning)
+def classify(py, dst: Path, rel: str, original: str, code: int, summary: str, first, scope: str, k=None) -> dict:
+    """FÅNGAD kräver att ett prov fallerar eller får fel med mutanten och att exakt samma provurval, i samma ordning,
+    passerar helt i tvillingen utan mutationen. Annars är felet inte orsakat av mutationen: MILJÖFEL, oavsett fas (setup, anrop, nedstädning)
     och undantagstyp."""
     if code == 0:
         return {"utfall": "MISSAD", "pytest": summary, "körda_prov": scope}
@@ -233,7 +233,7 @@ def classify(py, dst: Path, rel: str, original: str, code: int, summary: str, fi
     test_id, kind, tag = first
     row = {"pytest": summary, "första_fel": test_id, "orsak": kind, "fas": "anrop" if tag == "failure" else "setup/nedstädning",
            "körda_prov": scope}
-    if _twin_passes(py, dst, rel, original, test_id):
+    if _twin_passes(py, dst, rel, original, k):
         return {"utfall": "FÅNGAD", **row, "tvilling_utan_mutation": "passerar"}
     return {"utfall": "MILJÖFEL", **row, "tvilling_utan_mutation": "fallerar också"}
 
@@ -269,6 +269,21 @@ def env_selftest(py) -> dict:
         if res["utfall"] != "MILJÖFEL":
             sys.exit(f"Självtestet klassade ett setupfel ({fault}) utan beteendemutation som {res['utfall']}: {res}")
         out[fault] = res["utfall"]
+    # Ordningsberoende setupfel: fixturen fallerar först vid andra provet. Prövat ensamt passerar det fallerande provet,
+    # men samma urval i samma ordning fallerar i tvillingen också: MILJÖFEL.
+    with tempfile.TemporaryDirectory() as tmp:
+        dst = _workspace(Path(tmp))
+        f = dst / "traderlab" / rel
+        original = f.read_text()
+        f.write_text(original.replace(marker, marker + "# neutral kommentar (självtest)\n", 1))
+        (dst / "tests" / "conftest.py").write_text(
+            "import pytest\n\n_n = [0]\n\n\n@pytest.fixture(autouse=True)\ndef _sequence_fault():\n"
+            "    _n[0] += 1\n    if _n[0] == 2:\n        raise RuntimeError(\"synthetic fault on the second test\")\n")
+        code, summary, first = _pytest(py, dst)
+        res = classify(py, dst, rel, original, code, summary, first, "hela D1-sviten")
+    if res["utfall"] != "MILJÖFEL":
+        sys.exit(f"Självtestet klassade ett ordningsberoende setupfel som {res['utfall']}: {res}")
+    out["ordningsberoende RuntimeError"] = res["utfall"]
     n, f_rel, o, w = MUTATIONS[0]
     real = run_one(py, n, f_rel, o, w)
     if real["utfall"] != "FÅNGAD":
@@ -285,12 +300,12 @@ def run_one(py, name, rel, old, new):
         if src.count(old) != 1:
             return {"utfall": "MÖNSTER_SAKNAS"}
         f.write_text(src.replace(old, new))
-        scope = "riktade"
-        code, summary, first = _pytest(py, dst, TARGETS.get(name))
+        scope, k = "riktade", TARGETS.get(name)
+        code, summary, first = _pytest(py, dst, k)
         if code == 0 or (code == 5 and not first):          # riktade prov passerade (eller inga valdes): hela sviten
-            scope = "hela D1-sviten"
+            scope, k = "hela D1-sviten", None
             code, summary, first = _pytest(py, dst)
-        return classify(py, dst, rel, src, code, summary, first, scope)
+        return classify(py, dst, rel, src, code, summary, first, scope, k)
 
 
 def main():

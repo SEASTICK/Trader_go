@@ -10,6 +10,7 @@
     "RuntimeError": "MILJÖFEL",
     "AssertionError": "MILJÖFEL",
     "FileNotFoundError": "MILJÖFEL",
+    "ordningsberoende RuntimeError": "MILJÖFEL",
     "verklig mutation": "FÅNGAD"
   },
   "felprov": [

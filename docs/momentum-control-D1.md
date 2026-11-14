@@ -174,6 +174,20 @@ Utfall: baslinjen är 65 prov. 31 fel fångas, alla i anropsfasen och med tvilli
 ekvivalent. `--check` ger PASS. Verifiering: 605 momentumtester och 1 158 motortester passerar, liksom A1-oraklet,
 26 av 26 momentum-audits och alla fyra checklistor.
 
+## Rättning D1-09 (revision 6)
+
+Underlag: [Codex granskning av 8be597c](momentum-D1-granskning-8be597c.md). Tvillingen körde bara det fallerande
+provet ensamt. Ett setupfel som beror på ordningen mellan prov försvann därför i tvillingen och kunde bli FÅNGAD.
+Nu kör tvillingen exakt samma provurval (samma riktade -k eller hela D1-sviten) i samma ordning, och FÅNGAD kräver
+att hela den körningen passerar utan mutationen.
+
+Självtestet har ett nytt fall: en fixtur som fallerar först vid andra provet. Det ger MILJÖFEL, liksom de tre tidigare
+setupfelen, medan en verklig mutation blir FÅNGAD. Utfallet är oförändrat: 31 fångade, 0 missade, 1 ekvivalent,
+och `--check` ger PASS.
+
+**Id på main:** sedan 2026-11-14 heter den här hypotesen **H-0026** på main (tidigare H-0017 på Edwins gren); se
+`research/id-omnumrering.md` på main. Filnamn och id i den här grenens historik är oförändrade.
+
 ## Inte i D1
 
 - buy_and_hold, ema_legacy och bb_legacy samt no_vol.
