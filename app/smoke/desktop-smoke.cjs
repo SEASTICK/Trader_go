@@ -49,6 +49,14 @@ async function dismissUpdateDialog(page) {
   }
 }
 
+// Klick som tål att uppdateringsrutan dyker upp mitt i (den kommer asynkront när uppdateringen är hämtad).
+async function safeClick(page, locator) {
+  for (let attempt = 0; ; attempt++) {
+    await dismissUpdateDialog(page);
+    try { await locator.click({ timeout: 4000 }); return; } catch (e) { if (attempt >= 4) throw e; }
+  }
+}
+
 async function overflow(page) {
   return page.evaluate(() => ({ doc: document.documentElement.scrollWidth, main: (document.querySelector("main") || document.body).scrollWidth, client: document.documentElement.clientWidth }));
 }
@@ -105,8 +113,7 @@ async function overflow(page) {
       const mode = width ? `${width} px bred` : "normal storlek";
       for (const p of PAGES) {
         const btn = width && width <= 820 ? page.locator("aside button", { hasText: p.nav }).first() : page.locator("aside nav button", { hasText: p.nav }).first();
-        await dismissUpdateDialog(page);
-        await btn.click();
+        await safeClick(page, btn);
         await page.waitForTimeout(600);
         const h1 = (await page.locator("h1").first().innerText()).trim();
         check(p.h1.test(h1) && h1.length > 0, `${p.nav} (${mode}): rubrik "${h1}"`);
@@ -119,8 +126,7 @@ async function overflow(page) {
 
     // Marknad utan marknadsdata (bara skrivbordsläget): tomläget får inte antyda att prisdata finns.
     if (!WEB_URL) {
-      await dismissUpdateDialog(page);
-      await page.locator("aside nav button", { hasText: "Marknad" }).first().click();
+      await safeClick(page, page.locator("aside nav button", { hasText: "Marknad" }).first());
       await page.waitForTimeout(1500);
       const text = await page.locator("main").innerText();
       check(await page.locator(".candle-box, canvas").count() === 0, "Marknad utan data: inget diagram och ingen canvas ritas");
@@ -131,15 +137,14 @@ async function overflow(page) {
 
     // Temaväxling: Mer → Utseende. Hem renderar fortfarande efteråt och bakgrunden ändras.
     const themeOf = () => page.evaluate(() => ({ attr: document.documentElement.getAttribute("data-theme"), bg: getComputedStyle(document.body).backgroundColor }));
-    const toggle = async () => { await dismissUpdateDialog(page); await page.locator("aside button.more-btn").first().click(); await page.locator('[role="menuitem"], .item', { hasText: "Utseende" }).first().click(); await page.mouse.click(700, 400); await page.waitForTimeout(500); };
+    const toggle = async () => { await safeClick(page, page.locator("aside button.more-btn").first()); await safeClick(page, page.locator('[role="menuitem"], .item', { hasText: "Utseende" }).first()); await page.mouse.click(700, 400); await page.waitForTimeout(500); };
     const before = await themeOf();
     await toggle(); const dark = await themeOf();
     check(dark.attr === "dark" && dark.bg !== before.bg, `Tema Mörkt: data-theme=${dark.attr}, bakgrund ${before.bg} → ${dark.bg}`);
-    for (const p of PAGES) { await dismissUpdateDialog(page); await page.locator("aside nav button", { hasText: p.nav }).first().click(); await page.waitForTimeout(400); const o = await overflow(page); check(o.doc <= o.client, `${p.nav} i mörkt läge: ingen overflow`); }
+    for (const p of PAGES) { await safeClick(page, page.locator("aside nav button", { hasText: p.nav }).first()); await page.waitForTimeout(400); const o = await overflow(page); check(o.doc <= o.client, `${p.nav} i mörkt läge: ingen overflow`); }
     await toggle(); const light = await themeOf();
     check(light.attr === "light" && light.bg !== dark.bg, `Tema Ljust: data-theme=${light.attr}, bakgrund ${dark.bg} → ${light.bg}`);
-    await dismissUpdateDialog(page);
-    await page.locator("aside nav button", { hasText: "Hem" }).first().click();
+    await safeClick(page, page.locator("aside nav button", { hasText: "Hem" }).first());
     await page.waitForTimeout(400);
     check((await page.locator("h1").first().innerText()).trim().length > 0, "Hem renderar efter temaväxling");
 
