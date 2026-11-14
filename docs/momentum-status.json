@@ -940,6 +940,10 @@
             {
               "file": "research/audits/momentum-d1-3becd97/verification.json",
               "detail": "Källhashar, exakt femfilsdiff och byte-oförändrade skyddade källor. D1-10: sex färska omuterade kontroller fallerar som väntat. D1-11: båda omuterade sekvenser passerar riktat urval och fallerar sedan i fullsviten. Audit-PASS reproducerar även öppet fynd och innebär inte godkännande. Mutationsskriptets --check PASS 31/0/1/0 med grön 65-provsbaslinje och sju miljöfelssjälvtest. Alla 28 äldre audits PASS som historisk reproduktion; totalt 29 av 29 med ny audit. A1-oraklet och alla fyra checklistor PASS."
+            },
+            {
+              "file": "scripts/momentum-d1-mutations.py",
+              "detail": "Rättning av D1-11 från granskningen av 3becd97, för Codex omgranskning, inte godkänd: varje jämförd körning (riktad och hela sviten) har egen orörd mutant- och kontrollgren tagen före all provkörning; självtest för kvarlämnad resurs före reservkörning (MISSAD, aldrig FÅNGAD)."
             }
           ],
           "note": "D1 revision 7 EJ GODKÄND på 3becd97. D1-10:s konkreta setup-/anrops-/nedstädningsfall stängda; D1-04:s bredare garanti kvarstår som D1-11 P2: fallback jämför olika resurs- och körhistorik och kan ge falsk FÅNGAD utan beteendemutation. Tidigare stängda fynd består inom sina avgränsningar. MOM-D01 kan inte bli done av D1 ensam; buy_and_hold, legacy, no_vol, blandningar och komponent-bound återstår. D1-Q01/Q02 ej avgjorda. Enligt Edwin heter momentum H-0026 på main; grenens gamla id, protokoll och register ändras inte."

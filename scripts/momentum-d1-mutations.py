@@ -19,6 +19,8 @@ venv).
 
     python3 scripts/momentum-d1-mutations.py [--check] [--python PATH]
 """
+from __future__ import annotations
+
 import argparse
 import json
 import re
@@ -207,15 +209,17 @@ def _node(test_id: str) -> str:
     return mod.replace(".", "/") + ".py::" + name
 
 
-def _snapshot(dst: Path, tmp: Path, rel: str, original: str) -> Path:
-    """Kontrollgren: kopia av arbetsytan tagen INNAN något prov har körts, med bara mutationen återställd. Allt annat
-    (testfiler, fixturer, resurser, eventuella injicerade fel) är identiskt med mutantgrenens utgångsläge."""
-    twin = tmp / "kontroll" / dst.name
+def _snapshot(dst: Path, tmp: Path, rel: str, original: str | None, label: str = "kontroll") -> Path:
+    """Orörd kopia av arbetsytan tagen INNAN något prov har körts. Med `original` återställs bara mutationen
+    (kontrollgren); utan den är kopian en färsk mutantgren. Allt annat (testfiler, fixturer, resurser, eventuella
+    injicerade fel) är identiskt med utgångsläget."""
+    twin = tmp / label / dst.name
     shutil.copytree(dst, twin, ignore=shutil.ignore_patterns("__pycache__", ".pytest_cache", "_d1_junit.xml"))
     for extra in ("docs",):                                   # resurser utanför engine/ följer med
         if (dst.parent / extra).exists():
-            shutil.copytree(dst.parent / extra, tmp / "kontroll" / extra)
-    (twin / "traderlab" / rel).write_text(original)
+            shutil.copytree(dst.parent / extra, tmp / label / extra)
+    if original is not None:
+        (twin / "traderlab" / rel).write_text(original)
     return twin
 
 
@@ -289,6 +293,25 @@ def env_selftest(py) -> dict:
         if res["utfall"] != "MILJÖFEL":
             sys.exit(f"Självtestet klassade {name} utan beteendemutation som {res['utfall']}: {res}")
         out[name] = res["utfall"]
+    # D1-11: det riktade provet lämnar en markör; prov i första filen fallerar om markören redan finns. I en orörd
+    # helkörning körs första filen före det riktade provet och passerar. En reservkörning i den redan använda
+    # arbetsytan skulle fallera och ge falsk FÅNGAD; med orörda grenar blir den neutrala ändringen MISSAD.
+    target = "test_adapter_keeps_earliest_fill_and_source_fields"
+    leftover = ("import pytest\nfrom pathlib import Path\n\n\n@pytest.fixture(autouse=True)\ndef _leftover(request):\n"
+                "    m = Path(__file__).with_name(\"_marker_leftover\")\n"
+                f"    if request.node.name == \"{target}\":\n        m.write_text(\"x\")\n"
+                "    elif request.node.fspath.basename == \"test_momentum_control.py\" and m.exists():\n"
+                "        raise RuntimeError(\"synthetic leftover resource from an earlier run\")\n")
+    with tempfile.TemporaryDirectory() as tmp:
+        dst = _workspace(Path(tmp))
+        f = dst / "traderlab" / rel
+        original = f.read_text()
+        f.write_text(original.replace(marker, marker + "# neutral kommentar (självtest)\n", 1))
+        (dst / "tests" / "conftest.py").write_text(leftover)
+        res = _run_flow(py, Path(tmp), dst, rel, original, target)
+    if res["utfall"] == "FÅNGAD":
+        sys.exit(f"Självtestet: kvarlämnad resurs från den riktade körningen gav falsk FÅNGAD: {res}")
+    out["kvarlämnad resurs före reservkörning"] = res["utfall"]
     n, f_rel, o, w = MUTATIONS[0]
     real = run_one(py, n, f_rel, o, w)
     if real["utfall"] != "FÅNGAD":
@@ -305,13 +328,22 @@ def run_one(py, name, rel, old, new):
         if src.count(old) != 1:
             return {"utfall": "MÖNSTER_SAKNAS"}
         f.write_text(src.replace(old, new))
-        twin = _snapshot(dst, Path(tmp), rel, src)            # före varje provkörning
-        scope, k = "riktade", TARGETS.get(name)
-        code, summary, first = _pytest(py, dst, k)
-        if code == 0 or (code == 5 and not first):          # riktade prov passerade (eller inga valdes): hela sviten
-            scope, k = "hela D1-sviten", None
-            code, summary, first = _pytest(py, dst)
-        return classify(py, twin, code, summary, first, scope, k)
+        return _run_flow(py, Path(tmp), dst, rel, src, TARGETS.get(name))
+
+
+def _run_flow(py, t: Path, dst: Path, rel: str, src: str, k_targeted) -> dict:
+    """Riktade prov först, annars hela D1-sviten. Alla ögonblicksbilder tas före varje provkörning: varje jämförelse
+    (riktad och hela sviten) har en egen orörd mutantgren och en egen orörd kontrollgren, så ingen körning ärver
+    resurser från en tidigare."""
+    mut_full = _snapshot(dst, t, rel, None, "mutant_hela")
+    ctl_targeted = _snapshot(dst, t, rel, src, "kontroll_riktade")
+    ctl_full = _snapshot(dst, t, rel, src, "kontroll_hela")
+    scope, k, twin = "riktade", k_targeted, ctl_targeted
+    code, summary, first = _pytest(py, dst, k)
+    if code == 0 or (code == 5 and not first):          # riktade prov passerade (eller inga valdes): hela sviten
+        scope, k, twin = "hela D1-sviten", None, ctl_full
+        code, summary, first = _pytest(py, mut_full)
+    return classify(py, twin, code, summary, first, scope, k)
 
 
 def main():

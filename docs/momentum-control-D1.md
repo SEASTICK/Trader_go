@@ -202,6 +202,17 @@ Självtestet omfattar sju felfall utan beteendemutation, och alla ger MILJÖFEL:
 
 En verklig mutation blir FÅNGAD. Utfallet: 31 fångade, 0 missade, 1 ekvivalent.
 
+## Rättning D1-11 (revision 8)
+
+Underlag: [Codex granskning av 3becd97](momentum-D1-granskning-3becd97.md). När de riktade proven passerade kördes
+hela sviten i samma arbetsyta, som redan var ändrad av den riktade körningen, medan kontrollgrenen var orörd. Nu
+tas alla ögonblicksbilder före all provkörning. Varje jämförelse, riktad och hela sviten, har en egen orörd
+mutantgren och en egen orörd kontrollgren (`_run_flow`).
+
+Självtestet har ett nytt fall: det riktade provet lämnar en markör som får prov i första filen att fallera vid nästa
+körning. Med en neutral källändring ger fallet MISSAD, inte FÅNGAD. Skriptet har `from __future__ import
+annotations`, så det fungerar även med äldre system-Python.
+
 ## Inte i D1
 
 - buy_and_hold, ema_legacy och bb_legacy samt no_vol.
