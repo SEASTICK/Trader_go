@@ -35,7 +35,7 @@ OUT_MD = Path("research/coverage/h0024-datapreflight.md")
 # Det enda som får skrivas i resultatet: täckning och datakvalitet. Inga kurser, ingen avkastning.
 ALLOWED_RESULT_KEYS = {"hypothesis", "kind", "status", "source", "request", "rows_cut_holdout", "rows_in_period", "requirements", "invalid_reasons", "per_year_days", "months_below_minimum",
                        "missing_sessions", "unexpected_days", "rows_with_missing_fields", "cycles_expected", "cycles_complete", "incomplete_cycles", "calendar_verification",
-                       "series_sha256", "fetched_at_utc", "note", "blocker"}
+                       "dates_sha256", "value_stability", "fetched_at_utc", "note", "blocker"}
 
 
 class SourceUnavailable(RuntimeError):
@@ -108,15 +108,25 @@ def _read(req) -> bytes:
     raise OSError("oåtkomlig")
 
 
-def series_sha256(df: pd.DataFrame) -> str:
-    """SHA-256 över serien (datum, justerad öppning och stängning med 6 decimaler). En kontrollsumma, inga kurser i klartext."""
-    d = df[["open", "close"]].round(6)
-    d.index = pd.DatetimeIndex(d.index, name="date")                       # samma kanoniska text oavsett indexnamn
-    text = d.to_csv(float_format="%.6f", lineterminator="\n")
-    return hashlib.sha256(text.encode()).hexdigest()
+def dates_sha256(df: pd.DataFrame) -> str:
+    """SHA-256 över de datum som har både justerad öppning och stängning (ISO-datum, en per rad). Ett täckningsfingeravtryck utan några värden. Värdena själva hashas inte: Yahoos justerade
+    värden är inte bitvis stabila mellan anrop (mätt, se `stability`), så en värdehash skulle inte vara reproducerbar."""
+    ok = df[["open", "close"]].dropna().index
+    return hashlib.sha256("\n".join(pd.DatetimeIndex(ok).strftime("%Y-%m-%d")).encode()).hexdigest()
 
 
-def preflight(df: pd.DataFrame, n_cut: int = 0, source_note: str = "Yahoo chart-API (SPY)") -> dict:
+def stability(first: pd.DataFrame, second: pd.DataFrame) -> dict:
+    """Hur lika två hämtningar är (samma period, båda redan kapade): samma datum, och största relativa skillnad i justerad öppning/stängning. Inga kurser, bara skillnaden."""
+    same_dates = bool(first.index.equals(second.index))
+    both = first.index.intersection(second.index)
+    a, b = first.loc[both, ["open", "close"]], second.loc[both, ["open", "close"]]
+    rel = ((a - b).abs() / a.abs()).to_numpy()
+    rel = np.where(np.isfinite(rel), rel, 0.0)
+    return {"same_dates": same_dates, "rows_compared": int(len(both)), "max_relative_difference": float(f"{float(rel.max()) if rel.size else 0.0:.3g}"),
+            "rows_differing_over_1e-9": int((rel > 1e-9).any(axis=1).sum()) if rel.size else 0}
+
+
+def preflight(df: pd.DataFrame, n_cut: int = 0, second: pd.DataFrame | None = None, source_note: str = "Yahoo chart-API (SPY)") -> dict:
     """Protokollets datakrav 1–3 som sant/falskt med exakta orsaker. Innehåller inga kurser. `df` ska redan vara kapad (`parse_cut`); `tom.clean_prices` kapar ändå på nytt, för säkerhets skull."""
     cut_df, extra_cut = tom.clean_prices(df)                              # kapar på indexet innan något värde används
     period = tom.PRIMARY
@@ -156,7 +166,8 @@ def preflight(df: pd.DataFrame, n_cut: int = 0, source_note: str = "Yahoo chart-
             "rows_cut_holdout": int(n_cut + extra_cut), "rows_in_period": int(len(sel)), "requirements": req, "invalid_reasons": reasons,
             "per_year_days": years, "months_below_minimum": below, "missing_sessions": [d.date().isoformat() for d in missing], "unexpected_days": [d.date().isoformat() for d in extra],
             "rows_with_missing_fields": int(isna.sum()), "cycles_expected": len(expected_months) - 1, "cycles_complete": (len(expected_months) - 1) - len(incomplete),
-            "incomplete_cycles": incomplete, "calendar_verification": ver, "series_sha256": series_sha256(sel),
+            "incomplete_cycles": incomplete, "calendar_verification": ver, "dates_sha256": dates_sha256(sel),
+            "value_stability": None if second is None else stability(*[tom.clean_prices(x)[0].loc[period[0]:period[1]] for x in (df, second)]),
             "fetched_at_utc": pd.Timestamp.now("UTC").strftime("%Y-%m-%dT%H:%M:%SZ"),
             "note": "Bara täckning. Inga kurser, ingen avkastning, ingen Sharpe, inget t-värde, ingen placebo, inget beslut och ingen registerrad. Slutprovet (2025-01-01 och senare) är inte läst."}
 
@@ -183,7 +194,7 @@ def markdown(r: dict) -> str:
     lines = [f"# H-0024 datapreflight: {r['status']}", "",
              "Bara täckning enligt protokollets datakrav. Inga kurser, ingen avkastning, ingen Sharpe, inget t-värde, ingen placebo och inget beslut. Slutprovet (2025-01-01 och senare) är inte läst: "
              f"förfrågan slutar vid {r['request']['url_period2_exclusive']} (exklusivt), serien kapas före första kontroll ({r['rows_cut_holdout']} rader kapades).", "",
-             f"Källa: {r['source']}; hämtad {r['fetched_at_utc']}. Rader i primärperioden 2006-01-01..2024-12-31: {r['rows_in_period']}. Serie-SHA-256 (justerad öppning och stängning, 6 decimaler): `{r['series_sha256']}`.", "",
+             f"Källa: {r['source']}; hämtad {r['fetched_at_utc']}. Rader i primärperioden 2006-01-01..2024-12-31: {r['rows_in_period']}. Täckningsfingeravtryck (SHA-256 över datumen som har både justerad öppning och stängning; inga värden): `{r['dates_sha256']}`.", "",
              "## Krav", "", "| Krav | Utfall |", "|---|---|"]
     names = {"1_alla_sessioner_och_inga_saknade_varden": "1. Justerad öppning och stängning för alla NYSE-sessioner, inga saknade värden, inga extra dagar",
              "1b_249_253_dagar_per_ar": "1b. 249–253 handelsdagar per kalenderår", "2_minst_15_dagar_per_manad": "2. Minst 15 handelsdagar per kalendermånad",
@@ -195,7 +206,8 @@ def markdown(r: dict) -> str:
               f"Rader med saknade fält: {r['rows_with_missing_fields']}", f"Månader under 15 dagar: {len(r['months_below_minimum'])}", f"Cykler: {r['cycles_complete']} av {r['cycles_expected']} kompletta"
               + (f"; ofullständiga: {', '.join(r['incomplete_cycles'][:20])}" if r["incomplete_cycles"] else ""),
               "", "Handelsdagar per år: " + ", ".join(f"{y}: {n}" for y, n in r["per_year_days"].items()), "",
-              f"NYSE-kalenderns verifiering: {r['calendar_verification']['verified_rows']} av {r['calendar_verification']['ledger_rows']} stängningar belagda (maskinavstämning).", ""]
+              ("Värdestabilitet mellan två hämtningar: " + (f"samma datum: {r['value_stability']['same_dates']}; {r['value_stability']['rows_differing_over_1e-9']} av {r['value_stability']['rows_compared']} rader skiljer sig med mer än 1e-9 (relativt); största relativa skillnad {r['value_stability']['max_relative_difference']}. Yahoos justerade värden är alltså inte bitvis stabila mellan anrop, och därför hashas inga värden." if r.get("value_stability") else "inte mätt (andra hämtningen misslyckades)") + ""),
+              "", f"NYSE-kalenderns verifiering: {r['calendar_verification']['verified_rows']} av {r['calendar_verification']['ledger_rows']} stängningar belagda (maskinavstämning).", ""]
     if r["invalid_reasons"]:
         lines += ["## Orsaker som bryter datakravet", ""] + [f"- {x}" for x in r["invalid_reasons"]] + [""]
     lines += ["H-0024 är inte körd. Ingen registerrad skrivs i den här PR:en."]
@@ -205,7 +217,11 @@ def markdown(r: dict) -> str:
 def run(opener=None, write: bool = True) -> dict:
     try:
         df, n_cut = fetch(opener)
-        result = preflight(df, n_cut)
+        try:
+            second, _ = fetch(opener)                                          # en andra, oberoende hämtning mäter hur stabila Yahoos värden är
+        except SourceUnavailable:
+            second = None
+        result = preflight(df, n_cut, second)
     except SourceUnavailable as exc:
         result = blocked(str(exc))
     assert_no_prices(result)
