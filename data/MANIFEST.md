@@ -1360,3 +1360,10 @@ Råfiler ligger separat på forskningsservern och committas inte.
 | 2026-11-13 13:46 | data.binance.vision | um | ZROUSDT | fundingRate | 2024-06 till 2024-12 | 7 | - |
 | 2026-11-13 13:46 | data.binance.vision | um | XVSUSDT | fundingRate | 2023-04 till 2024-12 | 21 | - |
 | 2026-11-13 13:46 | data.binance.vision | um | YGGUSDT | fundingRate | 2023-08 till 2024-12 | 17 | - |
+| 2026-11-14 14:32 | data.binance.vision | spot | BTCUSDT | 1h | 2020-01 till 2024-12 | 60 | - |
+| 2026-11-14 14:33 | data.binance.vision | spot | ETHUSDT | 1h | 2020-01 till 2024-12 | 60 | - |
+| 2026-11-14 14:34 | data.binance.vision | um | BTCUSDT | 1h | 2020-01 till 2024-12 | 60 | - |
+| 2026-11-14 14:35 | data.binance.vision | um | ETHUSDT | 1h | 2020-01 till 2024-12 | 60 | - |
+| 2026-11-14 14:37 | data.binance.vision | um | BTCUSDT | 15m | 2020-01 till 2024-12 | 60 | - |
+| 2026-11-14 14:38 | data.binance.vision | um | BTCUSDT | fundingRate | 2020-01 till 2024-12 | 60 | - |
+| 2026-11-14 14:39 | data.binance.vision | um | ETHUSDT | fundingRate | 2020-01 till 2024-12 | 60 | - |
