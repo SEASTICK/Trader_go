@@ -33,6 +33,22 @@ async function waitFor(fn, ms, what) {
   throw new Error(`Timeout (${ms} ms): ${what}${last ? ` (${last.message})` : ""}`);
 }
 
+// Uppdateringsrutan ("Ny version finns") kan dyka upp när programmet hittar en nyare version i flödet.
+// Den får aldrig installera något här: vi stänger bara med det ofarliga valet (Senare/Stäng) och noterar att den visades.
+let updateDialogSeen = 0;
+async function dismissUpdateDialog(page) {
+  for (let i = 0; i < 5; i++) {
+    const dlg = page.locator(".overlay .update-dialog");
+    if (!(await dlg.count())) return;
+    updateDialogSeen++;
+    const text = (await dlg.first().innerText()).replace(/\s+/g, " ").trim();
+    log(`INFO Uppdateringsrutan visades: "${text.slice(0, 160)}"`);
+    const safe = dlg.first().locator("button", { hasText: /^(Senare|Stäng)$/ }).first();
+    await safe.click({ timeout: 5000 });
+    await page.waitForTimeout(400);
+  }
+}
+
 async function overflow(page) {
   return page.evaluate(() => ({ doc: document.documentElement.scrollWidth, main: (document.querySelector("main") || document.body).scrollWidth, client: document.documentElement.clientWidth }));
 }
@@ -64,6 +80,7 @@ async function overflow(page) {
       page = await waitFor(async () => browser.contexts().flatMap((c) => c.pages()).find((p) => /^https?:\/\/tauri\.localhost|^tauri:\/\//.test(p.url())), 60000, "Tauri-fönstret");
     }
 
+    globalThis.__page = page;
     const errors = [];
     page.on("pageerror", (e) => errors.push(`pageerror: ${e.message}`));
     page.on("console", (m) => { if (m.type() === "error") errors.push(`console.error: ${m.text()}`); });
@@ -82,11 +99,13 @@ async function overflow(page) {
     const intro = page.locator(".intro");
     if (await intro.count()) { await intro.first().click({ timeout: 5000 }).catch(() => {}); await waitFor(async () => (await page.locator(".intro").count()) === 0, 15000, "att introt stängs"); }
 
+    await dismissUpdateDialog(page);
     for (const width of [null, 700]) {
       if (width) { await page.setViewportSize({ width, height: 600 }); await page.waitForTimeout(500); }
       const mode = width ? `${width} px bred` : "normal storlek";
       for (const p of PAGES) {
         const btn = width && width <= 820 ? page.locator("aside button", { hasText: p.nav }).first() : page.locator("aside nav button", { hasText: p.nav }).first();
+        await dismissUpdateDialog(page);
         await btn.click();
         await page.waitForTimeout(600);
         const h1 = (await page.locator("h1").first().innerText()).trim();
@@ -100,6 +119,7 @@ async function overflow(page) {
 
     // Marknad utan marknadsdata (bara skrivbordsläget): tomläget får inte antyda att prisdata finns.
     if (!WEB_URL) {
+      await dismissUpdateDialog(page);
       await page.locator("aside nav button", { hasText: "Marknad" }).first().click();
       await page.waitForTimeout(1500);
       const text = await page.locator("main").innerText();
@@ -111,22 +131,25 @@ async function overflow(page) {
 
     // Temaväxling: Mer → Utseende. Hem renderar fortfarande efteråt och bakgrunden ändras.
     const themeOf = () => page.evaluate(() => ({ attr: document.documentElement.getAttribute("data-theme"), bg: getComputedStyle(document.body).backgroundColor }));
-    const toggle = async () => { await page.locator("aside button.more-btn").first().click(); await page.locator('[role="menuitem"], .item', { hasText: "Utseende" }).first().click(); await page.mouse.click(700, 400); await page.waitForTimeout(500); };
+    const toggle = async () => { await dismissUpdateDialog(page); await page.locator("aside button.more-btn").first().click(); await page.locator('[role="menuitem"], .item', { hasText: "Utseende" }).first().click(); await page.mouse.click(700, 400); await page.waitForTimeout(500); };
     const before = await themeOf();
     await toggle(); const dark = await themeOf();
     check(dark.attr === "dark" && dark.bg !== before.bg, `Tema Mörkt: data-theme=${dark.attr}, bakgrund ${before.bg} → ${dark.bg}`);
-    for (const p of PAGES) { await page.locator("aside nav button", { hasText: p.nav }).first().click(); await page.waitForTimeout(400); const o = await overflow(page); check(o.doc <= o.client, `${p.nav} i mörkt läge: ingen overflow`); }
+    for (const p of PAGES) { await dismissUpdateDialog(page); await page.locator("aside nav button", { hasText: p.nav }).first().click(); await page.waitForTimeout(400); const o = await overflow(page); check(o.doc <= o.client, `${p.nav} i mörkt läge: ingen overflow`); }
     await toggle(); const light = await themeOf();
     check(light.attr === "light" && light.bg !== dark.bg, `Tema Ljust: data-theme=${light.attr}, bakgrund ${dark.bg} → ${light.bg}`);
+    await dismissUpdateDialog(page);
     await page.locator("aside nav button", { hasText: "Hem" }).first().click();
     await page.waitForTimeout(400);
     check((await page.locator("h1").first().innerText()).trim().length > 0, "Hem renderar efter temaväxling");
 
+    log(`INFO Uppdateringsrutan visades ${updateDialogSeen} gång(er). Inget installerades.`);
     check(errors.length === 0, `Inga JS-fel (pageerror/console.error): ${errors.length}`);
     for (const e of errors) log(`     ${e}`);
   } catch (e) {
     failures.push(String(e && e.message || e)); log(`FEL  ${e && e.stack || e}`);
     try { globalThis.__diagnose?.(); } catch {}
+    try { const t = await globalThis.__page?.locator(".overlay").first().innerText({ timeout: 2000 }); if (t) log(`--- Öppet överlägg: ${t.replace(/\s+/g, " ").slice(0, 300)}`); } catch {}
   } finally {
     try { await browser?.close(); } catch {}
     if (child) { try { child.kill(); } catch {} }
