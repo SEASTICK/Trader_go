@@ -39,9 +39,11 @@ EVIDENCE = {
                      "sha256": "62d4faadddc1beee4d3e7fa6802f5284a8a983f3f8b73deb7340b840b76eb2e1", "what": "SEC Release No. 34-70097, avsnittet Events During Superstorm Sandy (s. 6)"},
 }
 CALENDAR_YEARS = {2020: "NYSE-CAL-2020", 2022: "NYSE-CAL-2022", 2023: "NYSE-CAL-2023", 2024: "NYSE-CAL-2024"}
-# Rader som en människa har verifierat mot ett dokument som Claude inte kunnat läsa härifrån (nyse.com svarar 403 på automatiska anrop). Redovisas som sådana: verified_by anger vem.
-HUMAN_VERIFIED = {date(2018, 12, 5): {"source": "NYSE Arca Options Regulatory Bulletin 18-06, https://www.nyse.com/publicdocs/nyse/markets/arca-options/rule-interpretations/2018/NYSE%20Arca%20Options%2018-06.pdf",
-                                      "by": "SEASTICK (egen läsning av dokumentet enligt PR #133, kommentar 6875537135; Claude har inte kunnat öppna det, exakt citat och sida saknas)", "date": "2026-11-14"}}
+# Rader som Codex (eller en människa) har läst mot ett dokument som Claude inte kunnat öppna härifrån (nyse.com svarar 403 på automatiska anrop). Redovisas som sådana: verified_by anger vem som läste.
+HUMAN_VERIFIED = {date(2018, 12, 5): {
+    "source": ("NYSE Arca Options RB-18-06 / NYSE American RB-18-176 (2018-12-03), s. 1: \"Exchanges will be closed on Wednesday, December 5, 2018 in observance of a National Day of Mourning for President George H. W. Bush.\" "
+               "https://www.nyse.com/publicdocs/nyse/markets/arca-options/rule-interpretations/2018/NYSE%20Arca%20Options%2018-06.pdf"),
+    "by": "Codex (läste PDF:en via länken; citat och sida återgivna av SEASTICK i PR #133, kommentar 6875755443; Claude har inte kunnat öppna dokumentet, så detta är ingen maskinavstämning)", "date": "2026-11-14"}}
 DPI = 130
 MONTHS = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"]
 MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]

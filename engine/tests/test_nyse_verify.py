@@ -69,7 +69,10 @@ def test_manniskoverifierad_rad_markeras_som_det_och_fylls_av_apply(tmp_path, mo
     assert nv.apply({}, "maskin", "2026-11-14") == len(nv.HUMAN_VERIFIED) == 1
     out = pd.read_csv(f, dtype=str, keep_default_na=False)
     row = out[out["date"] == "2018-12-05"].iloc[0]
-    assert "Arca Options Regulatory Bulletin 18-06" in row["verified_source"] and "SEASTICK" in row["verified_by"] and "Claude har inte kunnat öppna det" in row["verified_by"]
+    assert 'Exchanges will be closed on Wednesday, December 5, 2018 in observance of a National Day of Mourning for President George H. W. Bush.' in row["verified_source"]
+    assert "RB-18-06" in row["verified_source"] and "s. 1" in row["verified_source"] and "2018-12-03" in row["verified_source"]
+    assert row["verified_by"].startswith("Codex") and "Claude har inte kunnat öppna dokumentet" in row["verified_by"] and "ingen maskinavstämning" in row["verified_by"]
+    assert "SEASTICK" in row["verified_by"] and not row["verified_by"].startswith("SEASTICK")                           # SEASTICK återgav citatet, Codex läste dokumentet
     assert (out["verified_source"] != "").sum() == 1
 
 
@@ -80,3 +83,14 @@ def test_luckorna_listas_datum_for_datum_och_filen_ar_i_synk_med_ledgern():
     open_dates = sorted(led.loc[(src == "") | (src.str.lower() == "saknas"), "date"])
     assert all(f"- {d} " in text for d in open_dates) and text.count("\n- ") == len(open_dates)
     assert nv.GAPS_FILE.read_text(encoding="utf-8") == text                                                          # den committade listan är genererad ur den committade ledgern
+
+
+def test_2018_12_05_ar_den_enda_manniskoverifierade_raden_och_resten_ar_overifierat():
+    assert list(nv.HUMAN_VERIFIED) == [date(2018, 12, 5)]
+    led = nyse_sessions.read_ledger()
+    ver = led[led["verified_source"].str.strip() != ""]
+    machine = ver[ver["verified_by"].str.startswith("Claude")]
+    human = ver[~ver["verified_by"].str.startswith("Claude")]
+    assert list(human["date"]) == ["2018-12-05"] and len(machine) == len(ver) - 1                                      # övriga verifierade rader är maskinavstämda
+    r = nyse_sessions.reconcile()
+    assert (r["verified_rows"], r["unverified_rows"], r["fully_verified"]) == (58, 118, False)                         # 58/176, resten fail-closed

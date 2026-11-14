@@ -1,7 +1,7 @@
 # NYSE-sessionskalendern för H-0024: källor och avstämning
 
-**Status 2026-11-14: delvis verifierad. 58 av 176 stängningar har ett belägg (57 maskinavstämda mot dokument jag läst, 1 verifierad av SEASTICK mot ett dokument jag inte kunnat öppna); 118 återstår overifierade och listas datum för datum i [nyse-unverified-dates.md](nyse-unverified-dates.md), så `tom.evaluate` förblir fail-closed.**
-Avstämningen är en maskinavstämning som jag (Claude) gjorde mot dokumenten, inte en mänsklig granskning (`verified_by` säger det). Raden 2018-12-05 är undantaget: den bygger på SEASTICK:s läsning av NYSE Arca Options Regulatory Bulletin 18-06 (nyse.com svarar 403 på automatiska anrop, jag har inte kunnat öppna den) och är markerad så i `verified_by`; exakt citat och sida saknas. Dokumenten hämtades 2026-11-14 efter att `www.nyse.com`
+**Status 2026-11-14: delvis verifierad. 58 av 176 stängningar har ett belägg (57 maskinavstämda mot dokument jag läst, 1 läst av Codex i ett dokument jag inte kunnat öppna); 118 återstår overifierade och listas datum för datum i [nyse-unverified-dates.md](nyse-unverified-dates.md), så `tom.evaluate` förblir fail-closed.**
+Avstämningen är en maskinavstämning som jag (Claude) gjorde mot dokumenten, inte en mänsklig granskning (`verified_by` säger det). Raden 2018-12-05 är undantaget: den bygger på att Codex har läst NYSE Arca Options RB-18-06 / NYSE American RB-18-176 (2018-12-03), s. 1, som säger "Exchanges will be closed on Wednesday, December 5, 2018 in observance of a National Day of Mourning for President George H. W. Bush." (citat och sida återgivna av SEASTICK i PR #133). nyse.com svarar 403 på automatiska anrop, jag har inte kunnat öppna dokumentet, och raden är markerad så i `verified_by` (ingen maskinavstämning). Dokumenten hämtades 2026-11-14 efter att `www.nyse.com`
 tillåtits i sessionens miljö; SHA-256 för varje dokument är låst i `engine/traderlab/nyse_verify.py` (`EVIDENCE`). SHA-256-låset på sessionsfilen och testet mot `generate()` visar fortfarande bara att
 CSV:n motsvarar samma kod; det är avstämningen mot dokumenten nedan som är det oberoende beviset, och bara för de rader den täcker.
 
@@ -47,7 +47,7 @@ Hela listan datum för datum finns i [nyse-unverified-dates.md](nyse-unverified-
 |---|---|---|
 | 2008–2019 och 2021, 116 ordinarie helgdagar (9 per år, 8 för 2011) | Regelboken har dagsdokument (Information Memos) bara för 2004–2007. NYSE:s årskalendrar hittades för 2020 och 2022–2024; sökningar efter övriga år gav 404 eller 403 (nyse.com svarar 403 på många okända sökvägar, så ett 403 visar inte att dokumentet saknas) | NYSE:s helgdagskalendrar eller notiser för de åren |
 | 2006-01-02 och 2007-01-01 (nyårsdagen) | Marginal-memona utfärdades efter nyår | NYSE-notis eller kalender för nyår 2006 och 2007 |
-| 2018-12-05 är **inte** med här | Den har ett belägg (SEASTICK:s läsning av RB 18-06) men räknas som människoverifierad, inte maskinavstämd | Exakt citat och sida ur bulletinen, helst granskad av Codex |
+| 2018-12-05 är **inte** med här | Den har ett belägg (Codex läste RB-18-06 s. 1, citat ovan) men räknas som människoverifierad, inte maskinavstämd, eftersom jag inte kan öppna dokumentet | En maskinavstämning kräver att dokumentet går att hämta automatiskt |
 
 116 + 2 (nyårsdagarna 2006 och 2007) = 118 rader. Siffran och listan genereras ur ledgern, inte för hand.
 
