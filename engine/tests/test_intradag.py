@@ -139,3 +139,16 @@ def test_no_lookahead(hid):
     b["high"] = b[["open", "close"]].max(axis=1) * 1.001
     b["low"] = b[["open", "close"]].min(axis=1) * 0.999
     backtest.check_no_lookahead(fn, b, cutoffs=12)
+
+
+def test_exit_at_final_open_is_not_allowed():
+    """Motorn kör aldrig datasetets sista öppning, så ett utträde där skulle lämna affären öppen (Codex-fynd)."""
+    b = _with_shock("2021-01-31 19:00", -0.05)
+    end = pd.Timestamp("2021-01-31 23:00", tz="UTC")
+    b = b.loc[:end]
+    tgt = intradag.extreme_hour_reversal(b, last_open=end)
+    assert (tgt == 0).all()
+    res = backtest.run(b, tgt, ZERO)
+    assert not res.trades
+    ok = intradag.extreme_hour_reversal(b, last_open=pd.Timestamp("2021-02-01 00:00", tz="UTC"))
+    assert (ok != 0).sum() == 3

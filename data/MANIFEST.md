@@ -1367,3 +1367,4 @@ Råfiler ligger separat på forskningsservern och committas inte.
 | 2026-11-14 14:37 | data.binance.vision | um | BTCUSDT | 15m | 2020-01 till 2024-12 | 60 | - |
 | 2026-11-14 14:38 | data.binance.vision | um | BTCUSDT | fundingRate | 2020-01 till 2024-12 | 60 | - |
 | 2026-11-14 14:39 | data.binance.vision | um | ETHUSDT | fundingRate | 2020-01 till 2024-12 | 60 | - |
+| 2026-11-14 14:43 | data.binance.vision | um | BTCUSDT | 5m | 2020-01 till 2024-12 | 60 | - |

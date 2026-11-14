@@ -47,7 +47,7 @@ def extreme_hour_reversal(bars: pd.DataFrame, last_open: pd.Timestamp = LAST_OPE
         d = t0.floor("D")
         stop = min(t0 + HOLD_HOURS * H, d + pd.Timedelta(hours=23))   # sista målstapeln öppnar före stop
         exit_at = min(t0 + (HOLD_HOURS + 1) * H, d + pd.Timedelta(hours=24))
-        if stop <= t0 or exit_at > last_open:
+        if stop <= t0 or exit_at >= last_open:   # motorn kör aldrig sista öppningen
             continue
         sign = -float(np.sign(r.iloc[i]))
         sel = (idx >= t0) & (idx < stop)
@@ -77,7 +77,7 @@ def us_open_range_breakout(bars: pd.DataFrame, last_open: pd.Timestamp = LAST_OP
             continue
         hi, lo = high[rng].max(), low[rng].min()
         exit_utc = (d.tz_localize(None) + pd.Timedelta(hours=16)).tz_localize(NY).tz_convert("UTC")
-        if exit_utc > last_open:
+        if exit_utc >= last_open:
             continue
         cands = in_day[(m >= 630) & (m <= 705)]       # öppnar 10:30–11:45, stänger senast 12:00
         for i in cands:
@@ -107,7 +107,7 @@ def early_late_momentum(bars: pd.DataFrame, last_open: pd.Timestamp = LAST_OPEN_
         early = in_day[h < 6]
         if len(early) != 6 or sorted(h[h < 6].tolist()) != list(range(6)):
             continue
-        if d + pd.Timedelta(hours=24) > last_open:
+        if d + pd.Timedelta(hours=24) >= last_open:
             continue
         first = in_day[h == 0][0]
         last = in_day[h == 5][0]
