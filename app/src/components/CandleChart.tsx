@@ -14,6 +14,7 @@ import { subscribeBars, type Listen } from "../lib/barSubscription";
 import { dataProblems, isSupportedLive } from "../lib/marketSources";
 
 import { observeChartViewport } from "../lib/chartViewport";
+import { Icon } from "./icons";
 
 const PAGE = 1000;
 /** Högst så här ofta ritas strömuppdateringar (ms). */
@@ -25,6 +26,20 @@ const alpha = (hex: string, a: number) => {
   const n = parseInt(h.length === 3 ? h.split("").map(x => x + x).join("") : h, 16);
   return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
 };
+
+/** Ändras när appens tema byts (data-theme eller systemets läge), så att diagrammet ritas om med rätta färger. */
+function useThemeKey() {
+  const [k, setK] = useState(0);
+  useEffect(() => {
+    const bump = () => setK(x => x + 1);
+    const mo = new MutationObserver(bump);
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    const mq = typeof window.matchMedia === "function" ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+    mq?.addEventListener?.("change", bump);
+    return () => { mo.disconnect(); mq?.removeEventListener?.("change", bump); };
+  }, []);
+  return k;
+}
 
 type Props = {
   /** Serien rutan handlar om, eller null om marknaden saknar en datakälla i appen. */
@@ -56,6 +71,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
   const [error, setError] = useState<string | null>(null);
   const [hover, setHover] = useState<Candle | null>(null);
   const [outside, setOutside] = useState(0);
+  const themeKey = useThemeKey();
 
   useEffect(() => setTf(series?.interval ?? ""), [series?.symbol, series?.interval]);
   const isHist = !!historicalOne || !!historicalSets;
@@ -98,7 +114,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
       crosshair: { mode: CrosshairMode.Normal },
       rightPriceScale: { borderColor: v("--line") },
       timeScale: { borderColor: v("--line"), timeVisible: true, secondsVisible: false, rightOffset: 4, minBarSpacing: isHist ? 0.01 : 0.5 },
-      localization: { locale: "sv-SE", timeFormatter: (t: Time) => utc((t as number) * 1000) },
+      localization: { locale: "sv-SE", priceFormatter: (p: number) => p.toLocaleString("sv-SE", { maximumFractionDigits: Math.abs(p) < 10 ? 4 : Math.abs(p) < 1000 ? 2 : 0 }), timeFormatter: (t: Time) => utc((t as number) * 1000) },
     });
     const cs = c.addSeries(CandlestickSeries, { upColor: colors.current.up, downColor: colors.current.down, borderUpColor: colors.current.up, borderDownColor: colors.current.down, wickUpColor: colors.current.up, wickDownColor: colors.current.down });
     const vs = c.addSeries(HistogramSeries, { priceFormat: { type: "volume" }, priceLineVisible: false, lastValueVisible: false }, 1);
@@ -118,7 +134,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
       chart.current = null; candleS.current = null; volS.current = null; markersApi.current = null; lines.current.clear();
       data.current = []; setCandles([]); setHover(null);
     };
-  }, [current?.symbol, current?.interval, isHist]);
+  }, [current?.symbol, current?.interval, isHist, themeKey]);
 
   const toCandle = (x: Candle) => {
     const fade = (col: string) => alpha(col, 0.45);
@@ -219,14 +235,14 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
   const shown = hover ?? last;
   const stale = status && sameSeries(status, current ?? ({} as SeriesRef)) && !status.ready;
   const empty = (title: string, text: string) => (
-    <div className="candle-empty"><b>{title}</b><p>{text}</p></div>
+    <div className="candle-empty"><span className="empty-icon"><Icon name="candles" size={22} /></span><b>{title}</b>{text && <p>{text}</p>}</div>
   );
 
   let body: JSX.Element;
   if (!desktop && !isHist) body = empty("Ingen prisdata här", "Prisdiagrammet läser datalagret i skrivbordsappen. I webbläsaren finns ingen riktig OHLCV, och ingen simulerad data visas i stället.");
   else if (series && !isHist && !isSupportedLive(series)) body = empty("Marknaden stöds inte i datavägen", `${series.provider} ${series.market} ${series.symbol} kan inte läsas av datalagret (bara Binance spot stöds). Ingen graf ritas hellre än en felmärkt.`);
   else if (!series) body = empty("Ingen datakälla för den här marknaden", noSourceReason ?? "Appen samlar bara in data för marknader med en publik datakälla. Inget simulerat pris visas i stället.");
-  else if (!isHist && available === null && !error) body = empty("Läser datalagret…", "");
+  else if (!isHist && available === null && !error) body = <div className="candle-skeleton" role="status" aria-label="Läser datalagret"><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /><i /></div>;
   else if (!current) body = empty(
     `${series.symbol} ${tf || series.interval} samlas inte in`,
     intervals.length ? `Datalagret har ${series.symbol} i ${intervals.join(", ")}. Välj en av dem ovan; tidsramen byts aldrig bara på etiketten.` : `Datalagret har ingen data för ${series.symbol} än. Insamlingen styrs i appens datamapp (market/config.json, se docs/marknadsdata.md).`,
@@ -247,12 +263,16 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
         </div>
         {series && intervals.length > 0 && (
           <div className="candle-tools">
-            {intervals.map(i => <button key={i} className={i === tf ? "on" : ""} onClick={() => setTf(i)}>{i}</button>)}
-            {isHist && <button onClick={() => chart.current?.timeScale().fitContent()}>Hela perioden</button>}
+            <div className="tool-group" role="group" aria-label="Tidsram">
+              {intervals.map(i => <button key={i} className={i === tf ? "on" : ""} aria-pressed={i === tf} onClick={() => setTf(i)}>{i}</button>)}
+            </div>
+            {isHist && <button className="reset" title="Zooma ut till hela perioden" onClick={() => chart.current?.timeScale().fitContent()}>Hela perioden</button>}
             <span className="sep" />
-            {INDICATORS.map(i => (
-              <button key={i.id} className={active.includes(i.id) ? "on" : ""} onClick={() => setActive(a => a.includes(i.id) ? a.filter(x => x !== i.id) : [...a, i.id])}>{i.label}</button>
-            ))}
+            <div className="tool-group" role="group" aria-label="Indikatorer">
+              {INDICATORS.map(i => (
+                <button key={i.id} className={active.includes(i.id) ? "on" : ""} aria-pressed={active.includes(i.id)} onClick={() => setActive(a => a.includes(i.id) ? a.filter(x => x !== i.id) : [...a, i.id])}>{i.label}</button>
+              ))}
+            </div>
           </div>
         )}
       </div>

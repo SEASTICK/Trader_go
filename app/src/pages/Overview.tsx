@@ -47,21 +47,26 @@ export default function Overview({ go, now = new Date() }: { go: (p: GoTarget) =
       )}
 
       <div className="stats">
-        <section className="stat">
-          <span className="k">Historiska tester</span>
-          <b className="big">{s.advanced} av {s.decided}</b>
+        <section className="stat" aria-labelledby="st-hist">
+          <header><span className="k" id="st-hist">Historiska tester</span><span className="stat-tag">Bakåt i tiden</span></header>
+          <b className="big">{s.advanced} <small>av {s.decided}</small></b>
+          <div className="meter" role="img" aria-label={`${s.advanced} av ${s.decided} idéer klarade testkraven`}><i style={{ width: `${s.decided ? (s.advanced / s.decided) * 100 : 0}%` }} /></div>
           <p>idéer klarade testkraven. {s.rejected > 0 ? `${s.rejected} klarade inte kraven.` : ""}</p>
-          <span className="src">Bakåt i tiden, på historik</span>
+          <span className="src">Testat på historik</span>
         </section>
-        <section className="stat">
-          <span className="k">Papperportfölj</span>
+        <section className="stat" aria-labelledby="st-paper">
+          <header><span className="k" id="st-paper">Papperportfölj</span><span className="stat-tag">Framåt</span></header>
           <b className="big">{started ? usd(p.value) : "Ej startad"}</b>
-          <p>{started ? <>{fmtPct(ret)} sedan <D>{p.start}</D>, {fmtPct(vsSpy).replace(" %", " procentenheter")} mot S&P 500.</> : <>Startar <D>{p.start}</D>.</>}</p>
-          <span className="src">Framåt, observation. Inga riktiga pengar</span>
+          {started
+            ? <span className={`delta ${ret >= 0 ? "up" : "down"}`}>{fmtPct(ret)}</span>
+            : <span className="delta idle">Startar <D>{p.start}</D></span>}
+          <p>{started ? <>sedan <D>{p.start}</D>, {fmtPct(vsSpy).replace(" %", " procentenheter")} mot S&P 500.</> : "Ingen observation har börjat än."}</p>
+          <span className="src">Observation. Inga riktiga pengar</span>
         </section>
-        <section className="stat">
-          <span className="k">Data</span>
+        <section className="stat" aria-labelledby="st-data">
+          <header><span className="k" id="st-data">Data</span><span className="stat-tag">Aktualitet</span></header>
           <b className={fresh.state === "ok" ? "big" : "big warn"}>{fresh.state === "ok" ? "Aktuell" : fresh.state === "old" ? "Gammal" : "Saknas"}</b>
+          <span className={`delta ${fresh.state === "ok" ? "up" : "warn"}`}>{fresh.state === "ok" ? "Uppdaterad" : fresh.state === "old" ? "Kan vara inaktuell" : "Inget datum"}</span>
           <p>{fresh.date ? <>Papperportföljen uppdaterades <D>{fresh.date}</D> ({agoText(fresh.days)}).</> : "Ingen uppdatering har registrerats."}</p>
           <span className="src">{filings.date ? <>Investerardata: <D>{filings.date}</D></> : "Investerardata saknas"}</span>
         </section>

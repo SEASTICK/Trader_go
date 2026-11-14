@@ -178,8 +178,7 @@ h2 { font-size:17px; font-weight:650; letter-spacing:-.01em; }
 @media (max-width:760px) { .ttr.reg { grid-template-columns:70px 1fr 1fr; } .ttr.reg > :nth-child(2), .ttr.reg > :nth-child(4) { display:none; } }
 
 /* Prisdiagram (components/CandleChart.tsx): alltid mörk yta, appens mörka färger. */
-.candle-card { --card:#101211; --line:#232725; --ink:#ecefed; --muted:#8d9591; --good:#5aa56f; --bad:#e0705f; --warn:#d9a441;
-  --ind1:#d9a441; --ind2:#6fa8dc; --ind3:#c58af9; --mark-entry:#6fa8dc; --mark-exit:#d9a441;
+.candle-card {
   background:var(--card); color:var(--ink); border-radius:16px; border:1px solid var(--line); overflow:hidden; }
 .candle-head { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; padding:14px 16px 8px; }
 .candle-title { display:flex; align-items:center; gap:10px; flex-wrap:wrap; } .candle-title b { font-size:16px; }
