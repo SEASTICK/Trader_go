@@ -38,19 +38,19 @@ export default function RegisteredResults({onReproduce, now = new Date()}: {onRe
       : <>Besluten kommer från hypotesregistret. Sortering ändrar inte beslutet.</>}</p>
     <div className="stats">
       <section className="stat" aria-labelledby="rr-n">
-        <header><span className="k" id="rr-n">Registrerade hypoteser</span><span className="stat-tag">Historik</span></header>
+        <header><span className="k" id="rr-n">Registrerade hypoteser</span></header>
         <b className="big">{data.length}</b>
         <p>Testperiod 2022–2024 efter träning på tidigare data.</p>
         <span className="src">BTC/USDT-terminer, 4h</span>
       </section>
       <section className="stat" aria-labelledby="rr-d">
-        <header><span className="k" id="rr-d">Beslut</span><span className="stat-tag">Förregistrerade krav</span></header>
+        <header><span className="k" id="rr-d">Beslut</span></header>
         <b className="big">{rejected} <small>av {data.length} REJECT</small></b>
         <span className={`delta ${rejected === data.length ? "down" : "idle"}`}>{rejected === data.length ? "Ingen godkänd" : `${data.length - rejected} går vidare`}</span>
         <span className="src">Inget godkänt för papper eller live</span>
       </section>
       <section className="stat" aria-labelledby="rr-s">
-        <header><span className="k" id="rr-s">Datakälla</span><span className="stat-tag">Aktualitet</span></header>
+        <header><span className="k" id="rr-s">Datakälla</span></header>
         <b className="big">{lastBar ? dateOf(lastBar.open_time) : "Saknas"}</b>
         <span className={`delta ${age === null ? "warn" : "idle"}`}>{age === null ? "Okänd ålder" : `Senaste stapel, ${agoText(age)}`}</span>
         <span className="src">Binance USDⓈ-M, kontrollsummerad historik (SHA-256 {market.dataset_sha256.slice(0, 8)}…). Följer med appen, kräver ingen serveranslutning.</span>

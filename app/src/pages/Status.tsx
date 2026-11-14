@@ -33,7 +33,7 @@ export default function Status({ updater }: { updater: Updater }) {
         : <button type="button" className="btn accent" disabled={!updater.enabled || busy} onClick={() => { void updater.checkNow(false); }}>Sök efter uppdateringar</button>}>
       <div className="stats two">
         <section className="stat" aria-labelledby="stt-v">
-          <header><span className="k" id="stt-v">Program</span><span className="stat-tag">{__UPDATE_CHANNEL__ === "test" ? "Testkanal" : "Stable"}</span></header>
+          <header><span className="k" id="stt-v">Program</span></header>
           <b className="big">v{__APP_VERSION__}</b>
           <span className={`delta ${updTone}`}>{updWord}</span>
           <p>{statusText(updater)}</p>
@@ -74,7 +74,7 @@ function MarketStat({ ms }: { ms: MarketHook }) {
   const tone = !available || !m ? "idle" : m.ready ? "up" : m.state === "error" || m.state === "stale" || m.state === "gap" ? "warn" : "idle";
   return (
     <section className="stat" aria-labelledby="stt-m">
-      <header><span className="k" id="stt-m">Marknadsdata</span><span className="stat-tag">Binance, publik</span></header>
+      <header><span className="k" id="stt-m">Marknadsdata</span></header>
       <b className={tone === "warn" ? "big warn" : "big"}>{!available ? "Ej tillgänglig" : !m ? "Väntar…" : STATE_TEXT[m.state]}</b>
       <span className={`delta ${tone}`}>{!available || !m ? "Bara i skrivbordsappen" : m.ready ? "Redo som analysunderlag" : "Inte redo som analysunderlag"}</span>
       <p>{!available ? "Insamlingen körs bara i skrivbordsprogrammet." : !m ? "Väntar på status från insamlingen…" : <>Senast mottaget: <span className="nb">{time(m.last_received_at)}</span>{m.message ? ` (${m.message})` : ""}{m.gaps.length > 0 ? ` ${m.gaps.length} öppna luckor i datan.` : ""}</>}</p>

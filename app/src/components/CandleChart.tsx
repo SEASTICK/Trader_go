@@ -17,9 +17,12 @@ import { observeChartViewport } from "../lib/chartViewport";
 import { Icon } from "./icons";
 
 const PAGE = 1000;
+/** Snabbval för synligt tidsintervall: antal dygn (null = hela perioden). */
+const RANGES: [string, number | null][] = [["1M", 30], ["3M", 91], ["1Å", 365], ["Allt", null]];
 /** Högst så här ofta ritas strömuppdateringar (ms). */
 const FLUSH_MS = 250;
 const sec = (ms: number) => (ms / 1000) as UTCTimestamp;
+const ageDays_ = (t: number) => Math.max(0, Math.floor((Date.now() - t) / 86_400_000));
 /** "#5aa56f" + 0.5 → "rgba(90,165,111,0.5)". Canvas förstår inte color-mix. */
 const alpha = (hex: string, a: number) => {
   const h = hex.replace("#", "");
@@ -71,6 +74,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
   const [error, setError] = useState<string | null>(null);
   const [hover, setHover] = useState<Candle | null>(null);
   const [outside, setOutside] = useState(0);
+  const [range, setRange] = useState<string>("3M");
   const themeKey = useThemeKey();
 
   useEffect(() => setTf(series?.interval ?? ""), [series?.symbol, series?.interval]);
@@ -146,6 +150,21 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
   };
   const toVol = (x: Candle) => ({ time: sec(x.open_time), value: x.volume, color: alpha(x.close >= x.open ? colors.current.up : colors.current.down, x.closed ? 0.5 : 0.25) });
 
+  /** Visar de senaste `days` dygnen (eller allt). Körs när diagrammet syns, så att en dold flik inte får fel storlek. */
+  const showRange = (label: string, list: Candle[] = data.current) => {
+    const entry = RANGES.find(([l]) => l === label);
+    const lastBar = list[list.length - 1];
+    if (!entry || !lastBar) return;
+    const [, days] = entry;
+    const show = () => {
+      const ts = chart.current?.timeScale();
+      if (!ts) return;
+      if (days === null) ts.fitContent();
+      else ts.setVisibleRange({ from: sec(lastBar.open_time - days * 86_400_000), to: sec(lastBar.open_time + 3 * Math.max(step, 1)) });
+    };
+    viewport.current ? viewport.current.showWhenVisible(show) : show();
+  };
+
   /** Ritar om allt men behåller användarens zoom och position (förskjutet om staplar lagts till före). */
   const redraw = (next: Candle[], addedBefore = 0) => {
     const c = chart.current, cs = candleS.current, vs = volS.current;
@@ -161,7 +180,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
   // Historik: senaste sidan, och äldre sidor när man panorerar bakåt.
   useEffect(() => {
     if (!current) return;
-    if (isHist) { redraw(problems.length ? [] : historical ?? []); viewport.current?.fitWhenVisible(); return; }
+    if (isHist) { const list = problems.length ? [] : historical ?? []; redraw(list); showRange(range, list); return; }
     let alive = true;
     let loadingOlder = false;
     let initialized = false;
@@ -257,6 +276,7 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
           <b>{series ? series.symbol : "Ingen marknad vald"}</b>
           {series && <span className="muted">{`${series.provider === "binance" ? "Binance" : series.provider} ${series.market === "um" ? "USDⓈ-M terminer" : series.market === "spot" ? "spot" : series.market}`}</span>}
           {series && <span className="chip-live" title={isHist ? "Kontrollsummerade stängda staplar från det historiska datasetet." : "Riktiga priser från datalagret. Resultatet i rutan är fortfarande HISTORIK eller SIM, inte livehandel."}>{isHist ? "HISTORIK" : "REALTIDSDATA"}</span>}
+          {isHist && last && ageDays_(last.open_time) > 7 && <span className="chip-stale" title="Det här är sparad historik. Priserna är inte dagens priser.">Historik · senaste stapel {utc(last.open_time).slice(0, 10)} ({ageDays_(last.open_time)} dagar sedan)</span>}
           {current && status && sameSeries(status, current) && (
             <span className={`candle-state ${status.ready ? "ok" : "warn"}`}>{STATE_TEXT[status.state]}</span>
           )}
@@ -266,7 +286,9 @@ export function CandleChart({ series, noSourceReason, trades = [], tradesLabel, 
             <div className="tool-group" role="group" aria-label="Tidsram">
               {intervals.map(i => <button key={i} className={i === tf ? "on" : ""} aria-pressed={i === tf} onClick={() => setTf(i)}>{i}</button>)}
             </div>
-            {isHist && <button className="reset" title="Zooma ut till hela perioden" onClick={() => chart.current?.timeScale().fitContent()}>Hela perioden</button>}
+            <div className="tool-group" role="group" aria-label="Tidsintervall att visa">
+              {RANGES.map(([l]) => <button key={l} className={l === range ? "on" : ""} aria-pressed={l === range} title={l === "Allt" ? "Visa hela perioden" : `Visa de senaste ${l === "1Å" ? "12 månaderna" : l === "3M" ? "3 månaderna" : "månaden"}`} onClick={() => { setRange(l); showRange(l); }}>{l}</button>)}
+            </div>
             <span className="sep" />
             <div className="tool-group" role="group" aria-label="Indikatorer">
               {INDICATORS.map(i => (

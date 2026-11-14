@@ -29,6 +29,8 @@ export function observeChartViewport(
   size.observe(element);
   intersection.observe(element);
   return {
+    /** Kör `show` (till exempel ett tidsintervall) så snart diagrammet syns och har fått storlek. Ersätter en väntande vy. */
+    showWhenVisible(show: () => void) { pendingView = show; schedule(); },
     fitWhenVisible() { pendingView = () => chart.timeScale().fitContent(); schedule(); },
     latestWhenVisible(count: number) {
       pendingView = () => chart.timeScale().setVisibleLogicalRange({from:Math.max(0,count-120),to:count+4});
