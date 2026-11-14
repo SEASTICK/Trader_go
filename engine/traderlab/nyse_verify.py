@@ -1,7 +1,7 @@
 """Avstämning av NYSE-ledgern (research/h0024/nyse-closures-ledger.csv) mot officiella dokument. Ingen SPY-data, inga priser.
 
 Vad som stäms av, och mot vad (dokumenten hämtas från publika adresser och låses med SHA-256 i `EVIDENCE`):
-  * NYSE:s årliga handelskalendrar (PDF) för 2022, 2023 och 2024: dagar fyllda med legendens färg "Exchange Holiday - Market Closed" läses ur PDF:en (ordpositioner via
+  * NYSE:s årliga handelskalendrar (PDF) för 2020 och 2022–2024: dagar fyllda med legendens färg "Exchange Holiday - Market Closed" läses ur PDF:en (ordpositioner via
     `pdftotext -bbox` och pixlar via `pdftoppm`). Både det som är stängt och det som inte är det jämförs med ledgern för hela året.
   * NYSE:s regelbok (`NYSE_Rules.pdf`): daterade Information Memos 2006 och 2007 ("will be closed on <veckodag>, <datum>") och notisen om att börsen var stängd 2007-01-02
     (Gerald Ford). Rule 7.2 (helgdagslistan och flyttregeln) kontrolleras som text, men styrker bara regeln, inte enskilda datum.
@@ -25,6 +25,8 @@ import pandas as pd
 from . import nyse_sessions
 
 EVIDENCE = {
+    "NYSE-CAL-2020": {"file": "NYSE_2020_Trading_Calendar.pdf", "url": "https://www.nyse.com/publicdocs/NYSE_2020_Trading_Calendar.pdf",
+                      "sha256": "17109dceb6fb078cd51905d29091e083ec074beefb79a8ac05885bcc270dac2d", "what": "NYSE 2020 Trading Calendar (Exchange Holiday - Market Closed)"},
     "NYSE-CAL-2022": {"file": "ICE_NYSE_2022_Yearly_Trading_Calendar.pdf", "url": "https://www.nyse.com/publicdocs/ICE_NYSE_2022_Yearly_Trading_Calendar.pdf",
                       "sha256": "2c2e63b780c4a373d8d546904ae46c8ba7e8070ad9357d23d2c92749985bb6c9", "what": "NYSE 2022 Trading Calendar (Exchange Holiday - Market Closed)"},
     "NYSE-CAL-2023": {"file": "ICE_NYSE_2023_Yearly_Trading_Calendar.pdf", "url": "https://www.nyse.com/publicdocs/ICE_NYSE_2023_Yearly_Trading_Calendar.pdf",
@@ -36,7 +38,10 @@ EVIDENCE = {
     "SEC-34-70097": {"file": "34-70097.pdf", "url": "https://www.sec.gov/rules/sro/nysearca/2013/34-70097.pdf",
                      "sha256": "62d4faadddc1beee4d3e7fa6802f5284a8a983f3f8b73deb7340b840b76eb2e1", "what": "SEC Release No. 34-70097, avsnittet Events During Superstorm Sandy (s. 6)"},
 }
-CALENDAR_YEARS = {2022: "NYSE-CAL-2022", 2023: "NYSE-CAL-2023", 2024: "NYSE-CAL-2024"}
+CALENDAR_YEARS = {2020: "NYSE-CAL-2020", 2022: "NYSE-CAL-2022", 2023: "NYSE-CAL-2023", 2024: "NYSE-CAL-2024"}
+# Rader som en människa har verifierat mot ett dokument som Claude inte kunnat läsa härifrån (nyse.com svarar 403 på automatiska anrop). Redovisas som sådana: verified_by anger vem.
+HUMAN_VERIFIED = {date(2018, 12, 5): {"source": "NYSE Arca Options Regulatory Bulletin 18-06, https://www.nyse.com/publicdocs/nyse/markets/arca-options/rule-interpretations/2018/NYSE%20Arca%20Options%2018-06.pdf",
+                                      "by": "SEASTICK (egen läsning av dokumentet enligt PR #133, kommentar 6875537135; Claude har inte kunnat öppna det, exakt citat och sida saknas)", "date": "2026-11-14"}}
 DPI = 130
 MONTHS = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"]
 MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
@@ -184,8 +189,32 @@ def apply(supported: dict[date, tuple[str, str]], verified_by: str, verified_dat
             led.loc[i, "verified_by"] = verified_by
             led.loc[i, "verified_date"] = day
             n += 1
+    for i, row in led.iterrows():                                   # rader som en människa verifierat mot ett dokument Claude inte kunnat läsa
+        d = pd.Timestamp(row["date"]).date()
+        if d in HUMAN_VERIFIED and not str(row["verified_source"]).strip():
+            h = HUMAN_VERIFIED[d]
+            led.loc[i, "verified_source"], led.loc[i, "verified_by"], led.loc[i, "verified_date"] = h["source"], h["by"], h["date"]
+            n += 1
     nyse_sessions.LEDGER_FILE.write_text(led.to_csv(index=False, lineterminator="\n"), encoding="utf-8", newline="\n")
     return n
+
+
+GAPS_FILE = nyse_sessions.LEDGER_FILE.with_name("nyse-unverified-dates.md")
+
+
+def gaps_markdown(led: pd.DataFrame | None = None) -> str:
+    """Alla ledger-rader som saknar verifierad källa, datum för datum, grupperade per år. Genereras ur ledgern (`--write-gaps`) så att listan aldrig kan avvika från den."""
+    led = nyse_sessions.read_ledger() if led is None else led
+    src = led["verified_source"].astype(str).str.strip()
+    open_ = led[(src == "") | (src.str.lower() == "saknas")]
+    lines = ["# Overifierade NYSE-stängningar för H-0024 (genereras ur nyse-closures-ledger.csv)", "",
+             f"{len(open_)} av {len(led)} rader saknar verifierad källa. Genereras med `python -m traderlab.nyse_verify --evidence-dir <katalog> --write-gaps`; ändra inte för hand.", "",
+             "Anledning för alla rader: inget dagsdokument från NYSE eller en tillsynsmyndighet har kunnat läsas för just datumet. Rule 7.2 och Rule 51 styrker bara regeln.", ""]
+    for year, g in open_.groupby(pd.to_datetime(open_["date"]).dt.year):
+        lines.append(f"## {year} ({len(g)})")
+        lines += [f"- {r['date']} {r['name']}" for _, r in g.iterrows()]
+        lines.append("")
+    return "\n".join(lines)
 
 
 if __name__ == "__main__":
@@ -195,6 +224,7 @@ if __name__ == "__main__":
     ap.add_argument("--evidence-dir", type=Path, required=True)
     ap.add_argument("--download", action="store_true")
     ap.add_argument("--apply", action="store_true")
+    ap.add_argument("--write-gaps", action="store_true")
     ap.add_argument("--verified-by", default="Claude (maskinavstämning mot dokumentet; ej mänsklig granskning)")
     a = ap.parse_args()
     if a.download:
@@ -209,3 +239,5 @@ if __name__ == "__main__":
         if r["problems"]:
             sys.exit("avbryter: avvikelser måste redas ut före --apply")
         print("fyllda rader:", apply(r["supported"], a.verified_by))
+    if a.write_gaps:
+        GAPS_FILE.write_text(gaps_markdown(), encoding="utf-8", newline="\n")

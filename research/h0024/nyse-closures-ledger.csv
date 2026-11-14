@@ -117,7 +117,7 @@ date,name,rule,candidate_source,verified_source,verified_by,verified_date
 2018-07-04,Independence Day,"4 juli; lördag flyttas till fredag, söndag till måndag",S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
 2018-09-03,Labor Day,första måndagen i september,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
 2018-11-22,Thanksgiving,fjärde torsdagen i november,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
-2018-12-05,Extra stängning: nationell sorgedag (George H. W. Bush),"enstaka händelse, inga regler",S3 (Sandy) respektive S4 (sorgedagar),,,
+2018-12-05,Extra stängning: nationell sorgedag (George H. W. Bush),"enstaka händelse, inga regler",S3 (Sandy) respektive S4 (sorgedagar),"NYSE Arca Options Regulatory Bulletin 18-06, https://www.nyse.com/publicdocs/nyse/markets/arca-options/rule-interpretations/2018/NYSE%20Arca%20Options%2018-06.pdf","SEASTICK (egen läsning av dokumentet enligt PR #133, kommentar 6875537135; Claude har inte kunnat öppna det, exakt citat och sida saknas)",2026-11-14
 2018-12-25,Christmas,"25 dec; lördag flyttas till fredag, söndag till måndag",S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
 2019-01-01,New Year's Day,1 jan; söndag flyttas till måndag; lördag: ingen stängning,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
 2019-01-21,Martin Luther King Jr. Day,tredje måndagen i januari,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
@@ -128,15 +128,15 @@ date,name,rule,candidate_source,verified_source,verified_by,verified_date
 2019-09-02,Labor Day,första måndagen i september,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
 2019-11-28,Thanksgiving,fjärde torsdagen i november,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
 2019-12-25,Christmas,"25 dec; lördag flyttas till fredag, söndag till måndag",S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
-2020-01-01,New Year's Day,1 jan; söndag flyttas till måndag; lördag: ingen stängning,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
-2020-01-20,Martin Luther King Jr. Day,tredje måndagen i januari,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
-2020-02-17,Washington's Birthday,tredje måndagen i februari,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
-2020-04-10,Good Friday,påskdagen minus 2 dagar,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
-2020-05-25,Memorial Day,sista måndagen i maj,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
-2020-07-03,Independence Day,"4 juli; lördag flyttas till fredag, söndag till måndag",S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
-2020-09-07,Labor Day,första måndagen i september,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
-2020-11-26,Thanksgiving,fjärde torsdagen i november,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
-2020-12-25,Christmas,"25 dec; lördag flyttas till fredag, söndag till måndag",S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
+2020-01-01,New Year's Day,1 jan; söndag flyttas till måndag; lördag: ingen stängning,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),NYSE-CAL-2020: NYSE 2020 Trading Calendar (Exchange Holiday - Market Closed): 2020-01-01 fylld som Exchange Holiday - Market Closed,Claude (maskinavstämning mot dokumentet; ej mänsklig granskning),2026-11-14
+2020-01-20,Martin Luther King Jr. Day,tredje måndagen i januari,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),NYSE-CAL-2020: NYSE 2020 Trading Calendar (Exchange Holiday - Market Closed): 2020-01-20 fylld som Exchange Holiday - Market Closed,Claude (maskinavstämning mot dokumentet; ej mänsklig granskning),2026-11-14
+2020-02-17,Washington's Birthday,tredje måndagen i februari,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),NYSE-CAL-2020: NYSE 2020 Trading Calendar (Exchange Holiday - Market Closed): 2020-02-17 fylld som Exchange Holiday - Market Closed,Claude (maskinavstämning mot dokumentet; ej mänsklig granskning),2026-11-14
+2020-04-10,Good Friday,påskdagen minus 2 dagar,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),NYSE-CAL-2020: NYSE 2020 Trading Calendar (Exchange Holiday - Market Closed): 2020-04-10 fylld som Exchange Holiday - Market Closed,Claude (maskinavstämning mot dokumentet; ej mänsklig granskning),2026-11-14
+2020-05-25,Memorial Day,sista måndagen i maj,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),NYSE-CAL-2020: NYSE 2020 Trading Calendar (Exchange Holiday - Market Closed): 2020-05-25 fylld som Exchange Holiday - Market Closed,Claude (maskinavstämning mot dokumentet; ej mänsklig granskning),2026-11-14
+2020-07-03,Independence Day,"4 juli; lördag flyttas till fredag, söndag till måndag",S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),NYSE-CAL-2020: NYSE 2020 Trading Calendar (Exchange Holiday - Market Closed): 2020-07-03 fylld som Exchange Holiday - Market Closed,Claude (maskinavstämning mot dokumentet; ej mänsklig granskning),2026-11-14
+2020-09-07,Labor Day,första måndagen i september,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),NYSE-CAL-2020: NYSE 2020 Trading Calendar (Exchange Holiday - Market Closed): 2020-09-07 fylld som Exchange Holiday - Market Closed,Claude (maskinavstämning mot dokumentet; ej mänsklig granskning),2026-11-14
+2020-11-26,Thanksgiving,fjärde torsdagen i november,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),NYSE-CAL-2020: NYSE 2020 Trading Calendar (Exchange Holiday - Market Closed): 2020-11-26 fylld som Exchange Holiday - Market Closed,Claude (maskinavstämning mot dokumentet; ej mänsklig granskning),2026-11-14
+2020-12-25,Christmas,"25 dec; lördag flyttas till fredag, söndag till måndag",S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),NYSE-CAL-2020: NYSE 2020 Trading Calendar (Exchange Holiday - Market Closed): 2020-12-25 fylld som Exchange Holiday - Market Closed,Claude (maskinavstämning mot dokumentet; ej mänsklig granskning),2026-11-14
 2021-01-01,New Year's Day,1 jan; söndag flyttas till måndag; lördag: ingen stängning,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
 2021-01-18,Martin Luther King Jr. Day,tredje måndagen i januari,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
 2021-02-15,Washington's Birthday,tredje måndagen i februari,S1 (NYSE:s regel om helgdagar) och S2 (NYSE Holidays & Trading Hours),,,
