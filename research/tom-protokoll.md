@@ -186,6 +186,6 @@ mått för H-0024. Perioden 2020–2024 ingår och är förbrukad i annan forskn
 ## Före körning
 
 1. ~~"Källverifiering" ifylld och granskad av Codex~~ **Klart 2026-11-13** (se "Källverifiering" och tredje rättelsen); inga regler ändrade.
-2. Kod och syntetiska tester i en egen PR, utan kontakt med riktiga SPY-data; test för att data från 2025-01-01 kapas.
-3. Datapreflight (täckning enligt datakraven) i en egen PR, utan kurs- eller avkastningsutskrift.
+2. ~~Kod och syntetiska tester i en egen PR, utan kontakt med riktiga SPY-data; test för att data från 2025-01-01 kapas.~~ **Klart 2026-11-14** (PR #133, mergad; ingen regel ändrad).
+3. ~~Datapreflight (täckning enligt datakraven) i en egen PR, utan kurs- eller avkastningsutskrift.~~ **Utförd 2026-11-14** i en egen PR (`engine/traderlab/tom_preflight.py`, utfall i `research/coverage/h0024-datapreflight.md`: datakravet UPPFYLLT; bara täckning, inga kurser, inget från 2025-01-01). Inga regler ändrade och H-0024 är inte körd.
 4. Därefter en enda körning och en ny registerrad.
