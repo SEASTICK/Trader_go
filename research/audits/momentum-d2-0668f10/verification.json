@@ -1,0 +1,329 @@
+{
+  "revision": "0668f1035f2d6241c196b669f8d264e2650be8d0",
+  "diff_base": "99e96858b460f00818a8f5bfc36ac15f79660242",
+  "momentum_baseline": "7345f06b928f25902ab1515008e1c26f99fa7c0c",
+  "changed_files": [
+    "docs/momentum-D2-mutationer.json",
+    "docs/momentum-benchmark-D2.md",
+    "docs/momentum-checklista.md",
+    "docs/momentum-status.json",
+    "engine/tests/test_momentum_benchmark.py",
+    "engine/traderlab/momentum_benchmark.py",
+    "engine/traderlab/momentum_event.py",
+    "scripts/momentum-d2-mutations.py"
+  ],
+  "protected_unchanged": true,
+  "baseline_sha256": {
+    "engine/traderlab/stats.py": "4cfffdd0bc58034688349c2a9fbbd69c7e6ca3988fde41f378619411d4b31a19",
+    "engine/traderlab/momentum_ledger.py": "c043e39515a06a28f615bc93bc6a3d01cf74395328d77d8210f0c7f412808c02",
+    "engine/traderlab/momentum_signal.py": "a288de6450b71d06ccb53e3b88384a0475b111aeb7e4ce8c77dd49f6de2c3746",
+    "engine/traderlab/momentum_funding.py": "60cb1011f22cf471a7e2d6e66a7d24093a5d4068309f50622eab37c91a72aebc",
+    "engine/traderlab/momentum_risk.py": "694a6eb117be293714542de645d04b4b0f4c30320faba80ee2e2287d462b5bd2",
+    "engine/traderlab/momentum_margin.py": "957f91a373b8cb21b548be6977fb4181a0c7c836d79e719ebfadb81fe4909e12",
+    "engine/traderlab/momentum_event.py": "118378b3c669e3c7f5ddd128650cd98aab838ceda71c2aab86dca5e16fea6eb4",
+    "engine/traderlab/momentum_bound.py": "983ef16f186eb1fc8836dca042292d1c10cb30a34eb3a455adcc44c692664424",
+    "engine/traderlab/momentum_control.py": "7c33a82ffafdf6dd1190a76b19af77350421cdd0a5706bb811c5b88c338f049a"
+  },
+  "sha256": {
+    "engine/traderlab/stats.py": "4cfffdd0bc58034688349c2a9fbbd69c7e6ca3988fde41f378619411d4b31a19",
+    "engine/traderlab/momentum_ledger.py": "c043e39515a06a28f615bc93bc6a3d01cf74395328d77d8210f0c7f412808c02",
+    "engine/traderlab/momentum_signal.py": "a288de6450b71d06ccb53e3b88384a0475b111aeb7e4ce8c77dd49f6de2c3746",
+    "engine/traderlab/momentum_funding.py": "60cb1011f22cf471a7e2d6e66a7d24093a5d4068309f50622eab37c91a72aebc",
+    "engine/traderlab/momentum_risk.py": "694a6eb117be293714542de645d04b4b0f4c30320faba80ee2e2287d462b5bd2",
+    "engine/traderlab/momentum_margin.py": "957f91a373b8cb21b548be6977fb4181a0c7c836d79e719ebfadb81fe4909e12",
+    "engine/traderlab/momentum_event.py": "927bde879d4aafca3aa1eebbf08610675a3d150e1c8c1c3978ea97a190b5d566",
+    "engine/traderlab/momentum_bound.py": "983ef16f186eb1fc8836dca042292d1c10cb30a34eb3a455adcc44c692664424",
+    "engine/traderlab/momentum_control.py": "7c33a82ffafdf6dd1190a76b19af77350421cdd0a5706bb811c5b88c338f049a",
+    "engine/traderlab/momentum_benchmark.py": "3226e5af891665db07bd785af2359c993aff65196549c62e4d58a904b743315c",
+    "research/h0017-protokoll.md": "e15197c7d17c815eb89845909d7719e825607e4e49cc856b603af7549acc827d",
+    "research/registry.md": "6362325f1991e185d02d46756b62f4c43925cafa5fdfeae228df0ee46fccc127",
+    "docs/claude-uppdrag-momentum-D2.md": "0f019f311b0798a874ce098e0287473aea326f6d588a997ac4bfff66d3471301",
+    "docs/momentum-a1-orakel.json": "887d08ad9bc10e3319b608c9703214db7519441614021944086dea1eae7cce3b",
+    "scripts/momentum-d2-mutations.py": "1d778cbf3f96a75f495888b3b9c6bac36f1a3e144b52227044d154d570d3d1fb",
+    "engine/tests/test_momentum_benchmark.py": "59d37deccb7652550fa6f2d42c0c2773c4ec9597a9ae1f3a0db9add4a6c6cd4a"
+  },
+  "full_decimal_histories": [
+    {
+      "order": "A",
+      "mmr": 0.05,
+      "legacy": "L1",
+      "bars": 6576,
+      "points": 6577,
+      "days": 1096,
+      "q_decimal": "993.4353790154658019805127716052326228283502614721917568705990812709615",
+      "terminal_decimal": "99779.59642681162875717260343649166309029930221098977953682068888782923"
+    },
+    {
+      "order": "A",
+      "mmr": 0.05,
+      "legacy": "L2",
+      "bars": 6576,
+      "points": 6577,
+      "days": 1096,
+      "q_decimal": "993.4353790154658019805127716052326228283502614721917568705990812709615",
+      "terminal_decimal": "99779.59642681162875717260343649166309029930221098977953682068888782923"
+    },
+    {
+      "order": "A",
+      "mmr": 0.005,
+      "legacy": "L1",
+      "bars": 6576,
+      "points": 6577,
+      "days": 1096,
+      "q_decimal": "993.4353790154658019805127716052326228283502614721917568705990812709615",
+      "terminal_decimal": "99779.59642681162875717260343649166309029930221098977953682068888782923"
+    },
+    {
+      "order": "A",
+      "mmr": 0.005,
+      "legacy": "L2",
+      "bars": 6576,
+      "points": 6577,
+      "days": 1096,
+      "q_decimal": "993.4353790154658019805127716052326228283502614721917568705990812709615",
+      "terminal_decimal": "99779.59642681162875717260343649166309029930221098977953682068888782923"
+    },
+    {
+      "order": "B",
+      "mmr": 0.05,
+      "legacy": "L1",
+      "bars": 6576,
+      "points": 6577,
+      "days": 1096,
+      "q_decimal": "993.4353790154658019805127716052326228283502614721917568705990812709615",
+      "terminal_decimal": "99779.69577034953030375280148776882361356158504601592675599637594773736"
+    },
+    {
+      "order": "B",
+      "mmr": 0.05,
+      "legacy": "L2",
+      "bars": 6576,
+      "points": 6577,
+      "days": 1096,
+      "q_decimal": "993.4353790154658019805127716052326228283502614721917568705990812709615",
+      "terminal_decimal": "99779.69577034953030375280148776882361356158504601592675599637594773736"
+    },
+    {
+      "order": "B",
+      "mmr": 0.005,
+      "legacy": "L1",
+      "bars": 6576,
+      "points": 6577,
+      "days": 1096,
+      "q_decimal": "993.4353790154658019805127716052326228283502614721917568705990812709615",
+      "terminal_decimal": "99779.69577034953030375280148776882361356158504601592675599637594773736"
+    },
+    {
+      "order": "B",
+      "mmr": 0.005,
+      "legacy": "L2",
+      "bars": 6576,
+      "points": 6577,
+      "days": 1096,
+      "q_decimal": "993.4353790154658019805127716052326228283502614721917568705990812709615",
+      "terminal_decimal": "99779.69577034953030375280148776882361356158504601592675599637594773736"
+    }
+  ],
+  "liquidation_decimal_histories": [
+    {
+      "order": "A",
+      "mmr": 0.05,
+      "kind": "gap",
+      "bars": 6576,
+      "zero_terminal": true
+    },
+    {
+      "order": "A",
+      "mmr": 0.05,
+      "kind": "intrabar",
+      "bars": 6576,
+      "zero_terminal": true
+    },
+    {
+      "order": "A",
+      "mmr": 0.005,
+      "kind": "gap",
+      "bars": 6576,
+      "zero_terminal": true
+    },
+    {
+      "order": "A",
+      "mmr": 0.005,
+      "kind": "intrabar",
+      "bars": 6576,
+      "zero_terminal": true
+    },
+    {
+      "order": "B",
+      "mmr": 0.05,
+      "kind": "gap",
+      "bars": 6576,
+      "zero_terminal": true
+    },
+    {
+      "order": "B",
+      "mmr": 0.05,
+      "kind": "intrabar",
+      "bars": 6576,
+      "zero_terminal": true
+    },
+    {
+      "order": "B",
+      "mmr": 0.005,
+      "kind": "gap",
+      "bars": 6576,
+      "zero_terminal": true
+    },
+    {
+      "order": "B",
+      "mmr": 0.005,
+      "kind": "intrabar",
+      "bars": 6576,
+      "zero_terminal": true
+    }
+  ],
+  "momentum_complete_result_regressions": [
+    {
+      "account": "main",
+      "order": "A",
+      "mmr": 0.05,
+      "bars": 120,
+      "trace_rows": 615
+    },
+    {
+      "account": "main",
+      "order": "A",
+      "mmr": 0.005,
+      "bars": 120,
+      "trace_rows": 615
+    },
+    {
+      "account": "main",
+      "order": "B",
+      "mmr": 0.05,
+      "bars": 120,
+      "trace_rows": 735
+    },
+    {
+      "account": "main",
+      "order": "B",
+      "mmr": 0.005,
+      "bars": 120,
+      "trace_rows": 735
+    },
+    {
+      "account": "mom7",
+      "order": "A",
+      "mmr": 0.05,
+      "bars": 120,
+      "trace_rows": 517
+    },
+    {
+      "account": "mom7",
+      "order": "A",
+      "mmr": 0.005,
+      "bars": 120,
+      "trace_rows": 517
+    },
+    {
+      "account": "mom7",
+      "order": "B",
+      "mmr": 0.05,
+      "bars": 120,
+      "trace_rows": 637
+    },
+    {
+      "account": "mom7",
+      "order": "B",
+      "mmr": 0.005,
+      "bars": 120,
+      "trace_rows": 637
+    },
+    {
+      "account": "mom14",
+      "order": "A",
+      "mmr": 0.05,
+      "bars": 120,
+      "trace_rows": 517
+    },
+    {
+      "account": "mom14",
+      "order": "A",
+      "mmr": 0.005,
+      "bars": 120,
+      "trace_rows": 517
+    },
+    {
+      "account": "mom14",
+      "order": "B",
+      "mmr": 0.05,
+      "bars": 120,
+      "trace_rows": 637
+    },
+    {
+      "account": "mom14",
+      "order": "B",
+      "mmr": 0.005,
+      "bars": 120,
+      "trace_rows": 637
+    },
+    {
+      "account": "mom28",
+      "order": "A",
+      "mmr": 0.05,
+      "bars": 120,
+      "trace_rows": 517
+    },
+    {
+      "account": "mom28",
+      "order": "A",
+      "mmr": 0.005,
+      "bars": 120,
+      "trace_rows": 517
+    },
+    {
+      "account": "mom28",
+      "order": "B",
+      "mmr": 0.05,
+      "bars": 120,
+      "trace_rows": 637
+    },
+    {
+      "account": "mom28",
+      "order": "B",
+      "mmr": 0.005,
+      "bars": 120,
+      "trace_rows": 637
+    }
+  ],
+  "D2-01_prevalidation": {
+    "OHLC": {
+      "economic_calls_before_rejection": 12,
+      "error": "Ogiltig mark-OHLC för 2022-01-03 00:00:00+00:00."
+    },
+    "funding_reference": {
+      "economic_calls_before_rejection": 13,
+      "error": "Event bad har M_ref 101.2 (mark_open); stapelns mark_open är 100.2."
+    },
+    "duplicate_funding": {
+      "economic_calls_before_rejection": 13,
+      "error": "Dubblerat event-id bad i stapeln."
+    }
+  },
+  "D2-02_stress_cost_accepted": 0.004,
+  "own_mutation_classification_injection": {
+    "utfall": "MILJÖFEL",
+    "pytest": "1 failed",
+    "första_fel": "tests.test_audit_fault::test_resource",
+    "orsak": "RuntimeError",
+    "fas": "anrop",
+    "körda_prov": "riktade",
+    "tvilling_utan_mutation": "fallerar också"
+  },
+  "D2-03_actual_shared_log_mutant": {
+    "utfall": "MISSAD",
+    "pytest": "155 passed",
+    "körda_prov": "hela D2-sviten"
+  },
+  "decision": "EJ GODKÄND"
+}

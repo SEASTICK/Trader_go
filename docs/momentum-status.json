@@ -3,8 +3,8 @@
   "title": "Efterföljare till H-0013 – granskning och implementation",
   "hypothesis": "H-0017 – riskstyrd tidsseriemomentum på BTCUSDT",
   "updated": "2026-11-15",
-  "reviewed_revision": "7345f06b928f25902ab1515008e1c26f99fa7c0c",
-  "reviewed_scope": "D1 revision 8 GODKÄND på exakt 7345f06 mot e148199, endast syntetiskt. D1-11 och D1-04:s bredare klassningsgaranti stängda inom D1: egna setup-/resurs-/ordningsfel ger MILJÖFEL; neutral ändring med kvarlämnad eller raderad resurs inför fallback ger MISSAD med orörda fullsvitsgrenar. Inga nya fynd. 605 momentumtester, 1 158 motorprov, A1-oraklet, 30 av 30 revisionsaudits och mutationsskriptets --check PASS (31/0/1/0, grön 65-provsbaslinje). Ny audit genererad och separat --check PASS: 3 288 Decimal-signaljämförelser, fulla referensförlopp och 31 individuellt reproducerade fångster. Alla fyra checklistor kontrollerade; momentumvyn regenererad. Tidigare avgränsade A/B/C-godkännanden består. MOM-D01 förblir in_progress; nästa avgränsade D-del kan tilldelas, inget nytt uppdrag skrivs. Enligt Edwin heter momentum H-0026 och squeezen H-0025 på main sedan 2026-11-14 (3cd3c4c, research/id-omnumrering.md); grenens gamla id, register och protokoll orörda, N=17 behålls. Ingen historik, registrering, drift eller paper/live.",
+  "reviewed_revision": "0668f1035f2d6241c196b669f8d264e2650be8d0",
+  "reviewed_scope": "Codex D2 på exakt 0668f1035f2d6241c196b669f8d264e2650be8d0 mot 99e9685: EJ GODKÄND, endast syntetiskt. D2-01 P2: sent ogiltigt OHLC/fundingunderlag upptäcks efter ekonomiska steg. D2-02 P2: buy_and_hold accepterar kostnadsstress. D2-03 P2: verkligt återanvänd L1-logg/slutstate för L2 missas av alla 155 deklarerade D2-prov. MOM-C03/C05 återgodkända inom tidigare huvudmodellsgarantier efter eventdiff och 1 920 kompletta momentumsteg/9 624 spårrader samt BoundLog lika mot 7345f06; MOM-C04:s tidigare scope består. Oberoende Decimal: åtta fulla buy_and_hold-ledgrar och åtta fulla likvidationsförlopp. 629 momentumtester och 1 182 motorprov PASS. Se granskningen och revisionsauditen för kontroller och underlag. MOM-D01 förblir in_progress; övriga D/E–H ej godkända. D1-Q01/Q02 ej avgjorda. H-0013 förblir REJECT; inga ändringar i frysta protokoll, register, gamla resultat eller audits. Ingen historik, registrering, merge, drift eller paper/live; inget committat eller pushat. Slutkontroller: ny revisionsaudit genererad och separat --check PASS; samtliga 30 äldre audits PASS (31 av 31 med ny), A1-oraklet PASS, D1-felprov --check PASS 31/0/1/0 med grön 65-provsbaslinje, D2-felprov --check PASS 23/0/0/0 med grön 155-provsbaslinje, alla fyra checklistor PASS. Den egna verkliga delat-förlopp-mutanten är därutöver MISSAD efter 155 prov (D2-03).",
   "groups": [
     {
       "id": "A",
@@ -449,7 +449,7 @@
         {
           "id": "MOM-C03",
           "title": "Implementera funding, dagsreset och första/sista event enligt låst kontrakt",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "engine/traderlab/momentum_funding.py",
@@ -570,9 +570,17 @@
             {
               "file": "engine/traderlab/momentum_event.py",
               "detail": "Återöppnad för omgranskning (D2): eventmodulen fick Scenario.policy och en buy_and_hold-väg (_bh_step) i process_bar. Momentumvägen och dess tester är oförändrade och gröna; Codex avgör återgodkännande av exakt ny revision."
+            },
+            {
+              "file": "docs/momentum-D2-granskning-0668f10.md",
+              "detail": "Codex oberoende D2-granskning på exakt 0668f10 mot 99e9685: EJ GODKÄND, D2-01–D2-03 P2. C03/C05 återgodkänns enbart inom tidigare huvudmodellsscope; C04 består. MOM-D01 fortsatt in_progress."
+            },
+            {
+              "file": "research/audits/momentum-d2-0668f10/verification.json",
+              "detail": "Revisionslåst git-show-underlag: skyddade filer byte-oförändrade, åtta fulla Decimal-ledgrar och åtta likvidationsförlopp. 1 920 kompletta momentumsteg/9 624 spårrader och BoundLog lika mot 7345f06 (endast nya standardfältet policy normaliserat). Tre sena datavalideringsfel, accepterad stresskostnad och verklig delad L1/L2-logg som MISSAD efter 155 prov; egen neutral resursinjektion ger MILJÖFEL."
             }
           ],
-          "note": "Done inom C5:s huvudmodell: funding, dagsreset, första/sista event och full syntetisk horisont verifierade på 43b2a4b. Ingen publik återställning. Legacy/jämförelsekonton och stress/fördröjning tillhör senare D; ingen historikkörning godkänd."
+          "note": "Done inom C5:s huvudmodell: funding, dagsreset, första/sista event och full syntetisk horisont verifierade på 43b2a4b. Ingen publik återställning. Legacy/jämförelsekonton och stress/fördröjning tillhör senare D; ingen historikkörning godkänd. Återgranskat på 0668f10: standardvägens kompletta steg/spår och BoundLog lika mot 7345f06; tidigare huvudmodellsgaranti återgodkänd efter D2:s eventändring. D2:s fullhorisontsvalidering/kostnad och felprov är inte godkända (D2-01–D2-03)."
         },
         {
           "id": "MOM-C04",
@@ -694,14 +702,22 @@
             {
               "file": "research/audits/momentum-c6-a84e0d8/review.py",
               "detail": "Revisionslåst git-show-audit med verification.json/--check: 115 Decimal-punktsekvenser/629 punkter, 60 ickeinterferenspar, åtta fundingstaplar med korrekt close-tid och sju egna mutationer fångade. Alla punktfasers tidsproveniens verifierad."
+            },
+            {
+              "file": "docs/momentum-D2-granskning-0668f10.md",
+              "detail": "Codex oberoende D2-granskning på exakt 0668f10 mot 99e9685: EJ GODKÄND, D2-01–D2-03 P2. C03/C05 återgodkänns enbart inom tidigare huvudmodellsscope; C04 består. MOM-D01 fortsatt in_progress."
+            },
+            {
+              "file": "research/audits/momentum-d2-0668f10/verification.json",
+              "detail": "Revisionslåst git-show-underlag: skyddade filer byte-oförändrade, åtta fulla Decimal-ledgrar och åtta likvidationsförlopp. 1 920 kompletta momentumsteg/9 624 spårrader och BoundLog lika mot 7345f06 (endast nya standardfältet policy normaliserat). Tre sena datavalideringsfel, accepterad stresskostnad och verklig delad L1/L2-logg som MISSAD efter 155 prov; egen neutral resursinjektion ger MILJÖFEL."
             }
           ],
-          "note": "Done inom leverans C:s huvudmodell: C5:s closebaserade 2 % dagsstopp/15 % permanentstopp består och C6:s separata §10.2-bound med 20 %-kriterieunderlag godkänns på a84e0d8. C6-02 stängt. 20 % styr ingen handel; full boolesk prövning inklusive likvidation hör till D. Ingen historikkörning eller drift."
+          "note": "Done inom leverans C:s huvudmodell: C5:s closebaserade 2 % dagsstopp/15 % permanentstopp består och C6:s separata §10.2-bound med 20 %-kriterieunderlag godkänns på a84e0d8. C6-02 stängt. 20 % styr ingen handel; full boolesk prövning inklusive likvidation hör till D. Ingen historikkörning eller drift. Omprövat på 0668f10: tidigare huvudmodellsscope består efter identiska momentum-/BoundLog-spår och regressioner; ingen buy_and_hold-bound godkänns."
         },
         {
           "id": "MOM-C05",
           "title": "Verifiera gap, basis, likvidation och riskordning med handräknade prov och kodgranskning",
-          "status": "in_progress",
+          "status": "done",
           "evidence": [
             {
               "file": "engine/tests/test_momentum_ledger.py",
@@ -834,9 +850,17 @@
             {
               "file": "engine/traderlab/momentum_event.py",
               "detail": "Återöppnad för omgranskning (D2): eventmodulen fick Scenario.policy och en buy_and_hold-väg (_bh_step) i process_bar. Momentumvägen och dess tester är oförändrade och gröna; Codex avgör återgodkännande av exakt ny revision."
+            },
+            {
+              "file": "docs/momentum-D2-granskning-0668f10.md",
+              "detail": "Codex oberoende D2-granskning på exakt 0668f10 mot 99e9685: EJ GODKÄND, D2-01–D2-03 P2. C03/C05 återgodkänns enbart inom tidigare huvudmodellsscope; C04 består. MOM-D01 fortsatt in_progress."
+            },
+            {
+              "file": "research/audits/momentum-d2-0668f10/verification.json",
+              "detail": "Revisionslåst git-show-underlag: skyddade filer byte-oförändrade, åtta fulla Decimal-ledgrar och åtta likvidationsförlopp. 1 920 kompletta momentumsteg/9 624 spårrader och BoundLog lika mot 7345f06 (endast nya standardfältet policy normaliserat). Tre sena datavalideringsfel, accepterad stresskostnad och verklig delad L1/L2-logg som MISSAD efter 155 prov; egen neutral resursinjektion ger MILJÖFEL."
             }
           ],
-          "note": "Done inom C5:s huvudmodell: gap, basis, likvidation och riskordning granskade mot oberoende Decimal-/kalenderfacit på 43b2a4b. C5-01–C5-04 stängda. C5-godkännandet omfattar inte legacy/grid, §10.2-bound, ekonomiskt resultat eller drift. C6:s separata huvudmodell-bound godkänd på a84e0d8; full boolesk kriterieprövning hör till D."
+          "note": "Done inom C5:s huvudmodell: gap, basis, likvidation och riskordning granskade mot oberoende Decimal-/kalenderfacit på 43b2a4b. C5-01–C5-04 stängda. C5-godkännandet omfattar inte legacy/grid, §10.2-bound, ekonomiskt resultat eller drift. C6:s separata huvudmodell-bound godkänd på a84e0d8; full boolesk kriterieprövning hör till D. Återgranskat på 0668f10: standardvägens kompletta steg/spår och BoundLog lika mot 7345f06; tidigare huvudmodellsgaranti återgodkänd efter D2:s eventändring. D2:s fullhorisontsvalidering/kostnad och felprov är inte godkända (D2-01–D2-03)."
         }
       ]
     },
@@ -968,9 +992,21 @@
             {
               "file": "engine/traderlab/momentum_benchmark.py",
               "detail": "D2 (H-0026, tidigare H-0017) för Codex granskning, inte godkänd: buy_and_hold med fasta enheter via eventlagrets buy_and_hold-väg; 24 tester, felprovsmatris 23 fångade/0 missade (docs/momentum-D2-mutationer.json). Återstår: legacy, no_vol, blandningar, kontrollkontonas bound (D1-Q01/Q02 öppna)."
+            },
+            {
+              "file": "docs/momentum-D2-granskning-0668f10.md",
+              "detail": "Codex oberoende D2-granskning på exakt 0668f10 mot 99e9685: EJ GODKÄND, D2-01–D2-03 P2. C03/C05 återgodkänns enbart inom tidigare huvudmodellsscope; C04 består. MOM-D01 fortsatt in_progress."
+            },
+            {
+              "file": "research/audits/momentum-d2-0668f10/verification.json",
+              "detail": "Revisionslåst git-show-underlag: skyddade filer byte-oförändrade, åtta fulla Decimal-ledgrar och åtta likvidationsförlopp. 1 920 kompletta momentumsteg/9 624 spårrader och BoundLog lika mot 7345f06 (endast nya standardfältet policy normaliserat). Tre sena datavalideringsfel, accepterad stresskostnad och verklig delad L1/L2-logg som MISSAD efter 155 prov; egen neutral resursinjektion ger MILJÖFEL."
+            },
+            {
+              "file": "docs/momentum-D2-granskning-0668f10.md",
+              "detail": "Slutverifiering: 629 momentumtester/1 182 motorprov PASS; A1 och båda mutationsskriptens --check PASS; ny audit genererad och separat --check PASS, alla 30 äldre audits PASS (31 totalt); samtliga fyra checklistkontroller PASS. D2-01–D2-03 kvarstår; matrisens gröna 23 fångster omfattar inte den egna missade loggåteranvändningsmutanten."
             }
           ],
-          "note": "D1 revision 8 GODKÄND på exakt 7345f06. D1-11 och D1-04:s bredare klassningsgaranti stängda inom syntetisk D1; tidigare stängda fynd består inom sina avgränsningar, inga nya fynd. MOM-D01 kan inte bli done av D1 ensam: buy_and_hold, legacy, no_vol, blandningar och komponent-bound återstår. D1-Q01/Q02 ej avgjorda. Nästa avgränsade D-del kan tilldelas; inget nytt uppdrag skrivs. Enligt Edwin heter momentum H-0026 på main; grenens gamla id, protokoll och register ändras inte. Ingen historik, registrering, drift eller paper/live."
+          "note": "D1 godkänd på exakt 7345f06. D2 EJ GODKÄND på exakt 0668f10 mot 99e9685: D2-01–D2-03 P2 behöver rättas och omgranskas. Oberoende Decimal-facit verifierar buy_and_hold-ekonomin inom syntetiska prov, men inte hela publika kontraktet. C03/C05 återgodkända endast inom tidigare huvudmodellsscope, C04 består. MOM-D01 kan inte bli done av D2 ensam: legacy, no_vol, blandningar och kontrollkontonas bound återstår. D1-Q01/Q02 ej avgjorda. Inget nytt uppdrag; ingen historik, registrering, merge, drift eller paper/live. H-0013 förblir REJECT."
         },
         {
           "id": "MOM-D02",
