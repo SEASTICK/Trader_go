@@ -2,9 +2,9 @@
   "schema_version": 1,
   "title": "Efterföljare till H-0013 – granskning och implementation",
   "hypothesis": "H-0017 – riskstyrd tidsseriemomentum på BTCUSDT",
-  "updated": "2026-11-14",
-  "reviewed_revision": "3becd973cee37e7609e4c54da0b9698e57f85ecc",
-  "reviewed_scope": "D1 revision 7 EJ GODKÄND på exakt 3becd97 mot add4495, endast syntetiskt. D1-10:s tre konkreta första-användningsfel rättade; D1-04:s bredare garanti kvarstår som D1-11 P2: fallback återanvänder mutantens resursändringar från riktat urval medan kontrollgrenen kör hela sviten från orörd ögonblicksbild. Neutral kommentar ger falsk FÅNGAD. Tidigare avgränsade A/B/C-godkännanden består; MOM-D01 in_progress. Enligt Edwin heter momentum H-0026 och squeezen H-0025 på main sedan 2026-11-14 (3cd3c4c, research/id-omnumrering.md); grenens gamla id, register och protokoll orörda, N=17 behålls. Ingen historik, registrering, drift eller paper/live; inget nytt uppdrag. Verifierat: 605 momentumtester, 1 158 motorprov, A1-oraklet, 29 av 29 revisionsaudits, mutationsskriptets --check (31/0/1/0, grön 65-provsbaslinje, sju miljöfelssjälvtest) och alla fyra checklistor PASS. Ny audit genererad och separat --check PASS: 3 288 Decimal-signaljämförelser, fulla referensförlopp, 31 reproducerade fångster, rättat D1-10 och öppet D1-11. Audit-PASS reproducerar även fynd och innebär inte implementationsgodkännande.",
+  "updated": "2026-11-15",
+  "reviewed_revision": "7345f06b928f25902ab1515008e1c26f99fa7c0c",
+  "reviewed_scope": "D1 revision 8 GODKÄND på exakt 7345f06 mot e148199, endast syntetiskt. D1-11 och D1-04:s bredare klassningsgaranti stängda inom D1: egna setup-/resurs-/ordningsfel ger MILJÖFEL; neutral ändring med kvarlämnad eller raderad resurs inför fallback ger MISSAD med orörda fullsvitsgrenar. Inga nya fynd. 605 momentumtester, 1 158 motorprov, A1-oraklet, 30 av 30 revisionsaudits och mutationsskriptets --check PASS (31/0/1/0, grön 65-provsbaslinje). Ny audit genererad och separat --check PASS: 3 288 Decimal-signaljämförelser, fulla referensförlopp och 31 individuellt reproducerade fångster. Alla fyra checklistor kontrollerade; momentumvyn regenererad. Tidigare avgränsade A/B/C-godkännanden består. MOM-D01 förblir in_progress; nästa avgränsade D-del kan tilldelas, inget nytt uppdrag skrivs. Enligt Edwin heter momentum H-0026 och squeezen H-0025 på main sedan 2026-11-14 (3cd3c4c, research/id-omnumrering.md); grenens gamla id, register och protokoll orörda, N=17 behålls. Ingen historik, registrering, drift eller paper/live.",
   "groups": [
     {
       "id": "A",
@@ -944,9 +944,21 @@
             {
               "file": "scripts/momentum-d1-mutations.py",
               "detail": "Rättning av D1-11 från granskningen av 3becd97, för Codex omgranskning, inte godkänd: varje jämförd körning (riktad och hela sviten) har egen orörd mutant- och kontrollgren tagen före all provkörning; självtest för kvarlämnad resurs före reservkörning (MISSAD, aldrig FÅNGAD)."
+            },
+            {
+              "file": "docs/momentum-D1-granskning-7345f06.md",
+              "detail": "Codex GODKÄND inom D1 på exakt 7345f06 mot e148199. D1-11 och D1-04 stängda med egna injektioner; inga nya fynd. MOM-D01 kvarstår in_progress; nästa avgränsade D-del kan tilldelas. 605 momentumtester och 1 158 motorprov PASS."
+            },
+            {
+              "file": "research/audits/momentum-d1-7345f06/review.py",
+              "detail": "Ny revisionslåst git-show-audit, genererad och separat --check PASS. Oberoende Decimal-/kalenderreferenser, 31 ordinarie fångster, verklig fallback, neutral överlevare samt egna D1-08–D1-11-injektioner och nya resurs-/setup-/insamlingsfall."
+            },
+            {
+              "file": "research/audits/momentum-d1-7345f06/verification.json",
+              "detail": "Källhashar, exakt femfilsdiff och byte-oförändrade skyddade källor. 3 288 signaljämförelser, tre fulla komponentförlopp och separat varierande ledger (6 576 staplar/6 577 closepunkter/1 096 dagar). D1-08 ger MILJÖFEL; D1-11 ger MISSAD med två gröna färska fullkontroller och två gamla felande tvåstegskontroller. Tre D1-10-fall ger MILJÖFEL med sex negativa omuterade kontroller. Alla 31 fångster omprövade. Mutationsskriptets --check PASS 31/0/1/0; sju miljöfelssjälvtest, kvarlämnad resurs MISSAD och verklig mutation FÅNGAD. 29 äldre audits PASS som historisk reproduktion, 30 totalt med ny audit. A1-oraklet och alla fyra checklistor PASS."
             }
           ],
-          "note": "D1 revision 7 EJ GODKÄND på 3becd97. D1-10:s konkreta setup-/anrops-/nedstädningsfall stängda; D1-04:s bredare garanti kvarstår som D1-11 P2: fallback jämför olika resurs- och körhistorik och kan ge falsk FÅNGAD utan beteendemutation. Tidigare stängda fynd består inom sina avgränsningar. MOM-D01 kan inte bli done av D1 ensam; buy_and_hold, legacy, no_vol, blandningar och komponent-bound återstår. D1-Q01/Q02 ej avgjorda. Enligt Edwin heter momentum H-0026 på main; grenens gamla id, protokoll och register ändras inte."
+          "note": "D1 revision 8 GODKÄND på exakt 7345f06. D1-11 och D1-04:s bredare klassningsgaranti stängda inom syntetisk D1; tidigare stängda fynd består inom sina avgränsningar, inga nya fynd. MOM-D01 kan inte bli done av D1 ensam: buy_and_hold, legacy, no_vol, blandningar och komponent-bound återstår. D1-Q01/Q02 ej avgjorda. Nästa avgränsade D-del kan tilldelas; inget nytt uppdrag skrivs. Enligt Edwin heter momentum H-0026 på main; grenens gamla id, protokoll och register ändras inte. Ingen historik, registrering, drift eller paper/live."
         },
         {
           "id": "MOM-D02",
