@@ -449,7 +449,7 @@
         {
           "id": "MOM-C03",
           "title": "Implementera funding, dagsreset och första/sista event enligt låst kontrakt",
-          "status": "done",
+          "status": "in_progress",
           "evidence": [
             {
               "file": "engine/traderlab/momentum_funding.py",
@@ -566,6 +566,10 @@
             {
               "file": "docs/momentum-C6-granskning-a84e0d8.md",
               "detail": "Codex godkänner exakt a84e0d8 mot 790d477 inom C6:s huvudmodell. C6-02 stängt; event och övriga handelsmoduler byte-oförändrade. C03/C05:s tidigare avgränsade godkännanden består; MOM-C04 klar inom C, ingen boolesk slutprövning."
+            },
+            {
+              "file": "engine/traderlab/momentum_event.py",
+              "detail": "Återöppnad för omgranskning (D2): eventmodulen fick Scenario.policy och en buy_and_hold-väg (_bh_step) i process_bar. Momentumvägen och dess tester är oförändrade och gröna; Codex avgör återgodkännande av exakt ny revision."
             }
           ],
           "note": "Done inom C5:s huvudmodell: funding, dagsreset, första/sista event och full syntetisk horisont verifierade på 43b2a4b. Ingen publik återställning. Legacy/jämförelsekonton och stress/fördröjning tillhör senare D; ingen historikkörning godkänd."
@@ -697,7 +701,7 @@
         {
           "id": "MOM-C05",
           "title": "Verifiera gap, basis, likvidation och riskordning med handräknade prov och kodgranskning",
-          "status": "done",
+          "status": "in_progress",
           "evidence": [
             {
               "file": "engine/tests/test_momentum_ledger.py",
@@ -826,6 +830,10 @@
             {
               "file": "docs/momentum-C6-granskning-a84e0d8.md",
               "detail": "Codex godkänner exakt a84e0d8 mot 790d477 inom C6:s huvudmodell. C6-02 stängt; event och övriga handelsmoduler byte-oförändrade. C03/C05:s tidigare avgränsade godkännanden består; MOM-C04 klar inom C, ingen boolesk slutprövning."
+            },
+            {
+              "file": "engine/traderlab/momentum_event.py",
+              "detail": "Återöppnad för omgranskning (D2): eventmodulen fick Scenario.policy och en buy_and_hold-väg (_bh_step) i process_bar. Momentumvägen och dess tester är oförändrade och gröna; Codex avgör återgodkännande av exakt ny revision."
             }
           ],
           "note": "Done inom C5:s huvudmodell: gap, basis, likvidation och riskordning granskade mot oberoende Decimal-/kalenderfacit på 43b2a4b. C5-01–C5-04 stängda. C5-godkännandet omfattar inte legacy/grid, §10.2-bound, ekonomiskt resultat eller drift. C6:s separata huvudmodell-bound godkänd på a84e0d8; full boolesk kriterieprövning hör till D."
@@ -956,6 +964,10 @@
             {
               "file": "research/audits/momentum-d1-7345f06/verification.json",
               "detail": "Källhashar, exakt femfilsdiff och byte-oförändrade skyddade källor. 3 288 signaljämförelser, tre fulla komponentförlopp och separat varierande ledger (6 576 staplar/6 577 closepunkter/1 096 dagar). D1-08 ger MILJÖFEL; D1-11 ger MISSAD med två gröna färska fullkontroller och två gamla felande tvåstegskontroller. Tre D1-10-fall ger MILJÖFEL med sex negativa omuterade kontroller. Alla 31 fångster omprövade. Mutationsskriptets --check PASS 31/0/1/0; sju miljöfelssjälvtest, kvarlämnad resurs MISSAD och verklig mutation FÅNGAD. 29 äldre audits PASS som historisk reproduktion, 30 totalt med ny audit. A1-oraklet och alla fyra checklistor PASS."
+            },
+            {
+              "file": "engine/traderlab/momentum_benchmark.py",
+              "detail": "D2 (H-0026, tidigare H-0017) för Codex granskning, inte godkänd: buy_and_hold med fasta enheter via eventlagrets buy_and_hold-väg; 24 tester, felprovsmatris 23 fångade/0 missade (docs/momentum-D2-mutationer.json). Återstår: legacy, no_vol, blandningar, kontrollkontonas bound (D1-Q01/Q02 öppna)."
             }
           ],
           "note": "D1 revision 8 GODKÄND på exakt 7345f06. D1-11 och D1-04:s bredare klassningsgaranti stängda inom syntetisk D1; tidigare stängda fynd består inom sina avgränsningar, inga nya fynd. MOM-D01 kan inte bli done av D1 ensam: buy_and_hold, legacy, no_vol, blandningar och komponent-bound återstår. D1-Q01/Q02 ej avgjorda. Nästa avgränsade D-del kan tilldelas; inget nytt uppdrag skrivs. Enligt Edwin heter momentum H-0026 på main; grenens gamla id, protokoll och register ändras inte. Ingen historik, registrering, drift eller paper/live."

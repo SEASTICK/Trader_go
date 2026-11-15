@@ -1,0 +1,280 @@
+{
+  "leverans": "H-0026 (tidigare H-0017) D2",
+  "modul": "mom-bh/1.0.0",
+  "prov": [
+    "tests/test_momentum_benchmark.py",
+    "tests/test_momentum_event.py",
+    "tests/test_momentum_control.py"
+  ],
+  "baslinje": "155 passed",
+  "miljöfel_självtest": {
+    "setup RuntimeError": "MILJÖFEL",
+    "setup AssertionError": "MILJÖFEL",
+    "setup FileNotFoundError": "MILJÖFEL",
+    "ordningsberoende (andra provet)": "MILJÖFEL",
+    "första användning, setup": "MILJÖFEL",
+    "första användning, anrop": "MILJÖFEL",
+    "första användning, nedstädning": "MILJÖFEL",
+    "kvarlämnad resurs före reservkörning": "MISSAD",
+    "verklig mutation": "FÅNGAD"
+  },
+  "felprov": [
+    {
+      "fel": "storlek före avgift (ingen kostnad i lösaren)",
+      "fil": "momentum_risk.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 154 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_O2_full_weight_entry_after_cost",
+      "orsak": "AssertionError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "kostnad dubbelt",
+      "fil": "momentum_risk.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 154 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_O2_full_weight_entry_after_cost",
+      "orsak": "AssertionError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "fel P/M vid inträde",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 153 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_entry_with_basis_P_ne_M[101.0]",
+      "orsak": "AssertionError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "ombalansering vid midnatt",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 154 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_fixed_units_no_cap_band_or_stops",
+      "orsak": "LedgerError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "återköp vid årsskifte",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 154 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_eight_labels_independent_ledger_every_close_and_terminal",
+      "orsak": "AssertionError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "momentumrisk på buy_and_hold",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 154 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_O2_full_weight_entry_after_cost",
+      "orsak": "EventError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "buy_and_hold-policyn läcker till main/komponent",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 152 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_momentum_label_and_path_unchanged",
+      "orsak": "EventError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "A på nya q",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 149 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_funding_times_entry_midnight_and_terminal[0.0001-A]",
+      "orsak": "KeyError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "B på gamla q",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 1 passed, 149 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_funding_times_entry_midnight_and_terminal[0.0001-B]",
+      "orsak": "KeyError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "1 ms-event behandlat som samtidigt",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 149 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_funding_times_entry_midnight_and_terminal[0.0001-A]",
+      "orsak": "FundingError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "fel fundingtecken",
+      "fil": "momentum_funding.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 154 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_fixed_units_no_cap_band_or_stops",
+      "orsak": "AssertionError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "kredit räddar adverse-prövningen",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 154 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_mmr_scenarios_differ_and_intrabar_unresolved_then_absorbing",
+      "orsak": "AttributeError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "mellanfunding bokförd trots intrastapelträff",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 154 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_mmr_scenarios_differ_and_intrabar_unresolved_then_absorbing",
+      "orsak": "EventError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "fill före gapmarginal",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 2 passed, 152 deselected",
+      "första_fel": "tests.test_momentum_event::test_gap_liquidation_before_fill_strikes_intent_and_absorbs",
+      "orsak": "LedgerError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "likvidation glöms i kontoregeln (återupplivning)",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 153 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_mmr_scenarios_differ_and_intrabar_unresolved_then_absorbing",
+      "orsak": "AssertionError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "terminal en stapel sent",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 153 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_constant_close_market_is_accepted_but_momentum_still_requires_signal",
+      "orsak": "EventError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "terminalkostnad tappad",
+      "fil": "momentum_ledger.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 154 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_O2_full_weight_entry_after_cost",
+      "orsak": "AssertionError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "startpunkt tappad",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 154 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_eight_labels_independent_ledger_every_close_and_terminal",
+      "orsak": "AssertionError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "sista close/terminalpunkt tappad",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 154 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_eight_labels_independent_ledger_every_close_and_terminal",
+      "orsak": "AssertionError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "delat kontoförlopp mellan legacy-ordningar",
+      "fil": "momentum_benchmark.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 154 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_eight_labels_independent_ledger_every_close_and_terminal",
+      "orsak": "AssertionError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "ändrat underlag godtas",
+      "fil": "momentum_benchmark.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 154 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_pre_start_and_2025_funding_handled_before_economics",
+      "orsak": "EventError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "policyn utanför etiketten (policybyte oskyddat)",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 154 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_momentum_label_and_path_unchanged",
+      "orsak": "AssertionError",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    },
+    {
+      "fel": "signal godtas för buy_and_hold",
+      "fil": "momentum_event.py",
+      "utfall": "FÅNGAD",
+      "pytest": "1 failed, 154 deselected",
+      "första_fel": "tests.test_momentum_benchmark::test_policy_binding_and_errors",
+      "orsak": "Failed",
+      "fas": "anrop",
+      "körda_prov": "riktade",
+      "tvilling_utan_mutation": "passerar"
+    }
+  ],
+  "fångade": 23,
+  "missade": 0,
+  "ekvivalenta": 0,
+  "ej_tillämpliga": 0
+}

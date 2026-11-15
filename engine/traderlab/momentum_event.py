@@ -54,6 +54,9 @@ TERMINAL = pd.Timestamp("2024-12-31 20:00", tz="UTC")
 END = pd.Timestamp("2025-01-01 00:00", tz="UTC")
 INITIAL = 100_000.0
 ORDERS = ("A", "B")
+MOMENTUM, BUY_AND_HOLD = "momentum", "buy_and_hold"
+POLICIES = (MOMENTUM, BUY_AND_HOLD)       # kontoregel; buy_and_hold enligt §11: fasta enheter, ingen momentumrisk
+BH_RULE = "buy_and_hold 1.0.0: w = 1 efter kostnad på E_trade vid första testöppningen, fasta enheter till terminal"
 COSTS = (ledger.COST_NORMAL, ledger.COST_STRESS)
 UNKNOWN_TIME = "okänd inom stapeln"
 # Fundingkategorier i spåret: varje event i en stapel får exakt en.
@@ -105,8 +108,11 @@ class Scenario:
     order: str                   # "A" eller "B" (§8.1)
     mmr: float                   # 0,05 eller 0,005 (§9)
     cost: float = ledger.COST_NORMAL
+    policy: str = MOMENTUM       # kontoregel; bunden till förloppet via EngineState (inget policybyte mitt i)
 
     def __post_init__(self) -> None:
+        if not isinstance(self.policy, str) or self.policy not in POLICIES:
+            raise EventError(f"Kontoregeln måste vara en av {POLICIES}, fick {_show(self.policy)}.")
         if not isinstance(self.account_key, str) or not self.account_key:
             raise EventError(f"account_key måste vara en icke-tom sträng, fick {_show(self.account_key)}.")
         if not isinstance(self.order, str) or self.order not in ORDERS:
@@ -122,7 +128,8 @@ class Scenario:
 
     @property
     def label(self) -> str:
-        return f"{self.order}-mmr{self.mmr}-c{self.cost}"
+        base = f"{self.order}-mmr{self.mmr}-c{self.cost}"
+        return base if self.policy == MOMENTUM else f"{self.policy}-{base}"   # momentumetiketten är oförändrad
 
 
 @dataclass(frozen=True)
@@ -327,6 +334,28 @@ def _trace(state_like, phase, acct, M=None, **kw) -> Trace:
                  mmr=s.mmr, **kw)
 
 
+def _bh_step(rs: risk.RiskState, T: pd.Timestamp, close, E_close, terminal: bool):
+    """Gränssteget för buy_and_hold (§11): inträde w = 1 vid första testöppningen, terminalstängning, annars inget.
+    Inget dagsbeslut, ingen cap, inget band, inget dags- eller permanentstopp. peak och day_start rörs inte och kan
+    därför aldrig utlösa eller låsa handel. Likvidation förs vidare som absorberande tillstånd."""
+    liquidated = rs.liquidated or (close is not None and close.liquidated)
+    intent = None
+    if not rs.started:
+        intent = risk.Intent(kind=risk.NORMAL, w=1.0, decision_time=T, fill_time=T, source_bar=None,
+                             E_decision=rs.initial, mark_decision=None, w_current=0.0, reason=BH_RULE)
+    elif terminal and not liquidated:
+        intent = risk.Intent(kind=risk.TERMINAL, w=0.0, decision_time=T, fill_time=T,
+                             source_bar=close.bar_open if close is not None else None, E_decision=E_close,
+                             mark_decision=close.mark_close if close is not None else None, w_current=float("nan"),
+                             reason="terminal stängning (buy_and_hold)")
+    new = replace(rs, next_boundary=T + BAR, started=True, terminated=terminal, liquidated=liquidated)
+    rec = risk.StepRecord(boundary=T, source_bar=close.bar_open if close is not None else None, E_close=E_close,
+                          peak=rs.peak, day_start_used=rs.day_start, day_return=None, drawdown=None,
+                          permanent_triggered=False, day_stop_triggered=False, daily_decision=None,
+                          candidates=(intent.kind,) if intent else (), intent=intent)
+    return new, rec
+
+
 def process_bar(state: EngineState, bar: Bar, events=(), signal: risk.SignalInput | None = None) -> BarResult:
     """Behandla stapeln som börjar vid state.next_bar: close för föregående stapel, öppning, mellanhändelser."""
     if not isinstance(state, EngineState) or not isinstance(bar, Bar):
@@ -346,7 +375,7 @@ def process_bar(state: EngineState, bar: Bar, events=(), signal: risk.SignalInpu
 
     # §8.1 steg 0–1: close för föregående stapel och eventuellt dagsbeslut vid T.
     close_point = day_end = None
-    close = None
+    close = E_close = None
     if rs.started:
         prev_bar = T - BAR
         close = risk.CloseInput(prev_bar, acct, state.prev_mark_close, liquidated=liquidated)
@@ -356,10 +385,15 @@ def process_bar(state: EngineState, bar: Bar, events=(), signal: risk.SignalInpu
                             time=T, bar_open=prev_bar, source="mark_close"))
         if T == T.floor("D"):
             day_end = (T - pd.Timedelta(days=1), E_close, liquidated)
-    try:
-        rs, rec = risk.step(rs, T, close, signal, terminal=T == TERMINAL)
-    except LedgerError as exc:
-        raise EventError(f"Riskmodulen avvisade gränsen {T}: {exc}") from None
+    if s.policy == BUY_AND_HOLD:
+        if signal is not None:
+            raise EventError("buy_and_hold tar ingen signal; kontot har ingen momentumsignal, cap, band eller stopp (§11).")
+        rs, rec = _bh_step(rs, T, close, E_close if close is not None else None, terminal=T == TERMINAL)
+    else:
+        try:
+            rs, rec = risk.step(rs, T, close, signal, terminal=T == TERMINAL)
+        except LedgerError as exc:
+            raise EventError(f"Riskmodulen avvisade gränsen {T}: {exc}") from None
     intent = rec.intent
     status = ("likviderad" if liquidated else "permanent stopp" if rs.permanent else
               f"lock_day {rs.lock_day.date()}" if rs.lock_day is not None and rs.lock_day == T.floor("D") else "levande")

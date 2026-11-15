@@ -1,6 +1,6 @@
 # Efterföljare till H-0013 – Arbetsplan
 
-**15 av 40 uppgifter verifierade · 8 arbetsområden.**
+**13 av 40 uppgifter verifierade · 8 arbetsområden.**
 
 Metodgranskning · Kontrollerad 2026-11-15 · Granskad kodversion `7345f06b928f25902ab1515008e1c26f99fa7c0c`.
 
@@ -101,7 +101,7 @@ D1 revision 8 GODKÄND på exakt 7345f06 mot e148199, endast syntetiskt. D1-11 o
 
 ## C. Utförande och nettobaserad risk
 
-5/5 verifierade.
+3/5 verifierade.
 
 - [x] **MOM-C01** Implementera enhetsledger med partial fills, markvärdering och kostnad exakt en gång
   - Underlag: [engine/traderlab/momentum_ledger.py](../engine/traderlab/momentum_ledger.py) — mom-ledger/1.0.0: konto C/q, E = C + qM, exakt §6-lösare, kostnad en gång, normal- och reduce-only-fyllning, E_trade i fas after_trade.
@@ -135,7 +135,7 @@ D1 revision 8 GODKÄND på exakt 7345f06 mot e148199, endast syntetiskt. D1-11 o
   - Underlag: [docs/momentum-C4-06-granskning-9174b9c.md](momentum-C4-06-granskning-9174b9c.md) — C4-06 P2 stängt på exakt 9174b9c. C3:s rena risk-/avsiktsmodul åter godkänd: kontrollerade metadatafel, oförändrade indata och 400 giltiga beslut exakt identiska med 4241d0e. Full eventintegration ingår inte.
   - Underlag: [research/audits/momentum-c406-9174b9c/verification.json](../research/audits/momentum-c406-9174b9c/verification.json) — Revisionslåst audit: 44 kontrollerade avvisningar, 17 basläckor inklusive åtta ursprungliga vägar, 400 funding- och 400 riskjämförelser samt oförändrad validering/beräkning/signatur.
   - C4-06 P2 stängt på exakt 9174b9c. C3:s rena risk-/avsiktsmodul åter godkänd: kontrollerade metadatafel, oförändrade indata och 400 giltiga beslut exakt identiska med 4241d0e. Full eventintegration ingår inte.
-- [x] **MOM-C03** Implementera funding, dagsreset och första/sista event enligt låst kontrakt
+- [ ] **MOM-C03** Implementera funding, dagsreset och första/sista event enligt låst kontrakt **Pågår.**
   - Underlag: [engine/traderlab/momentum_funding.py](../engine/traderlab/momentum_funding.py) — mom-funding/1.0.0: exakta fundingevent, betalning q × M_ref × ränta, mark_open-regel, stress bara på betalda belopp, dubbelbokningsskydd per konto och scenario.
   - Underlag: [engine/tests/test_momentum_funding.py](../engine/tests/test_momentum_funding.py) — 47 syntetiska tester mot O5, O5b, O16, O17 och Decimal; 15 riktade felprov fångade.
   - Underlag: [docs/momentum-funding-C2.md](momentum-funding-C2.md) — API, regler, ledgerkomplettering, fel, verifiering och gränser för C2.
@@ -165,6 +165,7 @@ D1 revision 8 GODKÄND på exakt 7345f06 mot e148199, endast syntetiskt. D1-11 o
   - Underlag: [engine/traderlab/momentum_event.py](../engine/traderlab/momentum_event.py) — Kompatibilitetsnot C6: BarResult får fältet bar, bara ett tillägg. 105 eventtester och 34 felprov för eventmodulen passerar; omgodkännande av exakt revision behövs.
   - Underlag: [docs/momentum-C6-granskning-8e27c5f.md](momentum-C6-granskning-8e27c5f.md) — Codex omgranskar exakt 8e27c5f: BarResult.bar är ett additivt fält under befintlig konstruktionsgrind; eventordning och 105 eventtester är oförändrade. C03/C05-godkännandet består inom C5:s huvudmodellgränser; C6-02 gäller boundens tidsmetadata.
   - Underlag: [docs/momentum-C6-granskning-a84e0d8.md](momentum-C6-granskning-a84e0d8.md) — Codex godkänner exakt a84e0d8 mot 790d477 inom C6:s huvudmodell. C6-02 stängt; event och övriga handelsmoduler byte-oförändrade. C03/C05:s tidigare avgränsade godkännanden består; MOM-C04 klar inom C, ingen boolesk slutprövning.
+  - Underlag: [engine/traderlab/momentum_event.py](../engine/traderlab/momentum_event.py) — Återöppnad för omgranskning (D2): eventmodulen fick Scenario.policy och en buy_and_hold-väg (_bh_step) i process_bar. Momentumvägen och dess tester är oförändrade och gröna; Codex avgör återgodkännande av exakt ny revision.
   - Done inom C5:s huvudmodell: funding, dagsreset, första/sista event och full syntetisk horisont verifierade på 43b2a4b. Ingen publik återställning. Legacy/jämförelsekonton och stress/fördröjning tillhör senare D; ingen historikkörning godkänd.
 - [x] **MOM-C04** Implementera 2 % dagsstopp, 15 % permanent stopp och konservativ 20 %-riskkontroll
   - Underlag: [engine/traderlab/momentum_risk.py](../engine/traderlab/momentum_risk.py) — mom-risk/1.0.0: rena tillståndsövergångar vid 4H-gränser, band 2 pp, dagsbeslut i §7:s ordning, sammanslagning terminal > permanent > dag > cap/platt > normal, dagsreset och lock_day.
@@ -197,7 +198,7 @@ D1 revision 8 GODKÄND på exakt 7345f06 mot e148199, endast syntetiskt. D1-11 o
   - Underlag: [docs/momentum-C6-granskning-a84e0d8.md](momentum-C6-granskning-a84e0d8.md) — Codex godkänner exakt a84e0d8 mot 790d477 inom C6:s huvudmodell. C6-02 stängt; event och övriga handelsmoduler byte-oförändrade. C03/C05:s tidigare avgränsade godkännanden består; MOM-C04 klar inom C, ingen boolesk slutprövning.
   - Underlag: [research/audits/momentum-c6-a84e0d8/review.py](../research/audits/momentum-c6-a84e0d8/review.py) — Revisionslåst git-show-audit med verification.json/--check: 115 Decimal-punktsekvenser/629 punkter, 60 ickeinterferenspar, åtta fundingstaplar med korrekt close-tid och sju egna mutationer fångade. Alla punktfasers tidsproveniens verifierad.
   - Done inom leverans C:s huvudmodell: C5:s closebaserade 2 % dagsstopp/15 % permanentstopp består och C6:s separata §10.2-bound med 20 %-kriterieunderlag godkänns på a84e0d8. C6-02 stängt. 20 % styr ingen handel; full boolesk prövning inklusive likvidation hör till D. Ingen historikkörning eller drift.
-- [x] **MOM-C05** Verifiera gap, basis, likvidation och riskordning med handräknade prov och kodgranskning
+- [ ] **MOM-C05** Verifiera gap, basis, likvidation och riskordning med handräknade prov och kodgranskning **Pågår.**
   - Underlag: [engine/tests/test_momentum_ledger.py](../engine/tests/test_momentum_ledger.py) — 40 syntetiska tester mot orakel O1–O4, O11, O14, O15 och handräkning; 14 riktade felprov fångade.
   - Underlag: [docs/momentum-C1-granskning-6eba8d6.md](momentum-C1-granskning-6eba8d6.md) — Codex granskar exakt 6eba8d6. Orakel/Decimal stämmer för normala fall, men C1-01 och C1-02 behöver numerisk/API-rättning och regressioner före godkännande. 40 ledgerprov, 629 motorprov godkända.
   - Underlag: [engine/tests/test_momentum_ledger.py](../engine/tests/test_momentum_ledger.py) — Rättning av C1-01/C1-02 från granskningen av 6eba8d6: kontofält och beräknade belopp ändlighetskontrollerade, vakt för kostnadsfri nämnare, enhetliga skalärtyper. 82 syntetiska tester; 39 nya fäller 6eba8d6.
@@ -230,6 +231,7 @@ D1 revision 8 GODKÄND på exakt 7345f06 mot e148199, endast syntetiskt. D1-11 o
   - Underlag: [engine/tests/test_momentum_event.py](../engine/tests/test_momentum_event.py) — Kompatibilitetsnot C6: eventtesterna är oförändrade och passerar på revisionen med BarResult.bar.
   - Underlag: [docs/momentum-C6-granskning-8e27c5f.md](momentum-C6-granskning-8e27c5f.md) — Codex omgranskar exakt 8e27c5f: BarResult.bar är ett additivt fält under befintlig konstruktionsgrind; eventordning och 105 eventtester är oförändrade. C03/C05-godkännandet består inom C5:s huvudmodellgränser; C6-02 gäller boundens tidsmetadata.
   - Underlag: [docs/momentum-C6-granskning-a84e0d8.md](momentum-C6-granskning-a84e0d8.md) — Codex godkänner exakt a84e0d8 mot 790d477 inom C6:s huvudmodell. C6-02 stängt; event och övriga handelsmoduler byte-oförändrade. C03/C05:s tidigare avgränsade godkännanden består; MOM-C04 klar inom C, ingen boolesk slutprövning.
+  - Underlag: [engine/traderlab/momentum_event.py](../engine/traderlab/momentum_event.py) — Återöppnad för omgranskning (D2): eventmodulen fick Scenario.policy och en buy_and_hold-väg (_bh_step) i process_bar. Momentumvägen och dess tester är oförändrade och gröna; Codex avgör återgodkännande av exakt ny revision.
   - Done inom C5:s huvudmodell: gap, basis, likvidation och riskordning granskade mot oberoende Decimal-/kalenderfacit på 43b2a4b. C5-01–C5-04 stängda. C5-godkännandet omfattar inte legacy/grid, §10.2-bound, ekonomiskt resultat eller drift. C6:s separata huvudmodell-bound godkänd på a84e0d8; full boolesk kriterieprövning hör till D.
 
 ## D. Utvärderare och jämförelser
@@ -266,6 +268,7 @@ D1 revision 8 GODKÄND på exakt 7345f06 mot e148199, endast syntetiskt. D1-11 o
   - Underlag: [docs/momentum-D1-granskning-7345f06.md](momentum-D1-granskning-7345f06.md) — Codex GODKÄND inom D1 på exakt 7345f06 mot e148199. D1-11 och D1-04 stängda med egna injektioner; inga nya fynd. MOM-D01 kvarstår in_progress; nästa avgränsade D-del kan tilldelas. 605 momentumtester och 1 158 motorprov PASS.
   - Underlag: [research/audits/momentum-d1-7345f06/review.py](../research/audits/momentum-d1-7345f06/review.py) — Ny revisionslåst git-show-audit, genererad och separat --check PASS. Oberoende Decimal-/kalenderreferenser, 31 ordinarie fångster, verklig fallback, neutral överlevare samt egna D1-08–D1-11-injektioner och nya resurs-/setup-/insamlingsfall.
   - Underlag: [research/audits/momentum-d1-7345f06/verification.json](../research/audits/momentum-d1-7345f06/verification.json) — Källhashar, exakt femfilsdiff och byte-oförändrade skyddade källor. 3 288 signaljämförelser, tre fulla komponentförlopp och separat varierande ledger (6 576 staplar/6 577 closepunkter/1 096 dagar). D1-08 ger MILJÖFEL; D1-11 ger MISSAD med två gröna färska fullkontroller och två gamla felande tvåstegskontroller. Tre D1-10-fall ger MILJÖFEL med sex negativa omuterade kontroller. Alla 31 fångster omprövade. Mutationsskriptets --check PASS 31/0/1/0; sju miljöfelssjälvtest, kvarlämnad resurs MISSAD och verklig mutation FÅNGAD. 29 äldre audits PASS som historisk reproduktion, 30 totalt med ny audit. A1-oraklet och alla fyra checklistor PASS.
+  - Underlag: [engine/traderlab/momentum_benchmark.py](../engine/traderlab/momentum_benchmark.py) — D2 (H-0026, tidigare H-0017) för Codex granskning, inte godkänd: buy_and_hold med fasta enheter via eventlagrets buy_and_hold-väg; 24 tester, felprovsmatris 23 fångade/0 missade (docs/momentum-D2-mutationer.json). Återstår: legacy, no_vol, blandningar, kontrollkontonas bound (D1-Q01/Q02 öppna).
   - D1 revision 8 GODKÄND på exakt 7345f06. D1-11 och D1-04:s bredare klassningsgaranti stängda inom syntetisk D1; tidigare stängda fynd består inom sina avgränsningar, inga nya fynd. MOM-D01 kan inte bli done av D1 ensam: buy_and_hold, legacy, no_vol, blandningar och komponent-bound återstår. D1-Q01/Q02 ej avgjorda. Nästa avgränsade D-del kan tilldelas; inget nytt uppdrag skrivs. Enligt Edwin heter momentum H-0026 på main; grenens gamla id, protokoll och register ändras inte. Ingen historik, registrering, drift eller paper/live.
 - [ ] **MOM-D02** Verifiera 50/50- och 1/3-blandningar, bruttoexponering och oberoende risklås
 - [ ] **MOM-D03** Implementera 2,5× kostnader, fundingstress, fördröjning och låst ordningskänslighet
