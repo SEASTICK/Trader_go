@@ -4,7 +4,7 @@
  "rules": "research/13f-protokoll.md",
  "start": "2026-11-05",
  "start_capital": 100000.0,
- "updated_at": "2026-11-14T13:46:59+00:00",
+ "updated_at": "2026-11-21T14:55:34+00:00",
  "managers": [
   "Berkshire Hathaway",
   "Baupost Group",
@@ -17,328 +17,338 @@
   "ValueAct",
   "Duquesne Family Office"
  ],
- "value": 98218.76,
- "spy_value": 98549.91,
+ "value": 89736.04,
+ "spy_value": 90115.88,
  "holdings": [
   {
    "ticker": "AMZN",
-   "shares": 40.8058,
-   "value": 10881.28
+   "shares": 34.7792,
+   "value": 8584.21
   },
   {
    "ticker": "GOOG",
-   "shares": 22.9771,
-   "value": 6721.27
-  },
-  {
-   "ticker": "GOOGL",
-   "shares": 20.3584,
-   "value": 6021.42
-  },
-  {
-   "ticker": "TSM",
-   "shares": 9.7184,
-   "value": 3875.02
-  },
-  {
-   "ticker": "V",
-   "shares": 8.6303,
-   "value": 3674.44
-  },
-  {
-   "ticker": "BN",
-   "shares": 86.6827,
-   "value": 3551.39
-  },
-  {
-   "ticker": "AAPL",
-   "shares": 9.3486,
-   "value": 3330.61
-  },
-  {
-   "ticker": "NTRA",
-   "shares": 10.0401,
-   "value": 3203.69
-  },
-  {
-   "ticker": "BRK-B",
-   "shares": 4.8961,
-   "value": 2903.11
+   "shares": 19.5582,
+   "value": 5163.37
   },
   {
    "ticker": "META",
-   "shares": 4.4897,
-   "value": 2881.02
+   "shares": 7.7959,
+   "value": 4372.26
   },
   {
-   "ticker": "UBER",
-   "shares": 35.0494,
-   "value": 2442.59
+   "ticker": "NTRA",
+   "shares": 14.9727,
+   "value": 4093.54
   },
   {
-   "ticker": "QSR",
-   "shares": 30.7482,
-   "value": 2318.72
+   "ticker": "V",
+   "shares": 9.0935,
+   "value": 3654.41
   },
   {
-   "ticker": "MA",
-   "shares": 3.3466,
-   "value": 2212.73
+   "ticker": "AAPL",
+   "shares": 9.8233,
+   "value": 3365.08
+  },
+  {
+   "ticker": "BN",
+   "shares": 87.7516,
+   "value": 3312.62
+  },
+  {
+   "ticker": "GOOGL",
+   "shares": 11.1843,
+   "value": 2967.08
+  },
+  {
+   "ticker": "BRK-B",
+   "shares": 4.5834,
+   "value": 2612.52
   },
   {
    "ticker": "PDD",
-   "shares": 25.9348,
-   "value": 2048.07
+   "shares": 29.6941,
+   "value": 2484.8
   },
   {
-   "ticker": "MU",
-   "shares": 2.4498,
-   "value": 1906.67
+   "ticker": "MA",
+   "shares": 3.9175,
+   "value": 2450.76
   },
   {
-   "ticker": "AXP",
-   "shares": 5.6982,
-   "value": 1826.83
-  },
-  {
-   "ticker": "KKR",
-   "shares": 16.6839,
-   "value": 1635.86
-  },
-  {
-   "ticker": "MCO",
-   "shares": 2.9864,
-   "value": 1517.7
-  },
-  {
-   "ticker": "BRK-A",
-   "shares": 0.0017,
-   "value": 1513.2
+   "ticker": "QSR",
+   "shares": 31.6451,
+   "value": 2307.24
   },
   {
    "ticker": "MSFT",
-   "shares": 2.7492,
-   "value": 1440.24
+   "shares": 4.5224,
+   "value": 2191.21
   },
   {
-   "ticker": "RKT",
-   "shares": 93.9921,
-   "value": 1288.63
+   "ticker": "UBER",
+   "shares": 34.1056,
+   "value": 2164.68
   },
   {
-   "ticker": "KO",
-   "shares": 12.6539,
-   "value": 1255.89
-  },
-  {
-   "ticker": "BLK",
-   "shares": 0.9707,
-   "value": 1187.12
-  },
-  {
-   "ticker": "ELV",
-   "shares": 2.7603,
-   "value": 1186.08
-  },
-  {
-   "ticker": "CRH",
-   "shares": 12.6248,
-   "value": 1176.13
-  },
-  {
-   "ticker": "KEYS",
-   "shares": 3.9157,
-   "value": 1165.62
-  },
-  {
-   "ticker": "STM",
-   "shares": 23.3579,
-   "value": 1091.51
-  },
-  {
-   "ticker": "TDS",
-   "shares": 34.0584,
-   "value": 1069.43
-  },
-  {
-   "ticker": "LYV",
-   "shares": 5.9549,
-   "value": 1062.65
-  },
-  {
-   "ticker": "FICO",
-   "shares": 1.4493,
-   "value": 1043.75
-  },
-  {
-   "ticker": "DE",
-   "shares": 1.5203,
-   "value": 1024.01
-  },
-  {
-   "ticker": "BAC",
-   "shares": 19.7406,
-   "value": 1007.17
-  },
-  {
-   "ticker": "CRM",
-   "shares": 4.3924,
-   "value": 956.84
-  },
-  {
-   "ticker": "EWBC",
-   "shares": 7.128,
-   "value": 935.27
-  },
-  {
-   "ticker": "HHH",
-   "shares": 10.8977,
-   "value": 904.73
-  },
-  {
-   "ticker": "FERG",
-   "shares": 3.4167,
-   "value": 876.28
-  },
-  {
-   "ticker": "ROP",
-   "shares": 1.7731,
-   "value": 851.03
-  },
-  {
-   "ticker": "TOST",
-   "shares": 23.7153,
-   "value": 822.45
-  },
-  {
-   "ticker": "UNP",
-   "shares": 2.6399,
-   "value": 798.4
-  },
-  {
-   "ticker": "GPC",
-   "shares": 6.4095,
-   "value": 790.54
-  },
-  {
-   "ticker": "EWY",
-   "shares": 5.5345,
-   "value": 790.22
-  },
-  {
-   "ticker": "INSM",
-   "shares": 6.0837,
-   "value": 737.11
-  },
-  {
-   "ticker": "ADI",
-   "shares": 1.8315,
-   "value": 728.86
-  },
-  {
-   "ticker": "CSGP",
-   "shares": 22.2821,
-   "value": 689.85
-  },
-  {
-   "ticker": "VST",
-   "shares": 4.9268,
-   "value": 655.31
-  },
-  {
-   "ticker": "WCC",
-   "shares": 1.8577,
-   "value": 597.79
-  },
-  {
-   "ticker": "TBBB",
-   "shares": 8.1482,
-   "value": 570.54
-  },
-  {
-   "ticker": "GS",
-   "shares": 0.6206,
-   "value": 568.85
-  },
-  {
-   "ticker": "YPF",
-   "shares": 14.9788,
-   "value": 567.7
-  },
-  {
-   "ticker": "AON",
-   "shares": 1.6035,
-   "value": 542.47
-  },
-  {
-   "ticker": "CVX",
-   "shares": 2.3988,
-   "value": 527.47
-  },
-  {
-   "ticker": "STX",
-   "shares": 0.9907,
-   "value": 523.38
-  },
-  {
-   "ticker": "EWZ",
-   "shares": 15.9972,
-   "value": 515.43
-  },
-  {
-   "ticker": "SPOT",
-   "shares": 0.8169,
-   "value": 500.46
-  },
-  {
-   "ticker": "NRG",
-   "shares": 5.1413,
-   "value": 499.22
-  },
-  {
-   "ticker": "OXY",
-   "shares": 8.3546,
-   "value": 490.84
-  },
-  {
-   "ticker": "CPRT",
-   "shares": 15.1993,
-   "value": 483.79
-  },
-  {
-   "ticker": "ORLY",
-   "shares": 4.7533,
-   "value": 438.21
-  },
-  {
-   "ticker": "CB",
-   "shares": 1.1623,
-   "value": 436.71
+   "ticker": "MU",
+   "shares": 3.178,
+   "value": 1889.37
   },
   {
    "ticker": "NVDA",
-   "shares": 2.5498,
-   "value": 415.23
+   "shares": 13.1899,
+   "value": 1655.73
   },
   {
-   "ticker": "CROX",
-   "shares": 1.8045,
-   "value": 295.44
+   "ticker": "UNM",
+   "shares": 20.8844,
+   "value": 1585.13
+  },
+  {
+   "ticker": "AXP",
+   "shares": 5.1086,
+   "value": 1541.26
+  },
+  {
+   "ticker": "MCO",
+   "shares": 3.2492,
+   "value": 1516.8
+  },
+  {
+   "ticker": "KKR",
+   "shares": 16.1883,
+   "value": 1433.32
+  },
+  {
+   "ticker": "BRK-A",
+   "shares": 0.0016,
+   "value": 1381.23
+  },
+  {
+   "ticker": "CRM",
+   "shares": 6.7931,
+   "value": 1226.97
+  },
+  {
+   "ticker": "KO",
+   "shares": 12.2717,
+   "value": 1190.23
+  },
+  {
+   "ticker": "ELV",
+   "shares": 2.7887,
+   "value": 1100.07
+  },
+  {
+   "ticker": "TSM",
+   "shares": 3.3464,
+   "value": 1066.54
+  },
+  {
+   "ticker": "BLK",
+   "shares": 0.8984,
+   "value": 989.83
+  },
+  {
+   "ticker": "RKT",
+   "shares": 70.5113,
+   "value": 969.53
+  },
+  {
+   "ticker": "STX",
+   "shares": 2.0809,
+   "value": 950.99
+  },
+  {
+   "ticker": "GPC",
+   "shares": 7.9172,
+   "value": 938.27
+  },
+  {
+   "ticker": "DE",
+   "shares": 1.5183,
+   "value": 925.0
+  },
+  {
+   "ticker": "ROP",
+   "shares": 1.9355,
+   "value": 889.99
+  },
+  {
+   "ticker": "CRH",
+   "shares": 9.596,
+   "value": 844.93
+  },
+  {
+   "ticker": "FERG",
+   "shares": 3.4421,
+   "value": 828.23
+  },
+  {
+   "ticker": "BAC",
+   "shares": 17.5427,
+   "value": 825.21
+  },
+  {
+   "ticker": "EWBC",
+   "shares": 6.7295,
+   "value": 817.91
+  },
+  {
+   "ticker": "HHH",
+   "shares": 10.0727,
+   "value": 769.96
+  },
+  {
+   "ticker": "CSGP",
+   "shares": 25.3629,
+   "value": 751.0
+  },
+  {
+   "ticker": "LYV",
+   "shares": 4.2608,
+   "value": 745.48
+  },
+  {
+   "ticker": "COF",
+   "shares": 4.1506,
+   "value": 741.55
+  },
+  {
+   "ticker": "FLEX",
+   "shares": 10.803,
+   "value": 715.59
+  },
+  {
+   "ticker": "KEYS",
+   "shares": 2.6618,
+   "value": 696.09
+  },
+  {
+   "ticker": "EWY",
+   "shares": 4.9016,
+   "value": 604.18
+  },
+  {
+   "ticker": "FOXA",
+   "shares": 9.5399,
+   "value": 600.16
+  },
+  {
+   "ticker": "ADI",
+   "shares": 1.7184,
+   "value": 594.42
+  },
+  {
+   "ticker": "CVX",
+   "shares": 2.8114,
+   "value": 585.81
+  },
+  {
+   "ticker": "FICO",
+   "shares": 0.8308,
+   "value": 576.81
+  },
+  {
+   "ticker": "WCC",
+   "shares": 2.0256,
+   "value": 571.29
+  },
+  {
+   "ticker": "YPF",
+   "shares": 16.5335,
+   "value": 534.36
+  },
+  {
+   "ticker": "CPRT",
+   "shares": 17.1328,
+   "value": 532.66
+  },
+  {
+   "ticker": "UNP",
+   "shares": 1.7705,
+   "value": 508.64
+  },
+  {
+   "ticker": "GS",
+   "shares": 0.6243,
+   "value": 493.62
+  },
+  {
+   "ticker": "INSM",
+   "shares": 3.4234,
+   "value": 483.83
+  },
+  {
+   "ticker": "OXY",
+   "shares": 8.9281,
+   "value": 481.22
+  },
+  {
+   "ticker": "SPOT",
+   "shares": 0.8301,
+   "value": 478.98
+  },
+  {
+   "ticker": "U",
+   "shares": 10.5318,
+   "value": 471.3
+  },
+  {
+   "ticker": "SE",
+   "shares": 7.3696,
+   "value": 461.56
+  },
+  {
+   "ticker": "AON",
+   "shares": 1.3532,
+   "value": 450.71
+  },
+  {
+   "ticker": "VST",
+   "shares": 3.8748,
+   "value": 446.57
+  },
+  {
+   "ticker": "TOST",
+   "shares": 14.197,
+   "value": 446.07
+  },
+  {
+   "ticker": "EWZ",
+   "shares": 13.5669,
+   "value": 387.2
+  },
+  {
+   "ticker": "CB",
+   "shares": 1.0355,
+   "value": 384.84
+  },
+  {
+   "ticker": "RVMD",
+   "shares": 1.81,
+   "value": 291.77
   },
   {
    "ticker": "TME",
-   "shares": 15.3381,
-   "value": 138.81
+   "shares": 31.029,
+   "value": 276.47
+  },
+  {
+   "ticker": "CROX",
+   "shares": 1.6496,
+   "value": 255.15
   },
   {
    "ticker": "SEG",
-   "shares": 3.3949,
-   "value": 69.6
+   "shares": 3.6962,
+   "value": 69.27
   },
   {
    "ticker": "HTZ",
-   "shares": 24.045,
-   "value": 36.07
+   "shares": 35.3033,
+   "value": 39.19
   }
  ],
  "history": [
@@ -376,7 +386,409 @@
    "day": "2026-11-13",
    "value": 98218.76,
    "spy": 98549.91
+  },
+  {
+   "day": "2026-11-16",
+   "value": 95974.3,
+   "spy": 96666.11
+  },
+  {
+   "day": "2026-11-17",
+   "value": 94518.25,
+   "spy": 95685.01
+  },
+  {
+   "day": "2026-11-18",
+   "value": 94560.47,
+   "spy": 95392.38
+  },
+  {
+   "day": "2026-11-19",
+   "value": 92822.27,
+   "spy": 93520.32
+  },
+  {
+   "day": "2026-11-20",
+   "value": 89736.04,
+   "spy": 90115.88
   }
  ],
- "events": []
+ "events": [
+  {
+   "day": "2026-11-16",
+   "filed": "2026-11-13",
+   "manager": "Baupost Group",
+   "accession": "0001061768-26-000015",
+   "top10": [
+    {
+     "ticker": "AMZN",
+     "weight": 0.2401
+    },
+    {
+     "ticker": "ELV",
+     "weight": 0.1276
+    },
+    {
+     "ticker": "QSR",
+     "weight": 0.1236
+    },
+    {
+     "ticker": "GPC",
+     "weight": 0.1003
+    },
+    {
+     "ticker": "FERG",
+     "weight": 0.09
+    },
+    {
+     "ticker": "GOOG",
+     "weight": 0.0833
+    },
+    {
+     "ticker": "WCC",
+     "weight": 0.0665
+    },
+    {
+     "ticker": "V",
+     "weight": 0.0649
+    },
+    {
+     "ticker": "UNP",
+     "weight": 0.0557
+    },
+    {
+     "ticker": "AON",
+     "weight": 0.0481
+    }
+   ]
+  },
+  {
+   "day": "2026-11-16",
+   "filed": "2026-11-13",
+   "manager": "Akre Capital",
+   "accession": "0001112520-26-000022",
+   "top10": [
+    {
+     "ticker": "MA",
+     "weight": 0.2547
+    },
+    {
+     "ticker": "MCO",
+     "weight": 0.1215
+    },
+    {
+     "ticker": "KKR",
+     "weight": 0.1033
+    },
+    {
+     "ticker": "BN",
+     "weight": 0.1005
+    },
+    {
+     "ticker": "ROP",
+     "weight": 0.0919
+    },
+    {
+     "ticker": "V",
+     "weight": 0.0877
+    },
+    {
+     "ticker": "CSGP",
+     "weight": 0.0777
+    },
+    {
+     "ticker": "FICO",
+     "weight": 0.0585
+    },
+    {
+     "ticker": "CPRT",
+     "weight": 0.0531
+    },
+    {
+     "ticker": "CCCS",
+     "weight": 0.051
+    }
+   ]
+  },
+  {
+   "day": "2026-11-17",
+   "filed": "2026-11-16",
+   "manager": "Third Point",
+   "accession": "0001040273-26-000004",
+   "top10": [
+    {
+     "ticker": "META",
+     "weight": 0.1696
+    },
+    {
+     "ticker": "UNM",
+     "weight": 0.1567
+    },
+    {
+     "ticker": "NVDA",
+     "weight": 0.1223
+    },
+    {
+     "ticker": "CRH",
+     "weight": 0.084
+    },
+    {
+     "ticker": "SQ",
+     "weight": 0.0835
+    },
+    {
+     "ticker": "MSFT",
+     "weight": 0.0824
+    },
+    {
+     "ticker": "FLEX",
+     "weight": 0.0786
+    },
+    {
+     "ticker": "COF",
+     "weight": 0.0765
+    },
+    {
+     "ticker": "KEYS",
+     "weight": 0.0741
+    },
+    {
+     "ticker": "LYV",
+     "weight": 0.0723
+    }
+   ]
+  },
+  {
+   "day": "2026-11-17",
+   "filed": "2026-11-16",
+   "manager": "Berkshire Hathaway",
+   "accession": "0001193125-26-463399",
+   "top10": [
+    {
+     "ticker": "AAPL",
+     "weight": 0.2792
+    },
+    {
+     "ticker": "AXP",
+     "weight": 0.1696
+    },
+    {
+     "ticker": "KO",
+     "weight": 0.1267
+    },
+    {
+     "ticker": "GOOGL",
+     "weight": 0.0997
+    },
+    {
+     "ticker": "BAC",
+     "weight": 0.0913
+    },
+    {
+     "ticker": "CVX",
+     "weight": 0.0634
+    },
+    {
+     "ticker": "OXY",
+     "weight": 0.0539
+    },
+    {
+     "ticker": "MCO",
+     "weight": 0.0412
+    },
+    {
+     "ticker": "CB",
+     "weight": 0.041
+    },
+    {
+     "ticker": "GOOG",
+     "weight": 0.0341
+    }
+   ]
+  },
+  {
+   "day": "2026-11-17",
+   "filed": "2026-11-16",
+   "manager": "ValueAct",
+   "accession": "0001418814-26-000006",
+   "top10": [
+    {
+     "ticker": "V",
+     "weight": 0.1722
+    },
+    {
+     "ticker": "AMZN",
+     "weight": 0.1548
+    },
+    {
+     "ticker": "CRM",
+     "weight": 0.1422
+    },
+    {
+     "ticker": "META",
+     "weight": 0.1374
+    },
+    {
+     "ticker": "BLK",
+     "weight": 0.1075
+    },
+    {
+     "ticker": "RKT",
+     "weight": 0.0963
+    },
+    {
+     "ticker": "SPOT",
+     "weight": 0.0501
+    },
+    {
+     "ticker": "KKR",
+     "weight": 0.0492
+    },
+    {
+     "ticker": "TOST",
+     "weight": 0.0491
+    },
+    {
+     "ticker": null,
+     "weight": 0.0413
+    }
+   ]
+  },
+  {
+   "day": "2026-11-17",
+   "filed": "2026-11-16",
+   "manager": "Duquesne Family Office",
+   "accession": "0001536411-26-000011",
+   "top10": [
+    {
+     "ticker": "NTRA",
+     "weight": 0.46
+    },
+    {
+     "ticker": "STX",
+     "weight": 0.111
+    },
+    {
+     "ticker": "AMZN",
+     "weight": 0.0678
+    },
+    {
+     "ticker": "FOXA",
+     "weight": 0.0672
+    },
+    {
+     "ticker": "YPF",
+     "weight": 0.0625
+    },
+    {
+     "ticker": "U",
+     "weight": 0.057
+    },
+    {
+     "ticker": "SE",
+     "weight": 0.0546
+    },
+    {
+     "ticker": "EWZ",
+     "weight": 0.0443
+    },
+    {
+     "ticker": "INSM",
+     "weight": 0.0439
+    },
+    {
+     "ticker": "RVMD",
+     "weight": 0.0315
+    }
+   ]
+  },
+  {
+   "day": "2026-11-17",
+   "filed": "2026-11-16",
+   "manager": "Appaloosa",
+   "accession": "0001656456-26-000004",
+   "top10": [
+    {
+     "ticker": "MU",
+     "weight": 0.219
+    },
+    {
+     "ticker": "AMZN",
+     "weight": 0.1834
+    },
+    {
+     "ticker": "TSM",
+     "weight": 0.1182
+    },
+    {
+     "ticker": null,
+     "weight": 0.0916
+    },
+    {
+     "ticker": "UBER",
+     "weight": 0.0824
+    },
+    {
+     "ticker": "NVDA",
+     "weight": 0.0751
+    },
+    {
+     "ticker": "EWY",
+     "weight": 0.0633
+    },
+    {
+     "ticker": "META",
+     "weight": 0.0626
+    },
+    {
+     "ticker": "GOOG",
+     "weight": 0.0561
+    },
+    {
+     "ticker": "VST",
+     "weight": 0.0481
+    }
+   ]
+  },
+  {
+   "day": "2026-11-17",
+   "filed": "2026-11-16",
+   "manager": "Himalaya Capital",
+   "accession": "0002043585-26-000030",
+   "top10": [
+    {
+     "ticker": "PDD",
+     "weight": 0.2424
+    },
+    {
+     "ticker": "GOOGL",
+     "weight": 0.2314
+    },
+    {
+     "ticker": "GOOG",
+     "weight": 0.2209
+    },
+    {
+     "ticker": "BRK-B",
+     "weight": 0.1459
+    },
+    {
+     "ticker": "EWBC",
+     "weight": 0.091
+    },
+    {
+     "ticker": "TME",
+     "weight": 0.0311
+    },
+    {
+     "ticker": "CROX",
+     "weight": 0.0275
+    },
+    {
+     "ticker": "AAPL",
+     "weight": 0.0097
+    }
+   ]
+  }
+ ]
 }
